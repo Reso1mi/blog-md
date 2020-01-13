@@ -3693,3 +3693,48 @@ public void dfs(TreeNode node,StringBuilder s){
 ```
 
 没啥好说的，搞清楚题目意思然后注意递归的几个出口就行了
+
+## [1315. 祖父节点值为偶数的节点和](https://leetcode-cn.com/problems/sum-of-nodes-with-even-valued-grandparent/)
+
+给你一棵二叉树，请你返回满足以下条件的所有节点的值之和：
+
+该节点的祖父节点的值为偶数。（一个节点的祖父节点是指该节点的父节点的父节点。）
+如果不存在祖父节点值为偶数的节点，那么返回 0 。
+
+**示例：**
+
+![1473_ex1.png](https://i.loli.net/2020/01/13/CgBK9WOMbNvxJpY.png)
+
+```java
+输入：root = [6,7,8,2,7,1,3,9,null,1,4,null,null,null,5]
+输出：18
+解释：图中红色节点的祖父节点的值为偶数，蓝色节点为这些红色节点的祖父节点。
+```
+
+**提示：**
+
+- 树中节点的数目在 `1` 到 `10^4` 之间。
+- 每个节点的值在 `1` 到 `100` 之间。
+
+**解法一**
+
+好像是170前一天的双周赛的第3题，还是很直白的题，遍历的时候带上它的father的值和grandfather的值带到下一层，然后判断就可以了
+
+```java
+public int sumEvenGrandparent(TreeNode root) {
+    return dfs(root,-1,-1);
+}
+
+public int dfs(TreeNode node,int fa,int ga){
+    if (node==null) {
+        return 0;
+    }
+    int sum=0;
+    if (fa!=-1 && ga!=-1 && ga%2==0) {
+        sum+=node.val;
+    }
+    sum+=dfs(node.left,node.val,fa);
+    sum+=dfs(node.right,node.val,fa);
+    return sum;
+}
+```
