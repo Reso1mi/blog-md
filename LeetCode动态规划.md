@@ -2891,3 +2891,87 @@ public int minInsertions(String s) {
 }
 ```
 这题也可以用LCS的解法解，`n-lcs[n][n]`就是最少的插入次数 
+
+## [32. 最长有效括号](https://leetcode-cn.com/problems/longest-valid-parentheses/)
+
+给定一个只包含 '(' 和 ')' 的字符串，找出最长的包含有效括号的子串的长度。
+
+**示例 1:**
+
+```java
+输入: "(()"
+输出: 2
+解释: 最长有效括号子串为 "()"
+```
+
+**示例 2:**
+
+```java
+输入: ")()())"
+输出: 4
+解释: 最长有效括号子串为 "()()"
+```
+
+**解法一**
+
+栈+dp的思路
+
+```java
+public int longestValidParentheses(String s) {
+    if (s==null || s.length()<=0) {
+        return  0;
+    }
+    Stack<Integer> stack=new Stack<>();
+    int[] dp=new int[s.length()]; //以i位置括号结尾的最长有效括号
+    dp[0]=0;
+    int res=0;
+    for (int i=0;i<s.length();i++) {
+        if (s.charAt(i)=='(') {
+            stack.push(i); //dp[i]=0
+        }else{
+            if(!stack.isEmpty()){
+                int left=stack.pop();
+                dp[i]= left==0?i-left+1:dp[left-1]+i-left+1;
+                res=Math.max(res,dp[i]);
+            }//else dp[i]=0  
+        }
+    }
+    return res;
+}
+```
+
+首先想到的就是这种解法，感觉还是很好理解的，栈中存索引，`dp[i]` 代表以`i`位置括号结尾的最长有效括号，当遇到右括号的时候将栈顶的左括号的索引`left`弹出来，两者形成的括号长度再加上左括号索引前一个元素`dp[left-1]`就是当前位置的`dp[i]`
+
+**解法二**
+
+纯dp解法，上面的解法虽然也用到了一点动态规划，但是还不够纯粹
+
+```java
+public int longestValidParentheses(String s) {
+    if (s==null || s.length()<=0) {
+        return  0;
+    }
+    int[] dp=new int[s.length()];
+    dp[0]=0;
+    int res=0;
+    for (int i=1;i<s.length();i++) {
+        if (s.charAt(i)==')') {
+            if (s.charAt(i-1)=='(') { //前一个是左括号
+                dp[i]=i-2>=0?dp[i-2]+2:2;
+            }else{ //前一个是右括号 ()(())
+                if (i-dp[i-1]-1>=0 && s.charAt(i-dp[i-1]-1)=='(') {//前一个右括号的合法序列的前一个是'('
+                    //前一个的前一个的dp[i-dp[i-1]-2]+dp[i-1]+2
+                    dp[i]=(i-dp[i-1]-2>=0?dp[i-dp[i-1]-2]:0)+dp[i-1]+2; 
+                }
+                //前一个右括号的合法序列的前一个是')',没救了
+            }
+        }
+        res=Math.max(res,dp[i]);
+    }
+    return res;
+}
+```
+
+解释都在代码注释中，感觉没那么容易直接想到，毕竟hard题
+
+> 其实还有两种方法，一种利用纯利用栈的，还有一种很神奇的方法，没什么通用性，很难直接想出来，就不做记录了
