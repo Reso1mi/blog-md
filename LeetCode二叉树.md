@@ -1815,8 +1815,9 @@ public int findPath(TreeNode node,int sum){
     return res;
 }
 ```
+~~emmmm，这题分类是easy确实太迷了，嵌套的递归，看了解法确实看的懂，但是写是绝对写不出来的（眼睛：我懂了，脑子：你懂个锤子）除非能记住~~
 
-
+回头来看发现其实挺简单的，确实是easy题~ 但是这个解很明显不是最优解，这个里面会有很多的重复的计算，最优解是利用 前缀和+回溯的解法，有点小顶~
 ## [235. 二叉搜索树的最近公共祖先](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-search-tree/)
 
 给定一个二叉搜索树, 找到该树中两个指定节点的最近公共祖先。
@@ -3738,3 +3739,143 @@ public int dfs(TreeNode node,int fa,int ga){
     return sum;
 }
 ```
+
+## [124. 二叉树中的最大路径和](https://leetcode-cn.com/problems/binary-tree-maximum-path-sum/)
+
+给定一个**非空**二叉树，返回其最大路径和。
+
+本题中，路径被定义为一条从树中任意节点出发，达到任意节点的序列。该路径至少包含一个节点，且不一定经过根节点。
+
+**示例 1:**
+
+```java
+输入: [1,2,3]
+   1
+  / \
+ 2   3
+输出: 6
+```
+
+**示例 2:**
+
+```java
+输入: [-10,9,20,null,null,15,7]
+   -10
+   / \
+  9  20
+    /  \
+   15   7
+
+输出: 42
+```
+
+**解法一**
+
+先上一个错误答案，过了 `71/93` 个case（lc的case好少）
+
+```java
+public int maxPathSum(TreeNode root) {
+    if (root==null) {
+        return Integer.MIN_VALUE;
+    }
+    if (root.left==null && root.right==null) {
+        return root.val;
+    }
+    int res=helper(root);
+    return Math.max(res,Math.max(maxPathSum(root.left),maxPathSum(root.right)));
+}
+
+//以当前节点为根的最大路径和
+public int helper(TreeNode root){
+    if(root==null) return Integer.MIN_VALUE;;
+    if (root.left==null && root.right==null) {
+        return root.val;
+    }
+    int left=helper(root.left);
+    int right=helper(root.right);
+    return root.val+(left>0?left:0)+(right>0?right:0);
+}
+```
+我一开始的想法是按照根节点来讨论的，每个节点的最大值就是 左右子树的最大路径和（大于0）加上当前节点的值，改了半天WA了几发后发现是有问题的
+
+```java
+     1 
+   /   \
+  2     3
+ / \   / \
+7   9  5  6
+```
+
+比如这样的，2为根的最长路径是1，2，9但是这个在1为根的节点中是不合法的，所以我们需要的只有单边的路径和，如上图的树，我们需要的就是 `2->9` 这条路径，所以我们需要再添加一个求最长路径的函数
+
+**解法二**
+
+可AC，但是效率较低
+
+```java
+public int maxPathSum(TreeNode root) {
+    if (root==null) {
+        return Integer.MIN_VALUE;
+    }
+    if (root.left==null && root.right==null) {
+        return root.val;
+    }
+    int res=helper(root);
+    return Math.max(res,Math.max(maxPathSum(root.left),maxPathSum(root.right)));
+}
+
+//以当前节点为根的最大路径和
+public int helper(TreeNode root){
+    if(root==null) return Integer.MIN_VALUE;
+    if (root.left==null && root.right==null) {
+        return root.val;
+    }
+    int left=dfs(root.left);
+    int right=dfs(root.right);
+    return root.val+(left>0?left:0)+(right>0?right:0);
+}
+
+//root为起始节点的最大路径和
+//这里可以cache一下
+//cache 前 219ms
+//cache 后 30ms
+
+private  HashMap<String,Integer> cache=new HashMap<>();
+
+public int dfs(TreeNode root){
+    if (root==null) {
+        return Integer.MIN_VALUE;
+    }
+    if (cache.containsKey(root.toString())) {
+        return cache.get(root.toString());
+    }
+    int left=dfs(root.left);
+    int right=dfs(root.right);
+    int max=Math.max(left,right);
+    cache.put(root.toString(),root.val+(max>0?max:0));
+    return root.val+(max>0?max:0);
+}
+```
+**解法三**
+
+这个解法其实就是将我前面的代码逻辑简化了，核心的思路还是一样的
+
+```java
+private int res=Integer.MIN_VALUE;
+
+public int maxPathSum(TreeNode root) {
+    helper(root);
+    return res;
+}
+
+//以当前节点为根的最大路径和
+public int helper(TreeNode root){
+    if(root==null) return 0;
+    int left=Math.max(helper(root.left),0);
+    int right=Math.max(helper(root.right),0);
+    res=Math.max(res,root.val+left+right); //在这里记录最大值
+    return root.val+Math.max(left,right); //返回的实际上是我上面dfs的结果
+}
+```
+
+在递归函数中用全局变量记录最大值，最后返回的却是单边的最大值，也就是我上面写的dfs函数返回的值，可以说是相当巧妙了，除此外对递归的出口也进行了简化
