@@ -1747,6 +1747,259 @@ public List<Integer> diffWaysToCompute(String input,int left,int right) {
 
 第一天看了这道题，没想到思路，然后瞄了一眼评论区，看到了关键点，找到运算符，然后左右分别递归，没看到细节，第二天回忆了下思路写出了解，其实这题可以参考[95. 不同的二叉搜索树 II](https://leetcode-cn.com/problems/unique-binary-search-trees-ii/) 我在我的 [二叉树专题](http://imlgw.top/2019/11/06/leetcode-er-cha-shu/) 中也加了这道题，两者解法极为相似
 
+## [139. 单词拆分](https://leetcode-cn.com/problems/word-break/)
+
+给定一个非空字符串 s 和一个包含非空单词列表的字典 wordDict，判定 s 是否可以被空格拆分为一个或多个在字典中出现的单词。
+
+**说明：**
+
+- 拆分时可以重复使用字典中的单词。
+- 你可以假设字典中没有重复的单词。
+
+**示例 1：**
+
+```java
+输入: s = "leetcode", wordDict = ["leet", "code"]
+输出: true
+解释: 返回 true 因为 "leetcode" 可以被拆分成 "leet code"。
+```
+
+
+**示例 2：**
+
+```java
+输入: s = "applepenapple", wordDict = ["apple", "pen"]
+输出: true
+解释: 返回 true 因为 "applepenapple" 可以被拆分成 "apple pen apple"。
+     注意你可以重复使用字典中的单词。
+```
+
+
+**示例 3：**
+
+```java
+输入: s = "catsandog", wordDict = ["cats", "dog", "sand", "and", "cat"]
+输出: false
+```
+
+**解法一**
+
+回溯DFS+记忆化
+
+```java
+Boolean[] cache=null;
+
+public boolean wordBreak(String s, List<String> wordDict) {
+    if (s==null || s.length()<=0) {
+        return false;
+    }
+    cache=new Boolean[s.length()];
+    HashSet<String> set=new HashSet<>(wordDict);
+    return dfs(s,set,0);
+}
+
+//判断【index,s.len】中的字符是否能拆分
+public boolean dfs(String s, HashSet<String> dict,int index) {
+    //这里的终止条件还是有点迷惑的,这里index只有在字典中存在当前元素的时候才会向后移动
+    //所以当index移动到s==length的是偶就说明前面的单词都匹配上了
+    if (index==s.length()) {
+        return true;
+    }
+    if (cache[index]!=null) {
+        return cache[index];
+    }
+    for (int i=index+1;i<=s.length();i++) {
+        //System.out.println(s.substring(index,i));
+        if (dict.contains(s.substring(index,i)) && dfs(s,dict,i)){
+            return cache[index]=true;
+        }
+    }
+    return cache[index]=false;
+}
+```
+
+很久之前做的题目，在做这题进阶版的时候发现这一题做了但是没有记录。。。可能是忘了
+
+这里回溯记忆化没啥好说的，也是属于那种 “一镜到底” 类型的
+
+**解法二**
+
+BFS
+
+```java
+//BFS,需要一个visit保证不会重复访问
+public boolean wordBreak(String s, List<String> wordDict) {
+    if (s==null || s.length()<=0) {
+        return false;
+    }
+    HashSet<String> dict=new HashSet<>(wordDict);
+    //queue中存index
+    LinkedList<Integer> queue=new LinkedList<>();
+    boolean[] visit=new boolean[s.length()];
+    queue.add(0);
+    while(!queue.isEmpty()){
+        int index=queue.poll();
+        if (!visit[index]) {
+            for (int i=index+1;i<=s.length();i++) {
+                if(dict.contains(s.substring(index,i))){
+                    if (i==s.length()) {
+                        return true;
+                    }
+                    queue.add(i);
+                }
+            }
+            visit[index]=true;
+        }
+    }
+    return false;
+}
+```
+
+自己写的居然一点印象都没有，BFS感觉也没啥好说的
+
+**解法三**
+
+动态规划，这个当时没有写出来，今天重新看的时候发现有dp的tag就写了一下，还是挺简单的
+
+```java
+public boolean wordBreak(String s, List<String> wordDict) {
+    if (s==null || s.length()<=0) {
+        return false;
+    }
+    HashSet<String> dict=new HashSet<>(wordDict);
+    boolean[] dp=new boolean[s.length()+1];
+    dp[0]=true;
+    for (int i=1;i<=s.length();i++) {
+        for (int j=0;j<=i;j++) {
+            if (dp[j] && dict.contains(s.substring(j,i))) {
+               dp[i]=true; //相比上面的可以break
+               break;
+            }
+        }
+    }
+    return dp[s.length()];
+}
+```
+## [140. 单词拆分 II](https://leetcode-cn.com/problems/word-break-ii/)
+
+给定一个**非空**字符串 s 和一个包含非空单词列表的字典 wordDict，在字符串中增加空格来构建一个句子，使得句子中所有的单词都在词典中。返回所有这些可能的句子。
+
+**说明：**
+
+- 分隔时可以重复使用字典中的单词。
+- 你可以假设字典中没有重复的单词。
+
+**示例 1：**
+
+```java
+输入:
+s = "catsanddog"
+wordDict = ["cat", "cats", "and", "sand", "dog"]
+输出:
+[
+  "cats and dog",
+  "cat sand dog"
+]
+```
+
+**示例 2：**
+
+```java
+输入:
+s = "pineapplepenapple"
+wordDict = ["apple", "pen", "applepen", "pine", "pineapple"]
+输出:
+[
+  "pine apple pen apple",
+  "pineapple pen apple",
+  "pine applepen apple"
+]
+解释: 注意你可以重复使用字典中的单词。
+```
+
+**示例 3：**
+
+```java
+输入:
+s = "catsandog"
+wordDict = ["cats", "dog", "sand", "and", "cat"]
+输出:
+[]
+```
+
+**解法一**
+
+这题要求出所有的序列，所以dp肯定是不好整了，直接上回溯
+
+```java
+public List<String> wordBreak(String s, List<String> wordDict) {
+    HashSet<String> dict=new HashSet<>(wordDict);
+    dfs(s,0,"",dict);
+    return res;
+}
+
+private List<String> res=new ArrayList<>();
+
+public void dfs(String s,int index,String word,HashSet<String> dict){
+    if (index==s.length()) {
+        res.add(word.substring(0,word.length()-1));
+        return;
+    }
+    for (int i=index+1;i<=s.length();i++) {
+        String str=s.substring(index,i);
+        if (dict.contains(str)) {
+            //word.append(str+" "); // app#pa# 
+            dfs(s,i,word+str+" ",dict);
+            //word.delete(word.length()-(i-),i);
+        }
+    }
+}
+```
+
+很可惜，超时了，卡在了aaaaaaaa....那个case上，翻了评论区，发现很多人借用了上一题的解法，先对整个s做可行性分析，也就是看能不能拆分，能拆分然后再进行回溯，这样就刚好跳过了那个case，好像确实是可以过，但是我感觉有点面向case编程了。。。
+
+**解法二**
+
+记忆化回溯，上面的过程分析一下会发现其实有很多的重复计算，所以我们可以有针对性的做记忆化，加快搜索速度
+
+```java
+//做记忆化
+HashMap<String,List<String>> cache=new HashMap<>();
+
+public List<String> wordBreak(String s, List<String> wordDict) {
+    HashSet<String> dict=new HashSet<>(wordDict);
+    return dfs(s,dict);
+}
+
+public List<String> dfs(String s,HashSet<String> dict){
+    if (cache.containsKey(s)) {
+        return cache.get(s);
+    }
+    List<String> res=new ArrayList<>();
+    if (s.length()==0) {
+        return res;
+    }
+    for (int i=0;i<=s.length();i++) {
+        String word=s.substring(0,i);
+        if (dict.contains(word)) {
+            if (i==s.length()) {
+                res.add(word);
+            }else{
+                //剩余字符
+                List<String> temp=dfs(s.substring(i,s.length()),dict);
+                for (String tmp:temp) {
+                    res.add(word+" "+tmp);
+                }
+            }
+        }
+    }
+    cache.put(s,res);
+    return res;
+}
+```
+
+其实我这里也是参考了评论区的解法，我上面的那种回溯的方式要改成记忆化有点不好搞，有两个变量，另外我感觉这种**回溯分割**的方式感觉更加的直观易懂 get
+
 ## 二维平面上的回溯
 
 ## [79. 单词搜索](https://leetcode-cn.com/problems/word-search/)
