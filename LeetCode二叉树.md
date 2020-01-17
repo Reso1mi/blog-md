@@ -1818,7 +1818,6 @@ public int findPath(TreeNode node,int sum){
 ~~emmmm，这题分类是easy确实太迷了，嵌套的递归，看了解法确实看的懂，但是写是绝对写不出来的（眼睛：我懂了，脑子：你懂个锤子）除非能记住~~
 
 回头来看发现其实挺简单的，确实是easy题~ 但是这个解很明显不是最优解，这个里面会有很多的重复的计算，最优解是利用 前缀和+回溯的解法，有点小顶~
-
 ## [235. 二叉搜索树的最近公共祖先](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-search-tree/)
 
 给定一个二叉搜索树, 找到该树中两个指定节点的最近公共祖先。
