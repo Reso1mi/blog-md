@@ -3121,6 +3121,56 @@ public long merge(int[] nums,int left,int mid,int right){
 
 归并排序的思路，最开始我是在每次i>j和最后收尾的时候res++，然后结果总是不对，然后取查了答案才意识到不能这样算，当`nums[i] > nums[j]` 的时候，`i~j` 形成的逆序对其实不只一个，而是`[i,mid]` 区间的所有元素，如果你只是+1的话就会漏掉许多情况，因为下一步 `j++` 就会将 `j` 向后移动，那些情况就考虑不到了
 
+## [263. 丑数](https://leetcode-cn.com/problems/ugly-number/)
+
+编写一个程序判断给定的数是否为丑数。
+
+丑数就是只包含质因数 2, 3, 5 的正整数。
+
+**示例 1:**
+
+```java
+输入: 6
+输出: true
+解释: 6 = 2 × 3
+```
+
+**示例 2:**
+
+```java
+输入: 8
+输出: true
+解释: 8 = 2 × 2 × 2
+```
+
+**示例 3:**
+
+```java
+输入: 14
+输出: false 
+解释: 14 不是丑数，因为它包含了另外一个质因数 7。
+```
+
+**说明：**
+
+1. `1` 是丑数。
+2. 输入不会超过 `32` 位有符号整数的范围: `[−231,  231 − 1]`。
+
+**解法一**
+
+直接暴力，还是比较简单
+
+```java
+public boolean isUgly(int num) {
+    if (num<=0) {
+        return false;
+    }
+    if(num==1) {
+        return true;
+    }
+    return num%2==0?isUgly(num/2):false || num%3==0?isUgly(num/3):false || num%5==0?isUgly(num/5):false;
+}
+```
 ## 贪心
 
 先暂时放在这里，以后多了之后在考虑分开的问题
