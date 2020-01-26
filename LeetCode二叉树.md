@@ -3879,3 +3879,72 @@ public int helper(TreeNode root){
 ```
 
 在递归函数中用全局变量记录最大值，最后返回的却是单边的最大值，也就是我上面写的dfs函数返回的值，可以说是相当巧妙了，除此外对递归的出口也进行了简化
+
+## [1325. 删除给定值的叶子节点](https://leetcode-cn.com/problems/delete-leaves-with-a-given-value/)
+
+给你一棵以 `root` 为根的二叉树和一个整数 `target` ，请你删除所有值为 `target` 的 叶子节点 。
+
+注意，一旦删除值为 `target` 的叶子节点，它的父节点就可能变成叶子节点；如果新叶子节点的值恰好也是 `target` ，那么这个节点也应该被删除。
+
+也就是说，你需要重复此过程直到不能继续删除。
+
+**示例 1：**
+
+![leetcode1325](https://img01.sogoucdn.com/app/a/100520146/897ab91a1a3689d0cf1ce6e5b96f6283)
+
+```java
+输入：root = [1,2,3,2,null,2,4], target = 2
+输出：[1,null,3,null,4]
+解释：
+上面左边的图中，绿色节点为叶子节点，且它们的值与 target 相同（同为 2 ），它们会被删除，得到中间的图。
+有一个新的节点变成了叶子节点且它的值与 target 相同，所以将再次进行删除，从而得到最右边的图。
+```
+
+**示例 2：**
+
+![leetcode1325](https://img03.sogoucdn.com/app/a/100520146/f2eb7abb250d645ff500a2b0582fa3d1)
+
+```java
+输入：root = [1,3,3,3,2], target = 3
+输出：[1,3,null,null,2]
+```
+
+**示例 3：**
+
+![leetcode](https://img02.sogoucdn.com/app/a/100520146/0fe194cdb9fb9a1a722d764736be738a)
+
+```java
+输入：root = [1,2,null,2,null,2], target = 2
+输出：[1]
+解释：每一步都删除一个绿色的叶子节点（值为 2）。
+```
+
+**提示：**
+
+- `1 <= target <= 1000`
+- 每一棵树最多有 `3000` 个节点。
+- 每一个节点值的范围是 `[1, 1000]` 。
+
+**解法一**
+
+某次周赛的第三题
+
+```java
+public TreeNode removeLeafNodes(TreeNode root, int target) {
+    return delete(root,target);
+}
+
+public TreeNode delete(TreeNode root,int target){
+    if (root==null) {
+        return null;
+    }
+    root.left=delete(root.left,target);
+    root.right=delete(root.right,target);
+    if (root.left==null && root.right==null && root.val==target) {
+        return null;
+    }
+    return root;
+}
+```
+搞了半天。。。一开始写的时候写的前序遍历的方式，先删除自己然后再去删除左右孩子，然后在如何判断是否有叶子节点上卡了半天，最后写了个for3000的循环过的。。。好菜啊，只要交换一下顺序变成后序遍历的方式，先删除左右子节点，然后再回头删除自己的就可以一直删了。。
+

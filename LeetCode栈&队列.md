@@ -124,7 +124,7 @@ public class MyStack<T>{
 
 3ms，94%，比之前快了一点，去看了下Stack的源码，它的pop是真的删除，我的只是移动了指针，所以效率会高很多
 
-> 后面的题可能都会利用这个MyStack
+> 后面的题可能还会利用这个`MyStack`
 
 **解法三**
 
@@ -148,6 +148,81 @@ public boolean isValid(String s) {
 }
 ```
 100ms，效率感人，感觉应该说的是这种做法吧，当然还可以写正则表达式来匹配，但是我不太会写。。。
+
+## [678. 有效的括号字符串](https://leetcode-cn.com/problems/valid-parenthesis-string/)
+
+给定一个只包含三种字符的字符串：（ ，） 和 *，写一个函数来检验这个字符串是否为有效字符串。有效字符串具有如下规则：
+
+1. 任何左括号 `(` 必须有相应的右括号 `)`。
+2. 任何右括号 `)` 必须有相应的左括号 `(` 。
+3. 左括号 `(` 必须在对应的右括号之前 `)`。
+4. `*` 可以被视为单个右括号 `)` ，或单个左括号 `(` ，或一个空字符串。
+5. 一个空字符串也被视为有效字符串。
+
+**示例 1:**
+
+```java
+输入: "()"
+输出: True
+```
+
+
+**示例 2:**
+
+```java
+输入: "(*)"
+输出: True
+```
+
+
+**示例 3:**
+
+```java
+输入: "(*))"
+输出: True
+```
+
+
+**注意:**
+
+1. 字符串大小将在 [1，100] 范围内。
+
+**解法一**
+
+看面筋看到的这一题，还是挺有意思的，评论区有人说了双栈，然后今天来试了下
+
+```java
+public boolean checkValidString(String s) {
+    Stack<Integer> bracketStack=new Stack<>();
+    Stack<Integer> starStack=new Stack<>();
+    for (int i=0;i<s.length();i++) {
+        if (s.charAt(i)=='(') {
+            bracketStack.push(i);
+        }else if(s.charAt(i)=='*'){
+            starStack.push(i);
+        }else{
+            if (bracketStack.isEmpty()) {
+                if (starStack.isEmpty()) {
+                    return false;
+                }
+                starStack.pop();
+            }else{
+                bracketStack.pop();
+            }
+        }
+    }
+    //消除左括号
+    while(!starStack.isEmpty() && !bracketStack.isEmpty()){
+        if(starStack.peek()>bracketStack.peek()){
+            bracketStack.pop();
+        }
+        starStack.pop();
+    }
+    return bracketStack.isEmpty();
+}
+```
+
+很可惜没有`bugfree`，最后对左括号的判断改了好几次，一开始写的`bracketStack.size()<=starStack().size()`  然后提交后才意识到还要 `"*("` 这样的情况，然后要消除这种情况也简单，一开始我再栈中存的就是index，从star栈里面取比bracket栈index大的，然后消除，最后再看括号栈是不是空
 
 ## [344. 反转字符串](https://leetcode-cn.com/problems/reverse-string/)
 
