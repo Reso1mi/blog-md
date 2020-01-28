@@ -2494,6 +2494,138 @@ public int minTaps(int n, int[] ranges) {
 
 过两天再来补吧，目前还是不能白板写出来
 
+## [1335. 工作计划的最低难度](https://leetcode-cn.com/problems/minimum-difficulty-of-a-job-schedule/)
+
+你需要制定一份 d 天的工作计划表。工作之间存在依赖，要想执行第 i 项工作，你必须完成全部 j 项工作（ `0 <= j < i`）。
+
+你每天 **至少** 需要完成一项任务。工作计划的总难度是这 `d` 天每一天的难度之和，而一天的工作难度是当天应该完成工作的最大难度。
+
+给你一个整数数组 `jobDifficulty` 和一个整数 d，分别代表工作难度和需要计划的天数。第 i 项工作的难度是 `jobDifficulty[i]`。
+
+返回整个工作计划的 **最小难度** 。如果无法制定工作计划，则返回 -1 。
+
+**示例 1：**
+
+![image.png](https://i.loli.net/2020/01/27/ipKvNZQASOhVmdI.png)
+
+```java
+输入：jobDifficulty = [6,5,4,3,2,1], d = 2
+输出：7
+解释：第一天，您可以完成前 5 项工作，总难度 = 6.
+第二天，您可以完成最后一项工作，总难度 = 1.
+计划表的难度 = 6 + 1 = 7 
+```
+
+**示例 2：**
+
+```java
+输入：jobDifficulty = [9,9,9], d = 4
+输出：-1
+解释：就算你每天完成一项工作，仍然有一天是空闲的，你无法制定一份能够满足既定工作时间的计划表。
+```
+
+**示例 3：**
+
+```java
+输入：jobDifficulty = [1,1,1], d = 3
+输出：3
+解释：工作计划为每天一项工作，总难度为 3 。
+```
+
+**示例 4：**
+
+```java
+输入：jobDifficulty = [7,1,7,1,7,1], d = 3
+输出：15
+```
+
+**解法一**
+
+173周赛的最后一道dp题，事后一个小时左右独立的ac，还是挺舒服的，希望以后能更快ac
+
+```java
+public int minDifficulty(int[] jobDifficulty, int d) {
+    int jlen=jobDifficulty.length;
+    if(jlen<d){
+        return -1;
+    }
+    //dp[i][j]   第i天完成前j项任务的最低难度
+    int[][] dp=new int[d][jlen];
+    for(int i=0;i<dp.length;i++){
+        Arrays.fill(dp[i],Integer.MAX_VALUE);
+    }
+    int max=0;
+    for(int j=0;j<jlen;j++){
+        max=Math.max(max,jobDifficulty[j]);
+        dp[0][j]=max;
+    }
+    for(int i=1;i<d;i++){
+        for(int j=0;j<jlen;j++){
+            for(int k=j-1;k>=i-1;k--){
+                dp[i][j]=Math.min(dp[i][j], dp[i-1][k]+maxDifficulty(jobDifficulty,k+1,j));
+            }
+        }
+    }
+    return dp[d-1][jlen-1];
+}
+
+public int maxDifficulty(int[] jobDifficulty,int left,int right){
+    int max=jobDifficulty[left];
+    for(int i=left;i<=right;i++){
+        max=Math.max(max,jobDifficulty[i]);
+    }
+    return max;
+}
+```
+
+核心的递推公式： `dp[i][j]=min(dp[i][j],dp[i-1][0~k]+max(k+1,j))` 
+
+其实也不是一开始就想到了这个递推公式，首先需要确定的是用几维数组和递推数组的含义，这个题目两个变量：天数和工作量；所以应该是二维的结构，`dp[i][j]` 然后对应题目所要求的东西，其实就可以确定dp数组的含义
+
+`dp[i][j]` 的含义是前`i`天完成前`j`项工作的最低难度，最后返回的结果就是`dp[d-1][jlen-1]`
+
+但是上面这个解法时间复杂度比较高，`O(dN^3)`，其实可以做一下预处理降低时间复杂度
+
+**解法二**
+
+预处理的地方也写成了动态规划hahaha~ 其实就是求一个**区间和**
+
+```java
+public int minDifficulty(int[] jobDifficulty, int d) {
+    int jlen=jobDifficulty.length;
+    if(jlen<d){
+        return -1;
+    }
+    //dp[i][j]   前i天完成前j项任务的最低难度
+    int[][] dp=new int[d][jlen];
+    for(int i=0;i<dp.length;i++){
+        Arrays.fill(dp[i],Integer.MAX_VALUE);
+    }
+    //预处理
+    int[][] maxRange=new int[jlen][jlen];
+    for(int i=0;i<jlen;i++){
+        maxRange[i][i]=jobDifficulty[i];
+        for (int j=i+1;j<jlen;j++) {
+            //这里也是个动态规划hahaha~
+            maxRange[i][j]=Math.max(maxRange[i][j-1],jobDifficulty[j]);
+        }
+    }
+    for(int j=0;j<jlen;j++){
+        dp[0][j]=maxRange[0][j];
+    }
+    for(int i=1;i<d;i++){
+        for(int j=0;j<jlen;j++){
+            for(int k=j-1;k>=i-1;k--){ //注意这里k>=i-1的含义
+                dp[i][j]=Math.min(dp[i][j], dp[i-1][k]+maxRange[k+1][j]);
+            }
+        }
+    }
+    return dp[d-1][jlen-1];
+}
+```
+
+这样时间复杂度就降低为`O(dN^2)` ，当然还是有一点不完美，就是对边界的处理可以通过对dp数组+1来规避，这个问题我之前也说过，这我尝试改了下，没改好，不改了，哈哈哈~
+
 ##  _字符串类型的动态规划_
 
 ## [1143. 最长公共子序列](https://leetcode-cn.com/problems/longest-common-subsequence/)

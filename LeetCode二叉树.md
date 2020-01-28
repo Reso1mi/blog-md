@@ -3824,7 +3824,7 @@ public int maxPathSum(TreeNode root) {
     return Math.max(res,Math.max(maxPathSum(root.left),maxPathSum(root.right)));
 }
 
-//以当前节点为根的最大路径和
+//以当前节点为根的最大路径和(双边)
 public int helper(TreeNode root){
     if(root==null) return Integer.MIN_VALUE;
     if (root.left==null && root.right==null) {
@@ -3835,7 +3835,7 @@ public int helper(TreeNode root){
     return root.val+(left>0?left:0)+(right>0?right:0);
 }
 
-//root为起始节点的最大路径和
+//root为起始节点的最大路径和(单边)
 //这里可以cache一下
 //cache 前 219ms
 //cache 后 30ms
@@ -3868,7 +3868,7 @@ public int maxPathSum(TreeNode root) {
     return res;
 }
 
-//以当前节点为根的最大路径和
+//返回以当前节点为*起点*的最大路径和(单边,左右子树中选最大的一个)
 public int helper(TreeNode root){
     if(root==null) return 0;
     int left=Math.max(helper(root.left),0);
@@ -3890,7 +3890,7 @@ public int helper(TreeNode root){
 
 **示例 1：**
 
-![leetcode1325](https://img01.sogoucdn.com/app/a/100520146/897ab91a1a3689d0cf1ce6e5b96f6283)
+![image.png](https://i.loli.net/2020/01/28/e7dOxoLNciVa4Uf.png)
 
 ```java
 输入：root = [1,2,3,2,null,2,4], target = 2
@@ -3902,7 +3902,7 @@ public int helper(TreeNode root){
 
 **示例 2：**
 
-![leetcode1325](https://img03.sogoucdn.com/app/a/100520146/f2eb7abb250d645ff500a2b0582fa3d1)
+![image.png](https://i.loli.net/2020/01/28/aNLo4wQz3C1ZiAf.png)
 
 ```java
 输入：root = [1,3,3,3,2], target = 3
@@ -3911,7 +3911,7 @@ public int helper(TreeNode root){
 
 **示例 3：**
 
-![leetcode](https://img02.sogoucdn.com/app/a/100520146/0fe194cdb9fb9a1a722d764736be738a)
+![image.png](https://i.loli.net/2020/01/28/JHBRy7uZDFWLMVT.png)
 
 ```java
 输入：root = [1,2,null,2,null,2], target = 2

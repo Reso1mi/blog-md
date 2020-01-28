@@ -2316,4 +2316,71 @@ public int maximalRectangle(char[][] matrix) {
 
 **解法一**
 
-单调栈的解法明天再写
+~~单调栈的解法明天再写~~
+
+鸽了挺长时间，单调栈的解法可以说是相当优秀
+
+```java
+public int findUnsortedSubarray(int[] nums) {
+    Stack<Integer> stack=new Stack<>();
+    int left=Integer.MAX_VALUE,right=Integer.MIN_VALUE;
+    for (int i=0;i<nums.length;i++) {
+        while(!stack.isEmpty() && nums[stack.peek()]>nums[i]){
+            left=Math.min(stack.pop(),left); //左边界正确位置(最小值)
+        }
+        stack.push(i);
+    }
+    stack.clear();
+    for (int i=nums.length-1;i>=0;i--) {
+        while(!stack.isEmpty() && nums[stack.peek()]<nums[i]){
+            right=Math.max(stack.pop(),right); //右边界正确位置(最大值)
+        }
+        stack.push(i);
+    }
+    return left>right?0:right-left+1;
+}
+```
+
+第一个单调栈中存的是从左到右递增的序列，当遇到`nums[i]`小于栈顶时，说明这个位置是错位的，正确的位置应该是**栈顶的元素**的位置，我们这里求的就是一个**最小的错位的索引**
+
+第二个单调栈中存的是从右向左递减的序列，当遇到`nums[i]`大于栈顶时，说明这个位置是错位的，正确的位置应该是**栈顶的元素**，这里求的就是一个**最大的错位的索引** ，两者之间的距离其实就是我们最终要求的最短无序子数组长度
+
+**解法二**
+
+画一个折线图，观察结果，不容易直接想出来
+
+```java
+//O(1)空间的解法
+public int findUnsortedSubarray(int[] nums) {
+    if (nums[0]>nums[nums.length-1]) {
+        return nums.length;
+    }
+    int max=Integer.MIN_VALUE,min=Integer.MAX_VALUE;
+    for (int i=1;i<nums.length;i++) {
+        if (nums[i]<nums[i-1]) {
+            min=Math.min(min,nums[i]); //无序序列中的最小值
+        }
+    }
+
+    for (int i=nums.length-1;i>0;i--) {
+        if (nums[i]<nums[i-1]) {
+            max=Math.max(max,nums[i-1]); //无序序列中的最大值
+        }
+    }
+    int left=0,right=nums.length-1;
+    while(left<nums.length){
+        if (nums[left]>min) {
+            break;
+        }
+        left++; //左边界正确位置
+    }
+    while(right>=0){
+        if (nums[right]<max) {
+            break;
+        }
+        right--; //右边界正确位置
+    }
+    return right<left?0:right-left+1;
+}
+```
+
