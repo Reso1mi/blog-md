@@ -12,102 +12,7 @@ date: 2019/5/4
 
 面试中的算法问题，有很多并不需要复杂的数据结构支撑。就是用数组，就能考察出很多东西了。其实，经典的排序问题，二分搜索等等问题，就是在数组这种最基础的结构中处理问题的。 
 
-## [1. 两数之和](https://leetcode-cn.com/problems/two-sum/)
-
-给定一个整数数组 `nums` 和一个目标值 `target`，请你在该数组中找出和为目标值的那 **两个** 整数，并返回他们的数组下标。
-
-你可以假设每种输入只会对应一个答案。但是，你不能重复利用这个数组中同样的元素。
-
-**示例:**
-
-```java
-给定 nums = [2, 7, 11, 15], target = 9
-
-因为 nums[0] + nums[1] = 2 + 7 = 9
-所以返回 [0, 1]
-```
-
-> 平生不识**TwoSum**，做遍LeetCode也枉然
-
-```java
-public int[] twoSum(int[] nums, int target) {
-    int length = nums.length;
-    for (int i = 0; i < length - 1; i++) {
-        for (int j = 1; j < length - i; j++) {
-            int result = nums[i] + nums[i + j];
-            if (result == target) {
-                return new int[] { i, i + j };
-            }
-        }
-    }
-    return null;
-}
-```
-
-最开始的做法，直接暴力求解，简单，但是效率很低，50ms，41% beats，其实在笔试或者其它对效率要求没那么严格的地方用暴力法也没毛病节约很多时间，能直接写出最优解肯定好，但是实在没办法了暴力法也不失为一种好方法，最优解可以下来后再研究。
-
-**hash查找**
-
-```java
-public int[] twoSum(int[] nums, int target) {
-        HashMap<Integer,Integer> map=new HashMap<>();
-        //第一遍把所有的元素和索引存到hashMap中
-        for (int i=0;i<nums.length;i++) {
-            map.put(nums[i],i);
-        }
-        //再查找hash
-        for (int i=0;i<nums.length;i++) {
-            //不能重复所以 下标需要限制下
-            if(map.containsKey(target-nums[i]) && map.get(target-nums[i])!=i){
-                return new int[]{i,map.get(target-nums[i])};
-            }
-        }
-        return new int[]{};
-    }
-```
-
-其实可以只hash一遍，hash两遍主要考虑顺序的问题。直接利用hashMap查找，效率很高。
-
-```java
-    public int[] twoSum2(int[] nums, int target) {
-        HashMap<Integer,Integer> map=new HashMap<>();
-        for (int i=0;i<nums.length;i++) {
-            //不能重复所以 下标需要限制下
-            if(map.containsKey(target-nums[i]) && map.get(target-nums[i])!=i){
-                return new int[]{i,map.get(target-nums[i])};
-            }
-            map.put(nums[i],i);
-        }
-
-        return new int[]{};
-    }
-```
-
-提交记录上最快的做法
-
-```java
- public int[] twoSum(int[] nums, int target) {
-        int index;
-        int indexArrayMax=2047;
-        int[] indexArrays=new int[indexArrayMax+1];
-        int diff;
-        for(int i=1;i<nums.length;i++){
-            diff=target-nums[i];
-            //i=0时索引无效,所以单独处理
-            if(diff==nums[0]){
-                return new int[]{0,i};
-            }
-            index=diff&indexArrayMax;
-            if(indexArrays[index]!=0){
-                return new int[]{indexArrays[index],i};
-            }
-            indexArrays[nums[i]&indexArrayMax]=i;   
-        }   
-        return new int[2];
-}
-```
-
-没看懂。。。群里问了下，手动hash。。。。以后再来研究吧.
+## _双指针_ 
 
 ## [167. 两数之和 II - 输入有序数组](https://leetcode-cn.com/problems/two-sum-ii-input-array-is-sorted/)
 
@@ -132,21 +37,21 @@ public int[] twoSum(int[] nums, int target) {
 
 ```java
 public int[] twoSum(int[] numbers, int target) {
-        if(numbers==null||numbers.length<=0){
-            return null;
-        }
-        int left=0,right=numbers.length-1;
-        while(right>left){
-            int sum=numbers[right]+numbers[left];
-            if(sum==target){
-                return new int[]{left+1,right+1};
-            }if(sum<target){
-                left++;
-            }else{
-                right--;
-            }
-        }
+    if(numbers==null||numbers.length<=0){
         return null;
+    }
+    int left=0,right=numbers.length-1;
+    while(right>left){
+        int sum=numbers[right]+numbers[left];
+        if(sum==target){
+            return new int[]{left+1,right+1};
+        }if(sum<target){
+            left++;
+        }else{
+            right--;
+        }
+    }
+    return null;
 }
 ```
 
@@ -250,6 +155,142 @@ public int maxArea(int[] height) {
 
 这个时候如果移动尾指针，明显面积只可能减小，所以只有移动头指针才有可能增大这个区域的面积，这样一来就可以省掉很多没必要的计算，有点像贪心，时间复杂度O(N)
 
+## [42. 接雨水](https://leetcode-cn.com/problems/trapping-rain-water/)
+
+给定 *n* 个非负整数表示每个宽度为 1 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。
+
+![rainwatertrap.png](https://i.loli.net/2019/05/14/5cda71129045d93180.png)
+
+
+
+
+上面是由数组 `[0,1,0,2,1,0,1,3,2,1,2,1]` 表示的高度图，在这种情况下，可以接 6 个单位的雨水（蓝色部分表示雨水）。
+
+**示例:**
+
+```java
+输入: [0,1,0,2,1,0,1,3,2,1,2,1]
+输出: 6
+```
+
+**解法一**
+
+> 我最开始思路是填满后用总面积减数组和，跑过了130+个，有一种特殊的跑不过了，懒得去处理那个边界了，不太优雅
+
+这个题目的关键就是每个柱子能接的水是**左右最长柱子(都大于当前柱子)中的较小的那个减去当前柱子**。
+
+所以我们可以用两个数组分别存储每个柱子左右的最长柱子（做预处理），这样就得到了一种有点动态规划意思的解法
+
+```java
+public static int trap(int []height){
+    if (height==null || height.length<=0) {
+        return 0;
+    }
+    int len=height.length;
+    int[] leftMax=new int[len];
+    leftMax[0]=height[0];
+    int[] rightMax=new int[len];
+    rightMax[len-1]=height[len-1];
+    int res=0;
+    //左右最大柱子包含当前柱子
+    for (int i=1;i<len;i++) {
+        leftMax[i]=Math.max(leftMax[i-1],height[i]);
+    }
+    for (int i=len-2;i>=0;i--) {
+        rightMax[i]=Math.max(rightMax[i+1],height[i]);
+    }
+    for (int i=0;i<len;i++) {
+        res+=Math.min(rightMax[i],leftMax[i])-height[i];
+    }
+    return res;
+}
+```
+
+利用**双指针**就行空间的优化
+
+```java
+public static int trap(int []height){
+    if (height==null || height.length<=0) {
+        return 0;
+    }
+    int len=height.length;
+    int leftMax=0,rightMax=0;
+    int left=0,right=len-1,res=0;
+    while(left<=right){
+        leftMax=Math.max(leftMax,height[left]);
+        rightMax=Math.max(rightMax,height[right]);
+        //leftMax小于rightMax,那么靠近leftMax的柱子left可以接的雨水就可以确定了
+        if (leftMax<rightMax) {
+            res+=leftMax-height[left]; 
+            left++;
+        }else{ //反之leftMax大于rightMax,那么考近rightMax的柱子right可以接的最多的雨水就可以i确定了
+            res+=rightMax-height[right];
+            right--;
+        }
+    }
+    return res;
+}
+```
+
+个人感觉这个是最好理解的版本，我这里最开始的哪个版本不是这样写的，当时自己肯定也没搞懂，包括现在我也没搞懂那种写法
+
+![[图片来自liweiwei1419大佬](https://leetcode-cn.com/u/liweiwei1419/)](http://static.imlgw.top/blog/20200129/Dy8M19G4XwSn.png?imageslim)
+
+这两种情况对应的就是循环中的if的两个分支，双指针向中间靠拢，当`leftMax`小于`rightMax`的时候我们不用去考虑当前`left`柱子右边实际的最大的右边的柱子是谁，我们只需要知道`left`柱子 左边最大值`leftMax`的值就ok，因为此时`left` 柱子能接水的量是由`leftMax`决定的，反之对应第二种情况，`right`柱子的接水量则是由`rightMax` 决定的，最后遍历完所有的柱子就可以确定整体的接水量
+
+> 这里的if分支的条件有的解法中写的是`leftMax<nums[right]`甚至`nums[left]<nums[right]` 这也是我上面说的不理解的地方，因为这样写也是可以AC的😅，后面有时间再回头看看吧
+
+**解法二**
+
+还有一种很巧妙的方法，也比较好理解，找到最大值，然后分别对两边的柱子进行遍历，如果当前的柱子小于前面柱子的最大值，就说明一定可以接到水，这个过程中需要记录柱子左边和右边的最大值，用于计算可以接水的量，最后计算总和
+
+```java
+public static int trap5(int []height){
+    //
+    int n=height.length,idx=0,lefth=0,righth=0,area=0;
+    for (int i=0;i<n;i++) idx=height[idx]<=height[i]?i:idx;
+    for (int i=0;i<idx;i++){
+        if(height[i]<lefth) area+=lefth-height[i]; 
+        else lefth=height[i]; //更新最大值
+    }
+    for (int i=n-1;i>idx;i--){
+        if(height[i]<righth) area+=righth-height[i]; 
+        else righth=height[i]; //更新最大值
+    }
+    return area;
+}
+```
+
+**解法三**
+
+利用栈的
+
+```java
+public static int trap6(int[] height) {
+    if (height == null || height.length == 0) return 0;
+    Deque<Integer> stack = new ArrayDeque<>(); //栈里面维护一个递减序列
+    int res = 0;
+    for (int i = 0; i < height.length; i++){
+        while ( ! stack.isEmpty() && height[stack.peek()] < height[i]) { //当遍历的元素大于栈顶元素
+            int tmp = stack.pop(); //栈顶弹出来
+            if (stack.isEmpty()) break;
+            res += (Math.min(height[i],height[stack.peek()]) - height[tmp]) * (i - stack.peek() - 1);
+        }
+        //维护递减序列
+        stack.push(i);
+    }
+    return res;
+}
+```
+
+这种有点不好理解，其实是按照层来计算的，栈里面是递减的元素，如果读到比栈顶大的元素就**按层**计算递减栈**底部元素**到**当前元素**能蓄水的面积。
+
+> 2020/1/29回顾
+>
+> 这个解法其实就是单调栈😂，当时还是菜鸟根本就不懂，现在回头一看就懂了hahaha~ 
+>
+> 放到[单调栈专题](http://imlgw.top/2019/10/01/leetcode-zhan-dui-lie/#%E5%8D%95%E8%B0%83%E6%A0%88)里面解释了
+
 ## [15. 三数之和](https://leetcode-cn.com/problems/3sum/)
 
 给定一个包含 *n* 个整数的数组 `nums`，判断 `nums` 中是否存在三个元素 *a，b，c ，*使得 *a + b + c =* 0 ？找出所有满足条件且不重复的三元组。
@@ -265,6 +306,8 @@ public int maxArea(int[] height) {
   [-1, -1, 2]
 ]
 ```
+
+**解法一**
 
 想太多了，没做出来，看了评论才做出来。
 
@@ -322,6 +365,8 @@ public static List<List<Integer>> threeSum(int[] nums) {
 
 与 target 最接近的三个数的和为 2. (-1 + 2 + 1 = 2).
 ```
+
+**解法一**
 
 跟上面的题其实是一样的，这里主要时为了检测下自己上面的搞懂了没
 
@@ -511,6 +556,8 @@ for (int i = 0; i < len; i++) {
 }
 ```
 
+**解法一**
+
 上面题目加一点，在前后相等的时候判断index前是否已经有两个相等
 
 ```java
@@ -554,6 +601,8 @@ public int removeDuplicates(int[] nums) {
 
 你不需要考虑数组中超出新长度后面的元素。
 ```
+
+**解法一**
 
 目标元素多时
 
@@ -607,26 +656,30 @@ public int removeElement2(int[] nums, int val) {
 
 ```java
 public void moveZeroes(int[] nums) {
-        if(nums==null||nums.length<=1){
-            return;
+    if(nums==null||nums.length<=1){
+        return;
+    }
+    int index=0;
+    for(int i=0;i<nums.length;i++){
+        if(nums[i]!=0){
+            nums[index++]=nums[i];
         }
-        int index=0;
-        for(int i=0;i<nums.length;i++){
-            if(nums[i]!=0){
-                nums[index++]=nums[i];
-            }
-        }
-        for(int i=index;i<nums.length;i++){
-            nums[i]=0;
-        }
+    }
+    for(int i=index;i<nums.length;i++){
+        nums[i]=0;
+    }
 }
 ```
 
 其实就是借助上面题目的思路，最后再补0就ok了，其实也还可以优化下
 
+**解法二**
+
+保持`[0,m)` 为非0元素，遇到非0元素就和右边界进行交换
+
 ```java
 public void moveZeroes(int[] nums) {
-    int m=0; //[0,k)为非0元素
+    int m=0; //[0,m)为非0元素
     for(int i=0;i<nums.length;i++){
         if(nums[i]!=0){
             if(i!=m){
@@ -799,77 +852,6 @@ public int singleNumber(int[] nums) {
         nums[i]^=nums[i-1];
     }
     return nums[nums.length-1];
-}
-```
-
-## [55. 跳跃游戏](https://leetcode-cn.com/problems/jump-game/)
-
-给定一个非负整数数组，你最初位于数组的第一个位置。
-
-数组中的每个元素代表你在该位置可以跳跃的最大长度。
-
-判断你是否能够到达最后一个位置。
-
-**示例 1:**
-
-```java
-输入: [2,3,1,1,4]
-输出: true
-解释: 我们可以先跳 1 步，从位置 0 到达 位置 1, 然后再从位置 1 跳 3 步到达最后一个位置。
-```
-
-**示例 2:**
-
-```java
-输入: [3,2,1,0,4]
-输出: false
-解释: 无论怎样，你总会到达索引为 3 的位置。但该位置的最大跳跃长度是 0 ， 所以你永远不可能到达最后一个位置。
-```
-
-**解法一**
-
-回溯，勉强能过。。。太蠢了，为啥想不到简单的方法，就非得往复杂了想？就这么傻么？
-
-```java
-Boolean[] cache=null;
-
-public boolean canJump(int[] nums) {
-    if (nums==null || nums.length<=0) return false;
-    cache=new Boolean[nums.length];
-    return jump(nums,0);
-}
-
-public boolean jump(int[] nums,int index) {
-    if (nums[index] >= nums.length-1 -index) {
-        return true;
-    }
-    if (cache[index]!=null) {
-        return cache[index];
-    }
-    for (int i=nums[index];i>=1;i--) {
-        if (index+i<nums.length && jump(nums,index+i)) {
-            return cache[index]=true;
-        }
-    }
-    return cache[index]=false;
-}
-```
-**解法二**
-
-不用多说了，遍历数组，不断更新能到达的最远距离，如果**某个位置的index大于当前能到达的最远距离就直接返回false**
-
-```java
-//MDZZ
-public boolean canJump(int[] nums) {
-    int maxIndex=nums[0];
-    for (int i=1;i<nums.length-1;i++) {
-        if(maxIndex >= nums.length-1) return true;
-        if (i>maxIndex) {
-            return false;
-        }
-        maxIndex=Math.max(maxIndex,i+nums[i]);
-    }
-    return true;
 }
 ```
 ## [169. 多数元素](https://leetcode-cn.com/problems/majority-element/)
@@ -1058,7 +1040,7 @@ public int firstMissingPositive(int[] nums) {
         return 1;
     }
     for (int i=0;i<nums.length;++i){
-        //将每个元素归位，我开始只有一层循环，那样会漏掉很多元素（可能被交换的元素 后面也需要交换），这样的就是一次直接到位。
+        //将每个元素归位，我开始只有一层循环，那样会漏掉很多元素（可能被交换的元素后面也需要交换），这样的就是一次直接到位。
         while(nums[i]>=1&&nums[i]<=nums.length&&nums[nums[i]-1]!=nums[i])
         {
             int temp=nums[nums[i]-1];
@@ -1073,6 +1055,10 @@ public int firstMissingPositive(int[] nums) {
     return nums.length+1;
 }
 ```
+
+其实也是桶排序的思想，不过这里是利用交换来定位每个元素，首相我们将原数组看作桶，题目要求的正整数，所以我们桶中存的应该是`【1，nums.length】`，也就是0位置应该存放的是1，1位置存放的应该是2....再归位后重新遍历数组，如果某个位置的`nums[i]!=i+1` 就说明这个是第一个缺失的正数，遍历完了之后没有找到，全部对应上了，那就说明我们缺少的第一个正数是`nums.length+1`
+
+**解法二**
 
 不考虑空间复杂度利用桶排序的思想
 
@@ -1097,100 +1083,7 @@ public int firstMissingPositive2(int[] nums) {
 
 lc上提交后的空间消耗居然比上面的还小一点😂
 
-## [42. 接雨水](https://leetcode-cn.com/problems/trapping-rain-water/)
 
-给定 *n* 个非负整数表示每个宽度为 1 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。
-
-![rainwatertrap.png](https://i.loli.net/2019/05/14/5cda71129045d93180.png)
-
-
-
-
-上面是由数组 [0,1,0,2,1,0,1,3,2,1,2,1] 表示的高度图，在这种情况下，可以接 6 个单位的雨水（蓝色部分表示雨水）。
-
-**示例:**
-
-```java
-输入: [0,1,0,2,1,0,1,3,2,1,2,1]
-输出: 6
-```
-
-**解法一**
-
-这种解法的关键就是每个柱子能接的水是**左右最长柱子(都大于当前柱子)中的较小的那个减去当前柱子**。
-
-```java
-//双指针
-public static int trap3(int []height){
-    if (height == null || height.length <= 1) return 0;
-    int left = 0;
-    int right = height.length - 1;
-    int left_max = 0;
-    int right_max = 0;
-    int res = 0;
-    while (left < right) {
-        if (height[left] < height[right]) {
-            if (height[left] < left_max) //当前左边元素 比右边最大值小，比左边最大值小是个“凹点”
-                res += left_max - height[left]; 
-            else left_max = height[left]; //更新左边柱子最大值
-            left++;
-        } else {
-            if (height[right] < right_max) //当前左边元素 比左边最大值小，比右边最大值小是个“凹点”
-                res += right_max - height[right]; 
-            else right_max = height[right]; //更新右边柱子最大值
-            right--;
-        }
-    }
-    return res; 
-}
-```
-
-> 我最开始思路是填满后用总面积减数组和，跑过了130+个，有一种特殊的跑不过了，懒得去处理那个边界了，不太优雅
-
-**解法二**
-
-还有一种很巧妙的方法，也比较好理解，找到最大值，然后分别对两边的柱子进行遍历，如果当前的柱子小于前面柱子的最大值，就说明一定可以接到水，这个过程中需要记录柱子左边的最大值，用于计算可以接水的量，最后计算总和
-
-```java
-public static int trap5(int []height){
-    //
-    int n=height.length,idx=0,lefth=0,righth=0,area=0;
-    for (int i=0;i<n;i++) idx=height[idx]<=height[i]?i:idx;
-    for (int i=0;i<idx;i++){
-        if(height[i]<lefth) area+=lefth-height[i]; 
-        else lefth=height[i]; //更新最大值
-    }
-    for (int i=n-1;i>idx;i--){
-        if(height[i]<righth) area+=righth-height[i]; 
-        else righth=height[i]; //更新最大值
-    }
-    return area;
-}
-```
-
-**解法三**
-
-利用栈的
-
-```java
-public static int trap6(int[] height) {
-        if (height == null || height.length == 0) return 0;
-        Deque<Integer> stack = new ArrayDeque<>(); //栈里面维护一个递减序列
-        int res = 0;
-        for (int i = 0; i < height.length; i++){
-            while ( ! stack.isEmpty() && height[stack.peek()] < height[i]) { //当遍历的元素大于栈顶元素
-                int tmp = stack.pop(); //栈顶弹出来
-                if (stack.isEmpty()) break;
-                res += (Math.min(height[i],height[stack.peek()]) - height[tmp]) * (i - stack.peek() - 1);
-            }
-            //维护递减序列
-            stack.push(i);
-        }
-        return res;
-}
-```
-
-这种有点不好理解，其实是按照层来计算的，栈里面是递减的元素，如果读到比栈顶大的元素就**按层**计算递减栈**底部元素**到**当前元素**能蓄水的面积。
 
 ## [75. 颜色分类](https://leetcode-cn.com/problems/sort-colors/)
 
@@ -1213,6 +1106,8 @@ public static int trap6(int[] height) {
 - 一个直观的解决方案是使用计数排序的两趟扫描算法。
   首先，迭代计算出0、1 和 2 元素的个数，然后按照0、1、2的排序，重写当前数组。
 - 你能想出一个仅使用常数空间的一趟扫描算法吗？
+
+**解法一**
 
 题目上已经有了提示，很直观的做法就是利用桶排序的方法
 
@@ -1278,6 +1173,8 @@ public static swap(int []nums,int a,int b){
 输入: "race a car"
 输出: false
 ```
+
+**解法一**
 
 easy题，对撞指针
 
@@ -1724,6 +1621,8 @@ nums2 = [2,5,6],       n = 3
 Output: [1,2,2,3,5,6]
 ```
 
+**解法一**
+
 典型的二路归并
 
 ```java
@@ -1750,6 +1649,8 @@ public static void merge(int[] nums1, int m, int[] nums2, int n) {
 ```
 
 1ms ，98%beats.
+
+**解法二**
 
 看了下评论区发现自己还是太年轻了，原来这题是可以在**O(1)**的空间复杂度下完成的
 

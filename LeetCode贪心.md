@@ -224,6 +224,77 @@ public int leastInterval(char[] tasks, int n) {
 ```
 核心思想就是将出现次数最多的任务优先执行并且尽可能的分散，比如  `A A A B B C n=2` 最短的时间就是`A X X A X X A` ，最终的时间就是`(n+1)*(max-1)+1` 也就是 `(2+1) *(3-1)+1=7`， 但是可能会有多个最多次数的任务，所以我们还需要加上最多的相同的个数，最后就是 `(n+1)*(max-1)+maxCount` ，但是还不够，还是有可能会出现代码中的例子，也就是最后得到的结果比我们的任务列表还有短，所以我们需要取一个最大值
 
+## [55. 跳跃游戏](https://leetcode-cn.com/problems/jump-game/)
+
+给定一个非负整数数组，你最初位于数组的第一个位置。
+
+数组中的每个元素代表你在该位置可以跳跃的最大长度。
+
+判断你是否能够到达最后一个位置。
+
+**示例 1:**
+
+```java
+输入: [2,3,1,1,4]
+输出: true
+解释: 我们可以先跳 1 步，从位置 0 到达 位置 1, 然后再从位置 1 跳 3 步到达最后一个位置。
+```
+
+**示例 2:**
+
+```java
+输入: [3,2,1,0,4]
+输出: false
+解释: 无论怎样，你总会到达索引为 3 的位置。但该位置的最大跳跃长度是 0 ， 所以你永远不可能到达最后一个位置。
+```
+
+**解法一**
+
+回溯，勉强能过。。。太蠢了，为啥想不到简单的方法，就非得往复杂了想？就这么傻么？
+
+```java
+Boolean[] cache=null;
+
+public boolean canJump(int[] nums) {
+    if (nums==null || nums.length<=0) return false;
+    cache=new Boolean[nums.length];
+    return jump(nums,0);
+}
+
+public boolean jump(int[] nums,int index) {
+    if (nums[index] >= nums.length-1 -index) {
+        return true;
+    }
+    if (cache[index]!=null) {
+        return cache[index];
+    }
+    for (int i=nums[index];i>=1;i--) {
+        if (index+i<nums.length && jump(nums,index+i)) {
+            return cache[index]=true;
+        }
+    }
+    return cache[index]=false;
+}
+```
+**解法二**
+
+不用多说了，遍历数组，不断更新能到达的最远距离，如果**某个位置的index大于当前能到达的最远距离就直接返回false**
+
+```java
+//MDZZ
+public boolean canJump(int[] nums) {
+    int maxIndex=nums[0];
+    for (int i=1;i<nums.length-1;i++) {
+        if(maxIndex >= nums.length-1) return true;
+        if (i>maxIndex) {
+            return false;
+        }
+        maxIndex=Math.max(maxIndex,i+nums[i]);
+    }
+    return true;
+}
+```
+
 ## [45. 跳跃游戏 II](https://leetcode-cn.com/problems/jump-game-ii/)
 
 给定一个非负整数数组，你最初位于数组的第一个位置。
