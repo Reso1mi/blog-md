@@ -1392,7 +1392,7 @@ public final class ServiceLoader<S> implements Iterable<S> {
 
 > 首先我们要明白一点，`Driver接口`，`DriverManage类`，以及`ServiceLoader`都是由**根加载器**去加载的(如果不相信的话可以用TraceClassLoading去查看)，所以在`ServiceLoader`中也是无法直接加载具体得实现类的
 
-前面`loadInitialDriver()` 调用的就是这里的 `ServiceLoader.load(Class<S> service)` 方法，这个方法中悄悄的拿到了`TCCL` ，而TCCL在`Launcher` 类（系统加载器和扩展加载器都是在Launcher中实现的）中默认设置成了系统加载器，具体可以去看一下源码这里我就不展开了，然后调用另一个重载的构造方法将`TCCL` 传递进去，最终调用了 `reload()`方法
+前面`loadInitialDriver()`调用的就是这里的`ServiceLoader.load(Class< S> service)` 方法，这个方法中悄悄的拿到了`TCCL` ，而TCCL在`Launcher` 类（系统加载器和扩展加载器都是在Launcher中实现的）中默认设置成了系统加载器，具体可以去看一下源码这里我就不展开了，然后调用另一个重载的构造方法将`TCCL` 传递进去，最终调用了 `reload()`方法
 
 ```java
 public void reload() {

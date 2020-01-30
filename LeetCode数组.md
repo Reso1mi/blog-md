@@ -238,7 +238,7 @@ public static int trap(int []height){
 
 这两种情况对应的就是循环中的if的两个分支，双指针向中间靠拢，当`leftMax`小于`rightMax`的时候我们不用去考虑当前`left`柱子右边实际的最大的右边的柱子是谁，我们只需要知道`left`柱子 左边最大值`leftMax`的值就ok，因为此时`left` 柱子能接水的量是由`leftMax`决定的，反之对应第二种情况，`right`柱子的接水量则是由`rightMax` 决定的，最后遍历完所有的柱子就可以确定整体的接水量
 
-> 这里的if分支的条件有的解法中写的是`leftMax<nums[right]`甚至`nums[left]<nums[right]` 这也是我上面说的不理解的地方，因为这样写也是可以AC的😅，后面有时间再回头看看吧
+> 这里的if分支的条件有的解法中写的是leftMax < nums[right]甚至nums[left] < nums[right] 这也是我上面说的不理解的地方，因为这样写也是可以AC的😅，后面有时间再回头看看吧
 
 **解法二**
 
@@ -709,6 +709,8 @@ public void moveZeroes(int[] nums) {
 1,1,5 → 1,5,1
 ```
 
+**解法一**
+
 直接上最优解吧，这题暴力法O(N!)，空间也超过了
 
 ```java
@@ -737,12 +739,14 @@ public void nextPermutation(int[] nums) {
         }
     }
 }
+
 //翻转数组
 private void reverse(int[] nums, int start) {
     for (int i=start,j=nums.length-1;i<j;i++,j--) {
         swap(nums,i,j);
     }
 }
+
 private  static void swap(int[] nums, int i, int j) {
     int temp = nums[i];
     nums[i] = nums[j];
@@ -821,7 +825,7 @@ public void swap(char[] nums,int a,int b){
 ```
 ## [136. 只出现一次的数字](https://leetcode-cn.com/problems/single-number/)
 
-给定一个**非空整数**数组，除了某个元素只出现一次以外，其余每个元素均出现两次。找出那个只出现了一次的元素。
+给定一个**非空整数**数组，除了某个元素只出现一次以外，**其余每个元素均出现两次**。找出那个只出现了一次的元素。
 
 **说明：**
 
@@ -854,6 +858,46 @@ public int singleNumber(int[] nums) {
     return nums[nums.length-1];
 }
 ```
+## [461. 汉明距离](https://leetcode-cn.com/problems/hamming-distance/)
+
+两个整数之间的汉明距离指的是这两个数字对应二进制位不同的位置的数目。
+
+给出两个整数 x 和 y，计算它们之间的汉明距离。
+
+**注意：**
+`0 ≤ x, y < 2^31.`
+
+**示例:**
+
+```java
+输入: x = 1, y = 4
+
+输出: 2
+
+解释:
+1   (0 0 0 1)
+4   (0 1 0 0)
+       ↑   ↑
+```
+
+**解法一**
+
+```java
+public int hammingDistance(int x, int y) {
+    int i=x^y;
+    int count=0;
+    while(i!=0){
+        if ((i&1)==1) { //括号不能掉
+            count++;
+        }
+        i=i>>1;
+    }
+    return count;
+}
+```
+
+一行`Integer.bitCount(x^y)`
+
 ## [169. 多数元素](https://leetcode-cn.com/problems/majority-element/)
 
 给定一个大小为 n 的数组，找到其中的多数元素。多数元素是指在数组中出现次数大于 ⌊ n/2 ⌋ 的元素。
@@ -1083,7 +1127,136 @@ public int firstMissingPositive2(int[] nums) {
 
 lc上提交后的空间消耗居然比上面的还小一点😂
 
+## [442. 数组中重复的数据](https://leetcode-cn.com/problems/find-all-duplicates-in-an-array/)
 
+给定一个整数数组 a，其中1 ≤ a[i] ≤ n （n为数组长度）, 其中有些元素出现两次而其他元素出现一次。
+
+找到所有出现两次的元素。
+
+你可以不用到任何额外空间并在O(n)时间复杂度内解决这个问题吗？
+
+**示例：**
+
+```java
+输入:
+[4,3,2,7,8,2,3,1]
+
+输出:
+[2,3]
+```
+
+**解法一**
+
+同上，抽屉原理，直接秒掉这三题 hard，mid，easy
+
+```java
+public List<Integer> findDuplicates(int[] nums) {
+    for (int i=0;i<nums.length;i++) {
+        while(nums[i]!=i+1 && nums[i]!=nums[nums[i]-1]){
+            int temp=nums[nums[i]-1];
+            nums[nums[i]-1]=nums[i];
+            nums[i]=temp;
+        }
+    }
+    List<Integer> res=new LinkedList<>();
+    for (int i=0;i<nums.length;i++) {
+        if (nums[i]!=i+1) {
+            res.add(nums[i]);
+        }
+    }
+    return res;
+}
+```
+
+**解法二**
+
+技巧性的思路，和上一题一样，将对应位置置反，如果遇到已经置反的就说明当前位置重复了
+
+```java
+//5 1 1 3 2
+public List<Integer> findDuplicates(int[] nums) {
+    List<Integer> res=new LinkedList<>();
+    for (int i=0;i<nums.length;i++) {
+        if (nums[Math.abs(nums[i])-1]<0) {
+            res.add(Math.abs(nums[i]));
+        }
+        nums[Math.abs(nums[i])-1]=-Math.abs(nums[Math.abs(nums[i])-1]);
+    }
+    return res;
+}
+```
+
+## [448. 找到所有数组中消失的数字](https://leetcode-cn.com/problems/find-all-numbers-disappeared-in-an-array/)
+
+给定一个范围在  1 ≤ a[i] ≤ n ( n = 数组大小 ) 的 整型数组，数组中的元素一些出现了两次，另一些只出现一次。
+
+找到所有在 [1, n] 范围之间没有出现在数组中的数字。
+
+您能在不使用额外空间且时间复杂度为O(n)的情况下完成这个任务吗? 你可以假定返回的数组不算在额外空间内。
+
+**示例:**
+
+```java
+输入:
+[4,3,2,7,8,2,3,1]
+
+输出:
+[5,6]
+```
+
+**解法一**
+
+首先想到的解法，利用的和上面缺失的第一个正数一样的思路，抽屉原理，归位每个数字，最后没有归为的index就是消失的数字
+
+```java
+public List<Integer> findDisappearedNumbers(int[] nums) {
+    //nums[i]=i+1
+    for (int i=0;i<nums.length;i++) {
+        while(nums[i]!=i+1 && nums[nums[i]-1]!=nums[i]){
+            int temp=nums[i];
+            nums[i]=nums[temp-1];
+            nums[temp-1]=temp;
+            //nums[i]=nums[nums[i]-1]; 最开始的错误写法
+            //nums[nums[i]-1]=temp;
+        }
+    }
+    List<Integer> res=new LinkedList<>();
+    for (int i=0;i<nums.length;i++) {
+        if (nums[i]!=i+1) {
+            res.add(i+1);
+        }
+    }
+    return res;
+}
+```
+
+中间写出了一个小`bug`，交换两个元素的时候先交换了`nums[i]`，导致了后面的`nums[nums[i]+1]` 发生了变化，然后就死循环了😂，调试了一下才看出来，太菜了
+
+**解法二**
+
+很巧妙的方法
+
+```java
+//很巧妙
+public List<Integer> findDisappearedNumbers(int[] nums) {
+    //nums[i]=i+1
+    //5 1 4 2 3
+    for (int i=0;i<nums.length;i++) {
+        nums[Math.abs(nums[i])-1]=-Math.abs(nums[Math.abs(nums[i])-1]);
+    }
+    List<Integer> res=new LinkedList<>();
+    for (int i=0;i<nums.length;i++) {
+        if (nums[i]>0) {
+            res.add(i+1);
+        }
+    }
+    return res;
+}
+```
+
+题目给定了数值的范围就是`[1,n]`所以可以遍历每个元素，将该元素正确位置的值取反置为负数
+
+比如 `5 1 1 3 2` 遍历到5的时候就会将末尾的2变为-2，依次类推，最后得到的就是`[-5,-1,-1,3,-2]` ，最后再遍历一遍，其中值为正数的元素的索引+1就是消失的数字
 
 ## [75. 颜色分类](https://leetcode-cn.com/problems/sort-colors/)
 
@@ -1236,6 +1409,466 @@ public Boolean isPalindrome(String s) {
     return true;
 }
 ```
+
+
+
+## [345. 反转字符串中的元音字母](https://leetcode-cn.com/problems/reverse-vowels-of-a-string/)
+
+Write a function that takes a string as input and reverse only the vowels of a string.
+
+**Example 1:**
+
+```
+Input: "hello"
+Output: "holle"
+```
+
+**Example 2:**
+
+```
+Input: "leetcode"
+Output: "leotcede"
+```
+
+**Note:**
+The vowels does not include the letter "y".
+
+```java
+public String reverseVowels(String s) {
+    if(s==null||s.length()<=0){
+        return s;
+    }
+    char[] ss=s.toCharArray();
+    int left=0,right=s.length()-1;
+    while(left<right){
+        while(left<right && !isYy(ss[left])){
+            left++;
+        }
+        while(left<right && !isYy(ss[right])){
+            right--;
+        }
+        swap(left++,right--,ss);
+    }
+    return new String(ss);
+}
+
+public Boolean isYy(char ch){
+    char temp=Character.toLowerCase(ch);
+    return temp=='a'|| temp=='e'||temp=='i'||temp=='o'||temp=='u';
+}
+
+public void swap(int a,int b,char[] s){
+    char temp=s[a];
+    s[a]=s[b];
+    s[b]=temp;
+}
+```
+
+很简单的对撞指针题
+
+## [88. 合并两个有序数组](https://leetcode-cn.com/problems/merge-sorted-array/)
+
+Given two sorted integer arrays *nums1* and *nums2*, merge *nums2* into *nums1* as one sorted array.
+
+**Note:**
+
+- The number of elements initialized in *nums1* and *nums2* are *m* and *n* respectively.
+- You may assume that *nums1* has enough space (size that is greater or equal to *m* + *n*) to hold additional elements from *nums2*.
+
+**Example:**
+
+```java
+Input:
+nums1 = [1,2,3,0,0,0], m = 3
+nums2 = [2,5,6],       n = 3
+
+Output: [1,2,2,3,5,6]
+```
+
+**解法一**
+
+典型的二路归并
+
+```java
+public static void merge(int[] nums1, int m, int[] nums2, int n) {
+    if(nums1.length<=0||nums2.length<=0){
+        return;
+    }
+    int []res=new int[m+n];
+    int i1=0,i2=0;
+    for (int i=0;i1<m&&i2<n;i++) {
+        if(nums1[i1]<=nums2[i2]) {
+            res[i]=nums1[i1++];
+        } else if(nums1[i1]>nums2[i2] ){
+            res[i]=nums2[i2++];
+        }
+    }
+    if(i1>=m){
+        System.arraycopy(nums2,i2,res,i2+m,n-i2);
+    } else{
+        System.arraycopy(nums1,i1,res,i1+n,m-i1);
+    }
+    System.arraycopy(res,0,nums1,0,res.length);
+}
+```
+
+1ms ，98%beats.
+
+**解法二**
+
+看了下评论区发现自己还是太年轻了，原来这题是可以在**O(1)**的空间复杂度下完成的
+
+```java
+public static void merge3(int[] nums1, int m, int[] nums2, int n) {
+    if(nums1.length<=0||nums2.length<=0){
+        return;
+    }
+    int i1=m-1,i2=n-1;
+    for (int i=m+n-1;i>=0;i--) {
+        if(i1<0){
+            nums1[i]=nums2[i2--];
+        } else if(i2<0){
+            nums1[i]=nums1[i1--];
+        } else if(nums1[i1]>nums2[i2]) {
+            nums1[i]=nums1[i1--];
+        } else if(nums1[i1]<=nums2[i2] ){
+            nums1[i]=nums2[i2--];
+        }
+    }
+}
+```
+
+合并后的长度确定，nums1的空间也足够，所以完全可以从后往前，从大到小，从而避免了使用额外的空间储存结果，学到了学到了👏
+
+## [532. 逆序对](https://www.lintcode.com/problem/reverse-pairs/description)
+
+（来自领扣）
+
+在数组中的两个数字如果前面一个数字大于后面的数字，则这两个数字组成一个逆序对。给你一个数组，求出这个数组中逆序对的总数。
+概括：如果a[i] > a[j] 且 i < j， a[i] 和 a[j] 构成一个逆序对。
+
+**样例1**
+
+```java
+输入: A = [2, 4, 1, 3, 5]
+输出: 3
+解释:
+(2, 1), (4, 1), (4, 3) 是逆序对
+```
+
+**样例2**
+
+```java
+输入: A = [1, 2, 3, 4]
+输出: 0
+解释:
+没有逆序对
+```
+
+**解法一**
+
+```java
+public long reversePairs(int[] A) {
+    if (A==null || A.length<=0) {
+        return 0;
+    }
+    return reversePairs(A,0,A.length-1);
+}
+
+public long reversePairs(int[] A,int left,int right) {
+    if (left == right) {
+        return 0;
+    }
+    int mid=left+(right-left)/2;
+    long l=reversePairs(A,left,mid);
+    long r=reversePairs(A,mid+1,right);
+    return merge(A,left,mid,right)+l+r;
+}
+
+public long merge(int[] nums,int left,int mid,int right){
+    long res=0;
+    int[] help=new int[right-left+1];
+    int i=left,j=mid+1;
+    int index=0;
+    while(i<=mid && j<=right){
+        //小于等于的时候让i先进栈
+        //help[index++]=nums[i]<=nums[j] ? nums[i++]:nums[j++];
+        if (nums[i]<=nums[j]) {
+            help[index++] = nums[i++];
+        }else{
+            help[index++] = nums[j++];
+            res+= mid-i+1; //j和i-mid间的所有元素形成逆序对
+        }
+    }
+    while(i<=mid){
+        help[index++]=nums[i++];
+    }
+    while(j<=right){
+        help[index++]=nums[j++];
+    }
+
+    for (int k=0;k<help.length;k++) {
+        nums[left+k]=help[k];
+    }
+    return res;
+}
+```
+
+归并排序的思路，最开始我是在每次i>j和最后收尾的时候res++，然后结果总是不对，然后取查了答案才意识到不能这样算，当`nums[i] > nums[j]` 的时候，`i~j` 形成的逆序对其实不只一个，而是`[i,mid]` 区间的所有元素，如果你只是+1的话就会漏掉许多情况，因为下一步 `j++` 就会将 `j` 向后移动，那些情况就考虑不到了
+
+## [118. 杨辉三角](https://leetcode-cn.com/problems/pascals-triangle/)
+
+Given a non-negative integer *numRows*, generate the first *numRows* of Pascal's triangle.
+
+![img](https://upload.wikimedia.org/wikipedia/commons/0/0d/PascalTriangleAnimated2.gif)
+In Pascal's triangle, each number is the sum of the two numbers directly above it.
+
+**Example:**
+
+```java
+Input: 5
+Output:
+[
+     [1],
+    [1,1],
+   [1,2,1],
+  [1,3,3,1],
+ [1,4,6,4,1]
+]
+```
+
+递归专题里面的题目，所以直接用递归来实现了下。
+
+```java
+public static List<List<Integer>> generate(int numRows) {
+    if(numRows<=0) {
+        return new ArrayList();
+    }
+    List<List<Integer>> res = new ArrayList<>();
+    res.add(new ArrayList<Integer>() {
+        {
+            add(1);
+        }
+    }
+    );
+    generate(1, res.get(0), res, numRows);
+    return res;
+}
+
+public static void generate(int numRow, List<Integer> preRow, List<List<Integer>> res, int rowMax) {
+    if (rowMax == numRow) {
+        return;
+    }
+    List<Integer> row = new ArrayList<>();
+    row.add(1);
+    for (int i = 1; i < preRow.size(); i++) {
+        row.add(preRow.get(i - 1) + preRow.get(i));
+    }
+    row.add(1);
+    res.add(row);
+    generate(numRow + 1,row,res,rowMax);
+}
+```
+
+尾递归，很鸡肋。
+
+## [119. 杨辉三角 II](https://leetcode-cn.com/problems/pascals-triangle-ii/)
+
+Given a non-negative index *k* where *k* ≤ 33, return the *k*th index row of the Pascal's triangle.
+
+Note that the row index starts from 0.
+
+![img](https://upload.wikimedia.org/wikipedia/commons/0/0d/PascalTriangleAnimated2.gif)
+In Pascal's triangle, each number is the sum of the two numbers directly above it.
+
+**Example:**
+
+```java
+Input: 3
+Output: [1,3,3,1]
+```
+
+**Follow up:**
+
+Could you optimize your algorithm to use only *O*(*k*) extra space?
+
+```java
+ public List<Integer> getRow(int rowIndex) {
+        List<Integer> res=new ArrayList<>();
+        long cur=1;
+        res.add((int)cur);
+        for(int i=1;i<=rowIndex;i++){
+            cur=cur*(rowIndex-i+1)/i;
+            res.add((int)cur);
+        }
+        return res;
+ }
+```
+
+直接利用组合数的公式，m列第n个元素等于C(n-1,M-1)
+
+## [54. 螺旋矩阵](https://leetcode-cn.com/problems/spiral-matrix/)
+
+给定一个包含 m x n 个元素的矩阵（m 行, n 列），请按照顺时针螺旋顺序，返回矩阵中的所有元素。
+
+**示例 1:**
+
+```java
+输入:
+[
+ [ 1, 2, 3 ],
+ [ 4, 5, 6 ],
+ [ 7, 8, 9 ]
+]
+输出: [1,2,3,6,9,8,7,4,5]
+```
+
+**示例 2:**
+
+```java
+输入:
+[
+  [1, 2, 3, 4],
+  [5, 6, 7, 8],
+  [9,10,11,12]
+]
+输出: [1,2,3,4,8,12,11,10,9,5,6,7]
+```
+
+**解法一**
+
+这题很久之前做过，这次又来做的时候还是没做出来，忘了之前咋做的了，用模拟的方法搞了半天，没搞出来，然后瞄了一眼之前写的才写出来....
+
+```java
+public static List<Integer> spiralOrder2(int[][] matrix) {
+    List<Integer> res=new ArrayList<>();
+    if(matrix.length<=0){
+        return res;
+    }
+    //a: 行
+    //b: 列
+    int la=0,lb=0,ra=matrix.length-1,rb=matrix[0].length-1;
+    //终止条件
+    while(lb<=rb && la<=ra){
+        //缓存各个坐标
+        int tla=la,tlb=lb,tra=ra,trb=rb;
+        //特殊情况，特殊处理
+        if(tla==tra){//同一行
+            while(tlb<=trb){
+                res.add(matrix[tla][tlb++]);
+            }
+            return res;
+        }else if(tlb==trb){//同一列
+            while(tla<=tra){
+                res.add(matrix[tla++][tlb]);
+            }
+            return res;
+        }else{
+            //向左
+            while(tlb<rb){
+                res.add(matrix[tla][tlb++]);
+            }
+			//向下
+            while(tla<ra){
+                res.add(matrix[tla++][tlb]);
+            }
+			//向右
+            while(trb>lb){
+                res.add(matrix[tra][trb--]);
+            }
+			//向上
+            while(tra>la){
+                res.add(matrix[tra--][trb]);
+            }
+        }
+        //向内靠拢(缩圈)
+        la++;
+        lb++;
+        ra--;
+        rb--;
+    }
+    return res;
+}
+```
+
+模拟的方式相对要复杂点，需要记录每个节点是否访问然后在选择，这里的方式就很巧妙，直接按层遍历，由外到内，不用考虑那么多。时间复杂度`O(NM)`空间复杂度`O(NM)`。
+
+## [48. 旋转图像](https://leetcode-cn.com/problems/rotate-image/)
+
+给定一个 *n* × *n* 的二维矩阵表示一个图像。
+
+将图像顺时针旋转 90 度。
+
+**说明：**
+
+你必须在**原地**旋转图像，这意味着你需要直接修改输入的二维矩阵。**请不要**使用另一个矩阵来旋转图像。
+
+**Example 1:**
+
+```java
+Given input matrix = 
+[
+  [1,2,3],
+  [4,5,6],
+  [7,8,9]
+],
+
+rotate the input matrix in-place such that it becomes:
+[
+  [7,4,1],
+  [8,5,2],
+  [9,6,3]
+]
+```
+
+**Example 2:**
+
+```java
+Given input matrix =
+[
+  [ 5, 1, 9,11],
+  [ 2, 4, 8,10],
+  [13, 3, 6, 7],
+  [15,14,12,16]
+], 
+
+rotate the input matrix in-place such that it becomes:
+[
+  [15,13, 2, 5],
+  [14, 3, 4, 1],
+  [12, 6, 8, 9],
+  [16, 7,10,11]
+]
+```
+
+**解法一**
+
+这题和上面哪一题放在一起很有必要，很类似的题型
+
+```java
+public void rotate(int[][] matrix) {
+    if (matrix==null || matrix.length==0) {
+        return;
+    }
+    int len=matrix.length-1;
+    int lx=0,ly=0,rx=len,ry=len;
+    while(lx<=rx){
+        //len=ry-ly;
+        for (int i=0;i<len;i++) {
+            int temp=matrix[lx][ly+i];
+            matrix[lx][ly+i]=matrix[rx-i][ly];
+            matrix[rx-i][ly]=matrix[rx][ry-i];
+            matrix[rx][ry-i]=matrix[lx+i][ry];
+            matrix[lx+i][ry]=temp;
+        }
+        //缩圈
+        len-=2; //写ry-ly可能会好一点，无所谓
+        lx++;ly++;
+        rx--;ry--;
+    }
+}
+```
+和上一题一样，都是从整体出发，从外层到内层，考虑每一层的前`n-1`个节点的旋转过程，这个过程需要自己在纸上画一画，空想容易搞错
 
 ## [215.数组中的第K个最大元素](https://leetcode-cn.com/problems/kth-largest-element-in-an-array/)
 
@@ -1547,390 +2180,6 @@ public static void swap(int []nums,int a,int b){
 如上图，每一列为分好的一组元素，中间黄色部分为每组的中位数，红色块为**中位数的中位数**，这个中位数至少会大于等于左上角黑框框住的部分，所以在划分的时候会保证至少减小大约3n/10 的规模。
 
 所以时间复杂度   `T(N)<=T(n/5)+T( 7n/10)+c*n`  总体时间复杂度**O(N)**，至于为什么不用其他的元素可以看看上面的那篇文章。
-
-## [345. 反转字符串中的元音字母](https://leetcode-cn.com/problems/reverse-vowels-of-a-string/)
-
-Write a function that takes a string as input and reverse only the vowels of a string.
-
-**Example 1:**
-
-```
-Input: "hello"
-Output: "holle"
-```
-
-**Example 2:**
-
-```
-Input: "leetcode"
-Output: "leotcede"
-```
-
-**Note:**
-The vowels does not include the letter "y".
-
-```java
-public String reverseVowels(String s) {
-    if(s==null||s.length()<=0){
-        return s;
-    }
-    char[] ss=s.toCharArray();
-    int left=0,right=s.length()-1;
-    while(left<right){
-        while(left<right && !isYy(ss[left])){
-            left++;
-        }
-        while(left<right && !isYy(ss[right])){
-            right--;
-        }
-        swap(left++,right--,ss);
-    }
-    return new String(ss);
-}
-
-public Boolean isYy(char ch){
-    char temp=Character.toLowerCase(ch);
-    return temp=='a'|| temp=='e'||temp=='i'||temp=='o'||temp=='u';
-}
-
-public void swap(int a,int b,char[] s){
-    char temp=s[a];
-    s[a]=s[b];
-    s[b]=temp;
-}
-```
-
-很简单的对撞指针题
-
-## [88. 合并两个有序数组](https://leetcode-cn.com/problems/merge-sorted-array/)
-
-Given two sorted integer arrays *nums1* and *nums2*, merge *nums2* into *nums1* as one sorted array.
-
-**Note:**
-
-- The number of elements initialized in *nums1* and *nums2* are *m* and *n* respectively.
-- You may assume that *nums1* has enough space (size that is greater or equal to *m* + *n*) to hold additional elements from *nums2*.
-
-**Example:**
-
-```java
-Input:
-nums1 = [1,2,3,0,0,0], m = 3
-nums2 = [2,5,6],       n = 3
-
-Output: [1,2,2,3,5,6]
-```
-
-**解法一**
-
-典型的二路归并
-
-```java
-public static void merge(int[] nums1, int m, int[] nums2, int n) {
-    if(nums1.length<=0||nums2.length<=0){
-        return;
-    }
-    int []res=new int[m+n];
-    int i1=0,i2=0;
-    for (int i=0;i1<m&&i2<n;i++) {
-        if(nums1[i1]<=nums2[i2]) {
-            res[i]=nums1[i1++];
-        } else if(nums1[i1]>nums2[i2] ){
-            res[i]=nums2[i2++];
-        }
-    }
-    if(i1>=m){
-        System.arraycopy(nums2,i2,res,i2+m,n-i2);
-    } else{
-        System.arraycopy(nums1,i1,res,i1+n,m-i1);
-    }
-    System.arraycopy(res,0,nums1,0,res.length);
-}
-```
-
-1ms ，98%beats.
-
-**解法二**
-
-看了下评论区发现自己还是太年轻了，原来这题是可以在**O(1)**的空间复杂度下完成的
-
-```java
-public static void merge3(int[] nums1, int m, int[] nums2, int n) {
-    if(nums1.length<=0||nums2.length<=0){
-        return;
-    }
-    int i1=m-1,i2=n-1;
-    for (int i=m+n-1;i>=0;i--) {
-        if(i1<0){
-            nums1[i]=nums2[i2--];
-        } else if(i2<0){
-            nums1[i]=nums1[i1--];
-        } else if(nums1[i1]>nums2[i2]) {
-            nums1[i]=nums1[i1--];
-        } else if(nums1[i1]<=nums2[i2] ){
-            nums1[i]=nums2[i2--];
-        }
-    }
-}
-```
-
-合并后的长度确定，nums1的空间也足够，所以完全可以从后往前，从大到小，从而避免了使用额外的空间储存结果，学到了学到了👏
-
-
-
-## [118. 杨辉三角](https://leetcode-cn.com/problems/pascals-triangle/)
-
-Given a non-negative integer *numRows*, generate the first *numRows* of Pascal's triangle.
-
-![img](https://upload.wikimedia.org/wikipedia/commons/0/0d/PascalTriangleAnimated2.gif)
-In Pascal's triangle, each number is the sum of the two numbers directly above it.
-
-**Example:**
-
-```java
-Input: 5
-Output:
-[
-     [1],
-    [1,1],
-   [1,2,1],
-  [1,3,3,1],
- [1,4,6,4,1]
-]
-```
-
-递归专题里面的题目，所以直接用递归来实现了下。
-
-```java
-public static List<List<Integer>> generate(int numRows) {
-    if(numRows<=0) {
-        return new ArrayList();
-    }
-    List<List<Integer>> res = new ArrayList<>();
-    res.add(new ArrayList<Integer>() {
-        {
-            add(1);
-        }
-    }
-    );
-    generate(1, res.get(0), res, numRows);
-    return res;
-}
-
-public static void generate(int numRow, List<Integer> preRow, List<List<Integer>> res, int rowMax) {
-    if (rowMax == numRow) {
-        return;
-    }
-    List<Integer> row = new ArrayList<>();
-    row.add(1);
-    for (int i = 1; i < preRow.size(); i++) {
-        row.add(preRow.get(i - 1) + preRow.get(i));
-    }
-    row.add(1);
-    res.add(row);
-    generate(numRow + 1,row,res,rowMax);
-}
-```
-
-尾递归，很鸡肋。
-
-## [119. 杨辉三角 II](https://leetcode-cn.com/problems/pascals-triangle-ii/)
-
-Given a non-negative index *k* where *k* ≤ 33, return the *k*th index row of the Pascal's triangle.
-
-Note that the row index starts from 0.
-
-![img](https://upload.wikimedia.org/wikipedia/commons/0/0d/PascalTriangleAnimated2.gif)
-In Pascal's triangle, each number is the sum of the two numbers directly above it.
-
-**Example:**
-
-```java
-Input: 3
-Output: [1,3,3,1]
-```
-
-**Follow up:**
-
-Could you optimize your algorithm to use only *O*(*k*) extra space?
-
-```java
- public List<Integer> getRow(int rowIndex) {
-        List<Integer> res=new ArrayList<>();
-        long cur=1;
-        res.add((int)cur);
-        for(int i=1;i<=rowIndex;i++){
-            cur=cur*(rowIndex-i+1)/i;
-            res.add((int)cur);
-        }
-        return res;
- }
-```
-
-直接利用组合数的公式，m列第n个元素等于C(n-1,M-1)
-
-## [54. 螺旋矩阵](https://leetcode-cn.com/problems/spiral-matrix/)
-
-给定一个包含 m x n 个元素的矩阵（m 行, n 列），请按照顺时针螺旋顺序，返回矩阵中的所有元素。
-
-**示例 1:**
-
-```java
-输入:
-[
- [ 1, 2, 3 ],
- [ 4, 5, 6 ],
- [ 7, 8, 9 ]
-]
-输出: [1,2,3,6,9,8,7,4,5]
-```
-
-**示例 2:**
-
-```java
-输入:
-[
-  [1, 2, 3, 4],
-  [5, 6, 7, 8],
-  [9,10,11,12]
-]
-输出: [1,2,3,4,8,12,11,10,9,5,6,7]
-```
-
-**解法一**
-
-这题很久之前做过，这次又来做的时候还是没做出来，忘了之前咋做的了，用模拟的方法搞了半天，没搞出来，然后瞄了一眼之前写的才写出来....
-
-```java
-public static List<Integer> spiralOrder2(int[][] matrix) {
-    List<Integer> res=new ArrayList<>();
-    if(matrix.length<=0){
-        return res;
-    }
-    //a: 行
-    //b: 列
-    int la=0,lb=0,ra=matrix.length-1,rb=matrix[0].length-1;
-    //终止条件
-    while(lb<=rb && la<=ra){
-        //缓存各个坐标
-        int tla=la,tlb=lb,tra=ra,trb=rb;
-        //特殊情况，特殊处理
-        if(tla==tra){//同一行
-            while(tlb<=trb){
-                res.add(matrix[tla][tlb++]);
-            }
-            return res;
-        }else if(tlb==trb){//同一列
-            while(tla<=tra){
-                res.add(matrix[tla++][tlb]);
-            }
-            return res;
-        }else{
-            //向左
-            while(tlb<rb){
-                res.add(matrix[tla][tlb++]);
-            }
-			//向下
-            while(tla<ra){
-                res.add(matrix[tla++][tlb]);
-            }
-			//向右
-            while(trb>lb){
-                res.add(matrix[tra][trb--]);
-            }
-			//向上
-            while(tra>la){
-                res.add(matrix[tra--][trb]);
-            }
-        }
-        //向内靠拢(缩圈)
-        la++;
-        lb++;
-        ra--;
-        rb--;
-    }
-    return res;
-}
-```
-
-模拟的方式相对要复杂点，需要记录每个节点是否访问然后在选择，这里的方式就很巧妙，直接按层遍历，由外到内，不用考虑那么多。时间复杂度`O(NM)`空间复杂度`O(NM)`。
-
-## [48. 旋转图像](https://leetcode-cn.com/problems/rotate-image/)
-
-给定一个 *n* × *n* 的二维矩阵表示一个图像。
-
-将图像顺时针旋转 90 度。
-
-**说明：**
-
-你必须在**原地**旋转图像，这意味着你需要直接修改输入的二维矩阵。**请不要**使用另一个矩阵来旋转图像。
-
-**Example 1:**
-
-```java
-Given input matrix = 
-[
-  [1,2,3],
-  [4,5,6],
-  [7,8,9]
-],
-
-rotate the input matrix in-place such that it becomes:
-[
-  [7,4,1],
-  [8,5,2],
-  [9,6,3]
-]
-```
-
-**Example 2:**
-
-```java
-Given input matrix =
-[
-  [ 5, 1, 9,11],
-  [ 2, 4, 8,10],
-  [13, 3, 6, 7],
-  [15,14,12,16]
-], 
-
-rotate the input matrix in-place such that it becomes:
-[
-  [15,13, 2, 5],
-  [14, 3, 4, 1],
-  [12, 6, 8, 9],
-  [16, 7,10,11]
-]
-```
-
-**解法一**
-
-这题和上面哪一题放在一起很有必要，很类似的题型
-
-```java
-public void rotate(int[][] matrix) {
-    if (matrix==null || matrix.length==0) {
-        return;
-    }
-    int len=matrix.length-1;
-    int lx=0,ly=0,rx=len,ry=len;
-    while(lx<=rx){
-        //len=ry-ly;
-        for (int i=0;i<len;i++) {
-            int temp=matrix[lx][ly+i];
-            matrix[lx][ly+i]=matrix[rx-i][ly];
-            matrix[rx-i][ly]=matrix[rx][ry-i];
-            matrix[rx][ry-i]=matrix[lx+i][ry];
-            matrix[lx+i][ry]=temp;
-        }
-        //缩圈
-        len-=2; //写ry-ly可能会好一点，无所谓
-        lx++;ly++;
-        rx--;ry--;
-    }
-}
-```
-和上一题一样，都是从整体出发，从外层到内层，考虑每一层的前`n-1`个节点的旋转过程，这个过程需要自己在纸上画一画，空想容易搞错
 
 ## [347. 前 K 个高频元素](https://leetcode-cn.com/problems/top-k-frequent-elements/)
 
@@ -2716,6 +2965,76 @@ public String palindrome(String s,int i,int j){
 ```
 如果采用暴力法的话就是枚举所有子串，判断是不是回文串，最后求个最长的，时间复杂度`O(N^3)` ，但是我们可以利用回文的特征，利用中心扩散法，以`str`的**各个位置**作为中心，向两边扩散，最后求得最大值，注意得这里说的是**各个位置**，这个里面其实就包含了元素之间的间隙，其实整体思路还是挺简单的，但经过我们小小的转换思路，时间复杂度就降低到了`O(N^2)`，当然，这里还不是最优解，最优应该是[Manacher](https://oi-wiki.org/string/manacher/) （马拉车）算法，等后面有时间我再来研究这种算法
 
+## [1332. 删除回文子序列](https://leetcode-cn.com/problems/remove-palindromic-subsequences/)
+
+给你一个字符串 s，它仅由字母 'a' 和 'b' 组成。每一次删除操作都可以从 s 中删除一个回文 **子序列**。
+
+返回删除给定字符串中所有字符（字符串为空）的最小删除次数。
+
+「子序列」定义：如果一个字符串可以通过删除原字符串某些字符而不改变原字符顺序得到，那么这个字符串就是原字符串的一个子序列。
+
+「回文」定义：如果一个字符串向后和向前读是一致的，那么这个字符串就是一个回文。 
+
+**示例 1：**
+
+```java
+输入：s = "ababa"
+输出：1
+解释：字符串本身就是回文序列，只需要删除一次。
+```
+
+**示例 2：**
+
+```java
+输入：s = "abb"
+输出：2
+解释："abb" -> "bb" -> "". 
+先删除回文子序列 "a"，然后再删除 "bb"。
+```
+
+
+**示例 3：**
+
+```java
+输入：s = "baabb"
+输出：2
+解释："baabb" -> "b" -> "". 
+先删除回文子序列 "baab"，然后再删除 "b"。
+```
+
+
+**示例 4：**
+
+```java
+输入：s = ""
+输出：0
+```
+
+**提示：**
+
+- `0 <= s.length <= 1000`
+- `s` 仅包含字母 'a'  和 'b'
+
+**解法一**
+
+某一次周赛的第一题，乍一看最长回文子串？最长回文序列？这题当时还是难到了不少人，我那次没参加，后台听说了第一题是个坑，然后这里审题的时候就很注意，没踩坑😁
+
+```java
+public int removePalindromeSub(String s) {
+    if (s==null || s.length()<=0) {
+        return 0;
+    }
+    for(int i=0,j=s.length()-1;i<=j;i++,j--){
+        if (s.charAt(i)!=s.charAt(j)) {
+            return 2;
+        }
+    }
+    return 1;
+}
+```
+
+题目说了只有两个字母a和b，而且要删除的是**回文子序列**，这样一说就清楚了，这才是简单题的水准呐~还是挺有意思的，脑筋急转弯hahaha
+
 ## [56. 合并区间](https://leetcode-cn.com/problems/merge-intervals/)
 
 给出一个区间的集合，请合并所有重叠的区间。
@@ -2945,82 +3264,6 @@ public boolean searchMatrix(int[][] matrix, int target) {
 }
 ```
 整个矩阵从左上到右下，其实就分为了两块，每个元素的左上一定小于当前元素，右下一定大于当前元素，所以很自然就可以写出类似的O(m+n)的解法，这题好像也可以二分，但是还是这种比较好理解
-
-## [532. 逆序对](https://www.lintcode.com/problem/reverse-pairs/description)
-
-（来自领扣）
-
-在数组中的两个数字如果前面一个数字大于后面的数字，则这两个数字组成一个逆序对。给你一个数组，求出这个数组中逆序对的总数。
-概括：如果a[i] > a[j] 且 i < j， a[i] 和 a[j] 构成一个逆序对。
-
-**样例1**
-
-```java
-输入: A = [2, 4, 1, 3, 5]
-输出: 3
-解释:
-(2, 1), (4, 1), (4, 3) 是逆序对
-```
-
-**样例2**
-
-```java
-输入: A = [1, 2, 3, 4]
-输出: 0
-解释:
-没有逆序对
-```
-
-**解法一**
-
-```java
-public long reversePairs(int[] A) {
-    if (A==null || A.length<=0) {
-        return 0;
-    }
-    return reversePairs(A,0,A.length-1);
-}
-
-public long reversePairs(int[] A,int left,int right) {
-    if (left == right) {
-        return 0;
-    }
-    int mid=left+(right-left)/2;
-    long l=reversePairs(A,left,mid);
-    long r=reversePairs(A,mid+1,right);
-    return merge(A,left,mid,right)+l+r;
-}
-
-public long merge(int[] nums,int left,int mid,int right){
-    long res=0;
-    int[] help=new int[right-left+1];
-    int i=left,j=mid+1;
-    int index=0;
-    while(i<=mid && j<=right){
-        //小于等于的时候让i先进栈
-        //help[index++]=nums[i]<=nums[j] ? nums[i++]:nums[j++];
-        if (nums[i]<=nums[j]) {
-            help[index++] = nums[i++];
-        }else{
-            help[index++] = nums[j++];
-            res+= mid-i+1; //j和i-mid间的所有元素形成逆序对
-        }
-    }
-    while(i<=mid){
-        help[index++]=nums[i++];
-    }
-    while(j<=right){
-        help[index++]=nums[j++];
-    }
-
-    for (int k=0;k<help.length;k++) {
-        nums[left+k]=help[k];
-    }
-    return res;
-}
-```
-
-归并排序的思路，最开始我是在每次i>j和最后收尾的时候res++，然后结果总是不对，然后取查了答案才意识到不能这样算，当`nums[i] > nums[j]` 的时候，`i~j` 形成的逆序对其实不只一个，而是`[i,mid]` 区间的所有元素，如果你只是+1的话就会漏掉许多情况，因为下一步 `j++` 就会将 `j` 向后移动，那些情况就考虑不到了
 
 ## [263. 丑数](https://leetcode-cn.com/problems/ugly-number/)
 
