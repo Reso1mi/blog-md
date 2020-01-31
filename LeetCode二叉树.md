@@ -2736,7 +2736,7 @@ public void flatten(TreeNode root) {
 
 **解法三**
 
-迭代，我觉得这种解法应该来说是最容易理解的，而且是完全的 `in-place`
+迭代，我觉得这种解法应该来说是最容易理解的，而且是完全的 `in-place`，但是时间复杂度会高一些，每个元素不只遍历一次
 
 ```java
 public void flatten(TreeNode root) {
@@ -3947,4 +3947,110 @@ public TreeNode delete(TreeNode root,int target){
 }
 ```
 搞了半天。。。一开始写的时候写的前序遍历的方式，先删除自己然后再去删除左右孩子，然后在如何判断是否有叶子节点上卡了半天，最后写了个for3000的循环过的。。。好菜啊，只要交换一下顺序变成后序遍历的方式，先删除左右子节点，然后再回头删除自己的就可以一直删了。。
+
+## [1305. 两棵二叉搜索树中的所有元素](https://leetcode-cn.com/problems/all-elements-in-two-binary-search-trees/)
+
+给你 `root1` 和 `root2` 这两棵二叉搜索树。
+
+请你返回一个列表，其中包含 **两棵树** 中的所有整数并按 **升序** 排序。.
+
+**示例 1：**
+
+![image.png](https://i.loli.net/2020/01/31/Hy3MEwa4sRO6jUq.png)
+
+```java
+输入：root1 = [2,1,4], root2 = [1,0,3]
+输出：[0,1,1,2,3,4]
+```
+
+**示例 2：**
+
+```java
+输入：root1 = [0,-10,10], root2 = [5,1,7,0,2]
+输出：[-10,0,0,1,2,5,7,10]
+```
+
+
+**示例 3：**
+
+```java
+输入：root1 = [], root2 = [5,1,7,0,2]
+输出：[0,1,2,5,7]
+```
+
+
+**示例 4：**
+
+```java
+输入：root1 = [0,-10,10], root2 = []
+输出：[-10,0,10]
+```
+
+**解法一**
+
+某次周赛的题，大水题，白板回忆写出了中序的非递归haha，感觉忘不了了
+
+```java
+public List<Integer> getAllElements(TreeNode root1, TreeNode root2) {
+    //return megerList(inorder(root1),0,inorder(root2),0);
+    return megerList(inorder(root1),inorder(root2));
+}
+
+public List<Integer> inorder(TreeNode root){
+    List<Integer> res=new ArrayList<>();
+    Stack<TreeNode> stack=new Stack<>();
+    TreeNode cur=root;
+    while(!stack.isEmpty() || cur!=null){
+        while(cur!=null){
+            stack.add(cur);
+            cur=cur.left;
+        }
+        cur=stack.pop();
+        res.add(cur.val);
+        cur=cur.right;
+    }
+    return res;
+}
+
+public List<Integer> megerList(List<Integer> list1,List<Integer> list2){
+    List<Integer> res=new ArrayList<>();
+    int index1=0,index2=0;
+    while(index1<list1.size() && index2<list2.size()){
+        res.add(list1.get(index1)<list2.get(index2)?list1.get(index1++):list2.get(index2++));
+    }
+    while(index1<list1.size()){
+        res.add(list1.get(index1++));
+    }
+    while(index2<list2.size()){
+        res.add(list2.get(index2++));
+    }
+    return res;
+}
+
+
+//递归的TLE了 42/48,不停的创建list太耗时了
+public List<Integer> megerList(List<Integer> list1,int index1,List<Integer> list2,int index2){
+    List<Integer> res=new ArrayList<>();
+    if (index1==list1.size()) {
+        for (int i=index2;i<list2.size();i++) {
+            res.add(list2.get(i));
+        }
+        return res;
+    }
+    if (index2==list2.size()) {
+        for (int i=index1;i<list1.size();i++) {
+            res.add(list1.get(i));
+        }
+        return res;
+    }
+    if (list1.get(index1)<list2.get(index2)) {
+        res.add(list1.get(index1));
+        res.addAll(megerList(list1,index1+1,list2,index2));
+    }else{
+        res.add(list2.get(index2));
+        res.addAll(megerList(list1,index1,list2,index2+1));
+    }
+    return res;
+}
+```
 
