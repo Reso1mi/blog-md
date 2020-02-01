@@ -1856,7 +1856,7 @@ Level 1 的视频包含所有你好友观看过的视频，level 2 的视频包�
 
 **示例 1：**
 
-![leetcode.png](https://img02.sogoucdn.com/app/a/100520146/64f4a188fa9bb9ada019006a4ee68d7d)
+![image.png](https://i.loli.net/2020/02/01/I5XJKQg3WwvaeB1.png)
 
 ```java
 输入：watchedVideos = [["A","B"],["C"],["B","C"],["D"]], friends = [[1,2],[0,3],[0,3],[1,2]], id = 0, level = 1
@@ -1872,7 +1872,7 @@ C -> 2
 
 **示例 2：**
 
-![leetcode.png](https://img02.sogoucdn.com/app/a/100520146/64f4a188fa9bb9ada019006a4ee68d7d)
+![image.png](https://i.loli.net/2020/02/01/qhDZvr3sbJkgIuw.png)
 
 ```java
 输入：watchedVideos = [["A","B"],["C"],["B","C"],["D"]], friends = [[1,2],[0,3],[0,3],[1,2]], id = 0, level = 2
@@ -1933,6 +1933,114 @@ public List<String> watchedVideosByFriends(List<List<String>> watchedVideos, int
         int c2=map.get(v2);
         return c1==c2?v1.compareTo(v2):c1-c2; //相等的时候按照字典序列排序
     });
+    return res;
+}
+```
+
+## [399. 除法求值](https://leetcode-cn.com/problems/evaluate-division/)
+
+给出方程式 A / B = k, 其中 A 和 B 均为代表字符串的变量， k 是一个浮点型数字。根据已知方程式求解问题，并返回计算结果。如果结果不存在，则返回 -1.0。
+
+示例 :
+
+```java
+给定 a / b = 2.0, b / c = 3.0
+问题: a / c = ?, b / a = ?, a / e = ?, a / a = ?, x / x = ? 
+返回 [6.0, 0.5, -1.0, 1.0, -1.0 ]
+```
+
+输入为: `vector<pair<string, string>> equations, vector<double>& values, vector<pair<string, string>> queries(方程式，方程式结果，问题方程式)`， 其中 `equations.size() == values.size()`，即方程式的长度与方程式结果长度相等（程式与结果一一对应），并且结果值均为正数。以上为方程式的描述。 返回`vector<double>`类型。
+
+基于上述例子，输入如下：
+
+```java
+equations(方程式) = [ ["a", "b"], ["b", "c"] ],
+values(方程式结果) = [2.0, 3.0],
+queries(问题方程式) = [ ["a", "c"], ["b", "a"], ["a", "e"], ["a", "a"], ["x", "x"] ]. 
+```
+
+输入总是有效的。你可以假设除法运算中不会出现除数为0的情况，且不存在任何矛盾的结果。
+
+**解法一**
+
+建立图，然后BFS，这样就简单多了，比并茶集的方法直白多了，随便也学了一下如何建图
+
+```java
+//构造图 + BFS/DFS
+private Map<String,Map<String,Double>> graph = new HashMap<>();
+
+public void buildGraph(List<List<String>> equations, double[] values){
+    for (int i = 0; i < values.length; i++) {
+        graph.computeIfAbsent(equations.get(i).get(0), k -> new HashMap<>()).put(equations.get(i).get(1), values[i]);
+        graph.computeIfAbsent(equations.get(i).get(1), k -> new HashMap<>()).put(equations.get(i).get(0), 1 / values[i]);
+    }
+}
+
+class Pair{
+    String key;
+    double val;
+    public Pair(String key,double val){
+        this.key=key;
+        this.val=val;
+    }
+}
+
+public double bfs(String a,String b){
+    //讲道理,不管a,b是否在graph中,只要想等都应该返回1吧,这里是考虑了0的情况?
+    if (!graph.containsKey(a) || !graph.containsKey(b)) {
+        return -1.0;
+    }
+    if (a.equals(b)) {
+        return 1.0;
+    }
+    Queue<Pair> queue=new LinkedList<>();
+    queue.add(new Pair(a,1.0));
+    HashSet<String> visit=new HashSet<>();
+    while(!queue.isEmpty()){
+        Pair cur=queue.poll();
+        if (!visit.contains(cur.key)) {
+            visit.add(cur.key);
+            Map<String,Double> map=graph.get(cur.key);
+            for (String next:map.keySet()) {
+                if (b.equals(next)) {
+                    return cur.val*map.get(next);
+                }
+                queue.add(new Pair(next,cur.val*map.get(next)));
+            }
+        }
+    }
+    return -1.0;
+}
+
+public double dfs(String a,String b,HashSet<String> visit){
+    if (!graph.containsKey(a)) {
+        return -1;
+    }
+    if (a.equals(b)) {
+        return 1;
+    }
+    visit.add(a);
+    Map<String,Double> nextMap=graph.get(a);
+    for (String next:nextMap.keySet()) {
+        if (!visit.contains(next)) {
+            double subres=dfs(next,b,visit);
+            if (subres!=-1) {
+                return subres*nextMap.get(next);
+            }
+        }
+    }
+    return -1;
+}
+
+public double[] calcEquation(List<List<String>> equations, double[] values, List<List<String>> queries) {
+    buildGraph(equations,values);
+    double[] res=new double[queries.size()];
+    int index=0;
+    for (List<String> query:queries) {
+        HashSet<String> visit=new HashSet<>();
+        //res[index++]=bfs(query.get(0),query.get(1),visit); 
+        res[index++]=bfs(query.get(0),query.get(1));
+    }
     return res;
 }
 ```
