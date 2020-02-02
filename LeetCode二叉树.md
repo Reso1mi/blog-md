@@ -4054,3 +4054,150 @@ public List<Integer> megerList(List<Integer> list1,int index1,List<Integer> list
 }
 ```
 
+## [1339. 分裂二叉树的最大乘积](https://leetcode-cn.com/problems/maximum-product-of-splitted-binary- tree/)
+
+给你一棵二叉树，它的根为 root 。请你删除 1 条边，使二叉树分裂成两棵子树，且它们子树和的乘积尽可能大。
+
+由于答案可能会很大，请你将结果对 10^9 + 7 取模后再返回。
+
+**示例 1：**
+
+![image.png](https://i.loli.net/2020/02/02/HT93vAj7gcXwY8U.png)
+
+```java
+输入：root = [1,2,3,4,5,6]
+输出：110
+解释：删除红色的边，得到 2 棵子树，和分别为 11 和 10 。它们的乘积是 110 （11*10）
+```
+
+**示例 2：**
+
+![image.png](https://i.loli.net/2020/02/02/Fit7Xl2jkzCZyhV.png)
+
+```java
+输入：root = [1,null,2,3,4,null,null,5,6]
+输出：90
+解释：移除红色的边，得到 2 棵子树，和分别是 15 和 6 。它们的乘积为 90 （15*6）
+```
+
+**解法一**
+
+174周赛的第三题，当时比赛TLE了。。写了个很蠢的算法
+
+```java
+private long mod=1000000007;
+
+public int maxProduct(TreeNode root) {
+    Stack<TreeNode> stack=new Stack<>();
+    TreeNode cur=root;
+    long sumAll=sum(root);
+    while(!stack.isEmpty() || cur!=null){
+        TreeNode temp=null;
+        long s=0L;
+        while(cur!=null){
+            temp=cur.left;
+            cur.left=null;
+            long r=sum(root);
+            s=r*(sumAll-r);
+            max=Math.max(s,max);
+            cur.left=temp;
+            stack.add(cur);
+            cur=cur.left;
+        }
+        cur=stack.pop();
+        temp=cur.right;
+        cur.right=null;
+        long r=sum(root);
+        s=r*(sumAll-r);
+        max=Math.max(s,max);
+        cur.right=temp;
+        cur=cur.right;
+    }
+    return (int)(max%mod);
+}
+
+private long max=-1;
+
+public long sum(TreeNode root){
+    if (root==null) {
+        return 0;
+    }
+    return root.val+sum(root.left)+sum(root.right);
+}
+```
+
+我居然真的去删除节点去了。。。导致后面都没办法对sum做记忆化，太菜了啊
+
+**解法二**
+
+能AC但是效率感人
+
+```java
+private long mod=1000000007;
+
+private long sumAll=0;
+
+private long max=-1;
+
+public int maxProduct(TreeNode root) {
+    sumAll=sum(root);
+    dfs(root);
+    return (int)(max%mod);
+}
+
+public void dfs(TreeNode root){
+    if (root==null) {
+        return;
+    }
+    long temp=sum(root);
+    max=Math.max(max,temp*(sumAll-temp));
+    dfs(root.left);
+    dfs(root.right);
+}
+
+private HashMap<String,Long> cache=new HashMap<>();
+
+public long sum(TreeNode root){
+    if (root==null) {
+        return 0;
+    }
+    if (cache.containsKey(root.toString())) {
+        return cache.get(root.toString());
+    }
+    cache.put(root.toString(),root.val+sum(root.left)+sum(root.right));
+    return cache.get(root.toString());
+}
+```
+
+**解法三**
+
+标准`O(N)`的解法
+
+```java
+private long mod=1000000007;    
+
+List<Long> sum=new ArrayList<>();
+
+//标准解法
+public int maxProduct(TreeNode root) {
+    long max=-1;
+    long sumAll=dfs(root);
+    for (Long s:sum) {
+        max=Math.max(max,s*(sumAll-s));    
+    }
+    return (int)(max%mod);
+}
+
+public long dfs(TreeNode root){
+    if (root==null) {
+        return 0;
+    }
+    sum.add(root.val+dfs(root.left)+dfs(root.right));
+    return sum.get(sum.size()-1);
+}
+```
+
+在dfs的过程中将子树的sum存起来，然后直接遍历list，求 `max(s*(sumAll-s))`就ok
+
+> 这里最开始被大数据也卡了一会儿，不知道啥时候取模，其实这里题目没有那么难，相乘的结果并不会溢出Long，如果要是溢出Long的话可能就要用什么带模快速乘了
+

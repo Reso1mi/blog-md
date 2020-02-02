@@ -2626,6 +2626,169 @@ public int minDifficulty(int[] jobDifficulty, int d) {
 
 这样时间复杂度就降低为`O(dN^2)` ，当然还是有一点不完美，就是对边界的处理可以通过对dp数组+1来规避，这个问题我之前也说过，这我尝试改了下，没改好，不改了，哈哈哈~
 
+## [5331. 跳跃游戏 V](https://leetcode-cn.com/problems/jump-game-v/)
+
+给你一个整数数组 arr 和一个整数 d 。每一步你可以从下标 i 跳到：
+
+- `i + x` ，其中 `i + x < arr.length 且 0 < x <= d` 。
+- `i - x` ，其中 `i - x >= 0 且 0 < x <= d` 。
+
+除此以外，你从下标 i 跳到下标 j 需要满足：`arr[i] > arr[j] 且 arr[i] > arr[k]` ，其中下标 k 是所有 i 到 j 之间的数字（更正式的，min(i, j) < k < max(i, j)）。
+
+你可以选择数组的任意下标开始跳跃。请你返回你 **最多** 可以访问多少个下标。
+
+请注意，任何时刻你都不能跳到数组的外面
+
+**示例 1：**
+
+![image.png](https://i.loli.net/2020/02/02/lroNpJhPkVc46Ya.png)
+
+```java
+输入：arr = [6,4,14,6,8,13,9,7,10,6,12], d = 2
+输出：4
+解释：你可以从下标 10 出发，然后如上图依次经过 10 --> 8 --> 6 --> 7 。
+注意，如果你从下标 6 开始，你只能跳到下标 7 处。你不能跳到下标 5 处因为 13 > 9 。你也不能跳到下标 4 处，因为下标 5 在下标 4 和 6 之间且 13 > 9 。
+类似的，你不能从下标 3 处跳到下标 2 或者下标 1 处。
+```
+
+**示例 2：**
+
+```java
+输入：arr = [3,3,3,3,3], d = 3
+输出：1
+解释：你可以从任意下标处开始且你永远无法跳到任何其他坐标。
+```
+
+**示例 3：**
+
+```java
+输入：arr = [7,6,5,4,3,2,1], d = 1
+输出：7
+解释：从下标 0 处开始，你可以按照数值从大到小，访问所有的下标。
+```
+
+**提示：**
+
+- `1 <= arr.length <= 1000`
+- `1 <= arr[i] <= 10^5`
+- `1 <= d <= arr.length`
+
+**解法一**
+
+预处理+回溯+记忆化
+
+```java
+private Integer[] cache=null;
+
+public int maxJumps(int[] arr, int d) {
+    int[][] max=new int[arr.length][arr.length];
+    cache=new Integer[arr.length];
+    for (int i=0;i<arr.length;i++) {
+        max[i][i]=arr[i];
+        for (int j=i+1;j<arr.length;j++) {
+            max[i][j]=Math.max(max[i][j-1],arr[j]);
+        }
+    }
+    int res=0;
+    for (int i=0;i<arr.length;i++) {
+        res=Math.max(jump(arr,d,i,max),res);
+    }
+    return res+1;
+}
+
+public int jump(int[] arr,int d,int index,int[][] max){ //从index起跳能跳多远
+    if (cache[index]!=null) {
+        return cache[index];
+    }
+    int res=0;
+    for (int i=Math.max(index-d,0);i<index;i++) {
+        if (arr[index]>arr[i] && arr[index]>max[i+1][index-1]) {
+            res=Math.max(jump(arr,d,i,max)+1,res);
+        }
+    }
+    //index=0, i=1 , i<=1
+    for (int i=index+1;i<=Math.min(index+d,arr.length-1);i++) {
+        if (arr[index]>arr[i] && arr[index]>max[index+1][i-1]) {
+            res=Math.max(jump(arr,d,i,max)+1,res);
+        }
+    }
+    return cache[index]=res;
+}
+```
+
+其实已经在超时的边缘了。。。没有必要做预处理，一开始被题括号里面的信息给迷惑了，不然也不会搞个预处理，其实题目的意思就是只能向低处跳，我开始还搞了两个区间值haha，脑壳有点不亲白
+
+**解法二**
+
+改良后的回溯+记忆化
+
+```java
+private Integer[] cache=null;
+
+public int maxJumps(int[] arr, int d) {
+    cache=new Integer[arr.length];
+    int res=0;
+    for (int i=0;i<arr.length;i++) {
+        res=Math.max(jump(arr,d,i),res);
+    }
+    return res+1;
+}
+
+public int jump(int[] arr,int d,int index){ 
+    if (cache[index]!=null) {
+        return cache[index];
+    }
+    int res=0;
+    //挨个跳,有一个跳不到,后面所有的就都跳不到了
+    for (int i=index-1;i>=Math.max(index-d,0) && arr[index]>arr[i];i--) {
+        res=Math.max(jump(arr,d,i)+1,res);
+    }
+    for (int i=index+1;i<=Math.min(index+d,arr.length-1) && arr[index]>arr[i];i++) {
+        res=Math.max(jump(arr,d,i)+1,res);
+    }
+    return cache[index]=res;
+}
+```
+
+**解法三**
+
+自底向上动态规划
+
+```java
+public int maxJumps(int[] arr, int d) {
+    int res=0,len=arr.length;
+    Pair[] pair=new Pair[len];
+    int[] dp=new int[len];
+    Arrays.fill(dp,1);
+    for (int i=0;i<len;i++) pair[i]=new Pair(i,arr[i]);
+    Arrays.sort(pair,(p1,p2)->p1.value-p2.value);
+    for (int i=0;i<len;i++) {
+        int index=pair[i].index;
+        //向左
+        for (int j=index-1;j>=Math.max(index-d,0) && arr[index]>arr[j];j--) {
+            dp[index]=Math.max(dp[j]+1,dp[index]);
+        }
+        //向右
+        for (int j=index+1;j<=Math.min(index+d,arr.length-1) && arr[index]>arr[j];j++) {
+            dp[index]=Math.max(dp[j]+1,dp[index]);
+        }
+        res=Math.max(dp[index],res);
+    }
+    return res;
+}
+
+class Pair{
+    int index;
+    int value;
+    public Pair(int index,int value){
+        this.index=index;
+        this.value=value;
+    }
+}
+```
+
+这里其实动态规划还有麻烦一点，因为需要从高向低跳，所以我们需要先保证低处的dp值先计算完成，所以我们需要先排序，同时要保留原索引，所以我们需要建立一个`Pair`数组来辅助，跳的方式和上面回溯的一样
+
 ##  _字符串类型的动态规划_
 
 ## [1143. 最长公共子序列](https://leetcode-cn.com/problems/longest-common-subsequence/)
