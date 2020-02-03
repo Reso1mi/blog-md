@@ -2413,7 +2413,7 @@ public boolean isMatch(String s, String p) {
 
 **示例 1：**
 
-![leetcode](https://img01.sogoucdn.com/app/a/100520146/af9a09d4f50aa7c4d40ff8c7f8bdc423)
+![image.png](https://i.loli.net/2020/02/03/kAPc2ELusMa9qJZ.png)
 
 ```java
 输入：n = 5, ranges = [3,4,1,1,0,0]
@@ -2490,9 +2490,9 @@ public int minTaps(int n, int[] ranges) {
 
 **解法二**
 
-贪心算法
+贪心算法，和[贪心专题](http://imlgw.top/2020/01/21/leetcode-tan-xin/)中的 [1024. 视频剪辑]()是一样的题目
 
-过两天再来补吧，目前还是不能白板写出来
+有时间再来补吧
 
 ## [1335. 工作计划的最低难度](https://leetcode-cn.com/problems/minimum-difficulty-of-a-job-schedule/)
 
