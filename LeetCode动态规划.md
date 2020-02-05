@@ -2789,6 +2789,153 @@ class Pair{
 
 这里其实动态规划还有麻烦一点，因为需要从高向低跳，所以我们需要先保证低处的dp值先计算完成，所以我们需要先排序，同时要保留原索引，所以我们需要建立一个`Pair`数组来辅助，跳的方式和上面回溯的一样
 
+## [1262. 可被三整除的最大和](https://leetcode-cn.com/problems/greatest-sum-divisible-by-three/)
+
+给你一个整数数组 nums，请你找出并返回能被三整除的元素最大和。
+
+**示例 1：**
+
+```java
+输入：nums = [3,6,5,1,8]
+输出：18
+解释：选出数字 3, 6, 1 和 8，它们的和是 18（可被 3 整除的最大和）。
+```
+
+
+**示例 2：**
+
+```java
+输入：nums = [4]
+输出：0
+解释：4 不能被 3 整除，所以无法选出数字，返回 0。
+```
+
+**示例 3：**
+
+```java
+输入：nums = [1,2,3,4,4]
+输出：12
+解释：选出数字 1, 3, 4 以及 4，它们的和是 12（可被 3 整除的最大和）。
+```
+
+**提示：**
+
+- `1 <= nums.length <= 4 * 10^4`
+- `1 <= nums[i] <= 10^4`
+
+**解法一**
+
+动态规划的解法，很久之前的一次周赛的题，好像是第一次双周赛的题？
+
+```java
+public int maxSumDivThree(int[] nums) {
+    if (nums==null || nums.length<=0) {
+        return 0;
+    }
+    //dp[i][k] 0~i 之间/3余k的最大元素和
+    int[][] dp=new int[nums.length+1][3]; 
+    dp[0][0]=0; //初始状态定义
+    dp[0][1]=Integer.MIN_VALUE;
+    dp[0][2]=Integer.MIN_VALUE;
+    for (int i=1;i<=nums.length;i++) {
+        if (nums[i-1]%3==0) {
+            dp[i][0]=Math.max(dp[i-1][0],dp[i-1][0]+nums[i-1]);
+            dp[i][1]=Math.max(dp[i-1][1],dp[i-1][1]+nums[i-1]);
+            dp[i][2]=Math.max(dp[i-1][2],dp[i-1][2]+nums[i-1]);
+        }
+        if (nums[i-1]%3==1) {
+            dp[i][0]=Math.max(dp[i-1][0],dp[i-1][2]+nums[i-1]);
+            dp[i][1]=Math.max(dp[i-1][1],dp[i-1][0]+nums[i-1]);
+            dp[i][2]=Math.max(dp[i-1][2],dp[i-1][1]+nums[i-1]);   
+        }
+        if (nums[i-1]%3==2) {
+            dp[i][0]=Math.max(dp[i-1][0],dp[i-1][1]+nums[i-1]);
+            dp[i][1]=Math.max(dp[i-1][1],dp[i-1][2]+nums[i-1]);
+            dp[i][2]=Math.max(dp[i-1][2],dp[i-1][0]+nums[i-1]);   
+        }
+    }
+    return  Math.max(0,dp[nums.length][0]);
+}
+```
+
+看一下数据的范围`40000`，所以时间复杂度肯定是`O(N)` 或`O(NlogN)`的，`O(N^2)`的肯定超时啦
+
+想了很久没想出来，然后瞄了一眼评论区，发现dp数组定义的是和余数相关的，然后就反应过来了，余0余1余2， 他们的组合就可以得到新的最大余数和，我们最后要求的就是最后`[0,nums.length]` 余数为0的最大和
+
+递推公式就不用多说了，看代码就行了，递推公式很容易得到，关键就是初始的状态定义，第一步的递推，我一开始没有设置边界，直接开始dp然后后面怎么改都不对，一开始定义的base dp
+
+```java
+dp[0][0]=nums[0]%3==0?nums[0]:Integer.MIN_VALUE;
+dp[0][1]=nums[0]%3==1?nums[0]:Integer.MIN_VALUE;
+dp[0][2]=nums[0]%3==2?nums[0]:Integer.MIN_VALUE;
+```
+
+然后过了几十后卡在了个case上
+
+```java
+[2,19,6,16,5,10,7,4,11,6]
+```
+
+递推到第二个其实就有问题了
+
+```java
+      0     1      2 
+2    MIN   MIN     2 
+19   21    MIN+19  2
+```
+
+这里的19的1明显应该就是19，这里直接根据`dp[i-1][1]+19`递推得到的，后面的肯定都不对了，那我们这里将初始值设置为0可以么？
+
+```java
+dp[0][0]=nums[0]%3==0?nums[0]:0;
+```
+
+对这个case确实可以，但是对于其他的就不对了，这容易想到，你设置为0下一层的dp值就可以从这个值递推过来，但是这明显是不对的，举个例子： `3，4` 你将第一个3的余2最大值设置为0，那么下一个4就可以通过上一个余2的最大值来更新当前的余0最大值，变成4，这很明显就不对了，4根本就不能被3整除
+
+所以这里我们最好的处理方式是添加一个边界，相当于在数组的最前面添加一个0，0%3=0
+
+然后我们只需要将`dp[0][0]`设置为0就可以了，而1和2就设置为`INT_MIN`，让下一层不能通它来转移
+
+> dp边界的处理方式还是要多练啊
+
+**解法二**
+
+优化空间为O(1)
+
+```java
+public int maxSumDivThree2(int[] nums) {
+    int[] dp=new int[3];
+    dp[1]=Integer.MIN_VALUE;
+    dp[2]=Integer.MIN_VALUE;
+    for (int i=1;i<=nums.length;i++) {
+        if (nums[i-1]%3==0) {
+            dp[0]=Math.max(dp[0],dp[0]+nums[i-1]);
+            dp[1]=Math.max(dp[1],dp[1]+nums[i-1]);
+            dp[2]=Math.max(dp[2],dp[2]+nums[i-1]);
+        }
+        if (nums[i-1]%3==1) {
+            int temp0=dp[0];
+            dp[0]=Math.max(dp[0],dp[2]+nums[i-1]);
+            dp[2]=Math.max(dp[2],dp[1]+nums[i-1]); //按依赖关系调整顺序,减少变量
+            dp[1]=Math.max(dp[1],temp0+nums[i-1]);
+        }
+        if (nums[i-1]%3==2) {
+            int temp0=dp[0];
+            dp[0]=Math.max(dp[0],dp[1]+nums[i-1]);
+            dp[1]=Math.max(dp[1],dp[2]+nums[i-1]);
+            dp[2]=Math.max(dp[2],temp0+nums[i-1]);
+        }
+    }
+    return dp[0];
+}
+```
+
+可以看出代码还是可以简化的很短的，为了表达的清晰就不改了
+
+**解法三**
+
+贪心，放在 [贪心专题](http://imlgw.top/2020/01/21/leetcode-tan-xin/#406-%E6%A0%B9%E6%8D%AE%E8%BA%AB%E9%AB%98%E9%87%8D%E5%BB%BA%E9%98%9F%E5%88%97) 中
+
 ##  _字符串类型的动态规划_
 
 ## [1143. 最长公共子序列](https://leetcode-cn.com/problems/longest-common-subsequence/)

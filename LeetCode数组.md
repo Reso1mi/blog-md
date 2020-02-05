@@ -3385,6 +3385,54 @@ public List<Integer> filterRestaurants(int[][] restaurants, int veganFriendly, i
 }
 ```
 
+## [238. 除自身以外数组的乘积](https://leetcode-cn.com/problems/product-of-array-except-self/)
+
+给定长度为 n 的整数数组 nums，其中 n > 1，返回输出数组 output ，其中 output[i] 等于 nums 中除 nums[i] 之外其余各元素的乘积。
+
+**示例:**
+
+```java
+输入: [1,2,3,4]
+输出: [24,12,8,6]
+说明: 请不要使用除法，且在 O(n) 时间复杂度内完成此题。
+```
+
+**进阶：**
+你可以在常数空间复杂度内完成这个题目吗？（ 出于对空间复杂度分析的目的，输出数组不被视为额外空间。）
+
+**解法一**
+
+还行，独立的想到了解法，没啥好说的
+
+```java
+public int[] productExceptSelf(int[] nums) {
+    if (nums==null || nums.length<=0) {
+        return new int[0];
+    }
+    int[] left=new int[nums.length+1]; 
+    left[0]=1;//left[i]: [0 ~ i-1]的累积
+    int[] right=new int[nums.length+1];
+    right[nums.length]=1; //right[i]: [i ~ nums.length-1]的累积
+    for (int i=1;i<=nums.length;i++) {
+        left[i]=left[i-1]*nums[i-1];
+    }
+    for (int i=nums.length-1;i>=0;i--) {
+        right[i]=right[i+1]*nums[i];
+    }
+    int[] res=new int[nums.length];
+    //1 2 3
+    res[0]=right[1];
+    for (int i=1;i<nums.length;i++) {
+        res[i]=left[i]*right[i+1];
+    }
+    return res;
+}
+```
+
+**解法二**
+
+O(1)进阶版有时间再来补
+
 ##  二进制
 
 ## [136. 只出现一次的数字](https://leetcode-cn.com/problems/single-number/)
