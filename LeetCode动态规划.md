@@ -2936,6 +2936,134 @@ public int maxSumDivThree2(int[] nums) {
 
 贪心，放在 [贪心专题](http://imlgw.top/2020/01/21/leetcode-tan-xin/#406-%E6%A0%B9%E6%8D%AE%E8%BA%AB%E9%AB%98%E9%87%8D%E5%BB%BA%E9%98%9F%E5%88%97) 中
 
+## [312. 戳气球](https://leetcode-cn.com/problems/burst-balloons/)
+
+有 n 个气球，编号为0 到 n-1，每个气球上都标有一个数字，这些数字存在数组 nums 中。
+
+现在要求你戳破所有的气球。每当你戳破一个气球 i 时，你可以获得 `nums[left] * nums[i] * nums[right]` 个硬币。 这里的 `left` 和 `right` 代表和 i 相邻的两个气球的序号。注意当你戳破了气球 i 后，气球 left 和气球 right 就变成了相邻的气球。
+
+求所能获得硬币的最大数量。
+
+**说明:**
+
+- 你可以假设 nums[-1] = nums[n] = 1，但注意它们不是真实存在的所以并不能被戳破。
+- 0 ≤ n ≤ 500, 0 ≤ nums[i] ≤ 100
+
+**示例:**
+
+```java
+输入: [3,1,5,8]
+输出: 167 
+解释: nums = [3,1,5,8] --> [3,5,8] -->   [3,8]   -->  [8]  --> []
+     coins =  3*1*5      +  3*5*8    +  1*3*8      + 1*8*1   = 167
+```
+
+**解法一**
+
+暴力回溯，其实就是尝试所有的组合，这样时间复杂度`O(N!)` ，数据超过十几就不行了
+
+```java
+public int maxCoinsTLE(int[] nums) {
+    LinkedList<Integer> list=new LinkedList<>();
+    for (int n:nums) list.add(n);
+    dfs(list,0);
+    return max;
+}
+
+private int max=0;
+
+public void dfs(LinkedList<Integer> list,int sum) {
+    if (list.size()==0) {
+        max=Math.max(sum,max);
+        return;
+    }
+    for (int i=0;i<list.size();i++) {
+        int temp=list.get(i);
+        //这个值要先算
+        int cur=(i-1<0?1:list.get(i-1))*(i+1>=list.size()?1:list.get(i+1))*temp;
+        list.remove(i);
+        dfs(list,sum+cur);
+        list.add(i,temp);
+    }
+}
+```
+
+**解法二**
+
+区间型动态规划，也是我第一次听说这个名词，但是之前其实已经做了不少的区间型的dp了
+
+```java
+public int maxCoins(int[] nums) {
+    if (nums==null || nums.length<=0) {
+        return 0;
+    }
+    int[] A=new int[nums.length+2];
+    A[0]=1;A[A.length-1]=1;
+    for (int i=0;i<nums.length;i++) {
+        A[i+1]=nums[i]; //copy一个新数组
+    }
+    //区间DP
+    int n=A.length;
+    int[][] dp=new int[n][n]; //dp[i][j]代表的是不包含边界i,j的最大得分
+    for (int len=2;len<=n;len++) { //枚举区间长度
+        for (int i=0;i<=n-len;i++) { //枚举起点
+            int j=i+len-1; //区间终点
+            for (int k=i+1;k<j;k++) { //枚举分割点
+                dp[i][j]=Math.max(dp[i][j],dp[i][k]+dp[k][j]+A[k]*A[i]*A[j]);
+            }
+        }
+    }
+    return dp[0][n-1];
+}
+```
+
+这里为了处理边界将数组头尾插入了1，copy了一个新的数组，下面的区间型dp也是在看了题解，然后对着板子写的，当然这题的关键不是这里，关键是如何规划，这里搬运 [题解区大佬](https://leetcode-cn.com/problems/burst-balloons/solution/dong-tai-gui-hua-qiu-jie-by-feng-ji-wei-wang/) 的解释
+
+我们来分析一下按照上面的那个递归的思路状态转移方程能写吗？如果按照上面的递归的思路，我们定义dp[i][j]表示对于i-j的气球的最大的收益，那状态转移方程就是
+
+`dp[i][j]=max(coins[k]* coins[k-1] * coins[k+1]+dp[i][k-1]+dp[k+1][j]) k∈[i,j]`,
+
+就按上面的那个例子，[3,1,5,8],来写一下过程
+
+```java
+扎爆3 剩下[]和[1,5,8]
+扎爆1 剩下[3]和[5,8]
+扎爆5 剩下[3,1]和[8]
+扎爆8 剩下[3,1,5]和[]
+```
+
+然后在这些里面找到一个最大值返回，这其中对于扎爆1和8的最大的收益这样定义是没有问题的，因为两者都在边界，但是对于扎爆1和5就有问题了，就拿先扎爆1来说，扎爆1，剩下的最大的收益变为了[3]和[5,8]这两个区间的最大的收益的和，这个肯定不对，因为剩下的[3,5,8]区间的最大的收益的和不会是[3]的最大收益和与[5,8]的最大收益和的总和构成的，所以这个状态转移方程是不对的
+
+那应该怎么定义状态转移方程呢，这也就是这道题巧妙的地方，它使用逆向思维，也就是上面的状态转移方程是由某个气球先爆得出来的，那么这里我们让指定的气球最后爆，这样的话状态转移方程为
+
+`dp[i][j]=max(coins[k]*coins[i-1]*coins[j+1]+dp[i][k-1]+dp[k+1][j]) k∈[i,j]` 
+
+再来看上面的例子，就对了，也就是对于[i,j]的气球，我们让某个位置的气球最后再爆，求出它左区间的最大的收益和右区间的最大的收益，加上这个气球最后爆掉所获得的收益，一 一比较，返回一个最大值就好了，这里要注意的是，要按区间的长度来进行状态的转移，也就是先求长度为1的，然后2的依次类推，因为这里状态转移方程涉及到了当前位置的后面的区间的最大的收益，但是后面的区间的长度是小于当前区间的长度的，故应该按长度来进行状态的转移，这也是典型的区间型动态规划的套路
+
+**解法三**
+
+在解法二的基础上简化了代码，`dp[i][j]`代表`i`和`j`之间，包含`i`和`j`位置，戳爆所有气球的最大得分
+
+```java
+public int maxCoins(int[] nums) {
+    if (nums==null || nums.length<=0) {
+        return 0;
+    }
+    int n=nums.length;
+    //dp[i][j]代表的是包含边界i,j的最大得分
+    int[][] dp=new int[n][n]; 
+    for (int len=1;len<=n;len++) { //枚举区间长度
+        for (int i=0;i<=n-len;i++) { //枚举起点
+            int j=i+len-1; //区间终点
+            for (int k=i;k<=j;k++) { //枚举分割点
+                dp[i][j]=Math.max(dp[i][j],(k-1>=0?dp[i][k-1]:0)+(k+1<n?dp[k+1][j]:0)+nums[k]*(i-1>=0?nums[i-1]:1)*(j+1<n?nums[j+1]:1));
+            }
+        }
+    }
+    return dp[0][n-1];
+}
+```
+
 ##  _字符串类型的动态规划_
 
 ## [1143. 最长公共子序列](https://leetcode-cn.com/problems/longest-common-subsequence/)

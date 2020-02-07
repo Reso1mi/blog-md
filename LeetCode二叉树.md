@@ -707,8 +707,61 @@ public List<Integer> rightSideView(TreeNode root) {
 ```
 只记录每一层最后一个节点，最后得到的就是右视图
 
+## [637. 二叉树的层平均值](https://leetcode-cn.com/problems/average-of-levels-in-binary-tree/) 
+
+给定一个非空二叉树, 返回一个由每层节点平均值组成的数组.
+
+**示例 1:**
+
+```java
+输入:
+    3
+   / \
+  9  20
+    /  \
+   15   7
+输出: [3, 14.5, 11]
+解释:
+第0层的平均值是 3,  第1层是 14.5, 第2层是 11. 因此返回 [3, 14.5, 11].
+```
 
 
+**注意：**
+
+1. 节点值的范围在32位有符号整数范围内。
+
+**解法一**
+
+一百遍啊一百遍，这应该属于树类型题的HelloWorld吧 ~ 
+
+```java
+public List<Double> averageOfLevels(TreeNode root) {
+    if (root==null) {
+        return new LinkedList<>();
+    }
+    Queue<TreeNode> queue=new LinkedList<>();
+    List<Double> res=new ArrayList<>();
+    queue.add(root);
+    while (!queue.isEmpty()) {
+        int size=queue.size();
+        int temp=size;
+        double average=0;
+        while(size-->0){
+            TreeNode cur=queue.poll();
+            average+=cur.val;
+            if (cur.left!=null) {
+                queue.add(cur.left);
+            }
+            if (cur.right!=null) {
+                queue.add(cur.right);
+            }
+        }
+        average/=temp;
+        res.add(average);
+    }
+    return res;
+}
+```
 ## [104. 二叉树的最大深度](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/)
 
 给定一个二叉树，找出其最大深度。
@@ -2277,7 +2330,7 @@ public boolean isSymmetric(TreeNode t1,TreeNode t2) {
 
 ![mark](http://static.imlgw.top/blog/20191107/Ae6daB6SuXdl.png?imageslim)
 
-判断两颗树是否成镜像对称的话，其实就和照镜子一样的，如上图，判断左子树和右子树是否成镜像对称，就需要判断`t1的左子树和t2的右子树是否镜像对称,t1的右子树和t2的左子树是否镜像对称`，根据这个就可以写出递归函数，还是挺妙的
+判断两颗树是否成镜像对称的话，其实就和照镜子一样的，如上图，判断左子树和右子树是否成镜像对称，就需要判断**t1的左子树和t2的右子树是否镜像对称,t1的右子树和t2的左子树是否镜像对称**，根据这个就可以写出递归函数，还是挺妙的
 
 **解法三**
 
@@ -4054,7 +4107,7 @@ public List<Integer> megerList(List<Integer> list1,int index1,List<Integer> list
 }
 ```
 
-## [1339. 分裂二叉树的最大乘积](https://leetcode-cn.com/problems/maximum-product-of-splitted-binary- tree/)
+## [1339. 分裂二叉树的最大乘积](https://leetcode-cn.com/problems/maximum-product-of-splitted-binary-tree/)
 
 给你一棵二叉树，它的根为 root 。请你删除 1 条边，使二叉树分裂成两棵子树，且它们子树和的乘积尽可能大。
 
@@ -4200,4 +4253,126 @@ public long dfs(TreeNode root){
 在dfs的过程中将子树的sum存起来，然后直接遍历list，求 `max(s*(sumAll-s))`就ok
 
 > 这里最开始被大数据也卡了一会儿，不知道啥时候取模，其实这里题目没有那么难，相乘的结果并不会溢出Long，如果要是溢出Long的话可能就要用什么带模快速乘了
+
+## [297. 二叉树的序列化与反序列化](https://leetcode-cn.com/problems/serialize-and-deserialize-binary-tree/)
+
+序列化是将一个数据结构或者对象转换为连续的比特位的操作，进而可以将转换后的数据存储在一个文件或者内存中，同时也可以通过网络传输到另一个计算机环境，采取相反方式重构得到原数据。
+
+请设计一个算法来实现二叉树的序列化与反序列化。这里不限定你的序列 / 反序列化算法执行逻辑，你只需要保证一个二叉树可以被序列化为一个字符串并且将这个字符串反序列化为原始的树结构。
+
+**示例:** 
+
+```java
+你可以将以下二叉树：
+    1
+   / \
+  2   3
+     / \
+    4   5
+
+序列化为 "[1,2,3,null,null,4,5]"
+```
+
+**提示:** 这与 LeetCode 目前使用的方式一致，详情请参阅 LeetCode 序列化二叉树的格式。你并非必须采取这种方式，你也可以采用其他的方法解决这个问题。
+
+**说明:** 不要使用类的成员 / 全局 / 静态变量来存储状态，你的序列化和反序列化算法应该是无状态的。
+
+**解法一**
+
+层序遍历非递归的方式
+
+```java
+//层序遍历的方式
+public String serialize(TreeNode root) {
+    if (root==null) {
+        return "";
+    }
+    //BFS
+    StringBuilder sb=new StringBuilder();
+    Queue<TreeNode> queue=new LinkedList<>();
+    queue.add(root);
+    while(!queue.isEmpty()){
+        TreeNode cur=queue.poll();
+        if (cur!=null) {
+            sb.append(cur.val+",");
+            queue.add(cur.left);
+            queue.add(cur.right);
+        }else{
+            sb.append("null,"); //会多很多null,不过影响不大
+        }
+    }
+    return sb.toString();
+}
+
+//按照题目意思写代码就ok
+public TreeNode deserialize(String data) {
+    if ("".equals(data)) {
+        return null;
+    }
+    String[] treeData=data.split(",");
+    int index=0;
+    TreeNode root=node(treeData[index]);
+    Queue<TreeNode> queue=new LinkedList<>();
+    queue.add(root);
+    while(!queue.isEmpty()){
+        TreeNode cur=queue.poll();
+        cur.left=node(treeData[++index]);
+        if (cur.left!=null) {
+            queue.add(cur.left);
+        }
+        cur.right=node(treeData[++index]);
+        if (cur.right!=null) {
+            queue.add(cur.right);
+        }
+    }
+    return root;
+}
+
+public TreeNode node(String str){
+    if (!"null".equals(str)) {
+        return new TreeNode(Integer.valueOf(str));
+    }
+    return null;
+}
+```
+
+**解法二**
+
+前序遍历递归方式
+
+```java
+public TreeNode node(String str){
+    if (!"null".equals(str)) {
+        return new TreeNode(Integer.valueOf(str));
+    }
+    return null;
+}
+
+public String serialize(TreeNode root) {
+    if (root==null) {
+        return "null";
+    }
+    return root.val+","+serialize(root.left)+","+serialize(root.right);
+}
+
+public TreeNode deserialize(String data) {
+    if ("".equals(data)) {
+        return null;
+    }
+    String[] dataTree=data.split(",");
+    Queue<String> queue=new LinkedList<>(Arrays.asList(dataTree));
+    return deserialize(queue);
+}
+
+public TreeNode deserialize(Queue<String> queue){
+    String val=queue.poll();
+    if ("null".equals(val)) {
+        return null;
+    }
+    TreeNode root=node(val);
+    root.left=deserialize(queue);
+    root.right=deserialize(queue);
+    return root;
+}
+```
 
