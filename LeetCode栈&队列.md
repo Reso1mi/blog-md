@@ -244,31 +244,37 @@ s = "2[abc]3[cd]ef", 返回 "abcabccdcdcdef".
 
 **解法一**
 
-第一眼就直接想到了用栈
+借助栈直接在原字符上做改动
 
 ```java
 public String decodeString(String s) {
     if (s==null || s.length()<=0) {
         return "";
     }
+    //转换为StringBuilder比较好处理,且效率较高
     StringBuilder sb=new StringBuilder(s);
     Stack<Integer>  stack=new Stack<>();
-    int i=0;
+    int i=0;//遍历索引
     while(i<sb.length()) {
         if (sb.charAt(i)=='[') {
             stack.push(i);
         }else if(sb.charAt(i)==']'){
-            int left=stack.pop();
-            String temp=sb.substring(left+1,i);
+            int left=stack.pop();//对应左括号索引
+            String temp=sb.substring(left+1,i);//相邻括号中的字符
             int preInt=left;
+            //'['前的数字,一开始以为只是个位数,还是挺麻烦的
             while(preInt-1>=0 && sb.charAt(preInt-1)>='0' && sb.charAt(preInt-1) <='9'){
                 preInt--;
             }
+            //repeat次数
             int repeat=Integer.valueOf(sb.substring(preInt,left));
+            //删除 k[encoded_string] 
             sb.delete(preInt,Math.min(i+1,sb.length()));
             for (int j=0;j<repeat;j++) {
+                //从k位置重新插入字符
                 sb.insert(preInt,temp);
             }
+            //重新定位索引到尾部
             i=preInt+(repeat*temp.length())-1;
         }
         i++;
@@ -276,6 +282,44 @@ public String decodeString(String s) {
     return sb.toString();
 }
 ```
+一开始是想用一个额外的String来保存结果，结果发现比较麻烦，索性直接将原字符转换为StringBuilder，然后借助api直接在原字符上做改动，因为是在原字符上做改动，所以索引的变化需要额外的注意，这也是最麻烦的一点，需要停下来稍微思考下才能确定，其他的还好，正常的思路，最初WA了一发是因为忽略了前面的数字可能是多位数😂
+
+**解法二**
+
+递归的方式，改成`StringBuilder`应该会好一点😂
+
+```java
+private int index=0; //字符索引下标
+
+public String decodeString(String s) {
+    if (s==null || s.length()<=0) {
+        return "";
+    }
+    String sb="";
+    while(index<s.length()){
+        if (s.charAt(index)==']') { //遇到右括号就结束
+            index++;//index定位到右括号下一个
+            return sb;
+        }else if(s.charAt(index)>='0' && s.charAt(index)<='9'){
+            int temp=index;
+            while(index<s.length() && s.charAt(index)!='['){
+                index++;
+            }
+            int repeat=Integer.valueOf(s.substring(temp,index));
+            index++;//跳过'['
+            String rs=decodeString(s);//从左括号开始
+            for (int i=0;i<repeat;i++) {
+                sb+=rs;
+            }
+        }else{
+            sb+=s.charAt(index++);
+        }
+    }
+    return sb;
+}
+```
+
+
 ## [344. 反转字符串](https://leetcode-cn.com/problems/reverse-string/)
 
 编写一个函数，其作用是将输入的字符串反转过来。输入字符串以字符数组 char[] 的形式给出。
@@ -1825,6 +1869,120 @@ public boolean dfs(int[] arr,int index,boolean[] visit){
     return b;
 }
 ```
+## [5314. 跳跃游戏 IV](https://leetcode-cn.com/problems/jump-game-iv/)
+
+给你一个整数数组 arr ，你一开始在数组的第一个元素处（下标为 0）。
+
+每一步，你可以从下标 i 跳到下标：
+
+- i + 1 满足：i + 1 < arr.length
+- i - 1 满足：i - 1 >= 0
+- j 满足：arr[i] == arr[j] 且 i != j
+
+请你返回到达数组最后一个元素的下标处所需的 最少操作次数 。 
+注意：任何时候你都不能跳到数组外面。
+
+**示例 1：**
+
+```java
+输入：arr = [100,-23,-23,404,100,23,23,23,3,404]
+输出：3
+解释：那你需要跳跃 3 次，下标依次为 0 --> 4 --> 3 --> 9 。下标 9 为数组的最后一个元素的下标。
+```
+
+**示例 2：**
+
+```java
+输入：arr = [7]
+输出：0
+解释：一开始就在最后一个元素处，所以你不需要跳跃。
+```
+
+
+**示例 3：**
+
+```java
+输入：arr = [7,6,9,6,9,6,9,7]
+输出：1
+解释：你可以直接从下标 0 处跳到下标 7 处，也就是数组的最后一个元素处。
+```
+
+
+**示例 4：**
+
+```java
+输入：arr = [6,1,9]
+输出：2
+```
+
+
+**示例 5：**
+
+```java
+输入：arr = [11,22,7,7,7,7,7,7,7,22,13]
+输出：3
+```
+
+**提示：**
+
+- `1 <= arr.length <= 5 * 10^4`
+- `-10^8 <= arr[i] <= 10^8`
+
+**解法一**
+
+19双周赛的最后一题，讲道理挺简单的（可我还是TLE了好长时间）
+
+```java
+public int minJumps(int[] arr) {
+    Queue<Pair> queue=new LinkedList<>();
+    boolean[] visit=new boolean[arr.length];
+    HashMap<Integer,List<Integer>> map=new HashMap<>();
+    //构建等值的索引 连续相同的只保留头尾
+    for (int i=0;i<arr.length;i++) {
+        List<Integer> lis=map.computeIfAbsent(arr[i],k->new ArrayList<>());
+        if (!((i-1>=0&&arr[i-1]==arr[i]) && (i+1<arr.length&&arr[i+1]==arr[i]))){
+            lis.add(i);
+        }
+    }
+    queue.add(new Pair(0,0));
+    visit[0]=true;
+    while(!queue.isEmpty()){
+        Pair pair=queue.poll();
+        if (pair.index==arr.length-1) {
+            return pair.step;
+        }
+        if(pair.index+1<arr.length && !visit[pair.index+1]){
+            queue.add(new Pair(pair.index+1,pair.step+1));
+            visit[pair.index+1]=true;
+        }
+        if (pair.index-1>=0 && !visit[pair.index-1]) {
+            queue.add(new Pair(pair.index-1,pair.step+1));
+            visit[pair.index-1]=true;
+        }
+        List<Integer> list=map.get(arr[pair.index]);
+        for (int i=list.size()-1;i>=0;i--) {
+            int idx=list.get(i);
+            if (!visit[idx]) {
+                queue.add(new Pair(idx,pair.step+1));
+                visit[idx]=true;
+            }
+        }
+    }
+    return -1;
+}
+
+class Pair{
+    int index;
+    int step;
+    public Pair(int index,int step){
+        this.index=index;
+        this.step=step;
+    }
+}
+```
+
+看一下数据范围，直接BFS遍历跳同值的肯定不行，所以想到了用map预处理同值的索引，结果还是TLE了，后面一个case有50000个7，这里即使做了map索引但是无奈太多了，依然会超时，这里其实这么多7，只有头和尾的7是用的，其他位置的7都是无用的，可以直接忽略，所以构建索引的时候可以跳过这些中间位置，这样可以节省很多时间
+
 ## [690. 员工的重要性](https://leetcode-cn.com/problems/employee-importance/)
 
 给定一个保存员工信息的数据结构，它包含了员工唯一的id，重要度 和 直系下属的id。

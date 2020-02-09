@@ -3385,6 +3385,24 @@ public List<Integer> filterRestaurants(int[][] restaurants, int veganFriendly, i
 }
 ```
 
+## [5313. 时钟指针的夹角](https://leetcode-cn.com/problems/angle-between-hands-of-a-clock/)
+
+给你两个数 `hour` 和 `minutes` 。请你返回在时钟上，由给定时间的时针和分针组成的较小角的角度（60 单位制）。
+
+这题就懒得copy了，19场双周赛的第三题，不应该是mid题的。。。
+
+**解法一**
+
+```java
+public double angleClock(int hour, int minutes) {
+    double m=minutes/60.0 * 360;
+    double h=((hour/12.0)*360)%360 + 30*minutes/60.0;
+    return Math.min(Math.abs(m-h),360-Math.abs(m-h));
+}
+```
+
+化简一下是 **h时m分的夹角为：5.5m-30h**
+
 ## [238. 除自身以外数组的乘积](https://leetcode-cn.com/problems/product-of-array-except-self/)
 
 给定长度为 n 的整数数组 nums，其中 n > 1，返回输出数组 output ，其中 output[i] 等于 nums 中除 nums[i] 之外其余各元素的乘积。

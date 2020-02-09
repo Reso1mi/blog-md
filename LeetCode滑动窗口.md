@@ -55,6 +55,8 @@ date: 2019/7/20
 
 你能在线性时间复杂度内解决此题吗？
 
+**解法一**
+
 ```java
 public static int[] maxSlidingWindow2(int[] nums, int k) {
     //题目上说的不为空，还是给我来了个空。。。。
@@ -85,6 +87,8 @@ public static int[] maxSlidingWindow2(int[] nums, int k) {
 }
 ```
 
+> 2020.2.9 回头看了下，这不是单调队列么😂（用堆也可以啦，不过既然要在头尾都操作，直接用队列会更方便）
+
 其实开始我也不会做，看了提示后搞了半天才弄出来，23ms，70%左右，思路就是利用一个双端队列(头尾都可以进出)，队列中存**数组下标**，然后遍历数组，在进入队列时从右向左遍历队尾，将**小于当前元素**的队尾元素去除(因为已经没用了，后面的最大值不可能是它们)，举个例子
 
 > [2，1，-1，3，......]  k=3 ，当读到**3**这个元素的时候，窗口再向右移动最大值肯定不会是右边的元素了，所以直接剔除他们，在纸上画一画就明白了
@@ -95,7 +99,9 @@ public static int[] maxSlidingWindow2(int[] nums, int k) {
 
 其实这里我开始不是这样做的，我在队列里面存的不是元素索引，我存的是元素，然后在判断什么时候移除的时候发现判断不了，**index**也只是结果元素的下标，并不能代表队列最左元素的下标，对于数组存下标优先于存元素，多一个已知量有时候还是很方便的
 
-这题其实还有其他的做法，应该说也是最直接的方法，提交记录上最快的方法。
+**解法二**
+
+属于对暴力法的优化吧，最坏情况下时间复杂度`O(NK)`，比如完全逆序的情况（2020.2.9回顾fix）
 
 ```java
 public static int[] maxSlidingWindow3(int[] nums, int k) {
@@ -139,7 +145,85 @@ public static int max(int a,int b){
 }
 ```
 
-2ms，99%  这种做法是最快的，而且也比较直白，时间复杂度最坏应该都是O(NK)，第一种耗时应该主要在队列的移除和添加元素上面。
+2ms，99%  提交记录这种做法是最快的😂，时间复杂度最坏应该是`O(NK)`
+
+## [5312. 大小为 K 且平均值大于等于阈值的子数组数目](https://leetcode-cn.com/problems/number-of-sub-arrays-of-size-k-and-average-greater-than-or-equal-to-threshold/) 
+
+给你一个整数数组 `arr` 和两个整数 `k` 和 `threshold` 。
+
+请你返回长度为 `k` 且平均值大于等于 `threshold` 的子数组数目。
+
+ **示例 1：**
+
+```java
+输入：arr = [2,2,2,2,5,5,5,8], k = 3, threshold = 4
+输出：3
+解释：子数组 [2,5,5],[5,5,5] 和 [5,5,8] 的平均值分别为 4，5 和 6 。其他长度为 3 的子数组的平均值都小于 4 （threshold 的值)。
+```
+
+
+**示例 2：**
+
+```java
+输入：arr = [1,1,1,1,1], k = 1, threshold = 0
+输出：5
+```
+
+
+**示例 3：**
+
+```java
+输入：arr = [11,13,17,23,29,31,7,5,2,3], k = 3, threshold = 5
+输出：6
+解释：前 6 个长度为 3 的子数组平均值都大于 5 。注意平均值不是整数。
+```
+
+
+**示例 4：**
+
+```java
+输入：arr = [7,7,7,7,7,7,7], k = 7, threshold = 7
+输出：1
+```
+
+
+**示例 5：**
+
+```java
+输入：arr = [4,4,4,4], k = 4, threshold = 1
+输出：1
+```
+
+**提示：**
+
+- `1 <= arr.length <= 10^5`
+- `1 <= arr[i] <= 10^4`
+- `1 <= k <= arr.length`
+- `0 <= threshold <= 10^4`
+
+**解法一**
+
+19双周赛的第2题，很简单的滑动窗口，枚举所有窗口计数就行了
+
+```java
+public int numOfSubarrays(int[] arr, int k, int threshold) {
+    threshold*=k;
+    int sum=0;
+    int count=0;
+    for (int i=0;i<k;i++) {
+        sum+=arr[i];
+    }
+    for (int i=k;i<arr.length;i++) {
+        if (sum>=threshold) {
+            count++;
+        }
+        //0 1 2 3
+        sum+=arr[i];
+        sum-=arr[i-k];
+    }
+    return count;
+}
+```
 
 ## [3. 无重复字符的最长子串](https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/)
 
