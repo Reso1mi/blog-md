@@ -224,6 +224,58 @@ public boolean checkValidString(String s) {
 
 很可惜没有`bugfree`，最后对左括号的判断改了好几次，一开始写的`bracketStack.size()<=starStack().size()`  然后提交后才意识到还要 `"*("` 这样的情况，然后要消除这种情况也简单，一开始我再栈中存的就是index，从star栈里面取比bracket栈index大的，然后消除，最后再看括号栈是不是空
 
+## [394. 字符串解码](https://leetcode-cn.com/problems/decode-string/)
+
+给定一个经过编码的字符串，返回它解码后的字符串。
+
+编码规则为: `k[encoded_string]`，表示其中方括号内部的 `encoded_string` 正好重复 k 次。注意 k 保证为正整数。
+
+你可以认为输入字符串总是有效的；输入字符串中没有额外的空格，且输入的方括号总是符合格式要求的。
+
+此外，你可以认为原始数据不包含数字，所有的数字只表示重复的次数 k ，例如不会出现像 3a 或 2[4] 的输入。
+
+**示例:**
+
+```java
+s = "3[a]2[bc]", 返回 "aaabcbc".
+s = "3[a2[c]]", 返回 "accaccacc".
+s = "2[abc]3[cd]ef", 返回 "abcabccdcdcdef".
+```
+
+**解法一**
+
+第一眼就直接想到了用栈
+
+```java
+public String decodeString(String s) {
+    if (s==null || s.length()<=0) {
+        return "";
+    }
+    StringBuilder sb=new StringBuilder(s);
+    Stack<Integer>  stack=new Stack<>();
+    int i=0;
+    while(i<sb.length()) {
+        if (sb.charAt(i)=='[') {
+            stack.push(i);
+        }else if(sb.charAt(i)==']'){
+            int left=stack.pop();
+            String temp=sb.substring(left+1,i);
+            int preInt=left;
+            while(preInt-1>=0 && sb.charAt(preInt-1)>='0' && sb.charAt(preInt-1) <='9'){
+                preInt--;
+            }
+            int repeat=Integer.valueOf(sb.substring(preInt,left));
+            sb.delete(preInt,Math.min(i+1,sb.length()));
+            for (int j=0;j<repeat;j++) {
+                sb.insert(preInt,temp);
+            }
+            i=preInt+(repeat*temp.length())-1;
+        }
+        i++;
+    }
+    return sb.toString();
+}
+```
 ## [344. 反转字符串](https://leetcode-cn.com/problems/reverse-string/)
 
 编写一个函数，其作用是将输入的字符串反转过来。输入字符串以字符数组 char[] 的形式给出。
