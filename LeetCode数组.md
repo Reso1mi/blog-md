@@ -3403,6 +3403,48 @@ public double angleClock(int hour, int minutes) {
 
 化简一下是 **h时m分的夹角为：5.5m-30h**
 
+## [557. 反转字符串中的单词 III](https://leetcode-cn.com/problems/reverse-words-in-a-string-iii/)
+
+给定一个字符串，你需要反转字符串中每个单词的字符顺序，同时仍保留空格和单词的初始顺序。
+
+**示例 1:**
+
+```java
+输入: "Let's take LeetCode contest"
+输出: "s'teL ekat edoCteeL tsetnoc" 
+```
+
+**注意：**在字符串中，每个单词由单个空格分隔，并且字符串中不会有任何额外的空格
+
+**解法一**
+
+原生的做法
+
+```java
+public String reverseWords(String s) {
+    s+=" ";//统一操作
+    char[] cs=s.toCharArray();
+    int start=0;
+    for (int i=0;i<cs.length;i++) {
+        if (cs[i]==' ') {
+            reverse(cs,start,i-1);
+            start=i+1;
+        }
+    }
+    return new String(cs,0,cs.length-1);
+}
+
+public void reverse(char[] s,int left,int right){
+    for (int i=left,j=right;i<j;i++,j--) {
+        char temp=s[i];
+        s[i]=s[j];
+        s[j]=temp;
+    }
+}
+```
+
+
+
 ## [238. 除自身以外数组的乘积](https://leetcode-cn.com/problems/product-of-array-except-self/)
 
 给定长度为 n 的整数数组 nums，其中 n > 1，返回输出数组 output ，其中 output[i] 等于 nums 中除 nums[i] 之外其余各元素的乘积。

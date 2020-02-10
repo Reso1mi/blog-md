@@ -2255,6 +2255,89 @@ public double[] calcEquation(List<List<String>> equations, double[] values, List
 }
 ```
 
+## [301. 删除无效的括号](https://leetcode-cn.com/problems/remove-invalid-parentheses/)
+
+删除最小数量的无效括号，使得输入的字符串有效，返回所有可能的结果。
+
+**说明:** 输入可能包含了除 ( 和 ) 以外的字符。
+
+**示例 1:**
+
+```java
+输入: "()())()"
+输出: ["()()()", "(())()"]
+```
+
+
+**示例 2:**
+
+```java
+输入: "(a)())()"
+输出: ["(a)()()", "(a())()"]
+```
+
+
+**示例 3:**
+
+```java
+输入: ")("
+输出: [""]
+```
+
+**解法一**
+
+BFS解法
+
+```java
+public List<String> removeInvalidParentheses(String s) {
+    List<String> res=new ArrayList<>();
+    Queue<String> queue=new LinkedList<>();
+    HashSet<String> visit=new HashSet<>();
+    visit.add(s);
+    queue.add(s);
+    boolean flag=false;
+    while(!queue.isEmpty()){
+        String cur=queue.poll();
+        if (isValid(cur)) {
+            res.add(cur);
+            flag=true;
+        }
+        if (flag) {
+            continue;
+        }
+        for (int i=0;i<cur.length();i++) {
+            if (cur.charAt(i)=='(' || cur.charAt(i)==')') {
+                String temp=cur.substring(0,i)+cur.substring(i+1,cur.length());
+                if (!visit.contains(temp)) {
+                    queue.add(temp);
+                    visit.add(temp);
+                }
+            }
+        }
+    }
+    if(res.isEmpty()) res.add("");
+    return res;
+}
+
+public boolean isValid(String s){
+    int left=0,right=0;
+    for (int i=0;i<s.length();i++) {
+        if (s.charAt(i)=='(') {
+            left++;
+        }else if (s.charAt(i)==')') {
+            if (left>0) {
+                left--;
+            }else{
+                return false;
+            }
+        }
+    }
+    return left==0;
+}
+```
+
+还是比较简单，dfs的解法比较难搞，容易TLE，这里难得写了
+
 ## _单调栈_
 
 ## [496. 下一个更大元素 I](https://leetcode-cn.com/problems/next-greater-element-i/)
