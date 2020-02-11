@@ -1719,6 +1719,55 @@ public static List<Integer> spiralOrder2(int[][] matrix) {
 
 模拟的方式相对要复杂点，需要记录每个节点是否访问然后在选择，这里的方式就很巧妙，直接按层遍历，由外到内，不用考虑那么多。时间复杂度`O(NM)`空间复杂度`O(NM)`。
 
+## [59. 螺旋矩阵 II](https://leetcode-cn.com/problems/spiral-matrix-ii/)
+
+给定一个正整数 n，生成一个包含 1 到 n^2 所有元素，且元素按顺时针顺序螺旋排列的正方形矩阵。
+
+**示例:**
+
+```java
+输入: 3
+输出:
+[
+ [ 1, 2, 3 ],
+ [ 8, 9, 4 ],
+ [ 7, 6, 5 ]
+]
+```
+
+**解法一**
+
+```java
+public int[][] generateMatrix(int n) {
+    int[][] res=new int[n][n];
+    int left=0,right=n-1;
+    int val=1;
+    while(left<=right){
+        int a=left,b=left;
+        int c=right,d=right;
+        if (left==right) {
+            res[left][right]=val;
+        }
+        while(b<right){
+            res[left][b++]=val++;
+        }
+        while(a<right){
+            res[a++][right]=val++;
+        }
+        while(d>left){
+            res[right][d--]=val++;
+        }
+        while(c>left){
+            res[c--][left]=val++;
+        }
+        left++;right--;
+    }
+    return  res;
+}
+```
+
+上一题的简化版，2020.2.11白板写的，还行
+
 ## [48. 旋转图像](https://leetcode-cn.com/problems/rotate-image/)
 
 给定一个 *n* × *n* 的二维矩阵表示一个图像。
@@ -1967,7 +2016,7 @@ private  void swap(int[] nums, int l, int r) {
 
 **解法三**
 
-其实还有一类做法，利用`快排+二分`的思想
+其实还有一类做法，利用`快排+二分`的思想，一般也被称为快选
 
 ```java
 public static int findKthLargest(int[] nums, int k) {
@@ -3530,6 +3579,59 @@ public int singleNumber(int[] nums) {
     return nums[nums.length-1];
 }
 ```
+## [268. 缺失数字](https://leetcode-cn.com/problems/missing-number/)
+
+给定一个包含 0, 1, 2, ..., n 中 n 个数的序列，找出 0 .. n 中没有出现在序列中的那个数。
+
+**示例 1:**
+
+```java
+输入: [3,0,1]
+输出: 2
+```
+
+**示例 2:**
+
+```java
+输入: [9,6,4,2,3,5,7,0,1]
+输出: 8
+```
+
+**说明:**
+你的算法应具有线性时间复杂度。你能否仅使用额外常数空间来实现?
+
+**解法一**
+
+比较直接的思路，求全序列的和然后相减就ok
+
+```java
+public int missingNumber(int[] nums) {
+    int N=nums.length;
+    int sum=0;
+    for (int i=0;i<N;i++) {
+        sum+=nums[i];
+    }
+    return N*(N+1)/2-sum; //可能会溢出
+}
+```
+**解法二**
+
+位运算，异或，和上面一样的思路
+
+```java
+public int missingNumber(int[] nums) {
+    int res=0;
+    //3 0 1 
+    for (int i=0;i<nums.length;i++) {
+        res^=nums[i];
+        res^=i;
+    }
+    //3^0^1^0^1^2^3=2
+    return res^nums.length;
+}
+```
+异或每个数和下标索引，结果就是缺失的数，因为缺失的只有一个，这样就和上面那一题一样了
+
 ## [461. 汉明距离](https://leetcode-cn.com/problems/hamming-distance/)
 
 两个整数之间的汉明距离指的是这两个数字对应二进制位不同的位置的数目。

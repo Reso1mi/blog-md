@@ -3064,6 +3064,53 @@ public int maxCoins(int[] nums) {
 }
 ```
 
+## _博弈型动态规划_
+
+## [292. Nim 游戏](https://leetcode-cn.com/problems/nim-game/)
+
+你和你的朋友，两个人一起玩 Nim 游戏：桌子上有一堆石头，每次你们轮流拿掉 1 - 3 块石头。 拿掉最后一块石头的人就是获胜者。你作为先手。
+
+你们是聪明人，每一步都是最优解。 编写一个函数，来判断你是否可以在给定石头数量的情况下赢得游戏。
+
+**示例:**
+
+```java
+输入: 4
+输出: false 
+解释: 如果堆中有 4 块石头，那么你永远不会赢得比赛；
+     因为无论你拿走 1 块、2 块 还是 3 块石头，最后一块石头总是会被你的朋友拿走。
+```
+
+**解法一**
+
+博弈型动态规划入门题
+
+```java
+public boolean canWinNim(int n) {
+    boolean[] dp=new boolean[n];
+    dp[0]=true;
+    dp[1]=true;
+    dp[2]=true;
+    //t t t f t t t f .....
+    //每个状态取决于前3个状态
+    for (int i=3;i<n;i++) {
+        //分别拿1,2,3个看对面能不能赢
+        dp[i]=!dp[i-1] || !dp[i-2] || !dp[i-3];
+    }
+    return dp[n-1];
+}
+```
+这个解法在数据过大的时候还是会TLE
+
+**解法二**
+
+规律
+
+```java
+public boolean canWinNim(int n) {
+    return n%4!=0;
+}
+```
 ##  _字符串类型的动态规划_
 
 ## [1143. 最长公共子序列](https://leetcode-cn.com/problems/longest-common-subsequence/)
