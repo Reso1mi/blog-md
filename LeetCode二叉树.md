@@ -1149,6 +1149,76 @@ public boolean isSame(TreeNode s, TreeNode t){
 
 其实还有一种解法，也是最开始想到的，就是直接中序遍历和前序遍历，得到两个序列，然后用kmp匹配两棵树，kmp很久没看了，不会写了，后面有时间再来写
 
+## [面试题26. 树的子结构](https://leetcode-cn.com/problems/shu-de-zi-jie-gou-lcof/)
+
+输入两棵二叉树A和B，判断B是不是A的子结构。(约定空树不是任意一个树的子结构)
+
+B是A的子结构， 即 A中有出现和B相同的结构和节点值。
+
+**例如:**
+给定的树 A:
+
+```java
+     3
+    / \
+   4   5
+  / \
+ 1   2
+```
+
+给定的树 B：
+
+```java
+   4 
+  /
+ 1
+```
+
+
+返回 true，因为 B 与 A 的一个子树拥有相同的结构和节点值。
+
+**示例 1：**
+
+```java
+输入：A = [1,2,3], B = [3,1]
+输出：false
+```
+
+**示例 2：**
+
+```java
+输入：A = [3,4,5,1,2], B = [4,1]
+输出：true
+```
+
+**限制：**
+
+0 <= 节点个数 <= 10000
+
+**解法一**
+
+一样的题为啥还加上？仔细看题，我开始也以为是一样的
+
+```java
+public boolean isSubStructure(TreeNode A, TreeNode B) {
+    if(A==null || B==null){
+        return false;
+    }
+    return isSame(A,B) | isSubStructure(A.left,B) | isSubStructure(A.right,B);
+}
+
+public boolean isSame(TreeNode A,TreeNode B){
+    if (B==null) { //AB同时为NULL应该返回true,所以上下不能交换
+        return true;
+    }
+    if(A==null){
+        return false;
+    }
+    return A.val==B.val && isSame(A.left,B.left) && isSame(A.right,B.right);
+}
+```
+这里说的是子结构不是子树，isSame函数不需要保证完全相等，这里就需要注意了，当`A!=null && B==null`的时候就说明B已经匹配完了A还没有，这就说明B是A的子结构
+
 ## [222. 完全二叉树的节点个数](https://leetcode-cn.com/problems/count-complete-tree-nodes/)
 
 给出一个**完全二叉树**，求出该树的节点个数。
