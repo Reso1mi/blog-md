@@ -3064,6 +3064,57 @@ public int maxCoins(int[] nums) {
 }
 ```
 
+## [面试题60. n个骰子的点数](https://leetcode-cn.com/problems/nge-tou-zi-de-dian-shu-lcof/)
+
+把n个骰子扔在地上，所有骰子朝上一面的点数之和为s。输入n，打印出s的所有可能的值出现的概率。
+
+你需要用一个浮点数数组返回答案，其中第 i 个元素代表这 n 个骰子所能掷出的点数集合中第 i 小的那个的概率。
+
+**示例 1:**
+
+```java
+输入: 1
+输出: [0.16667,0.16667,0.16667,0.16667,0.16667,0.16667]
+```
+
+
+**示例 2:**
+
+```java
+输入: 2
+输出: [0.02778,0.05556,0.08333,0.11111,0.13889,0.16667,0.13889,0.11111,0.08333,0.05556,0.02778]
+```
+
+**限制：**
+
+`1 <= n <= 11`
+
+**解法一**
+
+很有意思的题，看返回值还不容易想到用动态规划
+
+```java
+public double[] twoSum(int n) {
+    //dp[i][j]代表i枚色子和为j的概率
+    double[][] dp=new double[n+1][6*n+1];
+    double probability=1.0/6.0;
+    //base初始化
+    for(int i=1;i<=6;i++) dp[1][i]=probability;
+    for(int i=1;i<=n;i++){ //枚举色子
+        for(int j=i;j<=i*6;j++){ //枚举点数
+            for(int k=1;k<=j && k<=6;k++){ //枚举当前色子的点数
+                dp[i][j]+=(probability*dp[i-1][j-k]);
+            }
+        }
+    }
+    double[] res=new double[5*n+1];//
+    System.arraycopy(dp[n],n,res,0,res.length);
+    return res;
+}
+```
+
+`dp[i][j]`代表**i**枚色子和为**j**的概率 递推公式很容易想到 `dp[i][j]= 1/6(dp[i-1][j-1]+dp[i-1][j-2]+dp[i-1][j-3]...dp[i-1][j-6])` 然后我们枚举各个状态就ok了
+
 ## _博弈型动态规划_
 
 ## [292. Nim 游戏](https://leetcode-cn.com/problems/nim-game/)

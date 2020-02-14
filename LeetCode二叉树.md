@@ -1784,6 +1784,31 @@ public List<List<Integer>> pathSum2(TreeNode root,int sum) {
 ```
 用到三个栈，同步保存节点的信息，还是挺简单的
 
+**解法三**
+
+补一种dfs+回溯的思路，上面的所有路径也可以这样做，感觉会比上面的要好一点
+
+```java
+public List<List<Integer>> pathSum(TreeNode root, int sum) {
+    dfs(root,sum,new ArrayList<>());
+    return res;
+}
+
+private List<List<Integer>> res=new ArrayList<>();
+
+public void dfs(TreeNode root,int sum,List<Integer> lis){
+    if(root==null) return;
+    lis.add(root.val);
+    if(root.left==null && root.right==null && sum==root.val){
+        res.add(new ArrayList(lis)); //这里不能return，得到后面回溯后才能return
+    }else{
+        dfs(root.left,sum-root.val,lis);
+        dfs(root.right,sum-root.val,lis);
+    }
+    lis.remove(lis.size()-1);
+}
+```
+
 ## [129. 求根到叶子节点数字之和](https://leetcode-cn.com/problems/sum-root-to-leaf-numbers/)
 
 给定一个二叉树，它的每个结点都存放一个 `0-9` 的数字，每条从根到叶子节点的路径都代表一个数字。

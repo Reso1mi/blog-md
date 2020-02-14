@@ -579,6 +579,51 @@ public int right(int []nums,int target,int lo,int hi){
 }
 ```
 
+## [面试题53 - II. 0～n-1中缺失的数字](https://leetcode-cn.com/problems/que-shi-de-shu-zi-lcof/)
+
+一个长度为 ~~n-1~~ n 的递增排序数组中的所有数字都是唯一的，并且每个数字都在范围~~0～n-1~~ 0~n 之内。在范围~~0～n-1~~ 0~n内的~~n~~ n+1 个数字中有且只有一个数字不在该数组中，请找出这个数字。
+
+**示例 1:**
+
+```java
+输入: [0,1,3]
+输出: 2
+```
+
+
+**示例 2:**
+
+```java
+输入: [0,1,2,3,4,5,6,7,9]
+输出: 8
+```
+
+**限制：**
+
+`1 <= 数组长度 <= 10000`
+
+**解法一**
+
+这题的题目描述感觉有点问题我稍微改了下
+
+```java
+public int missingNumber(int[] nums) {
+    int left=0,right=nums.length-1;
+    while(left<right){
+        int mid=left+(right-left)/2;
+        if(nums[mid]==mid){
+            left=mid+1;
+        }else{
+            right=mid;
+        }
+    }
+    if(nums[left]==left) return left+1; //只有一个数
+    return left;
+}
+```
+
+二分找那个索引不对的元素就ok了，按照模板写的，排除法，排除相等的，最后返回的索引`left`就是缺失的数字
+
 ## [287. 寻找重复数](https://leetcode-cn.com/problems/find-the-duplicate-number/)
 
 给定一个包含 n + 1 个整数的数组 `nums`，其数字都在 1 到 n 之间（包括 1 和 n），可知至少存在一个重复的整数。假设只有一个重复的整数，找出这个重复的数。
