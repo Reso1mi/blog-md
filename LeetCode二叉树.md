@@ -4471,3 +4471,67 @@ public TreeNode deserialize(Queue<String> queue){
 }
 ```
 
+## [面试题33. 二叉搜索树的后序遍历序列](https://leetcode-cn.com/problems/er-cha-sou-suo-shu-de-hou-xu-bian-li-xu-lie-lcof/)
+
+输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历结果。如果是则返回 true，否则返回 false。假设输入的数组的任意两个数字都互不相同。
+
+参考以下这颗二叉搜索树：
+
+```java
+     5
+    / \
+   2   6
+  / \
+ 1   3
+```
+**示例 1：**
+
+```java
+输入: [1,6,3,2,5]
+输出: false
+```
+
+**示例 2：**
+
+```java
+输入: [1,3,2,6,5]
+输出: true
+```
+
+**提示：**
+
+1. `数组长度 <= 1000`
+
+**解法一**
+
+核心在于意识到最后一个节点是根节点
+
+```java
+public boolean verifyPostorder(int[] postorder) {
+    if(postorder==null || postorder.length<=0) return true;
+    return verify(postorder,0,postorder.length-1);
+}
+
+public boolean verify(int[] postorder,int left,int right){
+    if(left>=right) return true;
+    int root=postorder[right];
+    //WA点,这里要设置成left-1防止没有左子树的情况,比如5 4 3 2 1
+    //这样可以跳过第二个循环并且不用递归验证左子树
+    int index=left-1;
+    for(int i=right-1;i>=left;i--){ //从后往前找第一个小于root
+        if(postorder[i]<root){
+            index=i; //找到第一个小于root的,作为右子树的根
+            break;
+        }
+    }
+    //判断左子树是否都是小于root的
+    for(int i=index;i>=left;i--){
+        if(postorder[i]>root){
+            return false;
+        }
+    }
+    //递归验证左右子树
+    return verify(postorder,left,index) && verify(postorder,index+1,right-1);
+}
+```
+这题WA了3发，前两发是代码逻辑的问题，想简化代码，结果把自己带坑里面去了，最后一次是因为一个变量设置的问题，代码中已经注释

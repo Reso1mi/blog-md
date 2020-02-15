@@ -829,7 +829,19 @@ public int integerBreak(int n) {
 }
 ```
 
-------
+取模写法，这里其实涉及到取模的一个规则，`(a*b)%mod=(a%mid * b%mid) % mod` 
+
+```java
+public int cuttingRope(int n) {
+    if(n<=3) return n-1;
+    long res=1;
+    while(n>=5){
+        n-=3;
+        res=(res*3)%1000000007;
+    }
+    return (int)(res*n%1000000007);
+}
+```
 
 ## [279. 完全平方数](https://leetcode-cn.com/problems/perfect-squares/)
 
@@ -3077,7 +3089,6 @@ public int maxCoins(int[] nums) {
 输出: [0.16667,0.16667,0.16667,0.16667,0.16667,0.16667]
 ```
 
-
 **示例 2:**
 
 ```java
@@ -3100,7 +3111,7 @@ public double[] twoSum(int n) {
     double probability=1.0/6.0;
     //base初始化
     for(int i=1;i<=6;i++) dp[1][i]=probability;
-    for(int i=1;i<=n;i++){ //枚举色子
+    for(int i=2;i<=n;i++){ //枚举色子
         for(int j=i;j<=i*6;j++){ //枚举点数
             for(int k=1;k<=j && k<=6;k++){ //枚举当前色子的点数
                 dp[i][j]+=(probability*dp[i-1][j-k]);
@@ -3115,6 +3126,90 @@ public double[] twoSum(int n) {
 
 `dp[i][j]`代表**i**枚色子和为**j**的概率 递推公式很容易想到 `dp[i][j]= 1/6(dp[i-1][j-1]+dp[i-1][j-2]+dp[i-1][j-3]...dp[i-1][j-6])` 然后我们枚举各个状态就ok了
 
+## [264. 丑数 II](https://leetcode-cn.com/problems/ugly-number-ii/)
+
+编写一个程序，找出第 n 个丑数。
+
+丑数就是只包含质因数 2, 3, 5 的正整数。
+
+**示例:**
+
+```java
+输入: n = 10
+输出: 12
+解释: 1, 2, 3, 4, 5, 6, 8, 9, 10, 12 是前 10 个丑数。
+```
+
+
+**说明:**  
+
+1. 是丑数。
+2. n 不超过1690。
+
+**解法一**
+
+小根堆，将base每次乘2乘3乘5的结果放入小根堆，然后将堆顶拿出来base，继续重复这个过程，中间要注意去重
+
+```java
+public int nthUglyNumber3(int n) {
+    PriorityQueue<Long> queue=new PriorityQueue<>();
+    n-=1;
+    long base=1;
+    while(n-- >0){
+        queue.add(base*2);
+        queue.add(base*3);
+        queue.add(base*5);
+        base=queue.poll();
+        //去重
+        while(!queue.isEmpty()&&base==queue.peek()){
+            queue.poll();
+        }
+    }
+    return (int)base;
+}
+```
+
+用`HashSet`去重
+
+```java
+public int nthUglyNumber(int n) {
+    PriorityQueue<Long> queue=new PriorityQueue<>();
+    HashSet<Long> set=new HashSet<>();
+    long base=1;
+    long[] ugly={2,3,5};
+    n-=1;
+    set.add(1L);
+    while(n-->0){
+        for(int i=0;i<3;i++){
+            if (!set.contains(ugly[i]*base)) {
+                queue.add(ugly[i]*base);
+                set.add(ugly[i]*base);
+            }
+        }
+        base=queue.poll();
+    }
+    return (int)base;
+}
+```
+
+**解法二**
+
+这个解法还是很有技巧性的，其实就是按顺序生成丑数，一开始观察的时候就发现了但是确实想不到三指针的解法
+
+```java
+public int nthUglyNumber4(int n) {
+    int[] dp=new int[n];
+    dp[0]=1;
+    int index1=0,index2=0,index3=0;
+    for (int i=1;i<n;i++) {
+        dp[i]=Math.min(dp[index1]*2,Math.min(dp[index2]*3,dp[index3]*5));
+        index1+=(dp[index1]*2==dp[i]?1:0);
+        index2+=(dp[index2]*3==dp[i]?1:0);
+        index3+=(dp[index3]*5==dp[i]?1:0);
+    }
+    return dp[n-1];
+}
+```
 ## _博弈型动态规划_
 
 ## [292. Nim 游戏](https://leetcode-cn.com/problems/nim-game/)
