@@ -3542,6 +3542,85 @@ public int[] productExceptSelf(int[] nums) {
 
 O(1)进阶版有时间再来补
 
+## [5341. 最后 K 个数的乘积](https://leetcode-cn.com/problems/product-of-the-last-k-numbers/)
+
+请你实现一个「数字乘积类」`ProductOfNumbers`，要求支持下述两种方法：
+
+1. add(int num)
+
+- 将数字 num 添加到当前数字列表的最后面。
+
+2. getProduct(int k)
+
+- 返回当前数字列表中，最后 k 个数字的乘积。
+- 你可以假设当前列表中始终 至少 包含 k 个数字。
+- 题目数据保证：任何时候，任一连续数字序列的乘积都在 32-bit 整数范围内，不会溢出。
+
+**示例：**
+
+```java
+输入：
+["ProductOfNumbers","add","add","add","add","add","getProduct","getProduct","getProduct","add","getProduct"]
+[[],[3],[0],[2],[5],[4],[2],[3],[4],[8],[2]]
+
+输出：
+[null,null,null,null,null,null,20,40,0,null,32]
+
+解释：
+ProductOfNumbers productOfNumbers = new ProductOfNumbers();
+productOfNumbers.add(3);        // [3]
+productOfNumbers.add(0);        // [3,0]
+productOfNumbers.add(2);        // [3,0,2]
+productOfNumbers.add(5);        // [3,0,2,5]
+productOfNumbers.add(4);        // [3,0,2,5,4]
+productOfNumbers.getProduct(2); // 返回 20 。最后 2 个数字的乘积是 5 * 4 = 20
+productOfNumbers.getProduct(3); // 返回 40 。最后 3 个数字的乘积是 2 * 5 * 4 = 40
+productOfNumbers.getProduct(4); // 返回  0 。最后 4 个数字的乘积是 0 * 2 * 5 * 4 = 0
+productOfNumbers.add(8);        // [3,0,2,5,4,8]
+productOfNumbers.getProduct(2); // 返回 32 。最后 2 个数字的乘积是 4 * 8 = 32 
+```
+
+**提示：**
+
+```java
+add 和 getProduct 两种操作加起来总共不会超过 40000 次。
+0 <= num <= 100
+1 <= k <= 40000
+```
+
+**解法一**
+
+176周赛的第二题，思路倒是很容易想到，维护一个前缀积，然后用全积除以对应k位置的就行了，但是细节的处理出了大问题haha~
+
+```java
+LinkedList<Integer> product=null;
+
+public ProductOfNumbers() {
+    product=new LinkedList<>();
+    product.add(1);
+}
+
+public void add(int num) {
+    if(num==0){ //重新构建
+        product=new LinkedList<>();
+        product.add(1);
+    }else{
+        product.add(num*product.getLast());
+    }
+}
+
+//1| 1 0 2 3  k=3
+public int getProduct(int k) {
+    if(k>=product.size()){
+        return 0;
+    }
+    return product.getLast()/product.get(product.size()-k-1);
+}
+```
+一开始维护了所有的前缀积，结果后面的case过不了，出现了除0异常，很显然把0换成1，后面的case大了之后累乘的结果太大了，溢出为0了。
+
+上面代码的处理方式是参考了大佬的解法，遇到0的时候就直接重置队列，最后如果k大于队列长度说明这个序列肯定是包含了0，直接返回0就可以了
+
 ## [面试题64. 求1+2+…+n](https://leetcode-cn.com/problems/qiu-12n-lcof/)
 
 求 `1+2+...+n` ，要求不能使用乘除法、for、while、if、else、switch、case等关键字及条件判断语句（A?B:C）。
