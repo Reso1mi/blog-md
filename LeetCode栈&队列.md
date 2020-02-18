@@ -2842,3 +2842,59 @@ public static int trap6(int[] height) {
 ![mark](http://static.imlgw.top/blog/20200129/f0b4lo2Xk5Q3.png?imageslim)
 
 依次计算①②③位置的面积，这样的思路感觉会更加的自然
+
+## [面试题33. 二叉搜索树的后序遍历序列](https://leetcode-cn.com/problems/er-cha-sou-suo-shu-de-hou-xu-bian-li-xu-lie-lcof/)
+
+输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历结果。如果是则返回 true，否则返回 false。假设输入的数组的任意两个数字都互不相同。
+
+参考以下这颗二叉搜索树：
+
+```java
+     5
+    / \
+   2   6
+  / \
+ 1   3
+```
+**示例 1：**
+
+```java
+输入: [1,6,3,2,5]
+输出: false
+```
+
+**示例 2：**
+
+```java
+输入: [1,3,2,6,5]
+输出: true
+```
+
+**提示：**
+
+1. `数组长度 <= 1000`
+
+**解法一**
+
+单调栈的解法
+
+```java
+public boolean verifyPostorder(int[] postorder) {
+    if(postorder==null || postorder.length<=0) return true;
+    Deque<Integer> stack=new ArrayDeque<>();
+    //1 2 | 4 5 | 3
+    int curRoot=Integer.MAX_VALUE;
+    for(int i=postorder.length-1;i>=0;i--){
+        if(postorder[i]>curRoot){
+            return false;
+        }
+        while(!stack.isEmpty() && postorder[i]<postorder[stack.peek()]){
+            curRoot=postorder[stack.pop()];
+        }
+        stack.push(i);
+    }
+    return true;
+}
+```
+
+逆序遍历这个序列，就是 `root -- root.right -- root.left` ，用一个单调递增栈，当遇到减小的值就说明进入了左子树，我们需要找到这颗树的根节点，也就是不停出栈，直到找到根节点，然后继续向后判断左子树是不是都小于这个根节点的

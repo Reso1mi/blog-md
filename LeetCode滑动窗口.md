@@ -703,6 +703,65 @@ public static int minSubArrayLen3(int s, int[] nums) {
 }
 ```
 
+## [面试题57 - II. 和为s的连续正数序列](https://leetcode-cn.com/problems/he-wei-sde-lian-xu-zheng-shu-xu-lie-lcof/) 
+
+输入一个正整数 target ，输出所有和为 target 的连续正整数序列（至少含有两个数）。
+
+序列内的数字由小到大排列，不同序列按照首个数字从小到大排列。
+
+**示例 1：**
+
+```java
+输入：target = 9
+输出：[[2,3,4],[4,5]]
+```
+
+
+**示例 2：**
+
+```java
+输入：target = 15
+输出：[[1,2,3,4,5],[4,5,6],[7,8]]
+```
+
+**限制：**
+
+- `1 <= target <= 10^5`
+
+**解法一**
+
+滑动窗口，根据等差数列前n项和求sum，然后逐步的缩圈，右移
+
+```java
+public int[][] findContinuousSequence(int target) {
+    List<int[]> res=new ArrayList<>();
+    int left=1,right=2;
+    int sum=0;
+    //9 right最多到5
+    while(left<=right && right<=(target+1)/2){
+        //等差数列前n项和
+        int n=right-left+1;
+        sum=left*n+n*(n-1)/2;
+        if(sum>target){
+            left++; //剔除一个小的
+        }else if(sum<target){
+            right++; //添加一个大的
+        }else{ //build结果集
+            res.add(build(left,right));
+            left++;//窗口左移,剔除一个小的
+        }
+    }
+    return res.toArray(new int[0][0]);
+}
+
+public int[] build(int left,int right){
+    int[] res=new int[right-left+1];
+    for(int i=left;i<=right;i++){
+        res[i-left]=i;
+    }
+    return res;
+}
+```
 ## [480. 滑动窗口中位数](https://leetcode-cn.com/problems/sliding-window-median/)
 
 中位数是有序序列最中间的那个数。如果序列的大小是偶数，则没有最中间的数；此时中位数是最中间的两个数的平均数。

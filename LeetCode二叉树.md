@@ -4520,7 +4520,7 @@ public boolean verify(int[] postorder,int left,int right){
     int index=left-1;
     for(int i=right-1;i>=left;i--){ //从后往前找第一个小于root
         if(postorder[i]<root){
-            index=i; //找到第一个小于root的,作为右子树的根
+            index=i; //找到第一个小于root的,作为左子树的根
             break;
         }
     }
@@ -4535,3 +4535,7 @@ public boolean verify(int[] postorder,int left,int right){
 }
 ```
 这题WA了3发，前两发是代码逻辑的问题，想简化代码，结果把自己带坑里面去了，最后一次是因为一个变量设置的问题，代码中已经注释
+
+**解法二**
+
+单调栈的解法，放在栈专题中

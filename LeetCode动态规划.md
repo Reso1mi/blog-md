@@ -3210,6 +3210,95 @@ public int nthUglyNumber4(int n) {
     return dp[n-1];
 }
 ```
+## [面试题62. 圆圈中最后剩下的数字](https://leetcode-cn.com/problems/yuan-quan-zhong-zui-hou-sheng-xia-de-shu-zi-lcof/) 
+
+0,1,,n-1这n个数字排成一个圆圈，从数字0开始，每次从这个圆圈里删除第m个数字。求出这个圆圈里剩下的最后一个数字。
+
+例如，0、1、2、3、4这5个数字组成一个圆圈，从数字0开始每次删除第3个数字，则删除的前4个数字依次是2、0、4、1，因此最后剩下的数字是3。
+
+**示例 1：**
+
+```java
+输入: n = 5, m = 3
+输出: 3
+```
+
+
+**示例 2：**
+
+```java
+输入: n = 10, m = 17
+输出: 2
+```
+
+**限制：**
+
+- 1 <= n <= 10^5
+- 1 <= m <= 10^6
+
+**解法一**
+
+用链表模拟的解法，在数据太大的时候会TLE
+
+```java
+/*
+链表模拟解法
+0 1 2 3 4 5 m=3
+3 4 5 0 1
+*/
+public int lastRemaining(int n, int m) {
+    Deque<Integer> queue=new LinkedList<>();
+    for(int i=0;i<n;i++)
+        queue.addLast(i);
+    while(queue.size()>1){
+        for(int i=0;i<m;i++){
+            int temp=queue.removeFirst();
+            if(i!=m-1){
+                queue.addLast(temp);
+            }
+        }
+    }
+    return queue.getFirst();
+}
+```
+**解法二**
+
+数学归纳法，加上一点递推dp
+
+```java
+/*
+    0 ~ n-1 每次kill第k个人
+    k=(m-1)%n
+
+    kill k之后, 在n-1个人中重建新索引
+    原始索引   新的index
+    k+1         0
+    k+2         1
+    k+3         2
+    ...         ...
+    n-1         n-k-2
+    0           n-k-1
+    1           n-k
+    2           n-k+1
+    ...         ...
+    k-1         n-2
+
+    新索引(x) ---> 原始索引(y)
+    y=(x+k+1)%n  eg. (n-2+k+1)%n=(n+k-1)%n=k-1
+    设在n-1个人中最后剩下的人是 f(n-1,m)按照上面的公式转换成原始索引就是
+    f(n,m)=(f(n-1,m)+k+1)%n
+ */
+//数学解法
+public int lastRemaining(int n, int m) {
+    int last=0;//一个人的时候存活者index f(1,m)=0
+    for(int i=2;i<=n;i++){ //枚举人数
+        last=(last+m)%i;
+    }
+    return last;
+}
+```
+参考了LeetCode的[大佬题解](https://leetcode-cn.com/u/yuanninesuns/)，讲的挺好的
+
 ## _博弈型动态规划_
 
 ## [292. Nim 游戏](https://leetcode-cn.com/problems/nim-game/)
