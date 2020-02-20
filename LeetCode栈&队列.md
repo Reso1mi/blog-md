@@ -2951,3 +2951,69 @@ public boolean verifyPostorder(int[] postorder) {
 ```
 
 逆序遍历这个序列，就是 `root -- root.right -- root.left` ，用一个单调递增栈，当遇到减小的值就说明进入了左子树，我们需要找到这颗树的根节点，也就是不停出栈，直到找到根节点，然后继续向后判断左子树是不是都小于这个根节点的
+
+## [面试题59 - II. 队列的最大值](https://leetcode-cn.com/problems/dui-lie-de-zui-da-zhi-lcof/)
+
+请定义一个队列并实现函数 max_value 得到队列里的最大值，要求函数max_value、push_back 和 pop_front 的时间复杂度都是O(1)。
+
+若队列为空，`pop_front` 和 `max_value` 需要返回 -1
+
+**示例 1：**
+
+```java
+输入: 
+["MaxQueue","push_back","push_back","max_value","pop_front","max_value"]
+[[],[1],[2],[],[],[]]
+输出: [null,null,null,2,1,2]
+```
+
+**示例 2：**
+
+```java
+输入: 
+["MaxQueue","pop_front","max_value"]
+[[],[],[]]
+输出: [null,-1,-1]
+```
+
+**限制：**
+
+- `1 <= push_back,pop_front,max_value的总操作数 <= 10000`
+- `1 <= value <= 10^5`
+
+**解法一**
+
+```java
+public MaxQueue() {
+
+}
+
+Deque<Integer> queue=new LinkedList<>();
+
+Deque<Integer> maxQueue=new ArrayDeque<>();
+
+public int max_value() {
+    return maxQueue.isEmpty()?-1:maxQueue.getFirst();
+}
+
+public void push_back(int value) {
+    queue.addLast(value);
+    while(!maxQueue.isEmpty() && value>maxQueue.getLast()){
+        maxQueue.removeLast();
+    }
+    maxQueue.addLast(value);
+}
+
+public int pop_front() {
+    if(queue.isEmpty()) return -1;
+    int temp=queue.removeFirst();
+    if(temp==maxQueue.getFirst()){
+        maxQueue.removeFirst();
+    }
+    return temp;
+}
+```
+
+一直以为是和最小栈一样，结果WA了两发才意识到搞错了。。。这里是一个队列，进出方向是不一样的
+
+其实这题和之前的一道 [滑动窗口最大值](http://imlgw.top/2019/07/20/leetcode-hua-dong-chuang-kou/#239-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E6%9C%80%E5%A4%A7%E5%80%BC) 一样，维护一个单调递减的单调栈然后维护这个单调栈就行了

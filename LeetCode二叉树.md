@@ -2884,7 +2884,7 @@ public void flatten(TreeNode root) {
 
 **解法三**
 
-迭代，我觉得这种解法应该来说是最容易理解的，而且是完全的 `in-place`，但是时间复杂度会高一些，每个元素不只遍历一次
+迭代，我觉得这种解法挺秀，而且是完全的 `in-place`，但是时间复杂度会高一些，每个元素不只遍历一次
 
 ```java
 public void flatten(TreeNode root) {
@@ -2911,6 +2911,68 @@ public void flatten(TreeNode root) {
 画个图就是这样
 
 ![mark](http://static.imlgw.top/blog/20191108/BIx12P1AYjeX.png?imageslim)
+
+## [面试题36. 二叉搜索树与双向链表](https://leetcode-cn.com/problems/er-cha-sou-suo-shu-yu-shuang-xiang-lian-biao-lcof/)
+
+输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的循环双向链表。要求不能创建任何新的节点，只能调整树中节点指针的指向。
+
+为了让您更好地理解问题，以下面的二叉搜索树为例：
+
+![3VE7QO.png](https://s2.ax1x.com/2020/02/19/3VE7QO.png)
+
+**示例 1:**
+
+```java
+输入:
+    2
+   / \
+  1   3
+输出: true
+```
+
+
+**示例 2:**
+
+```java
+输入:
+    5
+   / \
+  1   4
+     / \
+    3   6
+输出: false
+解释: 输入为: [5,1,4,null,null,3,6]。
+     根节点的值为 5 ，但是其右子节点值为 4 。
+```
+
+**解法一**
+
+开始还以为挺难搞，一遍就写出来了😁比上一题简单
+
+```java
+public Node treeToDoublyList(Node root) {
+    if(root==null) return root;
+    dfs(root);
+    head.left=lastNode;
+    lastNode.right=head;
+    return head;
+}
+
+Node lastNode,head=null;
+
+public void dfs(Node root){
+    if(root==null) return;
+    dfs(root.left);
+    if(lastNode==null){
+        head=lastNode=root;
+    }else{
+        root.left=lastNode;
+        lastNode.right=root;
+        lastNode=root;
+    }
+    dfs(root.right);
+}
+```
 
 ## [116. 填充每个节点的下一个右侧节点指针](https://leetcode-cn.com/problems/populating-next-right-pointers-in-each-node/)
 
