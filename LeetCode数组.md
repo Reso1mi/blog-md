@@ -2306,6 +2306,70 @@ public static List<Integer> topKFrequent(int[] nums, int k) {
 
 桶排序的思路，时间复杂度`O(N)`，空间复杂度也是`O(N)`，在leetcode提交三种方法的差距不大，可能是数据量太少了
 
+## [295. 数据流的中位数](https://leetcode-cn.com/problems/find-median-from-data-stream/)
+
+中位数是有序列表中间的数。如果列表长度是偶数，中位数则是中间两个数的平均值。
+
+例如，
+
+[2,3,4] 的中位数是 3
+
+[2,3] 的中位数是 (2 + 3) / 2 = 2.5
+
+设计一个支持以下两种操作的数据结构：
+
+- void addNum(int num) - 从数据流中添加一个整数到数据结构中。
+- double findMedian() - 返回目前所有元素的中位数。
+
+**示例：**
+
+```java
+addNum(1)
+addNum(2)
+findMedian() -> 1.5
+addNum(3) 
+findMedian() -> 2
+```
+
+
+**进阶:**
+
+- 如果数据流中所有整数都在 0 到 100 范围内，你将如何优化你的算法？
+- 如果数据流中 99% 的整数都在 0 到 100 范围内，你将如何优化你的算法？
+
+**解法一**
+
+这题很久之前就听人讲过，不过忘记了，最佳策略就是利用小根堆+大根堆，分别维护前半部分和后半部分的最值
+
+```java
+/** initialize your data structure here. */
+PriorityQueue<Integer> minQue=null;
+
+PriorityQueue<Integer> maxQue=null;
+
+public MedianFinder295() {
+    minQue=new PriorityQueue<>();
+    maxQue=new PriorityQueue<>((a,b)->b-a);
+}
+
+public void addNum(int num) {
+    minQue.add(num);
+    maxQue.add(minQue.poll());
+    if(minQue.size()<maxQue.size()){
+        minQue.add(maxQue.poll());
+    }
+}
+
+public double findMedian() {
+    if(minQue.size()==maxQue.size()){
+        return (minQue.peek()+maxQue.peek())/2.0;
+    }
+    return minQue.peek();
+}
+```
+
+前半部分用大跟堆，后半部分小根堆，每次将一个堆的最值放到另一个堆中，这样保证了大跟堆的最大值一定小于小根堆的最小值，另外我们还需要保证两个堆的差距不能大于1，这里我将多的放到小根堆中，最后在奇数的时候将小根堆的堆顶弹出就可以了
+
 ## [67. 二进制求和](https://leetcode-cn.com/problems/add-binary/) 
 
 给定两个二进制字符串，返回他们的和（用二进制表示）。
