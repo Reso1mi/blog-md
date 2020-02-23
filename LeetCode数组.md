@@ -3516,6 +3516,70 @@ public double angleClock(int hour, int minutes) {
 
 化简一下是 **h时m分的夹角为：5.5m-30h**
 
+## [5169. 日期之间隔几天](https://leetcode-cn.com/problems/number-of-days-between-two-dates/)
+
+请你编写一个程序来计算两个日期之间隔了多少天。
+
+日期以字符串形式给出，格式为 `YYYY-MM-DD`。
+
+**解法一**
+
+177周赛的T1
+
+```java
+import java.time.*;
+import java.time.temporal.ChronoUnit;
+class Solution {
+    public int daysBetweenDates(String date1, String date2) {
+        return (int)Math.abs(LocalDate.parse(date1).until(LocalDate.parse(date2),ChronoUnit.DAYS));
+    }
+}
+```
+
+做LeetCode少数导包了的题🤣
+
+**解法二**
+
+copy大佬的原生解法
+
+```java
+
+private int[] months = new int[]{0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+public int daysBetweenDates(String date1, String date2) {
+    String[] d1 = date1.split("-");
+    String[] d2 = date2.split("-");
+    int day1 = getYears(Integer.valueOf(d1[0]) - 1) + getMonths(Integer.valueOf(d1[0]), Integer.valueOf(d1[1]) - 1) + Integer.valueOf(d1[2]);
+    int day2 = getYears(Integer.valueOf(d2[0]) - 1) + getMonths(Integer.valueOf(d2[0]), Integer.valueOf(d2[1]) - 1) + Integer.valueOf(d2[2]);
+    return Math.abs(day1 - day2);
+}
+
+private int getYears(int year) {
+    int sum = (year - 1971) * 365;
+    for (int i = 1971; i <= year; ++i) {
+        if (isRun(i)) {
+            ++sum;
+        }
+    }
+    return sum;
+}
+
+private int getMonths(int year, int month) {
+    int sum = 0;
+    for (int i = 1; i <= month; ++i) {
+        sum += months[i];
+    }
+    if (isRun(year) && month >= 2) {
+        ++sum;
+    }
+    return sum;
+}
+
+private boolean isRun(int year) {
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+```
+
 ## [557. 反转字符串中的单词 III](https://leetcode-cn.com/problems/reverse-words-in-a-string-iii/)
 
 给定一个字符串，你需要反转字符串中每个单词的字符顺序，同时仍保留空格和单词的初始顺序。
@@ -3555,8 +3619,6 @@ public void reverse(char[] s,int left,int right){
     }
 }
 ```
-
-
 
 ## [238. 除自身以外数组的乘积](https://leetcode-cn.com/problems/product-of-array-except-self/)
 

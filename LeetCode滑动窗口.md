@@ -1231,3 +1231,65 @@ public int balancedString(String s) {
 }
 ```
 左指针追赶右指针，形成滑动窗口，感觉滑动窗口的题真的有点不好搞啊！！！
+
+## [5325. 包含所有三种字符的子字符串数目](https://leetcode-cn.com/problems/number-of-substrings-containing-all-three-characters/)  
+
+给你一个字符串 s ，它只包含三种字符 a, b 和 c 。
+
+请你返回 a，b 和 c 都 **至少** 出现过一次的子字符串数目。
+
+**示例 1：**
+
+```java
+输入：s = "abcabc"
+输出：10
+解释：包含 a，b 和 c 各至少一次的子字符串为 "abc", "abca", "abcab", "abcabc", "bca", "bcab", "bcabc", "cab", "cabc" 和 "abc" (相同字符串算多次)。
+```
+
+**示例 2：**
+
+```java
+输入：s = "aaacb"
+输出：3
+解释：包含 a，b 和 c 各至少一次的子字符串为 "aaacb", "aacb" 和 "acb" 。
+```
+
+**示例 3：**
+
+```java
+输入：s = "abc"
+输出：1
+```
+
+**提示：**
+
+- 3 <= s.length <= 5 x 10^4
+- s 只包含字符 a，b 和 c 。
+
+**解法一**
+
+20双周赛T3
+
+```java
+public int numberOfSubstrings(String s) {
+    int[] freq=new int[3];
+    int left=0,right=-1,slen=s.length();
+    int res=0;
+    //abc
+    while(left<slen-2){
+        while(right+1<slen && !valid(freq)){
+            freq[s.charAt(++right)-'a']++;
+        }
+        res+=valid(freq)?(slen-right):0;
+        freq[s.charAt(left)-'a']--;
+        left++;
+    }
+    return res;
+}
+
+public boolean valid(int[] freq){
+    return freq[0]!=0 && freq[1]!=0 && freq[2]!=0;
+}
+```
+枚举所有的左边界，然后找到最短的可以满足的右边界，那么包括右边界和之后的所有的都满足条件，直接计算就可以了，时间复杂度`O(N)`
+

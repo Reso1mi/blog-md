@@ -721,3 +721,97 @@ public int maxSumDivThree3(int[] nums) {
 如果总和%3=1我们就可以移除数组中%3=1的最小那个或者移除两个%3=2的最小的，同理，总和%3=2，我们可以移除一个最小的%2=0的元素，或者移除两个%2=1的最小元素
 
 这里我们需要记录的仅仅是数组中%3=1和%3=2的最小的4个值就ok，其实不用排序就可以，直接O(N)遍历就行，嫌麻烦没改，后面有时间来改改
+
+## [5172. 形成三的最大倍数](https://leetcode-cn.com/problems/largest-multiple-of-three/)
+
+给你一个整数数组 `digits`，你可以通过按任意顺序连接其中某些数字来形成 3 的倍数，请你返回所能得到的最大的 3 的倍数。
+
+由于答案可能不在整数数据类型范围内，请以字符串形式返回答案。
+
+如果无法得到答案，请返回一个空字符串。
+
+**示例 1：**
+
+```java
+输入：digits = [8,1,9]
+输出："981"
+```
+
+
+**示例 2：**
+
+```java
+输入：digits = [8,6,7,1,0]
+输出："8760"
+```
+
+
+**示例 3：**
+
+```java
+输入：digits = [1]
+输出：""
+```
+
+
+**示例 4：**
+
+```java
+输入：digits = [0,0,0,0,0,0]
+输出："0"
+```
+
+**提示：**
+
+- 1 <= digits.length <= 10^4
+- 0 <= digits[i] <= 9
+- 返回的结果不应包含不必要的前导零。
+
+**解法一**
+
+177周赛的T4，时隔多日，周赛又出了这一题，和上面一样，思路差不多的，需要优先考虑只删除一个的情况
+
+```java
+public String largestMultipleOfThree(int[] digits) {
+    int sum=0;
+    int[] freq=new int[10];
+    for(int i=0;i<digits.length;i++) {
+        sum+=digits[i];
+        freq[digits[i]]++;
+    }
+    if(sum==0) return "0";
+    //删除一个余1的或者两个余2的,优先删除一个余1的
+    //删除1个得到的结果肯定比删除2个大
+    if(sum%3==1){ 
+        if(!deleteMin(freq,1)){ 
+            deleteMin(freq,2);
+            deleteMin(freq,2);
+        }
+    }
+    if(sum%3==2){ //删除一个余2的或者两个余1的
+        if(!deleteMin(freq,2)){
+            deleteMin(freq,1);
+            deleteMin(freq,1);
+        }   
+    }
+    StringBuilder res=new StringBuilder();
+    //逆序构建结果
+    for(int i=9;i>=0;i--){
+        int count=freq[i];
+        while(count-- >0){
+            res.append(i);
+        }
+    }
+    return res.toString();
+}
+
+public boolean deleteMin(int[] freq,int y){
+    for (int i=y;i<9;i+=3) {
+        if (freq[i]!=0) {
+            freq[i]--;
+            return true;
+        }
+    }
+    return false;
+}
+```
