@@ -1898,7 +1898,41 @@ public static ListNode reverse(ListNode node,int k){
 
 ![mark](http://static.imlgw.top///20190312/jl7moiy7PbjH.png?imageslim)
 
----
+**解法二**
+
+2020.2.23 时隔多年现在回头重新写了一个递归的写法，还是比较简洁的
+
+```java
+//时隔一年,回头自己写了一个递归的解法
+public ListNode reverseKGroup(ListNode head, int k) {
+    if(head==null || k==1) return head;
+    int sum=0;
+    ListNode temp=head;
+    //预先计算链表的长度
+    while(temp!=null){
+        temp=temp.next;
+        sum++;
+    }
+    return reverse(head,k,sum);
+}
+
+public ListNode reverse(ListNode head, int k,int remain) {
+    if(remain<k) return head; //ramain不足k个return 
+    if(head==null) return head;
+    //正常的翻转操作
+    ListNode cur=head,pre=null,last=head;
+    int count=k;
+    while(count-- >0){
+        last=cur.next;
+        cur.next=pre;
+        pre=cur;
+        cur=last;
+    }
+    //下一次从last开始翻转,remain-k
+    head.next=reverse(last,k,remain-k);
+    return pre;
+}
+```
 ## **817. 链表组件**
 给定一个链表（链表结点包含一个整型值）的头结点 head。
 同时给定列表 G，该列表是上述链表中整型值的一个子集。

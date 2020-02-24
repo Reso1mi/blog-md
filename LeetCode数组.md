@@ -3785,6 +3785,34 @@ public int sumNums(int n) {
 }
 ```
 
+## [470. 用 Rand7() 实现 Rand10()](https://leetcode-cn.com/problems/implement-rand10-using-rand7/)
+
+已有方法 rand7 可生成 1 到 7 范围内的均匀随机整数，试写一个方法 rand10 生成 1 到 10 范围内的均匀随机整数。
+
+不要使用系统的 Math.random() 方法。
+
+**解法一**
+
+拒绝采样，两次Rand7()拒绝大于40的情况
+
+```java
+public int rand10() {
+    int a,b,idx;
+    do{
+        a=rand7();
+        b=rand7();
+        idx=a+(b-1)*7;
+    }while(idx>40);
+    return 1+(idx-1)%10;
+}
+```
+
+概率论里面学过的，都忘了
+
+![38nhYn.png](https://s2.ax1x.com/2020/02/24/38nhYn.png)
+
+期望其实还可以更低，这里后面有时间再来研究
+
 ##  二进制
 
 ## [136. 只出现一次的数字](https://leetcode-cn.com/problems/single-number/)
