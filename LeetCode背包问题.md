@@ -93,19 +93,11 @@ public int putPack(int m,int[] A,int index) {
 
 物品列表（样例1），因为这题价值就是重量，所以w和v是一样的
 
-| index | 0    | 1    | 2    | 3    |
-| ----- | ---- | ---- | ---- | ---- |
-| w     | 3    | 4    | 8    | 5    |
-| v     | 3    | 4    | 8    | 5    |
+![mark](http://static.imlgw.top/blog/20200227/XIvS0eAf1FqA.png?imageslim)
 
-DpTable（样例1）
+**DpTable（样例1）**
 
-| index\m | 0    | 1    | 2    | 3    | 4    | 5    | 6    | 7    | 8    | 9    | 10   |
-| :-----: | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
-|    0    | 0    | 0    | 0    | 3    | 3    | 3    | 3    | 3    | 3    | 3    | 3    |
-|    1    | 0    | 0    | 0    | 3    | 4    | 4    | 4    | 7    | 7    | 7    | 7    |
-|    2    | 0    | 0    | 0    | 3    | 4    | 4    | 4    | 7    | 8    | 8    | 8    |
-|    3    | 0    | 0    | 0    | 3    | 4    | 5    | 5    | 7    | 8    | 9    | 9    |
+![mark](http://static.imlgw.top/blog/20200227/YkPisR3fx1wa.png?imageslim)
 
 一行一行的看，从左到右，`dp[index][m]`代表 **背包总容量不超过m的情况下，考虑装入`[0,index]`中的元素能获得最大收益**，比如`dp[1][7]`代表的就是背包总容量不超过7的情况下，考虑装入`[0,1]` 范围内的元素所能获得的最大收益，人脑思考结果自然是7了，下面我们分析下如果dp推出这个结果
 
@@ -167,6 +159,91 @@ public int backPack4(int m,int[] A) {
 }
 ```
 可以看到，我们的内层循环不再是从左往右，而是从右往左，这样的好处就是避免了`dp[j-A[i]]`已经被`当前层前面的元素`覆盖的尴尬情况，结合上面的表推一下就知道了
+
+**解法三**
+
+算是对之前代码的优化吧，之前写的乱七八糟的
+
+```java
+//代码优化
+public int backPack(int m,int[] A) {
+    if (A==null || A.length<=0) {
+        return 0;
+    }
+    int[] dp=new int[m+1];
+    for (int i=0;i<A.length;i++) {
+        for (int j=m;j>=A[i];j--) {
+            dp[j]=Math.max(dp[j],dp[j-A[i]]+A[i]);
+        }
+    }
+    return dp[m];
+}
+```
+## [完全背包问题（acwing）](https://www.acwing.com/problem/content/description/3/) 
+
+有 NN 种物品和一个容量是 VV 的背包，每种物品都有无限件可用。
+
+第 ii 种物品的体积是 vivi，价值是 wiwi。
+
+求解将哪些物品装入背包，可使这些物品的总体积不超过背包容量，且总价值最大。
+输出最大价值。
+
+**输入格式**
+
+第一行两个整数，N，VN，V，用空格隔开，分别表示物品种数和背包容积。
+
+接下来有 NN 行，每行两个整数 vi,wivi,wi，用空格隔开，分别表示第 ii 种物品的体积和价值。
+
+**输出格式**
+
+输出一个整数，表示最大价值。
+
+**数据范围**
+
+0<N,V≤10000<N,V≤1000
+0<vi,wi≤10000<vi,wi≤1000
+
+**输入样例**
+
+```java
+4 5
+1 2
+2 4
+3 4
+4 5
+```
+
+**输出样例：**
+
+```java
+10
+```
+
+**解法一**
+
+相比01背包交换了内循环的顺序就ok了，当然也可以将每个物品拆分，不过复杂度会变高
+
+```java
+import java.util.*;
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int N=sc.nextInt();
+        int V=sc.nextInt();
+        int[] dp=new int[V+1];
+        for(int i=0;i<N;i++){
+            int vi=sc.nextInt();
+            int wi=sc.nextInt();
+            for(int j=vi;j<=V;j++) {
+                dp[j]=Math.max(dp[j],dp[j-vi]+wi);
+            }
+        }
+        System.out.println(dp[V]);
+    }
+}
+```
+
+其实这个结论要直接理解还是有点难懂的，具体的推导过程可以看下面的 [零钱兑换](#322. 零钱兑换)
 
 ## [416. 分割等和子集](https://leetcode-cn.com/problems/partition-equal-subset-sum/)
 
@@ -359,13 +436,9 @@ public int takeCoins(int[] coins, int amount) {
 
 动态规划，二维dp，注意这里其实和前面的背包问题就有区别了，这里实际上就是个`无限背包`问题，因为这里的硬币是无限的，每个面值的硬币都可以重复的选取
 
-**DpTable**
+**DPTable**
 
-| Coin / Amount | 0    | 1    | 2    | 3    | 4    | 5    | 6    | 7    | 8    | 9    | 10   | 11   |
-| ------------- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
-| 0（1）        | 0    | 1    | 2    | 3    | 4    | 5    | 6    | 7    | 8    | 9    | 10   | 11   |
-| 1（2）        | 0    | 1    | 1    | 2    | 2    | `3`  | 3    | 4    | 4    | 5    | 5    | 6    |
-| 2（5）        | 0    | 1    | 1    | 2    | 2    | 1    | 2    | 2    | 3    | 3    | 2    | 3    |
+![mark](http://static.imlgw.top/blog/20200227/ekmjFAHgA2K4.png?imageslim)
 
 **状态定义**
 
@@ -412,7 +485,7 @@ public int coinChange4(int[] coins,int amount){
 
 **空间优化**
 
-感觉一维的解释起来会更加清晰易懂 `f(11)=1 + min(f(10),f(9),f(6))` 这个里面就具有最优子结构，而且一看就明白了
+将上面的二维改成一维就是像下面一样，注意内层的循环！因为后面是 `f[i][j-c]+1` 所以需要依赖同一层前面的结果，所以必须顺序的遍历
 
 ```java
 public int coinChange(int[] coins,int amount){

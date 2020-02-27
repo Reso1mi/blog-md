@@ -6,7 +6,6 @@ tags:
 categories:
 	[数据结构]
 date: 2019/11/25
-cover: http://static.imlgw.top/blog/20191125/CdEsM2h5DuSX.png?imageslim
 ---
 
 ## Map接口

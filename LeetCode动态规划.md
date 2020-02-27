@@ -3299,6 +3299,60 @@ public int lastRemaining(int n, int m) {
 ```
 参考了LeetCode的[大佬题解](https://leetcode-cn.com/u/yuanninesuns/)，讲的挺好的
 
+## [1014. 最佳观光组合](https://leetcode-cn.com/problems/best-sightseeing-pair/)
+
+给定正整数数组 A，A[i] 表示第 i 个观光景点的评分，并且两个景点 i 和 j 之间的距离为 j - i。
+
+一对景点（i < j）组成的观光组合的得分为（A[i] + A[j] + i - j）：景点的评分之和减去它们两者之间的距离。
+
+返回一对观光景点能取得的最高分。
+
+**示例：**
+
+```java
+输入：[8,1,5,2,6]
+输出：11
+解释：i = 0, j = 2, A[i] + A[j] + i - j = 8 + 5 + 0 - 2 = 11
+```
+
+**提示：**
+
+- `2 <= A.length <= 50000`
+- `1 <= A[i] <= 1000`
+
+**解法一**
+
+暴力解法，`O(N^2)`，这题数据5w，肯定会T
+
+```java
+//A[i] + A[j] + i - j (i<j)
+public int maxScoreSightseeingPair(int[] A) {
+    int res=-1;
+    for (int i=0;i<A.length;i++) {
+        for (int j=i+1;j<A.length;j++) {
+            res=Math.max(A[i]+A[j]+i-j,res);
+        }
+    }
+    return res;
+}
+```
+**解法二**
+
+```java
+// A[i]+A[j] - (j-i) i<j
+// A[i]+i + (A[j]-j)
+public int maxScoreSightseeingPair(int[] A) {
+    int res=-1;
+    int maxPre=A[0]+0;
+    for (int j=1;j<A.length;j++) {           
+        res=Math.max(maxPre+A[j]-j,res);
+        maxPre=Math.max(maxPre,A[j]+j);
+    }
+    return res;
+}
+```
+我们把式子合并一下 `(A[i] +i) +(A[j]-j)` ，然后发现其实上面的暴力解法中，我们想要结果最大实际上就是要两部分都最大，然后内层循环里面，`A[j]-j` 是个变量，而`A[i]+i`不变的，代表`j`位置之前，所有的`A[i]+i` 但是我们只需要最大的，所以我们完全可以用一个变量来保存这个最大值，然后遍历的过程中不断的更新它就ok了
+
 ## _博弈型动态规划_
 
 ## [292. Nim 游戏](https://leetcode-cn.com/problems/nim-game/)
