@@ -2014,6 +2014,28 @@ private  void swap(int[] nums, int l, int r) {
 
 2ms，99%beat，一般情况下的topK问题，如果用堆解决的话应该都是采用**小根堆**这种做法来做，时间复杂度为`O(NlogK)`，维护一个大小为k的小根堆，然后再遍历后面n-k个元素，依次和当前最小堆的堆顶比较（当前topK中的最小元素，堆顶），如果比它小就和它交换然后调整堆，这样就始终保持了这个堆是当前的topK小，最后的堆顶就是第K大的元素。
 
+_关于节省空间的问题，其实很好理解，去找一个OJ试一下就懂了_
+
+```java
+import java.util.*;
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int N=sc.nextInt();
+        int K=sc.nextInt();
+        PriorityQueue<Integer> queue=new PriorityQueue<>((a,b)->b-a);
+        for(int i=0;i<N;i++){
+            int num=sc.nextInt(); //一个个的读入,而不是一起读入
+            queue.add(num);
+            if(queue.size()>K){
+                queue.poll();
+            }
+        }
+        System.out.println(queue.peek());
+    }
+}
+```
+
 **解法三**
 
 其实还有一类做法，利用`快排+二分`的思想，一般也被称为快选
@@ -2068,6 +2090,59 @@ public static  void  swap(int []nums,int a,int b){
 > 至于为什么是O(N)，我们可以来分析下，这里**假设每次划分都是差不多中点的位置**，如果是快排，那么在**partition**之后依然需要两边的子数组进行**partition**，分治整个递归栈的高度就是`logN`，每层都是N，所以整体的复杂度就**O(NlogN)**....扯远了，回到正题
 >
 > 来说说我们这里为什么是O(N)，这里我们沿用前面的分析过程，递归栈深度依然是`logN`，但是我们在这里第一次确定划分点的相对**k**的位置后，下一步**只需要划分其中一边的元素，不用对另一边的元素继续**，也就是n/2，再往下就是n/4，n/8，n/16 ....   而 `(1+1/2+1/4+1/8+......1/2^n)n <=2n` ，也就是说整体的复杂度是低于O(2N)的，所以这里复杂度就是O(N)
+
+**三切分快排优化**
+
+ACWing上交的，wa了好几次，发现是二分写错了，哎，二分真难，其实还可以做一下随机处理
+
+```java
+import java.util.*;
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int N=sc.nextInt();
+        int K=sc.nextInt()-1;
+        int[] nums=new int[N];
+        for(int i=0;i<N;i++) nums[i]=sc.nextInt();
+        int left=0,right=N-1;
+        while(left<right){
+            int[] equ=partition(nums,left,right);
+            if(K>equ[1]){
+                left=equ[1]+1;
+            }else if(K<equ[0]){
+                right=equ[0]-1;
+            }else{
+                System.out.println(nums[equ[0]]);
+                return;
+            }
+        }
+        System.out.println(nums[left]);
+    }
+
+    public static int[] partition(int[] nums,int left,int right){
+        int less=left-1,more=right,base=nums[right];
+        int i=left;
+        while(i<more){
+            if(nums[i]<base){
+                swap(nums,++less,i++);
+            }else if(nums[i]>base){
+                swap(nums,--more,i);
+            }else{
+                i++;
+            }
+        }
+        //归位
+        swap(nums,right,more++);
+        return new int[]{less+1,more-1}; //返回等于区域
+    }
+
+    public static void swap(int[] nums,int a,int b){
+        int temp=nums[a];
+        nums[a]=nums[b];
+        nums[b]=temp;
+    }
+}
+```
 
 **解法四**
 
@@ -3813,6 +3888,73 @@ public int rand10() {
 
 期望其实还可以更低，这里后面有时间再来研究
 
+## [面试题61. 扑克牌中的顺子](https://leetcode-cn.com/problems/bu-ke-pai-zhong-de-shun-zi-lcof/)
+
+从扑克牌中随机抽5张牌，判断是不是一个顺子，即这5张牌是不是连续的。2～10为数字本身，A为1，J为11，Q为12，K为13，而大、小王为 0 ，可以看成任意数字。A 不能视为 14。
+
+ 
+
+**示例 1:**
+
+```java
+输入: [1,2,3,4,5]
+输出: True
+```
+
+**示例 2:**
+
+```java
+输入: [0,0,1,2,5]
+输出: True
+```
+
+**限制：**
+
+数组长度为 5 
+
+数组的数取值为 [0, 13] .
+
+**解法一**
+
+只有5张牌，先排除对子，然后求最大和最小的牌面之差就行了，小于等于4就肯定是顺子
+
+```java
+public boolean isStraight(int[] nums) {
+    int[] bucket=new int[14];
+    for(int i=0;i<5;i++){
+        bucket[nums[i]]++;
+        //有非0的对子,直接false
+        if(nums[i]!=0 && bucket[nums[i]] >1 ){
+            return false;
+        }
+    }
+    //记录起手牌和最大牌
+    int start=-1,end=-1;
+    for(int i=1,j=13;end==-1||start==-1;i++,j--){
+        if(bucket[i]==1 && start==-1) start=i;
+        if(bucket[j]==1 && end==-1) end=j;
+    }
+    //小于等于4就行,多的用0补
+    return end-start<=4;
+}
+```
+代码可以优化成一个循环内
+
+```java
+//缩减成一个循环
+public boolean isStraight(int[] nums) {
+    int[] bucket=new int[14];
+    int min=14,max=-1;
+    for(int i=0;i<nums.length;i++){
+        if(nums[i]==0) continue;
+        if(bucket[nums[i]]==1) return false;
+        bucket[nums[i]]++;
+        min=Math.min(min,nums[i]);
+        max=Math.max(max,nums[i]);
+    }
+    return max-min<=4;
+}
+```
 ##  二进制
 
 ## [136. 只出现一次的数字](https://leetcode-cn.com/problems/single-number/)
