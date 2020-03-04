@@ -1466,6 +1466,19 @@ public static void merge3(int[] nums1, int m, int[] nums2, int n) {
 
 合并后的长度确定，nums1的空间也足够，所以完全可以从后往前，从大到小，从而避免了使用额外的空间储存结果，学到了学到了👏
 
+**解法三**
+
+时隔多年，LeetCode打卡又做了一遍，这次直接想到了最优解，而且代码很简洁
+
+```java
+public void merge(int[] A, int m, int[] B, int n) {
+    if(n==0 )  return;
+    int len=A.length,ai=m-1,bi=n-1,i=len-1;
+    while(ai>=0 && bi>=0) A[i--]=A[ai] > B[bi] ? A[ai--]:B[bi--];
+    while(bi>=0) A[i--]=B[bi--];
+    //ai剩余的不用管
+}
+```
 ## [532. 逆序对](https://www.lintcode.com/problem/reverse-pairs/description)
 
 （来自领扣）
