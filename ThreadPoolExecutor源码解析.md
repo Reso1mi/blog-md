@@ -1,6 +1,6 @@
 ---
 title:
-  深入ThreadPoolExecutor源码
+  ThreadPoolExecutor源码解析
 tags:
   [多线程,并发编程]
 categories:
@@ -23,27 +23,27 @@ top: True
 打开源码映入眼帘的就是这几个字段和方法，对应的就是线程池的一些运行状态和相关方法
 
 ```java
-    //控制线程池中数量和状态的字段,用AtomicInteger保存
-    private final AtomicInteger ctl = new AtomicInteger(ctlOf(RUNNING, 0));
-    //count bit顾名思义就是 workerCount的位数，这里是29
-    private static final int COUNT_BITS = Integer.SIZE - 3;
-    //1<<29 -1 == 1111....1111(29个1) 线程数(workerCount)上限 大约5亿
-    private static final int CAPACITY   = (1 << COUNT_BITS) - 1;
+//控制线程池中数量和状态的字段,用AtomicInteger保存
+private final AtomicInteger ctl = new AtomicInteger(ctlOf(RUNNING, 0));
+//count bit顾名思义就是 workerCount的位数，这里是29
+private static final int COUNT_BITS = Integer.SIZE - 3;
+//1<<29 -1 == 1111....1111(29个1) 线程数(workerCount)上限 大约5亿
+private static final int CAPACITY   = (1 << COUNT_BITS) - 1;
 
-    // runState is stored in the high-order bits
-    //高三位存放状态，相应的低29位就是workerCount
-    private static final int RUNNING    = -1 << COUNT_BITS;
-    private static final int SHUTDOWN   =  0 << COUNT_BITS;
-    private static final int STOP       =  1 << COUNT_BITS;
-    private static final int TIDYING    =  2 << COUNT_BITS;
-    private static final int TERMINATED =  3 << COUNT_BITS;
+// runState is stored in the high-order bits
+//高三位存放状态，相应的低29位就是workerCount
+private static final int RUNNING    = -1 << COUNT_BITS;
+private static final int SHUTDOWN   =  0 << COUNT_BITS;
+private static final int STOP       =  1 << COUNT_BITS;
+private static final int TIDYING    =  2 << COUNT_BITS;
+private static final int TERMINATED =  3 << COUNT_BITS;
 
-    // Packing and unpacking ctl
-    // 拆解ctl获取状态和数量
-    private static int runStateOf(int c)     { return c & ~CAPACITY; }
-    private static int workerCountOf(int c)  { return c & CAPACITY; }
-    // 拼接状态和数量得到ctl
-    private static int ctlOf(int rs, int wc) { return rs | wc; }
+// Packing and unpacking ctl
+// 拆解ctl获取状态和数量
+private static int runStateOf(int c)     { return c & ~CAPACITY; }
+private static int workerCountOf(int c)  { return c & CAPACITY; }
+// 拼接状态和数量得到ctl
+private static int ctlOf(int rs, int wc) { return rs | wc; }
 ```
 
 #### 状态转换过程

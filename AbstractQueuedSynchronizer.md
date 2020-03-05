@@ -1,6 +1,6 @@
 ---
 title:
-  深入AQS源码解析（一）
+  AQS源码解析（上）
 tags:
   [多线程,并发编程]
 categories:
