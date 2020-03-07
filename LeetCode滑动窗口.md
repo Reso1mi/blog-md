@@ -749,6 +749,7 @@ public int[][] findContinuousSequence(int target) {
         }else{ //build结果集
             res.add(build(left,right));
             left++;//窗口左移,剔除一个小的
+            right++; //回头重写发现这里还可以优化,右边界也可以扩大
         }
     }
     return res.toArray(new int[0][0]);
@@ -762,6 +763,8 @@ public int[] build(int left,int right){
     return res;
 }
 ```
+这里其实并不是最优解，还有更好的数学解法，直接根据求和公式，枚举所有的长度，逆向求出所有的首项，这里后面有时间再来实现
+
 ## [480. 滑动窗口中位数](https://leetcode-cn.com/problems/sliding-window-median/)
 
 中位数是有序序列最中间的那个数。如果序列的大小是偶数，则没有最中间的数；此时中位数是最中间的两个数的平均数。
