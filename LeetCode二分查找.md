@@ -174,6 +174,25 @@ public int searchInsert(int[] nums, int target) {
 
 如果熟悉二分的过程，其实最后返回`lo`或者`hi+1`就可以了。
 
+**解法二**
+
+跟谁学笔试现场写的，上面的都是dd
+
+```java
+public int searchInsert(int[] nums, int target) {
+    int len=nums.length;
+    int lo=0,hi=len;
+    while(lo< hi){
+        int mid=lo+(hi-lo)/2;
+        if(nums[mid]<target){
+            lo=mid+1;
+        }else {
+            hi=mid;
+        }
+    }
+    return lo;
+}
+```
 ## [153. 寻找旋转排序数组中的最小值](https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array/)
 
 假设按照升序排序的数组在预先未知的某个点上进行了旋转。

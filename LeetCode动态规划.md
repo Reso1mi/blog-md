@@ -1164,6 +1164,46 @@ private static int binarySearch(int[] nums, int len, int target) {
 }
 ```
 
+**解法二代码优化**
+
+2020.3.20
+
+```java
+public static int lengthOfLIS(int[] nums) {
+    int[] top = new int[nums.length];
+    int len = 0;
+    for (int num : nums) {
+        //寻找左侧最小的堆顶
+        int index=binarySearch(top,len,num);
+        if (index == len) {
+            len++;
+        }
+        top[index] = num;
+    }
+    return len;
+}
+
+//可以搜索
+private static int binarySearch(int[] nums, int len, int target) {
+    int left=0,right=len;
+    while(left<right){
+        int mid=left+(right-left)/2;
+        if(nums[mid]<target){
+            left=mid+1;
+        }else {
+            right=mid;
+        }
+    }
+    return left;
+}
+```
+首先是记住了这个套路，然后优化了二分的写法
+
+![mark](http://static.imlgw.top/blog/20200320/zhcxcxmK4Amt.png?imageslim)
+
+
+（copy自从liweiwei大佬 [题解](https://leetcode-cn.com/problems/longest-increasing-subsequence/solution/dong-tai-gui-hua-er-fen-cha-zhao-tan-xin-suan-fa-p/)）
+
 ## [354. 俄罗斯套娃信封问题](https://leetcode-cn.com/problems/russian-doll-envelopes/)
 
 给定一些标记了宽度和高度的信封，宽度和高度以整数对形式 `(w, h)` 出现。当另一个信封的宽度和高度都比这个信封大的时候，这个信封就可以放进另一个信封里，如同俄罗斯套娃一样。
@@ -1202,6 +1242,42 @@ public int maxEnvelopes(int[][] envelopes) {
 }
 ```
 其实和上面的LIS是一样的，所以我放在了一起，差点bugfree，被空输入坑了一发，可惜这个解法并不是最优解，而且也不符合这题的困难tag，这题的最优解应该是利用上面的贪心+二分的做法，这里实在是能力时间都有限，没法去研究那种解法，暂且先用这个解法吧
+
+**解法二**
+
+2020.3.20 阿里笔试考了这一题，dp超时了。。。。
+
+```java
+public int maxEnvelopes(int[][] envelopes) {
+    Arrays.sort(envelopes,(a,b)->a[0]!=b[0]?a[0]-b[0]:b[1]-a[1]);
+    int N=envelopes.length;
+    int[] top=new int[N];
+    int len=0;
+    for(int i=0;i<N;i++){
+        int cur=envelopes[i][1];
+        //二分搜索堆顶，找第一个小于当前牌的
+        int index=binarySearch(top,cur,len);
+        if(index==len){ //没找到合适的位置
+            len++; //新建牌堆，牌堆++
+        }
+        top[index]=cur;
+    }
+    return len;
+}
+
+public int binarySearch(int[] top,int target,int len){
+    int left=0,right=len;
+    while(left<right){
+        int mid=left+(right-left)/2;
+        if(top[mid]<target){
+            left=mid+1;
+        }else{
+            right=mid;
+        }
+    }
+    return left;
+}
+```
 
 ## [53. 最大子序和](https://leetcode-cn.com/problems/maximum-subarray/)
 

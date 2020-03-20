@@ -3354,6 +3354,55 @@ public String palindrome(String s,int i,int j){
 ```
 如果采用暴力法的话就是枚举所有子串，判断是不是回文串，最后求个最长的，时间复杂度`O(N^3)` ，但是我们可以利用回文的特征，利用中心扩散法，以`str`的**各个位置**作为中心，向两边扩散，最后求得最大值，注意得这里说的是**各个位置**，这个里面其实就包含了元素之间的间隙，其实整体思路还是挺简单的，但经过我们小小的转换思路，时间复杂度就降低到了`O(N^2)`，当然，这里还不是最优解，最优应该是[Manacher](https://oi-wiki.org/string/manacher/) （马拉车）算法，等后面有时间我再来研究这种算法
 
+## [409. 最长回文串](https://leetcode-cn.com/problems/longest-palindrome/)
+
+给定一个包含大写字母和小写字母的字符串，找到通过这些字母构造成的最长的回文串。
+
+在构造过程中，请注意区分大小写。比如 `"Aa"` 不能当做一个回文字符串。
+
+**注意:**
+假设字符串的长度不会超过 1010。
+
+**示例 1:**
+
+```java
+输入:
+"abccccdd"
+
+输出:
+7
+
+解释:
+我们可以构造的最长的回文串是"dccaccd", 它的长度是 7。
+```
+
+**解法一**
+
+和上面的题目名字一样，但是请注意审题！！！
+
+```java
+public int longestPalindrome(String s) {
+    if(s==null || s.length()<=0) return 0;
+    int[] hash=new int[128];
+    for(int i=0;i<s.length();i++){
+        hash[s.charAt(i)]++;
+    }
+    //Arrays.sort(hash);
+    int res=0;boolean flag=false;
+    for(int i=hash.length-1;i>=0;i--){
+        if(hash[i]!=0){
+            if(hash[i]%2==0){
+                res+=hash[i]; //偶数直接加
+            }else{
+                flag=true;
+                res+=(hash[i]-1); //奇数减一再加
+            }
+        }
+    }
+    return flag?res+1:res;
+}
+```
+
 ## [1332. 删除回文子序列](https://leetcode-cn.com/problems/remove-palindromic-subsequences/)
 
 给你一个字符串 s，它仅由字母 'a' 和 'b' 组成。每一次删除操作都可以从 s 中删除一个回文 **子序列**。
@@ -3963,6 +4012,33 @@ public String reverseWords(String s) {
 2. 翻转单个字符
 3. 去除多余空格
 
+## [面试题 01.06. 字符串压缩](https://leetcode-cn.com/problems/compress-string-lcci/)
+
+字符串压缩。利用字符重复出现的次数，编写一种方法，实现基本的字符串压缩功能。比如，字符串aabcccccaaa会变为a2b1c5a3。若“压缩”后的字符串没有变短，则返回原先的字符串。你可以假设字符串中只包含大小写英文字母（a至z）。
+
+case就不粘了
+
+**解法一**
+
+直接写就行了
+
+```java
+public String compressString(String S) {
+    StringBuilder sb=new StringBuilder();
+    int index=0;
+    while(index<S.length()){
+        sb.append(S.charAt(index));
+        int r=1;
+        while(index<S.length()-1&&S.charAt(index)==S.charAt(index+1)){
+            ++index;
+            r++;
+        }
+        sb.append(r);
+        index++;
+    }
+    return sb.length()<S.length()?sb.toString():S;
+}
+```
 ## [238. 除自身以外数组的乘积](https://leetcode-cn.com/problems/product-of-array-except-self/)
 
 给定长度为 n 的整数数组 nums，其中 n > 1，返回输出数组 output ，其中 output[i] 等于 nums 中除 nums[i] 之外其余各元素的乘积。
@@ -4391,6 +4467,55 @@ public void swap(int[] array,int a,int b){
     int temp=array[a];
     array[a]=array[b];
     array[b]=temp;
+}
+```
+## [836. 矩形重叠](https://leetcode-cn.com/problems/rectangle-overlap/)
+
+矩形以列表 `[x1, y1, x2, y2]` 的形式表示，其中 `(x1, y1)` 为左下角的坐标，`(x2, y2)` 是右上角的坐标。
+
+如果相交的面积为正，则称两矩形重叠。需要明确的是，只在角或边接触的两个矩形不构成重叠。
+
+给出两个矩形，判断它们是否重叠并返回结果。
+
+**示例 1：**
+
+```java
+输入：rec1 = [0,0,2,2], rec2 = [1,1,3,3]
+输出：true
+```
+
+**示例 2：**
+
+```java
+输入：rec1 = [0,0,1,1], rec2 = [1,0,2,1]
+输出：false
+```
+
+**提示：**
+
+1. 两个矩形 `rec1` 和 `rec2` 都以含有四个整数的列表的形式给出。
+2. 矩形中的所有坐标都处于 `-10^9` 和 `10^9` 之间。
+3. `x` 轴默认指向右，`y` 轴默认指向上。
+4. 你可以仅考虑矩形是正放的情况。
+
+**解法一**
+
+憨憨解法，最后还被一个大case越界给卡了
+
+```java
+public boolean isRectangleOverlap(int[] rec1, int[] rec2) {
+    int x=Math.max(rec2[2]-rec1[0],rec1[2]-rec2[0]);
+    int y=Math.max(rec2[3]-rec1[1],rec1[3]-rec2[1]);
+    long maxX=((long)rec1[2]-(long)rec1[0]+(long)rec2[2]-(long)rec2[0]);
+    long maxY=((long)rec1[3]-(long)rec1[1]+(long)rec2[3]-(long)rec2[1]);
+    return x<maxX && y <maxY;
+}
+```
+**解法二**
+
+```java
+public boolean isRectangleOverlap(int[] rec1, int[] rec2) {
+    return !(rec1[3]<=rec2[1]||rec2[3]<=rec1[1]||rec1[2]<=rec2[0]||rec2[2]<=rec1[0]);
 }
 ```
 ##  二进制
