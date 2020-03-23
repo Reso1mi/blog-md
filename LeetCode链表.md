@@ -22,63 +22,68 @@ cover: http://static.imlgw.top///20190227/gPprrxbrdwAx.jpg?imageslim
 **解法一**
 
 ```java
- public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
-      // 先用0补齐短的哪一个
-        ListNode n1 = l1;
-        ListNode n2 = l2;
-        while (n1 != null && n2 != null) {
-            if (n1.next == null && n2.next != null) {
-                n1.next = new ListNode(0);
-            } else if (n1.next != null && n2.next == null) {
-                n2.next = new ListNode(0);
-            } else if (n1.next == null && n2.next == null) {
-                break;
-            }
-            n1 = n1.next;
-            n2 = n2.next;
-        }
-        // 从头开始加
-        ListNode res = null;
-        //实际操作的链表
-        ListNode real=null;
-        // 进位
-        int n = 0;
-        int m = 0;
-        int i = 0;
-        while (l1 != null) {
-            // 当前位
-            m = (l1.val + l2.val) % 10+n;
-            // 判断进位后是否为10
-            if(m==10) {
-                m=0;
-                n=1;
-            }else {         
-             // 进位 0 or 1
-             n = (l1.val + l2.val) / 10;
-            }
-            // 添加到原链表的后面
-            // 判断是不是第一次
-            if (i == 0) {
-                real=res = new ListNode(m);
-            } else {
-                ListNode temp = new ListNode(m);
-                real.next = temp;
-                real=temp;
-            }
-            //判断位数相同的情况下最后一位和大于10的情况
-            if(n==1&&l1.next==null) {
-                //在最后加个1
-                real.next=new ListNode(1);
-            }
-            l2 = l2.next;
-            l1 = l1.next;
-            i++;
-        }
-        return res;
- }
+//比较推荐的写法，简洁一点，在lc上提交区别不大
+public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+    ListNode dummyNode=new ListNode(-1);
+    ListNode temp=dummyNode;
+    dummyNode.next=temp;
+    int carry=0;
+    while(l1!=null || l2!=null){
+        int sum= (l1!=null?l1.val:0) + (l2!=null?l2.val:0)+ carry;
+        temp.next=new ListNode(sum%10);
+        temp=temp.next;
+        carry=sum/10;
+        l1=l1!=null?l1.next:null;
+        l2=l2!=null?l2.next:null;
+    }
+    if(carry!=0) temp.next=new ListNode(1);
+    return dummyNode.next;
+}
 ```
-很久之前写的代码了，代码很乱，用0补齐短的那个然后对应相加注意进位就行了。
+~~很久之前写的代码了，代码很乱，用0补齐短的那个然后对应相加注意进位就行了~~
 
+2020.3.22 把之前的代码删了，一年前的代码，写的太丑了
+
+**解法二**
+
+2020.3.22 新增了一个解法，有点偏，没啥意思，不过熟悉下链表还是可以
+
+```java
+//这个解法有点偏了,为了不new节点直接在原链表上修改的
+public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+    ListNode dummyNode=new ListNode(-1);
+    dummyNode.next=l1;
+    int carry=0;
+    ListNode last=l1;
+    while(l1!=null && l2!=null){
+        int sum= l1.val + l2.val+ carry;
+        l1.val=sum%10;
+        carry=sum/10;
+        last=l1;
+        l1=l1.next;
+        l2=l2.next;
+    }
+    while(l1!=null && carry!=0){
+        int sum = l1.val + carry;
+        l1.val=sum%10;
+        carry=sum/10;
+        last=l1;
+        l1=l1.next;
+    }
+    if(l2!=null){
+        last.next=l2;
+        while(l2!=null && carry!=0){
+            int sum = l2.val + carry;
+            l2.val=sum%10;
+            carry=sum/10;
+            last=l2;
+            l2=l2.next;
+        }
+    }
+    if(carry!=0) last.next=new ListNode(1);
+    return dummyNode.next;
+}
+```
 ## 445. 两数相加Ⅱ
 
 给定两个**非空**链表来代表两个非负整数。数字最高位位于链表开始位置。它们的每个节点只存储单个数字。将这两数相加会返回一个新的链表。

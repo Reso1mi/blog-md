@@ -82,29 +82,26 @@ Explanation: Rob house 1 (money = 2), rob house 3 (money = 9) and rob house 5 (m
 
 **解法一**
 
-简单的dp题，dp方程很容易得到，`dp[i]=max(dp[i-2]+nums[i],dp[i-1])`
+简单的dp题，dp方程很容易得到，`dp[i]=max(dp[i-2]+nums[i],dp[i-1])` （2020.3.22更新了代码）
 
 ```java
 //  Max[i]=max(nums[i-2]+nums[i],nums[i-1])
 public int rob(int[] nums) {
-    if(nums==null||nums.length<=0){
-        return 0;
-    }
-    if(nums.length==1){
-        return nums[0];
-    }
-    int []dp=new int[nums.length];
+    if(nums==null || nums.length<=0) return 0;
+    int[] dp=new int[nums.length];
     dp[0]=nums[0];
-    dp[1]=nums[1]>nums[0]?nums[1]:nums[0];
-    int i;
-    for (i=2;i<nums.length;i++) {
-        dp[i]=Math.max(dp[i-2]+nums[i],dp[i-1]);
+    for(int i=1;i<nums.length;i++){
+        dp[i]=Math.max(i>=2?dp[i-2]+nums[i]:nums[i],dp[i-1]);
     }
-    return dp[i-1];
+    return dp[nums.length-1];
 }
 ```
 
-时间空间都是O(N)，需要注意边界条件，这题还有另一种写法，空间复杂度是O(1)的
+时间空间都是O(N)，需要注意边界条件
+
+**解法二**
+
+空间复杂度的优化
 
 ```java
 // Max[i]=max(pre+nums[i],cur);  
