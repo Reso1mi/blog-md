@@ -2862,6 +2862,31 @@ public void flatten(TreeNode root) {
 ```
 需要注意的地方就是需要保存右子树，因为前面的操作将左子树添加到根节点右子树的时候，会导致原本的右子树丢失
 
+**非递归的写法**
+
+```java
+public void flatten(TreeNode root) {
+    if (root==null) return;
+    TreeNode last=null;
+    Deque<TreeNode> stack=new ArrayDeque<>();
+    stack.push(root);
+    while(!stack.isEmpty()){
+        TreeNode cur=stack.pop();
+        if(last!=null){
+            last.right=cur;
+            last.left=null;
+        }
+        last=cur;
+        if(cur.right!=null){
+            stack.push(cur.right);
+        }
+        if(cur.left!=null){
+            stack.push(cur.left);
+        }
+    }
+}
+```
+
 **解法二**
 
 变形的后序遍历，递归解法

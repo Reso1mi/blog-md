@@ -2853,6 +2853,116 @@ public int gcd(int a,int b){
 
 综合以上，最大公因子的长度必然等于两串长度的最大公约数。
 
+## [914. 卡牌分组](https://leetcode-cn.com/problems/x-of-a-kind-in-a-deck-of-cards/)
+
+给定一副牌，每张牌上都写着一个整数。
+
+此时，你需要选定一个数字 X，使我们可以将整副牌按下述规则分成 1 组或更多组：
+
+- 每组都有 X 张牌。
+- 组内所有的牌上都写着相同的整数。
+
+仅当你可选的 X >= 2 时返回 true。
+
+**示例 1：**
+
+```java
+输入：[1,2,3,4,4,3,2,1]
+输出：true
+解释：可行的分组是 [1,1]，[2,2]，[3,3]，[4,4]
+```
+
+**示例 2：**
+
+```java
+输入：[1,1,1,2,2,2,3,3]
+输出：false
+解释：没有满足要求的分组。
+```
+
+**示例 3：**
+
+```java
+输入：[1]
+输出：false
+解释：没有满足要求的分组。
+```
+
+**示例 4：**
+
+```java
+输入：[1,1]
+输出：true
+解释：可行的分组是 [1,1]
+```
+
+**示例 5：**
+
+```java
+输入：[1,1,2,2,2,2]
+输出：true
+解释：可行的分组是 [1,1]，[2,2]，[2,2]
+```
+
+**提示：**
+
+- `1 <= deck.length <= 10000`
+- `0 <= deck[i] < 10000`
+
+**解法一**
+
+```java
+public boolean hasGroupsSizeX(int[] deck) {
+    HashMap<Integer,Integer> map=new HashMap<>();
+    for(int i=0;i<deck.length;i++){
+        map.put(deck[i],map.getOrDefault(deck[i],0)+1);
+    }
+    int g=-1;
+    for (Integer key:map.keySet()) {
+        int freq=map.get(key);
+        if(g==-1) {
+            g=freq;
+        }else{
+            if(freq<2) return false;
+            g=gcd(freq,g);
+        }
+    }
+    return g>=2;
+}
+
+public int gcd(int a,int b){
+    if(b==0) return a;
+    return gcd(b,a%b);
+}
+```
+wa一次就知道咋做了，一开始以为只要所有元素出现次数可以整除就行了，wa了之后就意识到只要求一个最大公约数就可以了
+
+**解法二**
+
+给定了范围，直接用数组模拟
+
+```java
+public int gcd(int a,int b){
+    if(b==0) return a;
+    return gcd(b,a%b);
+}
+
+public boolean hasGroupsSizeX2(int[] deck) {
+    int[] hash=new int[10001];
+    for(int i=0;i<deck.length;i++){
+        hash[deck[i]]++;
+    }
+    int g=-1;
+    for (int i=0;i<hash.length-1;i++) {
+        if(hash[i]!=0){
+            if(hash[i]<2) return false;
+            g= g!=-1?gcd(g,hash[i]):hash[i];
+            if(g==1) return false; //优化,提前终止
+        }
+    }
+    return g>=2;
+}
+```
 ## [165. 比较版本号](https://leetcode-cn.com/problems/compare-version-numbers/)
 
 比较两个版本号 version1 和 version2。
@@ -4516,6 +4626,143 @@ public boolean isRectangleOverlap(int[] rec1, int[] rec2) {
 ```java
 public boolean isRectangleOverlap(int[] rec1, int[] rec2) {
     return !(rec1[3]<=rec2[1]||rec2[3]<=rec1[1]||rec1[2]<=rec2[0]||rec2[2]<=rec1[0]);
+}
+```
+## [892. 三维形体的表面积](https://leetcode-cn.com/problems/surface-area-of-3d-shapes/)
+
+在 N * N 的网格上，我们放置一些 1 * 1 * 1  的立方体。
+
+每个值 v = grid[i][j] 表示 v 个正方体叠放在对应单元格 (i, j) 上。
+
+请你返回最终形体的表面积。
+
+**示例 1：**
+
+```java
+输入：[[2]]
+输出：10
+```
+
+**示例 2：**
+
+```java
+输入：[[1,2],[3,4]]
+输出：34
+```
+
+
+**示例 3：**
+
+```java
+输入：[[1,0],[0,2]]
+输出：16
+```
+
+**示例 4：**
+
+```java
+输入：[[1,1,1],[1,0,1],[1,1,1]]
+输出：32
+```
+
+
+**示例 5：**
+
+```java
+输入：[[2,2,2],[2,1,2],[2,2,2]]
+输出：46
+```
+
+**提示：**
+
+- `1 <= N <= 50`
+- `0 <= grid[i][j] <= 50` 
+
+**解法一**
+
+做加法
+
+```java
+//加法思路
+public int surfaceArea(int[][] grid) {
+    if(grid==null || grid.length<=0 ) return 0;
+    int N=grid.length;
+    int res=0;
+    for (int i=0;i<N;i++) {
+        for (int j=0;j<N;j++) {
+            //正面,背面暴露的面积
+            res+= Math.max(j<N-1?grid[i][j+1]-grid[i][j]:grid[i][j],0);
+            res+= Math.max(j>0?grid[i][j-1]-grid[i][j]:grid[i][j],0);
+            //左和右边暴露的面积
+            res+= Math.max(i<N-1?grid[i+1][j]-grid[i][j]:grid[i][j],0);
+            res+= Math.max(i>0?grid[i-1][j]-grid[i][j]:grid[i][j],0);
+            //上和下的面积
+            res+= grid[i][j]!=0?2:0;
+        }
+    }
+    return res;
+}
+```
+我太蠢了，开始直接分别算6个面，然后发现有坑，又去算坑的面积。。。结果就陷进去了
+
+**解法二**
+
+巧妙的减法思路，算贴合的时候的重合的面积
+
+```java
+//巧妙的减法思路
+public int surfaceArea(int[][] grid) {
+    if(grid==null || grid.length<=0 ) return 0;
+    int N=grid.length;
+    int x=0,y=0,count=0;
+    for (int i=0;i<N;i++) {
+        for (int j=0;j<N;j++) {
+            if(grid[i][j]!=0){
+                x+=grid[i][j]-1;
+                count+=grid[i][j];
+            }
+            if(i>=1 && grid[i-1][j]!=0){
+                y+=Math.min(grid[i][j],grid[i-1][j]);
+            }
+            if(j>=1 && grid[i][j-1]!=0){
+                y+=Math.min(grid[i][j],grid[i][j-1]);
+            }
+        }
+    }
+    return count*6-2*x-2*y;
+}
+```
+## [999. 车的可用捕获量](https://leetcode-cn.com/problems/available-captures-for-rook/)
+
+题目太长，不想复制了，模拟题，题目意思搞清楚就行了
+
+```java
+public int numRookCaptures(char[][] board) {
+    int[][] direction=new int[][]{{-1,0},{0,-1},{1,0},{0,1}};
+    int res=0;
+    for (int i=0;i<board.length;i++) {
+        for (int j=0;j<board[0].length;j++) {
+            if(board[i][j]=='R'){
+                for (int k=0;k<4;k++) {
+                    int nx=i+direction[k][0];
+                    int ny=j+direction[k][1];
+                    while(nx>=0 && nx<board.length && ny>=0 && ny<board[0].length){
+                        if(board[nx][ny]=='B'){
+                            break;
+                        }
+                        if(board[nx][ny]=='p'){
+                            res++;
+                            break;
+                        }
+                        nx+=direction[k][0];
+                        ny+=direction[k][1];
+                    }
+                }
+                return res;
+            }
+        }
+    }
+    return 0;
 }
 ```
 ##  二进制

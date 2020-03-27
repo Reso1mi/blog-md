@@ -1246,7 +1246,7 @@ public int maxEnvelopes(int[][] envelopes) {
 
 ```java
 public int maxEnvelopes(int[][] envelopes) {
-    Arrays.sort(envelopes,(a,b)->a[0]!=b[0]?a[0]-b[0]:b[1]-a[1]);
+    Arrays.sort(envelopes,(a,b)->a[0]!=b[0]?a[0]-b[0]:b[1]-a[1]); //这个排序很关键
     int N=envelopes.length;
     int[] top=new int[N];
     int len=0;
@@ -1275,6 +1275,8 @@ public int binarySearch(int[] top,int target,int len){
     return left;
 }
 ```
+
+第一步得排序很关键，如果只安装宽度排序，那么在宽度相同的时候，就有可能存在后面的把前面的装进去的情况，这明显是不符合题意得
 
 ## [53. 最大子序和](https://leetcode-cn.com/problems/maximum-subarray/)
 
