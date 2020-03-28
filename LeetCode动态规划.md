@@ -1897,6 +1897,175 @@ public int maxProfit(int[] prices) {
 ```
 这里我又发现了leetcode的case有问题，我开始没有缓存前一天的empty值，直接将empty带到hold去了，结果还过了。。。不过我懒得去想case了，反正提交了leecode也不会理我😅
 
+## [123. 买卖股票的最佳时机 III](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-iii/)
+
+给定一个数组，它的第 i 个元素是一支给定的股票在第 i 天的价格。
+
+设计一个算法来计算你所能获取的最大利润。你最多可以完成 两笔 交易。
+
+**注意:** 你不能同时参与多笔交易（你必须在再次购买前出售掉之前的股票）。
+
+**示例 1:**
+
+```java
+输入: [3,3,5,0,0,3,1,4]
+输出: 6
+解释: 在第 4 天（股票价格 = 0）的时候买入，在第 6 天（股票价格 = 3）的时候卖出，这笔交易所能获得利润 = 3-0 = 3 。
+     随后，在第 7 天（股票价格 = 1）的时候买入，在第 8 天 （股票价格 = 4）的时候卖出，这笔交易所能获得利润 = 4-1 = 3 。
+```
+
+
+**示例 2:**
+
+```java
+输入: [1,2,3,4,5]
+输出: 4
+解释: 在第 1 天（股票价格 = 1）的时候买入，在第 5 天 （股票价格 = 5）的时候卖出, 这笔交易所能获得利润 = 5-1 = 4 。   
+     注意你不能在第 1 天和第 2 天接连购买股票，之后再将它们卖出。   
+     因为这样属于同时参与了多笔交易，你必须在再次购买前出售掉之前的股票。
+```
+
+**示例 3:**
+
+```java
+输入: [7,6,4,3,1] 
+输出: 0 
+解释: 在这个情况下, 没有交易完成, 所以最大利润为 0
+```
+
+**解法一**
+
+二维动态规划，定义出每个状态，然后转换就可以了
+
+```java
+public int maxProfit(int[] prices){
+    if (prices==null || prices.length<=0) {
+        return 0;
+    }
+    //状态定义：
+    //j=0 什么都不做
+    //j=1 第一次买入
+    //j=2 第一次卖出
+    //j=3 第二次买入
+    //j=4 第二次卖出
+    int[][] dp=new int[prices.length][5];
+    //这样会溢出
+    //Arrays.fill(dp[0],Integer.MIN_VALUE);
+    //这样可以过,但是感觉还是判断一下好
+    //Arrays.fill(dp[0],-0x3f3f3f3f);
+    int INF=Integer.MIN_VALUE,n=prices.length;
+    Arrays.fill(dp[0],INF); //不可达状态
+    dp[0][0]=0;
+    dp[0][1]=-prices[0];
+    for(int i=1;i<n;i++){
+        dp[i][0]=0;
+        dp[i][1]=Math.max(-prices[i],dp[i-1][1]);
+        dp[i][2]=Math.max(dp[i-1][1]+prices[i],dp[i-1][2]);
+        dp[i][3]=Math.max(dp[i-1][2]!=INF?dp[i-1][2]-prices[i]:INF,dp[i-1][3]);
+        dp[i][4]=Math.max(dp[i-1][3]!=INF?dp[i-1][3]+prices[i]:INF,dp[i-1][4]);
+    }
+    return Math.max(Math.max(dp[n-1][0],dp[n-1][2]),dp[n-1][4]);
+}
+```
+> 因为题目的数据不是特别大，没有超过`10^9` 直接初始化为 `-0x3f3f3f3f` 就不用判断前面的状态是否可达了，
+
+**解法二**
+
+优化成一维的
+
+```java
+public int maxProfit(int[] prices){
+    if (prices==null || prices.length<=0) {
+        return 0;
+    }
+    int[] dp=new int[5];
+    int n=prices.length;
+    Arrays.fill(dp,-0x3f3f3f3f);
+    dp[0]=0;
+    dp[1]=-prices[0];
+    for(int i=1;i<n;i++){
+        dp[0]=0;
+        dp[1]=Math.max(-prices[i],dp[1]);
+        dp[2]=Math.max(dp[1]+prices[i],dp[2]);
+        dp[3]=Math.max(dp[2]-prices[i],dp[3]);
+        dp[4]=Math.max(dp[3]+prices[i],dp[4]);
+    }
+    return Math.max(Math.max(dp[0],dp[2]),dp[4]);
+}
+```
+## [188. 买卖股票的最佳时机 IV](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-iv/)
+
+给定一个数组，它的第 i 个元素是一支给定的股票在第 i 天的价格。
+
+设计一个算法来计算你所能获取的最大利润。你最多可以完成 k 笔交易。
+
+注意: 你不能同时参与多笔交易（你必须在再次购买前出售掉之前的股票）。
+
+**示例 1:**
+
+```java
+输入: [2,4,1], k = 2
+输出: 2
+解释: 在第 1 天 (股票价格 = 2) 的时候买入，在第 2 天 (股票价格 = 4) 的时候卖出，这笔交易所能获得利润 = 4-2 = 2 。
+```
+
+
+**示例 2:**
+
+```java
+输入: [3,2,6,5,0,3], k = 2
+输出: 7
+解释: 在第 2 天 (股票价格 = 2) 的时候买入，在第 3 天 (股票价格 = 6) 的时候卖出, 这笔交易所能获得利润 = 6-2 = 4 。
+     随后，在第 5 天 (股票价格 = 0) 的时候买入，在第 6 天 (股票价格 = 3) 的时候卖出, 这笔交易所能获得利润 = 3-0 = 3 。
+```
+
+**解法一**
+
+这题其实就是求上面一题的通解，上面的代码规律以及非常明显了，`j`为奇数的时候买入，偶数的时候卖出，我们统计最后偶数的最大值就可以
+
+```java
+public int maxProfit(int k, int[] prices) {
+    if (prices==null || prices.length<=0 || k<=0) {
+        return 0;
+    }
+    if(k>prices.length/2){
+        return maxProfit(prices);
+    }
+    int[] dp=new int[2*k+1];
+    int n=prices.length;
+    int res=0;
+    Arrays.fill(dp,-0x3f3f3f3f);
+    dp[0]=0;
+    dp[1]=-prices[0];
+    for(int i=1;i<n;i++){
+        //k次交易,2*k+1种状态
+        dp[0]=0;
+        for(int j=1;j<2*k+1;j++){
+            if((j&1)==1){
+                dp[j]=Math.max(dp[j-1]-prices[i],dp[j]);
+            }else{
+                dp[j]=Math.max(dp[j-1]+prices[i],dp[j]);
+                res=Math.max(dp[j],res);
+            }
+        }
+    }
+    return res;
+}
+
+//无限次k的最大收益 122的解
+public int maxProfit(int[] prices) {
+    if (prices==null || prices.length<=0) {
+        return 0;
+    }
+    int ans=0;
+    for (int i=1;i<prices.length;i++) {
+        if (prices[i]>prices[i-1]) {
+            ans+=prices[i]-prices[i-1];
+        }
+    }
+    return ans;
+}
+```
 ## [714. 买卖股票的最佳时机含手续费](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/)
 
 给定一个整数数组 `prices`，其中第 i 个元素代表了第 i 天的股票价格 ，非负整数 fee 代表了交易股票的手续费用
