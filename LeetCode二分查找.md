@@ -844,6 +844,59 @@ public int smallestDivisor(int[] nums, int threshold) {
 ```
 其实只要明确一点这题就很容易想到二分，解空间为：`[1，max(nums[i])]` 我们只需要在这个区间之内做二分搜索就ok了，再然后就是向上取整的一个小技巧
 
+## [162. 寻找峰值](https://leetcode-cn.com/problems/find-peak-element/)
+
+峰值元素是指其值大于左右相邻值的元素。
+
+给定一个输入数组 `nums`，其中 `nums[i] ≠ nums[i+1]`，找到峰值元素并返回其索引。
+
+数组可能包含多个峰值，在这种情况下，返回任何一个峰值所在位置即可。
+
+你可以假设 `nums[-1] = nums[n] = -∞`。
+
+**示例 1:**
+
+```java
+输入: nums = [1,2,3,1]
+输出: 2
+解释: 3 是峰值元素，你的函数应该返回其索引 2。
+```
+
+
+**示例 2:**
+
+```java
+输入: nums = [1,2,1,3,5,6,4]
+输出: 1 或 5 
+解释: 你的函数可以返回索引 1，其峰值元素为 2；
+     或者返回索引 5， 其峰值元素为 6。
+```
+
+
+**说明:**
+
+你的解法应该是 `O(logN)` 时间复杂度的。
+
+**解法一**
+
+题目挑明了logN的复杂度，那么肯定就是二分了，那是怎么个二分的思路呢？题目其实也说了很清楚了，边界的左右两边都是`-∞` 所以我们直接按照递增的去搜，最后肯定能搜索到峰值
+
+```java
+public int findPeakElement(int[] nums) {
+    int left=0,right=nums.length-1;
+    while(left<right){
+        int mid=left+(right-left)/2;
+        if(/*mid+1<nums.length &&*/nums[mid]<nums[mid+1]){
+            left=mid+1;
+        }else{
+            right=mid;
+        }
+    }
+    return left;
+}
+```
+liweiwei大佬的二分模板真好用！！！
+
 ## [74. 搜索二维矩阵](https://leetcode-cn.com/problems/search-a-2d-matrix/)
 
 编写一个高效的算法来判断 `m x n` 矩阵中，是否存在一个目标值。该矩阵具有如下特性：
