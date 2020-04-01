@@ -815,3 +815,28 @@ public boolean deleteMin(int[] freq,int y){
     return false;
 }
 ```
+
+## [1111. 有效括号的嵌套深度](https://leetcode-cn.com/problems/maximum-nesting-depth-of-two-valid-parentheses-strings/)
+
+迷惑题，不想粘题目了
+
+**解法一**
+
+按照深度的奇偶划分两个子串。。。。
+
+```java
+public int[] maxDepthAfterSplit(String seq) {
+    //Deque<Character> stack=new ArrayDeque<>();
+    int depth=0;
+    int[] res=new int[seq.length()];
+    for (int i=0;i<seq.length();i++) {
+        if(seq.charAt(i)=='('){
+            res[i]=depth++%2;
+        }else{
+            //根据左括号奇偶判断
+            res[i]=--depth%2;
+        }
+    }
+    return res;
+}
+```

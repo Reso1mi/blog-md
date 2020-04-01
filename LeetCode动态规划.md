@@ -3543,6 +3543,15 @@ public int lastRemaining(int n, int m) {
 ```
 参考了LeetCode的[大佬题解](https://leetcode-cn.com/u/yuanninesuns/)，讲的挺好的
 
+**递归解法**
+
+```java
+//递归的挺好理解
+public int lastRemaining(int n, int m) {
+    if(n==0) return 0;
+    return (lastRemaining(n-1,m)+m)%n;
+}
+```
 ## [1014. 最佳观光组合](https://leetcode-cn.com/problems/best-sightseeing-pair/)
 
 给定正整数数组 A，A[i] 表示第 i 个观光景点的评分，并且两个景点 i 和 j 之间的距离为 j - i。

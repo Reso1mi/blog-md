@@ -4732,6 +4732,53 @@ public int surfaceArea(int[][] grid) {
     return count*6-2*x-2*y;
 }
 ```
+## [463. 岛屿的周长](https://leetcode-cn.com/problems/island-perimeter/)
+
+给定一个包含 0 和 1 的二维网格地图，其中 1 表示陆地 0 表示水域。
+
+网格中的格子水平和垂直方向相连（对角线方向不相连）。整个网格被水完全包围，但其中恰好有一个岛屿（或者说，一个或多个表示陆地的格子相连组成的岛屿）。
+
+岛屿中没有“湖”（“湖” 指水域在岛屿内部且不和岛屿周围的水相连）。格子是边长为 1 的正方形。网格为长方形，且宽度和高度均不超过 100 。计算这个岛屿的周长。
+
+**示例 :**
+
+```java
+输入:
+[[0,1,0,0],
+ [1,1,1,0],
+ [0,1,0,0],
+ [1,1,0,0]]
+
+输出: 16
+```
+
+**解法一**
+
+偶然翻到的题，发现和上面的是一样的
+
+```java
+//和892类似的解法，简化版
+public int islandPerimeter(int[][] grid) {
+    int count=0;
+    int left=0,up=0;
+    for(int i=0;i<grid.length;i++){
+        for(int j=0;j<grid[0].length;j++){
+            if(grid[i][j]==1){
+                if(i-1>=0 && grid[i-1][j]==1){
+                    up++;
+                }
+                if(j-1>=0 && grid[i][j-1]==1){
+                    left++;
+                }
+                count++;
+            }
+        }
+    }
+    return count*4-(up+left)*2;
+}
+```
+> 看到题解区有大佬dfs的，通过方格的变化统计有效的边，比如从1->0就可以增加一条边，而从1->边界又可以增加一条边，还是挺秒的
+
 ## [999. 车的可用捕获量](https://leetcode-cn.com/problems/available-captures-for-rook/)
 
 题目太长，不想复制了，模拟题，题目意思搞清楚就行了
