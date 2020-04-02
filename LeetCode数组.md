@@ -4812,6 +4812,91 @@ public int numRookCaptures(char[][] board) {
     return 0;
 }
 ```
+## [289. 生命游戏](https://leetcode-cn.com/problems/game-of-life/)
+
+根据 百度百科 ，生命游戏，简称为生命，是英国数学家约翰·何顿·康威在 1970 年发明的细胞自动机。
+
+给定一个包含 m × n 个格子的面板，每一个格子都可以看成是一个细胞。每个细胞都具有一个初始状态：1 即为活细胞（live），或 0 即为死细胞（dead）。每个细胞与其八个相邻位置（水平，垂直，对角线）的细胞都遵循以下四条生存定律：
+
+1. 如果活细胞周围八个位置的活细胞数少于两个，则该位置活细胞死亡；
+
+2. 如果活细胞周围八个位置有两个或三个活细胞，则该位置活细胞仍然存活；
+
+3. 如果活细胞周围八个位置有超过三个活细胞，则该位置活细胞死亡；
+
+4. 如果死细胞周围正好有三个活细胞，则该位置死细胞复活；
+
+根据当前状态，写一个函数来计算面板上所有细胞的下一个（一次更新后的）状态。下一个状态是通过将上述规则同时应用于当前状态下的每个细胞所形成的，其中细胞的出生和死亡是同时发生的。
+
+**示例：**
+
+```java
+输入： 
+[
+  [0,1,0],
+  [0,0,1],
+  [1,1,1],
+  [0,0,0]
+]
+输出：
+[
+  [0,0,0],
+  [1,0,1],
+  [0,1,1],
+  [0,1,0]
+]
+```
+
+**进阶：**
+
+- 你可以使用原地算法解决本题吗？请注意，面板上所有格子需要同时被更新：你不能先更新某些格子，然后使用它们的更新后的值再更新其他格子。
+- 本题中，我们使用二维数组来表示面板。原则上，面板是无限的，但当活细胞侵占了面板边界时会造成问题。你将如何解决这些问题？
+
+**解法一**
+
+bugfree
+
+```java
+int[][] dir={{1,0},{0,1},{-1,0},{0,-1},{1,1},{-1,-1},{-1,1},{1,-1}};
+
+public void gameOfLife(int[][] board) {
+    if(board==null || board.length<=0) return;
+    int m=board.length,n=board[0].length;
+    boolean[][] change=new boolean[m][n];
+    for(int i=0;i<m;i++){
+        for(int j=0;j<n;j++){
+            if(board[i][j]==0 && aliveCell(board,i,j,change)==3){
+                board[i][j]=1;
+                change[i][j]=true;
+            }else if(board[i][j]==1){
+                int alive=aliveCell(board,i,j,change);
+                if(alive<2 || alive>3){
+                    board[i][j]=0;
+                    change[i][j]=true;
+                }
+            }
+        }
+    }
+}
+
+public int aliveCell(int[][] board,int x,int y,boolean[][] change){
+    int alive=0;
+    for(int k=0;k<dir.length;k++){
+        int nx=x+dir[k][0];
+        int ny=y+dir[k][1];
+        if(valid(board,nx,ny)&&(board[nx][ny]==1 && !change[nx][ny] || (board[nx][ny]==0 && change[nx][ny]))){
+            alive++;
+        }
+    }
+    return alive;
+}
+
+public boolean valid(final int[][] board,int x,int y){
+    return x>=0 && x<board.length && y>=0 && y<board[0].length;
+}
+```
+我理解的原地就是在原数组上做修改，但是并没有说不能用额外空间吧。。。但是看了评论区大佬们都不是这样写的，都是用的位运算，用int空的位保存状态，最后移位，懒得写了，感觉没啥意思，水题
+
 ##  二进制
 
 ## [136. 只出现一次的数字](https://leetcode-cn.com/problems/single-number/)
@@ -4849,6 +4934,54 @@ public int singleNumber(int[] nums) {
     return nums[nums.length-1];
 }
 ```
+## [260. 只出现一次的数字 III](https://leetcode-cn.com/problems/single-number-iii/)
+
+给定一个整数数组 nums，其中恰好有两个元素只出现一次，其余所有元素均出现两次。 找出只出现一次的那两个元素。
+
+**示例 :**
+
+```java
+输入: [1,2,1,3,2,5]
+输出: [3,5]
+```
+
+
+**注意：**
+
+1. 结果输出的顺序并不重要，对于上面的例子， [5, 3] 也是正确答案。
+2. 你的算法应该具有线性时间复杂度。你能否仅使用常数空间复杂度来实现？
+
+**解法一**
+
+根据异或的结果`xor`，讲整个数组划分为两组，分别包含a，b这两个唯一的元素
+
+```java
+public int[] singleNumber(int[] nums) {
+    if(nums==null || nums.length<=0) return new int[0];
+    int xor=nums[0];
+    for (int i=1;i<nums.length;i++) {
+        xor^=nums[i];
+    }
+    int index=0; //ab不同的index
+    while((xor&1)==0){
+        xor>>>=1;
+        index++;
+    }
+    int a=0,b=0;
+    for (int i=0;i<nums.length;i++) {
+        if(((nums[i]>>>index)&1)==1){ //根据index位置的元素0，1来划分为两个数组
+            a^=nums[i];
+        }else{
+            b^=nums[i];
+        }
+    }
+    return new int[]{a,b};
+}
+```
+> 为啥没有 只出现一次的数字Ⅱ？
+>
+> 别问，问就是不会
+
 ## [268. 缺失数字](https://leetcode-cn.com/problems/missing-number/)
 
 给定一个包含 0, 1, 2, ..., n 中 n 个数的序列，找出 0 .. n 中没有出现在序列中的那个数。

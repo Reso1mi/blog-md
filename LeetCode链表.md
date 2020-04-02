@@ -694,7 +694,7 @@ public ListNode removeNthFromEnd(ListNode head, int n) {
 
 
 ---
-## **82. 删除链表中的重复元素Ⅱ**
+## **82. 删除排序链表中的重复元素Ⅱ**
 给定一个排序链表，删除所有含有重复数字的节点，只保留原始链表中 _没有重复出现 _的数字。
 
 **示例 1:**
@@ -743,26 +743,79 @@ public  static ListNode deleteDuplicates(ListNode head) {
 整体来说还是挺简单的只跑了一趟 1ms beta98%，评论里面大都只用了两个指针我用了三个这样感觉比较清晰
 怎么好理解怎么来。貌似最快的是一个递归的，递归写起来确实玄学还要多练练啊
 
-```java
-  public ListNode deleteDuplicates(ListNode head) {
-        if (head == null) {
-            return null;
-        }
-        if (head.next != null && head.val == head.next.val) {
-            while (head.next != null && head.val == head.next.val) {
-                head = head.next;
-            }
-            return deleteDuplicates(head.next);
-        } else {
-            head.next = deleteDuplicates(head.next);
-        }
-        return head;
-    }
-```
-这题还有个简单版的那个删除后会留下一个，那样向我上面这样写pre的跳转就会更简单一点，这里就不写了
+**解法二**
 
----
+2020.4.2重写了一个递归的，感觉良好
+
+```java
+public ListNode deleteDuplicates(ListNode head) {
+    if(head==null || head.next==null) return head;
+    if(head.val==head.next.val){
+        while(head!=null && head.next!=null && head.val==head.next.val){
+            head=head.next;
+        }
+        return deleteDuplicates(head.next); //去重
+    }
+    head.next=deleteDuplicates(head.next);
+    return head;
+}
+```
+## [83. 删除排序链表中的重复元素](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list/)
+
+给定一个排序链表，删除所有重复的元素，使得每个元素只出现一次。
+
+**示例 1:**
+
+```java
+输入: 1->1->2
+输出: 1->2
+```
+
+
+**示例 2:**
+
+```java
+输入: 1->1->2->3->3
+输出: 1->2->3
+```
+
+**解法一**
+
+老题新写
+
+```java
+//递归
+public ListNode deleteDuplicates(ListNode head) {
+    if(head==null || head.next==null) return head;
+    ListNode node=deleteDuplicates(head.next);
+    if(head.val==node.val) {
+        head.next=node.next;
+    }
+    return head;
+}
+```
+**解法二**
+
+```java
+//迭代
+public ListNode deleteDuplicates(ListNode head) {
+    ListNode temp = head;
+    while (temp != null){
+        if (temp.next == null){
+            break;
+        }
+        if (temp.next.val == temp.val){
+            temp.next = temp.next.next;
+        }else {
+            temp = temp.next;
+        }
+
+    }
+    return head;
+}
+```
 ## **143. [重排链表](https://leetcode-cn.com/problems/reorder-list/)**
+
 给定一个单链表 _L_：L0→L1→…→Ln-1→Ln 
 将其重新排列后变为： L0→Ln→L1→Ln-1→L2→Ln-2→…
 
