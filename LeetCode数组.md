@@ -4897,6 +4897,42 @@ public boolean valid(final int[][] board,int x,int y){
 ```
 我理解的原地就是在原数组上做修改，但是并没有说不能用额外空间吧。。。但是看了评论区大佬们都不是这样写的，都是用的位运算，用int空的位保存状态，最后移位，懒得写了，感觉没啥意思，水题
 
+## [204. 计数质数](https://leetcode-cn.com/problems/count-primes/)
+
+统计所有小于非负整数 *n* 的质数的数量。
+
+**示例:**
+
+```java
+输入: 10
+输出: 4
+解释: 小于 10 的质数一共有 4 个, 它们是 2, 3, 5, 7 。
+```
+
+**解法一**
+
+[厄拉多塞筛法](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes) 简称埃式筛
+
+```java
+public int countPrimes(int n) {
+    boolean[] prime=new boolean[n];
+    //为了不那么别扭
+    Arrays.fill(prime,true);
+    for(int i=2;i*i<n;i++){
+        if(prime[i]){
+            //从i*i开始,i*(i-1)已经被前面的统计了
+            for(int j=i*i;j<n;j+=i){
+                prime[j]=false;
+            }
+        }
+    }
+    int res=0;
+    for(int i=2;i<prime.length;i++){
+        if(prime[i]) res++;
+    }
+    return res;
+}
+```
 ##  二进制
 
 ## [136. 只出现一次的数字](https://leetcode-cn.com/problems/single-number/)

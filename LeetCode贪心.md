@@ -722,6 +722,43 @@ public int maxSumDivThree3(int[] nums) {
 
 这里我们需要记录的仅仅是数组中%3=1和%3=2的最小的4个值就ok，其实不用排序就可以，直接O(N)遍历就行，嫌麻烦没改，后面有时间来改改
 
+**解法二**
+
+履行上面的承诺，改好了一版O(N)的贪心解法
+
+```java
+public int maxSumDivThree(int[] nums) {
+    int M=0x3f3f3f3f;
+    //余1最小值
+    int min1_0=M,min1_1=M;
+    //余2最小值
+    int min2_0=M,min2_1=M;
+    int sum=0;
+    for(int i=0;i<nums.length;i++){
+        sum+=nums[i];
+        if(nums[i]%3==1){
+            if(nums[i]<=min1_0){
+                min1_1=min1_0; //更新次小值
+                min1_0=nums[i]; //更新最小值
+            }else if(nums[i]<=min1_1){
+                min1_1=nums[i]; //更新次小值
+            }
+        }
+        if(nums[i]%3==2){
+            if(nums[i]<=min2_0){
+                min2_1=min2_0;
+                min2_0=nums[i];
+            }else if(nums[i]<=min2_1){
+                min2_1=nums[i];
+            }
+        }
+    }
+    if(sum%3==1) return sum-Math.min(min2_0+min2_1,min1_0);
+    if(sum%3==2) return sum-Math.min(min1_0+min1_1,min2_0);
+    return sum;
+}
+```
+
 ## [5172. 形成三的最大倍数](https://leetcode-cn.com/problems/largest-multiple-of-three/)
 
 给你一个整数数组 `digits`，你可以通过按任意顺序连接其中某些数字来形成 3 的倍数，请你返回所能得到的最大的 3 的倍数。
