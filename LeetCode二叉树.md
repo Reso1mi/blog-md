@@ -2281,29 +2281,61 @@ public void kthSmall(TreeNode root, int k) {
 
 ```java
 public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+    if(root==null || root==p || root==q) return root; 
+    TreeNode left=lowestCommonAncestor(root.left,p,q);
+    TreeNode right=lowestCommonAncestor(root.right,p,q);
+    if(left==null){
+        return right;
+    }else if(right==null){
+        return left;
+    }
+    return root;
+}
+```
+
+这个函数的功能有三个：给定两个节点 pp 和 qq
+
+- 如果 pp 和 qq 都存在，则返回它们的公共祖先
+- 如果只存在一个，则返回存在的一个
+- 如果 pp 和 qq 都不存在，则返回NULL 
+
+**解法二**
+
+2020.4.9新增解法，利用Map记录父节点，然后根据p,q倒推就行了
+
+```java
+public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
     if (root == null || p==root ||q==root) {
         return root;
     }
-    TreeNode left=lowestCommonAncestor(root.left,p,q);
-    TreeNode right=lowestCommonAncestor(root.right,p,q);
-    if (left!=null && right!=null) {
-        return root;
-    }else if (left!=null) {
-        return left;
-    }else if (right!=null) {
-        return right;
+    Deque<TreeNode> stack=new ArrayDeque<>();
+    HashMap<TreeNode,TreeNode> map=new HashMap<>();
+    stack.push(root);
+    while(!stack.isEmpty()){
+        TreeNode cur=stack.poll();
+        if(cur.right!=null){
+            stack.push(cur.right);
+            map.put(cur.right,cur);
+        }
+        if(cur.left!=null){
+            stack.push(cur.left);
+            map.put(cur.left,cur);
+        }
+    }
+    HashSet<Integer> set=new HashSet<>();
+    while(p!=null){
+        set.add(p.val);
+        p=map.get(p);
+    }
+    while(q!=null){
+        if(set.contains(q.val)){
+            return q;
+        }
+        q=map.get(q);
     }
     return null;
 }
 ```
-这题，说实话，我是想不出来
-
-在左、右子树中分别查找是否包含p或q：
-
-- 如果以下两种情况（左子树包含p，右子树包含q/左子树包含q，右子树包含p），那么此时的根节点就是最近公共祖先
-- 如果左子树包含p和q，那么到root->left中继续查找，最近公共祖先在左子树里面
-- 如果右子树包含p和q，那么到root->right中继续查找，最近公共祖先在右子树里面 
-
 ## [101. 对称二叉树](https://leetcode-cn.com/problems/symmetric-tree/)
 
 给定一个二叉树，检查它是否是镜像对称的。

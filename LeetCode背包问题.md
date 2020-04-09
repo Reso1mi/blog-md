@@ -781,6 +781,33 @@ public int findTarget(int[] nums,int S,int index,int max){
 ```
 这题还是挺有意思的，因为里面是有负数的，直接记忆化是不行的，需要转换一下，这里我是直接将cache数组扩大，同时保证不会有覆盖，所以直接扩大为 2sum就ok，这样整个S的范围就从`[-sum,+sum]` 变为 `[0,2sum]` 从而可以缓存所有的递归结果，其实也可以使用两个数组一个存正数，一个存负数，然后只需要符号取反就ok了，只不过占用的空间会大一点
 
+**解法二**
+
+正儿八经的01背包做法
+
+```java
+public int findTargetSumWays(int[] nums, int S) {
+    if(nums==null || nums.length<=0) return 0;
+    //nsum负,psum正; sum;
+    //sum=psum+nsum;
+    //S=psum-nsum;
+    //(sum+S)/2 = psum
+    int sum=0;
+    for(int i=0;i<nums.length;i++) sum+=nums[i];
+    if((sum+S)%2!=0 || S>sum) return 0;
+    int target=(sum+S)/2;
+    int[] dp=new int[target+1];
+    //Arrays.fill(dp,-1);
+    dp[0]=1;
+    for(int i=0;i<nums.length;i++){
+        for(int j=target;j>=nums[i];j--){
+            dp[j]+=dp[j-nums[i]];
+        }
+    }
+    return dp[target];
+}
+```
+
 ## [474. 一和零](https://leetcode-cn.com/problems/ones-and-zeroes/)
 
 在计算机界中，我们总是追求用有限的资源获取最大的收益。

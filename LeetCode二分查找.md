@@ -781,6 +781,23 @@ public static int peakIndexInMountainArray(int[] A) {
 }
 ```
 
+代码优化 `2020.4.9` 不知道为啥之前写成哪个鬼样子。。。
+
+```java
+public static int peakIndexInMountainArray(int[] A) {
+    int left=0,right=A.length-1;
+    while(left<right){
+        int mid=left+(right-left)/2;
+        if (A[mid]<A[mid+1]) {
+            left=mid+1;
+        }else{
+            right=mid;
+        }
+    }
+    return left;
+}
+```
+
 ## [1283. 使结果不超过阈值的最小除数](https://leetcode-cn.com/problems/find-the-smallest-divisor-given-a-threshold/)
 
 给你一个整数数组 `nums` 和一个正整数 `threshold`  ，你需要选择一个正整数作为除数，然后将数组里每个数都除以它，并对除法结果求和。

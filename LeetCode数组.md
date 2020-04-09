@@ -1862,6 +1862,32 @@ public void rotate(int[][] matrix) {
 ```
 和上一题一样，都是从整体出发，从外层到内层，考虑每一层的前`n-1`个节点的旋转过程，这个过程需要自己在纸上画一画，空想容易搞错
 
+**解法二**
+
+新学到的解法，挺有意思的，整体沿对角线交换，然后每行沿中点交换，这个其实可以通过观察数组结构得到
+
+```java
+public void rotate(int[][] matrix) {
+    if(matrix==null || matrix.length<=0) return;
+    int N=matrix.length;
+    for(int i=0;i<N;i++){
+        for(int j=i+1;j<N;j++){
+            int temp=matrix[i][j];
+            matrix[i][j]=matrix[j][i];
+            matrix[j][i]=temp;
+        }
+    }
+
+    for(int i=0;i<N;i++){
+        for(int j=0,k=N-1;j<k;j++,k--){
+            int temp=matrix[i][j];
+            matrix[i][j]=matrix[i][k];
+            matrix[i][k]=temp;
+        }
+    }
+}
+```
+
 ## [215.数组中的第K个最大元素](https://leetcode-cn.com/problems/kth-largest-element-in-an-array/)
 
 Find the **k**th largest element in an unsorted array. Note that it is the kth largest element in the sorted order, not the kth distinct element.

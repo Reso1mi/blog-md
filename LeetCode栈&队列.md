@@ -2635,6 +2635,74 @@ public boolean valid(final int[][] grid,int x,int y){
     return x>=0 && x<grid.length && y>=0 && y<grid[0].length;
 }
 ```
+## [207. 课程表](https://leetcode-cn.com/problems/course-schedule/)
+
+你这个学期必须选修 `numCourse` 门课程，记为 0 到 `numCourse-1` 。
+
+在选修某些课程之前需要一些先修课程。 例如，想要学习课程 0 ，你需要先完成课程 1 ，我们用一个匹配来表示他们：`[0,1]`
+
+给定课程总量以及它们的先决条件，请你判断是否可能完成所有课程的学习？
+
+**示例 1:**
+
+```java
+输入: 2, [[1,0]] 
+输出: true
+解释: 总共有 2 门课程。学习课程 1 之前，你需要完成课程 0。所以这是可能的。
+```
+
+
+**示例 2:**
+
+```java
+输入: 2, [[1,0],[0,1]]
+输出: false
+解释: 总共有 2 门课程。学习课程 1 之前，你需要先完成课程 0；并且学习课程 0 之前，你还应先完成课程 1。这是不可能的。
+```
+
+**提示：**
+
+1. 输入的先决条件是由 边缘列表 表示的图形，而不是 邻接矩阵 。详情请参见图的表示法。
+2. 你可以假定输入的先决条件中没有重复的边。
+3. `1 <= numCourses <= 10^5`
+
+**解法二**
+
+学习下拓扑排序，其实核心在于邻接表的构建
+
+```java
+public boolean canFinish(int numCourses, int[][] prerequisites) {
+    int[] indegree=new int[numCourses];
+    List<List<Integer>> adjacency=new ArrayList<>();
+    for(int i=0;i<numCourses;i++){
+        adjacency.add(new ArrayList<>());
+    }
+    for(int[] p:prerequisites){
+        indegree[p[0]]++; //每个节点的入度值
+        //邻接表,注意这里别搞反了,这里记录的是p[1]所有的出度节点
+        adjacency.get(p[1]).add(p[0]); 
+    }
+    //课程id
+    Queue<Integer> queue=new LinkedList<>();
+    for(int i=0;i<numCourses;i++){
+        if(indegree[i]==0){
+            queue.add(i);
+        }
+    }
+    while(!queue.isEmpty()){
+        int cid=queue.poll();
+        numCourses--;
+        for (int id:adjacency.get(cid)) { //cid --> id
+            //该节点的所有邻接节点入度--
+            indegree[id]--;
+            if(indegree[id]==0){
+                queue.add(id);
+            }
+        }
+    }
+    return numCourses==0;
+}
+```
 ## _单调栈_
 
 ## [496. 下一个更大元素 I](https://leetcode-cn.com/problems/next-greater-element-i/)
