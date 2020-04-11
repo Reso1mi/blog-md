@@ -474,6 +474,33 @@ public static int binarySearch(int []nums,int target,int lo,int hi){
 
 这个应该比上一个慢一点，最好情况下是_**O(logN)**_直接将**target**划分到有序的那一边，如果没划分到有序的那一边就会花费时间去二分尝试切割数组，时间复杂度应该是`logN+log(N/2)+log(N/4)+...log(N/N)` 最后整体复杂度应该是`O(logN*logN)` ，虽然比 `logN` 好很多，但是并不是我们想要的算法
 
+**解法三**
+
+相当巧妙的解法！参考 [lcus](https://leetcode.com/problems/search-in-rotated-sorted-array/discuss/14435/Clever-idea-making-it-simple)，通过判断 `target`和`mid`的位置，如果`target`和`mid`不在同一段就将 `【4，5，6，7，0，1，2】 `转换成 `【4，5，6，7，INT_MAX，INT_MAX，INT_MAX】`或者`【INT_MIN，INT_MIN，INT_MIN，INT_MIN，0，1，2】` 然后再进行二分
+
+```java
+class Solution {
+    public int search(int[] nums, int target) {
+        if(nums==null || nums.length<=0) return -1;
+        int left=0,right=nums.length-1;
+        while(left<right){
+            int mid=left+(right-left)/2;
+            //这一步 (nums[mid]>=nums[0])==(target>=nums[0]) 很巧秒
+            int midNum=(nums[mid]>=nums[0])==(target>=nums[0])?nums[mid]:
+                        nums[mid]>=nums[0]?Integer.MIN_VALUE:Integer.MAX_VALUE;
+            if(midNum<target){
+                left=mid+1;
+            }else{
+                right=mid;
+            }
+        }
+        return nums[left]!=target?-1:left;
+    }
+}
+```
+
+`(nums[mid]>=nums[0])==(target>=nums[0])` 这一步很巧妙，满足这个关系就说明mid和target在同一段，不用变化，可以直接求，否则就根据mid的位置考虑如何变化
+
 ## [34. 在排序数组中查找元素的第一个和最后一个位置](https://leetcode-cn.com/problems/find-first-and-last-position-of-element-in-sorted-array/)
 
 给定一个按照升序排列的整数数组 `nums`，和一个目标值 `target`。找出给定目标值在数组中的开始位置和结束位置。

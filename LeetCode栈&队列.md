@@ -213,7 +213,7 @@ public boolean checkValidString(String s) {
     }
     //消除左括号
     while(!starStack.isEmpty() && !bracketStack.isEmpty()){
-        if(starStack.peek()>bracketStack.peek()){
+        if(starStack.peek()>bracketStack.peek()){ //这里的逻辑不太好，其实可以很简单
             bracketStack.pop();
         }
         starStack.pop();
@@ -224,6 +224,35 @@ public boolean checkValidString(String s) {
 
 很可惜没有`bugfree`，最后对左括号的判断改了好几次，一开始写的`bracketStack.size()<=starStack().size()`  然后提交后才意识到还要 `"*("` 这样的情况，然后要消除这种情况也简单，一开始我再栈中存的就是index，从star栈里面取比bracket栈index大的，然后消除，最后再看括号栈是不是空
 
+```java
+//2020.4.10重写一下
+public boolean checkValidString(String s) {
+    Deque<Integer> stack=new ArrayDeque<>();
+    Deque<Integer> helpStack=new ArrayDeque<>();
+    for(int i=0;i<s.length();i++){
+        if(s.charAt(i)=='('){
+            stack.push(i);
+        }else if(s.charAt(i)==')'){
+            if(!stack.isEmpty()){
+                stack.pop();
+            }else{
+                if(helpStack.isEmpty()){
+                    return false;
+                }
+                helpStack.pop();
+            }
+        }else{
+            helpStack.push(i);
+        }
+    }
+    while(!stack.isEmpty() && !helpStack.isEmpty()){
+        if(stack.pop()>helpStack.pop()){
+            return false;
+        }
+    }
+    return stack.isEmpty();
+}
+```
 ## [394. 字符串解码](https://leetcode-cn.com/problems/decode-string/)
 
 给定一个经过编码的字符串，返回它解码后的字符串。
