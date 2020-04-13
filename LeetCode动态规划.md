@@ -2657,6 +2657,167 @@ public boolean isMatch(String s, String p) {
 
 思路都在注释里面了，比正则那个要简单，比较不好想的一点就是 `dp[i][j]=dp[i-1][j]|dp[i][j-1]`其实分别对应的就是 `*` **匹配任意字符**的情况和**匹配空字符**的情况，匹配任意字符为什么不是`dp[i-1][j-1]`? 因为`*` 不仅仅只可以匹配一个字符，它可以匹配任意个数的任意字符，就比如这样的` abcd，ab* ` 的，这种情况其实最终还是转换成了匹配空字符的情况，这也是动态规划的思想所在。
 
+## [10. 正则表达式匹配](https://leetcode-cn.com/problems/regular-expression-matching/)
+
+给你一个字符串 `s` 和一个字符规律 `p`，请你来实现一个支持 `'.'` 和 `'*'` 的正则表达式匹配。
+
+```java
+'.' 匹配任意单个字符
+'*' 匹配零个或多个前面的那一个元素
+```
+
+
+所谓匹配，是要涵盖 整个 字符串 s的，而不是部分字符串。
+
+**说明:**
+
+- s 可能为空，且只包含从 a-z 的小写字母。
+- p 可能为空，且只包含从 a-z 的小写字母，以及字符 . 和 *。
+
+**示例 1:**
+
+```java
+输入:
+s = "aa"
+p = "a"
+输出: false
+解释: "a" 无法匹配 "aa" 整个字符串。
+```
+
+**示例 2:**
+
+```java
+输入:
+s = "aa"
+p = "a*"
+输出: true
+解释: 因为 '*' 代表可以匹配零个或多个前面的那一个元素, 在这里前面的元素就是 'a'。因此，字符串 "aa" 可被视为 'a' 重复了一次。
+```
+
+**示例 3:**
+
+```java
+输入:
+s = "ab"
+p = ".*"
+输出: true
+解释: ".*" 表示可匹配零个或多个（'*'）任意字符（'.'）。
+```
+
+**示例 4:**
+
+```java
+输入:
+s = "aab"
+p = "c*a*b"
+输出: true
+解释: 因为 '*' 表示零个或多个，这里 'c' 为 0 个, 'a' 被重复一次。因此可以匹配字符串 "aab"。
+```
+
+**示例 5:**
+
+```java
+输入:
+s = "mississippi"
+p = "mis*is*p*."
+输出: false
+```
+
+**解法一**
+
+dfs回溯，暴力解法，挺难搞
+
+```java
+public boolean isMatch(String s, String p) {
+    return match(s,0,p,0);
+}
+
+public boolean match(String s,int sIdx, String p,int pIdx) {
+    if (sIdx>=s.length() && pIdx>=p.length()) {
+        return true;
+    }
+    if (pIdx>=p.length()) {
+        return false;
+    }
+    //这里的判断其实不太对,也不能说不对,会稍微慢一点,因为题目中是不会给**这样的case的
+    //可以直接一次跳两步判断是不是*
+    if (sIdx == s.length()) {
+        //后面没有*的情况 aaa aaaa
+        if (pIdx==p.length()-1 && p.charAt(pIdx)!='*') { //p也到尽头,并且不为*
+            return false;
+        }
+        while(pIdx<p.length()){ //p没到尽头,检查后面的是否有两个连续的非*
+            if (p.charAt(pIdx) != '*' && (pIdx+1<p.length() && p.charAt(pIdx+1)!='*')) {
+                return false;
+            }
+            pIdx++;
+        }
+        //aaa aaa*c
+        return p.charAt(pIdx-1)=='*';
+    }
+
+    if (pIdx+1 < p.length() && p.charAt(pIdx+1) =='*') { //pIdx下一个是 *
+        //*匹配至少一个
+        if ((s.charAt(sIdx) == p.charAt(pIdx) || p.charAt(pIdx)=='.') && match(s,sIdx+1,p,pIdx)) {
+            return true;
+        }
+        //*匹配0个
+        return match(s,sIdx,p,pIdx+2);
+    }else{
+        //pIdx下一个不是*
+        if ((p.charAt(pIdx) == s.charAt(sIdx) || p.charAt(pIdx)=='.') && match(s,sIdx+1,p,pIdx+1)) {
+            return true;
+        }
+        return false;
+    }
+}
+```
+
+这题还是挺麻烦的，毕竟是hard题，我也是看了题解才写出来，核心就是要把题目意思理解对，我这里没有做记忆化，懒得写
+
+**解法二**
+
+他来了他来了，他带着dp解法来了，终于还是把dp的解法补上来了，参考[题解 ](https://leetcode-cn.com/problems/regular-expression-matching/solution/dong-tai-gui-hua-si-yao-su-by-a380922457-5/) ，注意下标的转换，这里容易被绕进去，详细的都在注释中了
+
+```java
+//update: 2020.4.12
+public boolean isMatch(String text, String pattern) {
+    //dp[i][j]代表 text[0,i)和pattern[0,j)是否匹配
+    boolean[][] dp=new boolean[text.length()+1][pattern.length()+1];
+    //都为空的时候肯定是匹配的
+    dp[0][0]=true;
+    //pattern为空，text不为空肯定是无法匹配,默认false,不用处理
+    //text为空,pattern不为空需要额外判断
+    for(int i=2;i<=pattern.length();i++){
+        dp[0][i]=pattern.charAt(i-1)=='*'&&dp[0][i-2];
+    }
+
+    for(int i=1;i<=text.length();i++){
+        for(int j=1;j<=pattern.length();j++){
+            if(singleMatch(text,pattern,i-1,j-1)){
+                dp[i][j]=dp[i-1][j-1];
+            }else if(pattern.charAt(j-1)=='*'){
+                //j一定是>=2的,p如果是*开头就是错误的语法,不过lc其实也没有这样的case
+                if(j<2) return false;
+                //ab abb*    --> '*'匹配0个b
+                //abbbbb ab* --> '*'匹配多个b
+                //注意dp[i-1][j]和text.charAt(i-1)的i-1含义是不一样的
+                //text.charAt(i-1)的i-1其实指的是当前元素,而dp[i-1][j]中的i-1是前一个元素
+                //abc ab*
+                dp[i][j]=dp[i][j-2] || (singleMatch(text,pattern,i-1,j-2) && dp[i-1][j]);
+            }
+        }
+    }
+    return dp[text.length()][pattern.length()];
+}
+
+public boolean singleMatch(String s,String p,int i,int j){
+    return s.charAt(i)==p.charAt(j) || p.charAt(j)=='.';
+}
+```
+
+果然还是动态规划简洁，而且搞懂之后也很好理解~~
+
 ## [1326. 灌溉花园的最少水龙头数目](https://leetcode-cn.com/problems/minimum-number-of-taps-to-open-to-water-a-garden/) 
 
 在 x 轴上有一个一维的花园。花园长度为 n，从点 0 开始，到点 n 结束。
@@ -4194,6 +4355,32 @@ public int longestValidParentheses(String s) {
 
 首先想到的就是这种解法，感觉还是很好理解的，栈中存索引，`dp[i]` 代表以`i`位置括号结尾的最长有效括号，当遇到右括号的时候将栈顶的左括号的索引`left`弹出来，两者形成的括号长度再加上左括号索引前一个元素`dp[left-1]`就是当前位置的`dp[i]`
 
+**Update**
+
+回头做第二遍地时候竟然写了个不一样的dp思路hahaha~，还是挺有意思的，遇到右括号不是直接用`i-left+1` 算长度，而是直接根据前一个字符`dp[i-1]` 进行转化，其实是一样的，只不过是累加的，前面的是一次就全算出来了
+
+```java
+//update: 2020.4.13
+public int longestValidParentheses(String s) {
+    if(s==null || s.length()<=0) return 0;
+    Deque<Integer> stack=new ArrayDeque<>();
+    int[] dp=new int[s.length()];
+    int res=0;
+    for(int i=0;i<s.length();i++){
+        if(s.charAt(i)=='('){
+            stack.push(i);
+        }else{
+            if(!stack.isEmpty()){
+                int left=stack.pop();
+                //dp[i]=(left>1?dp[left-1]+dp[i-1]:dp[i-1])+2;
+                dp[i]=dp[i-1]+(left>1?dp[left-1]:0)+2;
+            }
+            res=Math.max(res,dp[i]);
+        }
+    }
+    return res;
+}
+```
 **解法二**
 
 纯dp解法，上面的解法虽然也用到了一点动态规划，但是还不够纯粹
@@ -4226,4 +4413,36 @@ public int longestValidParentheses(String s) {
 
 解释都在代码注释中，感觉没那么容易直接想到，毕竟hard题
 
-> 其实还有两种方法，一种利用纯利用栈的，还有一种很神奇的方法，没什么通用性，很难直接想出来，就不做记录了
+> 其实还有两种方法，一种利用纯利用栈的，还有一种很神奇的方法，没什么通用性，很难直接想出来，就不做记录了，纯栈的解法后面再来补充
+
+**解法三**
+
+~~纯利用栈的解法以后再来补充~~ 算了，直接写了吧
+
+```java
+public int longestValidParentheses(String s) {
+    if (s==null || s.length()<=0) {
+        return  0;
+    }
+    Deque<Integer> stack=new ArrayDeque<>();
+    stack.push(-1); //临界点
+    int res=0;
+    for(int i=0;i<s.length();i++){
+        if(s.charAt(i)=='('){
+            stack.push(i);
+        }else{
+            stack.pop();
+            if(stack.isEmpty()){ 
+                //栈为空,说明当前的')'肯定是不合法的
+                //其实相当于一个分界点,这个位置之前的字符不可能再构成合法的序列了
+                //后面的栈空的时候就不能再根据-1来算长度了,需要一个新的临界点
+                stack.push(i);
+            }else{
+                res=Math.max(res,i-stack.peek());
+            }
+        }
+    }
+    return res;
+}
+```
+关键的地方就在于将**非法的右括号**入栈，作为一个分界点便于后面计算，初始的-1也很关键

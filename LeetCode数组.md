@@ -4368,11 +4368,68 @@ public int rand10() {
 
 期望其实还可以更低，这里后面有时间再来研究
 
+## [384. 打乱数组](https://leetcode-cn.com/problems/shuffle-an-array/)
+
+打乱一个没有重复元素的数组。
+
+**示例:**
+
+```java
+// 以数字集合 1, 2 和 3 初始化数组。
+int[] nums = {1,2,3};
+Solution solution = new Solution(nums);
+
+// 打乱数组 [1,2,3] 并返回结果。任何 [1,2,3]的排列返回的概率应该相同。
+solution.shuffle();
+
+// 重设数组到它的初始状态[1,2,3]。
+solution.reset();
+
+// 随机返回数组[1,2,3]打乱后的结果。
+solution.shuffle();
+```
+
+**解法一**
+
+洗牌算法，确保至少会出现`N!`种情况，且每种情况出现的概率是相同的
+
+```java
+int[] origin=null;
+
+int[] nums=null;
+
+Random random=new Random();
+
+public Solution(int[] nums) {
+    this.nums=nums;
+    origin=nums.clone();
+}
+
+/** Resets the array to its original configuration and return it. */
+public int[] reset() {
+    return origin;
+}
+
+/** Returns a random shuffling of the array. */
+public int[] shuffle() {
+    for (int i=nums.length-1;i>=0;i--) {
+        //从尾部开始这样对于Java会简单一点点
+        int rand=(int)(random.nextInt(i+1)); //随机【0,i】的元素
+        swap(nums,i,rand);
+    }
+    return nums;
+}
+
+public void swap(int[] nums,int a,int b){
+    int temp=nums[a];
+    nums[a]=nums[b];
+    nums[b]=temp;
+}
+```
+
 ## [面试题61. 扑克牌中的顺子](https://leetcode-cn.com/problems/bu-ke-pai-zhong-de-shun-zi-lcof/)
 
 从扑克牌中随机抽5张牌，判断是不是一个顺子，即这5张牌是不是连续的。2～10为数字本身，A为1，J为11，Q为12，K为13，而大、小王为 0 ，可以看成任意数字。A 不能视为 14。
-
- 
 
 **示例 1:**
 

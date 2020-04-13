@@ -1113,9 +1113,104 @@ public ListNode mergeKLists4(ListNode[] lists) {
 }
 ```
 
-利用了小根堆，Java里面有小根堆可以直接用，思路就是每次把每条链表的头元素都放进小根堆里面然后找出最小的加到新链表中然后，最小的那个节点的链表向后移再加到小根堆里面，方法还是相当简洁的。但是用了90ms左右比较慢，时间复杂度O(NlogK)和上面是一样的，每次调整时间复杂度都是logk，需要调整N次
+利用了小根堆，Java里面有小根堆可以直接用，思路就是每次把每条链表的头元素都放进小根堆里面然后找出最小的加到新链表中然后，最小的那个节点的链表向后移再加到小根堆里面，方法还是相当简洁的。但是用了90ms左右比较慢，时间复杂度`O(NlogK)`和上面是一样的，每次调整时间复杂度都是`logK`，需要调整`N`次(K为链表数量，N为所有链表的元素个数)，空间复杂度是 `O(K)`
 
----
+## [355. 设计推特](https://leetcode-cn.com/problems/design-twitter/)
+
+设计一个简化版的推特(Twitter)，可以让用户实现发送推文，关注/取消关注其他用户，能够看见关注人（包括自己）的最近十条推文。你的设计需要支持以下的几个功能：
+
+1. **postTweet(userId, tweetId):** 创建一条新的推文
+2. **getNewsFeed(userId):** 检索最近的十条推文。每个推文都必须是由此用户关注的人或者是用户自己发出的。推文必须按照时间顺序由最近的开始排序。
+3. **follow(followerId, followeeId):** 关注一个用户
+4. **unfollow(followerId, followeeId):** 取消关注一个用户
+
+**实例**
+
+```java
+Twitter twitter = new Twitter();
+
+// 用户1发送了一条新推文 (用户id = 1, 推文id = 5).
+twitter.postTweet(1, 5);
+
+// 用户1的获取推文应当返回一个列表，其中包含一个id为5的推文.
+twitter.getNewsFeed(1);
+
+// 用户1关注了用户2.
+twitter.follow(1, 2);
+
+// 用户2发送了一个新推文 (推文id = 6).
+twitter.postTweet(2, 6);
+
+// 用户1的获取推文应当返回一个列表，其中包含两个推文，id分别为 -> [6, 5].
+// 推文id6应当在推文id5之前，因为它是在5之后发送的.
+twitter.getNewsFeed(1);
+
+// 用户1取消关注了用户2.
+twitter.unfollow(1, 2);
+
+// 用户1的获取推文应当返回一个列表，其中包含一个id为5的推文.
+// 因为用户1已经不再关注用户2.
+twitter.getNewsFeed(1);
+```
+
+**解法一**
+
+其实核心就是一个k路链表的归并，这里直接用的优先级队列，然后用java8的新特性简化了代码
+
+```java
+class Twitter {
+    //全局时间戳
+    private  int timeStamp=0;
+    //Tweet是有序链表,按照时间戳来排序
+    private  Map<Integer,Tweet> userTweetMap=new HashMap<>();
+    //followMap
+    private  Map<Integer,Set<Integer>> userFollowMap=new HashMap<>();;
+
+    public Twitter() {}
+
+    public void postTweet(int userId, int tweetId) {
+        Tweet oldHead=userTweetMap.get(userId);
+        userTweetMap.compute(userId,(k,v)->new Tweet(tweetId,++timeStamp)).next=oldHead;
+    }
+
+    public List<Integer> getNewsFeed(int userId) {
+        PriorityQueue<Tweet> pq=new PriorityQueue<>((t1,t2)->t2.time-t1.time);
+        List<Integer> feed=new ArrayList<>();
+        follow(userId,userId);
+        userFollowMap.get(userId).forEach(followerId->Optional.ofNullable(userTweetMap.get(followerId)).ifPresent(tw->pq.offer(tw)));
+        int count=0;
+        while(!pq.isEmpty() && count<10){
+            Tweet tw=pq.poll();
+            feed.add(tw.twId);
+            if(tw.next!=null){
+                pq.offer(tw.next);
+            }
+            count++;
+        }
+        return feed;
+    }
+
+    /** Follower follows a followee. If the operation is invalid, it should be a no-op. */
+    public void follow(int followerId, int followeeId) {
+        userFollowMap.computeIfAbsent(followerId,k->new HashSet<>()).add(followeeId);
+    }
+
+    /** Follower unfollows a followee. If the operation is invalid, it should be a no-op. */
+    public void unfollow(int followerId, int followeeId) {
+        Optional.ofNullable(userFollowMap.get(followerId)).ifPresent(set->set.remove(followeeId));
+    }
+}
+
+class Tweet{
+    int twId;
+    int time;
+    Tweet next;
+    public Tweet(int twId,int time){
+        this.twId=twId;
+        this.time=time;
+    }
+}
+```
 
 ## 430. 扁平化多级双向链表
 

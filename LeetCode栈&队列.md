@@ -2857,6 +2857,62 @@ public int[] dailyTemperatures(int[] T) {
 ```
 和上面两题一样，单调栈的解法，不过这题好像可以不用单调栈，可以从后向前递推
 
+## [901. 股票价格跨度](https://leetcode-cn.com/problems/online-stock-span/)
+
+编写一个 StockSpanner 类，它收集某些股票的每日报价，并返回该股票当日价格的跨度。
+
+今天股票价格的跨度被定义为股票价格小于或等于今天价格的最大连续日数（从今天开始往回数，包括今天）。
+
+例如，如果未来7天股票的价格是 [100, 80, 60, 70, 60, 75, 85]，那么股票跨度将是 [1, 1, 1, 2, 1, 4, 6]。
+
+**示例：**
+
+```java
+输入：["StockSpanner","next","next","next","next","next","next","next"], [[],[100],[80],[60],[70],[60],[75],[85]]
+输出：[null,1,1,1,2,1,4,6]
+解释：
+首先，初始化 S = StockSpanner()，然后：
+S.next(100) 被调用并返回 1，
+S.next(80) 被调用并返回 1，
+S.next(60) 被调用并返回 1，
+S.next(70) 被调用并返回 2，
+S.next(60) 被调用并返回 1，
+S.next(75) 被调用并返回 4，
+S.next(85) 被调用并返回 6。
+
+注意 (例如) S.next(75) 返回 4，因为截至今天的最后 4 个价格
+(包括今天的价格 75) 小于或等于今天的价格。
+```
+
+**提示：**
+
+- 调用 StockSpanner.next(int price) 时，将有 1 <= price <= 10^5
+- 每个测试用例最多可以调用  10000 次 StockSpanner.next
+- 在所有测试用例中，最多调用 150000 次 StockSpanner.next
+- 此问题的总时间限制减少了 50%
+
+**解法一**
+
+我起了，一枪秒了，有什么好说的
+
+```java
+class StockSpanner {
+
+    Deque<int[]> stack=new ArrayDeque<>();
+
+    public StockSpanner() {}
+    
+    public int next(int price) {
+        int res=1;
+        while(!stack.isEmpty() && price>=stack.peek()[0]){
+            res+=stack.pop()[1];
+        }
+        stack.push(new int[]{price,res});
+        return res;
+    }
+}
+```
+
 ## [84. 柱状图中最大的矩形](https://leetcode-cn.com/problems/largest-rectangle-in-histogram/)
 
 给定 *n* 个非负整数，用来表示柱状图中各个柱子的高度。每个柱子彼此相邻，且宽度为 1 。
@@ -3034,40 +3090,33 @@ public int largestRectangleArea(int[] heights,int left,int right) {
 特意在做了上面一题后没有马上做这一题，下面的是第二天下午做的，还行，没忘记😂，就是写的有点难看
 
 ```java
-//没写好,写的麻烦了
-public int maximalRectangleSilly(char[][] matrix) {
-    if (matrix==null || matrix.length<=0) {
-        return 0;
-    }
-    //初始化height数组,在末尾添加一个元素(默认0)让所有元素可以出栈
-    int[][] height=new int[matrix.length][matrix[0].length+1];
-    for (int i=0;i<matrix[0].length;i++) {
-        height[0][i]=matrix[0][i]-48; //初始化第一层
-    }
-    int max=maxArea(height[0]);
-    //记录每一层的height
-    for (int i=1;i<matrix.length;i++) {
-        for (int j=0;j<matrix[0].length;j++) {
-            if (matrix[i][j]=='1' && matrix[i-1][j] =='1') {
-                height[i][j]=height[i-1][j]+1;
-            }else{
-                height[i][j]=matrix[i][j]-48;
+//update: 2020.4.12
+public int maximalRectangle(char[][] matrix) {
+    if(matrix==null || matrix.length<=0) return 0;
+    int M=matrix.length,N=matrix[0].length;
+    int[][] height=new int[M][N+1]; //每一层多加一个0,方便后面出栈
+    int res=0;
+    for(int i=0;i<M;i++){
+        for(int j=0;j<N;j++){
+            if(matrix[i][j]=='1'){
+                height[i][j]=i-1>=0?height[i-1][j]+1:1;
             }
         }
-        max=Math.max(max,maxArea(height[i]));
+        res=Math.max(maxRectangle(height[i]),res);
     }
-    return max;
+    return res;
 }
 
-public int maxArea(int[] height){
-    Stack<Integer> stack=new Stack<>();
+public int maxRectangle(int[] height){
+    Deque<Integer> stack=new ArrayDeque<>();
     int max=0;
-    for (int i=0;i<height.length;i++) {
-        while(!stack.isEmpty() && height[stack.peek()]>=height[i]){
+    for(int i=0;i<height.length;i++){
+        while(!stack.isEmpty() && height[i]<height[stack.peek()]){
             int cur=stack.pop();
+            //栈为空的时候说明左边的全部是比当前栈顶大的元素,可以直接扩展到0,所以这里应该是-1
             int left=stack.isEmpty()?-1:stack.peek();
-            // (i-1)-(left+1)+1
-            max=Math.max(max,(i-left-1)*height[cur]);
+            //left+1 ~ i-1 = i-1-left
+            max=Math.max((i-1-left)*height[cur],max);
         }
         stack.push(i);
     }
@@ -3076,6 +3125,8 @@ public int maxArea(int[] height){
 ```
 
 其实计算height有一点动态规划的意思，我上面相当于写了个二维的动态规划
+
+> 2020.4.12重写了一遍，然后更新了代码，之前的代码不够简洁
 
 **解法二**
 
