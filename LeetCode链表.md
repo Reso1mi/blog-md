@@ -119,7 +119,39 @@ public static String  list2num(ListNode l){
 ```
 这两题方法很多，下面那题实际上是上面那一题反过来的，但是题目要求不改变链表所以可以利用栈来反转，然后就跟上面的类似了，然后这里我偷了个懒用的`BigInteger`搞的速度也还行 77%beat。
 
----
+**解法二**
+
+（update: 2020.4.14）上面的解法笔试这样写倒是无所谓，面试这样写肯定是不行的，咱还是得规规矩矩的写
+
+```java
+public  ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+    //用数组的话不知道有多长,需要多遍历两遍
+    Deque<Integer> stack1=new ArrayDeque<>();
+    Deque<Integer> stack2=new ArrayDeque<>();
+    ListNode res=new ListNode(-1);
+    while(l1!=null){
+        stack1.push(l1.val);
+        l1=l1.next;
+    }
+    while(l2!=null){
+        stack2.push(l2.val);
+        l2=l2.next;
+    }
+    int carry=0;
+    while(!stack1.isEmpty() || !stack2.isEmpty() || carry>0){
+        int temp=(stack1.isEmpty()?0:stack1.pop())+(stack2.isEmpty()?0:stack2.pop())+carry;
+        //头插法
+        ListNode next=res.next;
+        ListNode newNode=new ListNode(temp%10);
+        res.next=newNode;
+        newNode.next=next;
+        carry=temp/10;
+    }
+    return res.next;
+}
+```
+
+最后的头插法还是挺好的，我开始还想着翻转一下的，我看见评论区有人用递归写，我试了下，还是算了，太麻烦了，还没上面的简洁，写一大坨初始化，然后再递归，代码一点都不简洁，没啥意义
 
 ## **876. 链表的中间节点**
 

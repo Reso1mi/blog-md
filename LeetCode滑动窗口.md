@@ -453,24 +453,19 @@ public static int lengthOfLongestSubstring7(String s) {
 感觉对这题有很深的执念😅，对上面右优化了一下，但是其实还是上面的解法三比较简单，说到解法三，我又抽风改了一个boolean数组版本的
 
 ```java
-//用boolean数组
-public static int lengthOfLongestSubstring8(String s) {
-    int length=s.length();
-    if(length==0) return 0;
-    //ASCII码表
-    boolean[] freq=new boolean[256]; 
-    freq[s.charAt(0)]=true;
-    int head=0,tail=0;
-    int max=1;
-    while(head<length){
-        if(tail+1<length&&!freq[s.charAt(tail+1)]){
-            tail++;
-            freq[s.charAt(tail)]=true;
+//update: 2020.4.13 重写了一遍，代码更简洁了
+public int lengthOfLongestSubstring(String s) {
+    if(s==null ||s.length()<=0) return 0;
+    boolean[] freq=new boolean[128];
+    int left=0,right=0;
+    int max=0;
+    while(left<=right && right<s.length()){
+        if(!freq[s.charAt(right)]){
+            max=Math.max(max,right-left+1);
+            freq[s.charAt(right++)]=true;
         }else{
-            freq[s.charAt(head)]=false;
-            head++;
+            freq[s.charAt(left++)]=false;
         }
-        max=max<tail-head+1?tail-head+1:max;
     }
     return max;
 }
@@ -1006,6 +1001,54 @@ public static String minWindow(String s, String t) {
 ```
 10ms 86%，Hard题，其实大致的思路还是有的，主要是不知道怎么去和目标串对比，没想到用一个`window`数组去对比，一致想的是在目标串的数组上做手脚，但是越想越复杂。。。太蠢了😅，这题其实也可以用一个HashMap来做，但是我看了下提交记录上的普遍都是7,80ms，相对都比较慢，实际上题目没有明确的说明有特殊字符的话都是可以用一个**ASCII**数组来充当HashMap的，当然我这里用数组的时候相比HashMap要多了一步，需要统计不同字符出现的次数，不过这个操作也是常数级别的操作，并不耗时，整体时间复杂度O(N+M)，NM分别代表目标子串`t` 和源字符串 `p`的长度，首先遍历了`t` 然后滑动窗口，后面的滑动窗口左右边界最多移动2M次
 
+**Update**
+
+2020.4.15，在瞄了一眼之前做的之后按照之前的思路重写了一遍，感觉还行，有一个地方WA了一次
+
+```java
+//update: 2020.4.15
+public String minWindow(String s, String t) {
+    if(s==null || t==null) return "";
+    int[] needMap=new int[128]; //需要的字符map
+    int[] curMap=new int[128];  //已经匹配的字符map
+    int needCount=0; //需要匹配的字符个数
+    for(int i=0;i<t.length();i++){
+        if(needMap[t.charAt(i)]==0){
+            needCount++;
+        }
+        needMap[t.charAt(i)]++;
+    }
+    int matchCount=0; //已经匹配的个数
+    int left=0,right=0;
+    int minLeft=0,maxRight=Integer.MAX_VALUE;
+    while(left<=right && right<s.length()){
+        char c=s.charAt(right);
+        if(needMap[c]!=0){
+            curMap[c]++;
+            if(curMap[c]==needMap[c]){
+                matchCount++;
+            }
+        }
+        while(left<=right && right<s.length() && matchCount==needCount){
+            if(right-left<maxRight-minLeft){
+                maxRight=right;
+                minLeft=left;
+            }
+            char cl=s.charAt(left);
+            if(curMap[cl]!=0){
+                curMap[cl]--;
+                //这里注意，WA点，开始写的=0
+                if(curMap[cl]<needMap[cl]){
+                    matchCount--;
+                }
+            }
+            left++;
+        }
+        right++;
+    }
+    return Integer.MAX_VALUE==maxRight?"":s.substring(minLeft,maxRight+1);
+}
+```
 ## [438. 找到字符串中所有字母异位词](https://leetcode-cn.com/problems/find-all-anagrams-in-a-string/)
 
 给定一个字符串 **s** 和一个非空字符串 **p**，找到 **s** 中所有是 **p** 的字母异位词的子串，返回这些子串的起始索引。
@@ -1205,35 +1248,87 @@ public int characterReplacement(String s, int k) {
 
 周赛题，说实话不多做做竞赛真不知道自己多菜
 
+(update: 2020.4.15)
+
+我拿到这题，首先想到的是无脑套路滑窗，既然要保证平衡，那么每个字符出现的次数都应该是`N/4`，所以我们可以统计下多出来的有几个，比如`QQQW`，那么多出来的就是2个**`Q`**，也就是说我们要求的窗口内**至少**有2个Q，这样问题其实就转换成了 [76. 最小覆盖子串](https://leetcode-cn.com/problems/minimum-window-substring/)（这明明是个mid题，你咋还给转换成hard了，你是不是傻🤣）
+
+其实最小覆盖子串看起来好像挺难，但是是有套路的，我们直接套模板就可以了
+
 ```java
 public int balancedString(String s) {
-    if (s==null|| s.length()<=0) {
-        return 0;
+    if(s==null || s.length()<=0) return -1;
+    int N=s.length();
+    //这里用26有的浪费,为了方便写代码,就这样吧
+    int[] need=new int[26];
+    //初始化为-N/4这样最后得到的大于0的值就是多出来的
+    Arrays.fill(need,-N/4);
+    int[] cur=new int[26];
+    for(int i=0;i<N;i++){
+        need[s.charAt(i)-'A']++;
     }
-    int len=s.length();
-    int balance=len/4;
-    //映射字符
-    int[] count=new int[128];
-    //统计4个字符串出现的次数
-    for (int i=0;i<len;i++) {
-        count[s.charAt(i)]++;
-    }
-    int left=0,right=0,res=len;
-    while(right<len){
-        count[s.charAt(right)]--;
-        while(left<len && count['Q']<=balance && count['W']<=balance && count['E'] <=balance && count['R']<=balance){
-            res=Math.min(res, right-left+1);
-            //窗口左移，缩小窗口
-            count[s.charAt(left)]++;
+    //有几个字符多出来了
+    int needCount=0; 
+    for(int i=0;i<need.length;i++){
+        if(need[i]>0) needCount++;
+    } 
+    if(needCount==0) return 0;
+    int res=N;
+    int left=0,right=0;
+    int matchCount=0;
+    //无脑套路滑窗
+    while(right<s.length()){
+        char c=s.charAt(right);
+        if(need[c-'A']>0){
+            cur[c-'A']++;
+            if(cur[c-'A']==need[c-'A']){
+                matchCount++;
+            }
+        }
+        while(left<=right && matchCount==needCount){
+            res=Math.min(right-left+1,res);
+            char cl=s.charAt(left);
+            if(need[cl-'A']>0){
+                cur[cl-'A']--;
+                if(cur[cl-'A']<need[cl-'A']){
+                    matchCount--;
+                }
+            }
             left++;
         }
-        //扩大右边界
         right++;
     }
     return res;
 }
 ```
-左指针追赶右指针，形成滑动窗口，感觉滑动窗口的题真的有点不好搞啊！！！
+
+**解法二**
+
+上面的解法是考虑`窗口内`的元素组成，窗口内至少应该有哪些元素，反过来想，我们窗口内的元素是多出来的元素，我们是把多的元素放到窗口中，那么窗口外的元素就肯定都是`小于等于N/4`的了，那么我们就可以利用这一点进行滑窗，统计符合条件的窗口的最小值，这样代码就会简洁很多
+
+```java
+public int balancedString(String s) {
+    if(s==null || s.length()<=0) return -1;
+    int N=s.length();
+    int res=N,avg=N/4;
+    int[] freq=new int[26];
+    for(int i=0;i<s.length();i++){
+        freq[s.charAt(i)-'A']++;
+    }
+    int left=0,right=0;
+    while(right<s.length()){
+        //窗口右边界扩张，freq--
+        freq[s.charAt(right)-'A']--;
+        while(left<=right && freq['Q'-'A']<=avg && freq['W'-'A']<=avg && freq['E'-'A']<=avg && freq['R'-'A']<=avg){
+            res=Math.min(res,right-left+1);
+            //窗口左边界收缩，freq++
+            freq[s.charAt(left)-'A']++;
+            left++;
+        }
+        right++;
+    }
+    return left==right?0:res;
+}
+```
 
 ## [5325. 包含所有三种字符的子字符串数目](https://leetcode-cn.com/problems/number-of-substrings-containing-all-three-characters/)  
 

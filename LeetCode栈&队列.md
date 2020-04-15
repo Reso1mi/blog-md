@@ -1795,20 +1795,21 @@ class Pair{
 
 **解法二**
 
-另一种做法，以0作为源，向四周BFS，同时更新周围的1的值
+另一种更好的做法，以0作为源，向四周BFS，同时更新周围的1的值
 
 ```java
-private int[][] direction={{1,0},{0,1},{-1,0},{0,-1}};
+//update: 2020.4.15
+private int[][] dir={{1,0},{0,1},{-1,0},{0,-1}};
 
 public int[][] updateMatrix(int[][] matrix) {
-    if (matrix == null || matrix.length <=0 || matrix[0].length <=0) {
-        return new int[][]{};
-    }
+    if(matrix==null || matrix.length<=0) return matrix;
+    boolean[][] visit=new boolean[matrix.length][matrix[0].length];
     Queue<Pair> queue=new LinkedList<>();
-    for (int i=0;i<matrix.length;i++) {
-        for (int j=0;j<matrix[0].length;j++) {
-            if (matrix[i][j] == 0) {
+    for(int i=0;i<matrix.length;i++){
+        for(int j=0;j<matrix[0].length;j++){
+            if(matrix[i][j]==0){
                 queue.add(new Pair(i,j,0));
+                visit[i][j]=true;
             }else{
                 matrix[i][j]=Integer.MAX_VALUE;
             }
@@ -1816,25 +1817,25 @@ public int[][] updateMatrix(int[][] matrix) {
     }
     while(!queue.isEmpty()){
         Pair pair=queue.poll();
-        for (int i=0;i<direction.length;i++) {
-            int nx=pair.x+direction[i][0];
-            int ny=pair.y+direction[i][1];
-            if (isValid(matrix,nx,ny) && pair.step+1 < matrix[nx][ny]) {
-                matrix[nx][ny]=pair.step+1;
+        for(int i=0;i<dir.length;i++){
+            int nx=pair.x+dir[i][0];
+            int ny=pair.y+dir[i][1];
+            if(valid(matrix,nx,ny) && !visit[nx][ny]){
                 queue.add(new Pair(nx,ny,pair.step+1));
+                matrix[nx][ny]=pair.step+1; //这里不用判断是不是变小，第一次遇到的就是最近的
+                visit[nx][ny]=true;
             }
         }
     }
     return matrix;
 }
 
-public boolean isValid(int[][] matrix,int x,int y){
+public boolean valid(final int[][] matrix,int x,int y){
     return x>=0 && x<matrix.length && y>=0 && y<matrix[0].length;
 }
 
 class Pair{
-    int x;
-    int y;
+    int x,y;
     int step;
     public Pair(int x,int y,int step){
         this.x=x;
@@ -1844,9 +1845,9 @@ class Pair{
 }
 ```
 
-核心思想就是 把所有1都置为最大值, 把所有为0的位置加入队列中, 每次从队列中poll 一个节点, 更新其四周的节点, 如果被更新的节点距离变小了就将其也加入队列准备更新其邻接点
+核心思想就是 把所有1都置为最大值, 把所有为0的位置加入队列中, 每次从队列中poll 一个节点, 更新其四周的节点, ~~如果被更新的节点距离变小了就将其也加入队列准备更新其邻接点~~ step是递增的，第一次遇到的一定是最近的
 
-提交后发现两种做法时间差异并不大。。。甚至后面的还慢一点，官方解答锁这种做法时间复杂度是`O(R*C)`，我感觉并不是。。。可能是CASE少了没体现出来
+多源BFS，参考下面的 [994. 腐烂的橘子]()  和 [1162. 地图分析]()
 
 **解法三**
 
