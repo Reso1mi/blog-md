@@ -129,23 +129,21 @@ public int maxArea(int[] height) {
 上面两种其实都是暴力，时间复杂度都很高
 
 ```java
+//update: 2020.4.18
 public int maxArea(int[] height) {
-        int len=height.length;
-        if(len==0){
-            return 0;
+    if(height==null || height.length<=0) return 0;
+    int left=0,right=height.length-1;
+    int max=0;
+    while(left<right){
+        max=Math.max((right-left)*Math.min(height[left],height[right]),max);
+        //if(left<right){ 隐约记得之前也这样写过。。。没想到这次又在这里WA了
+        if(height[left]<height[right]){
+            left++;
+        }else{
+            right--;
         }
-        int left=0,right=len-1;
-        int max=Integer.MIN_VALUE;
-        while(left<right) {
-            int minHight=height[left]>height[right]?height[right]:height[left];
-            max=max>(right-left)*minHight ? max:(right-left)*minHight;
-            if(height[left]<=height[right]){
-                left++;
-            }else{
-                right--;
-            }
-        }
-        return max;
+    }
+    return max;
 }
 ```
 
@@ -2678,24 +2676,37 @@ public static String multiply(String num1, String num2) {
 其实上面的进位和计算对应位置的值可以同时处理，这是最接近人手算的思路了
 
 ```java
-public static String multiply3(String num1, String num2) {
-    if (num1.equals("0") || num2.equals("0")) {
-        return "0";
-    }
-    int n1=num1.length();
-    int n2=num2.length();
+//update: 2020.4.16 在web上重新推了一遍
+//idx : 0 1 2
+//i :   4 5 6
+//j :   1 2 3
+//   ——————————
+//    1 3 6 8 (i+j+1)
+//    9 1 2
+//  4 5 6
+//  ——————————
+//0 1 2 3 4 5
+//0 5 6 0 8 8  
+public String multiply(String num1, String num2) {
+    if(num1==null || num2==null) return num1;
+    int n1=num1.length(),n2=num2.length();
     int[] res=new int[n1+n2];
-    for (int i=n1-1;i>=0;i--) {
-        for (int j=n2-1;j>=0;j--) {
+    //如果想同时处理进位的话就必须倒推
+    for(int i=n1-1;i>=0;i--){
+        for(int j=n2-1;j>=0;j--){
             int sum=res[i+j+1]+(num1.charAt(i)-48)*(num2.charAt(j)-48);
             res[i+j+1]=sum%10;
-            res[i+j]+=sum/10;
+            //res[i+j]会超过10,但是由于我们是倒推的,所以这个会在下一轮进行处理,否则就无法处理了
+            res[i+j]+=sum/10; 
         }
-    }
+    }   
+    //n*m位数 乘积应该是 (m+n-1 ~ m+n)位
+    //前两个为0一定是0
+    if(res[0]==0 && res[1]==0) return "0";
+    //去除前导0（最多一个）
     StringBuilder sb=new StringBuilder();
-    for (int i=0;i<res.length;i++) {
-        //前面最多只有一个0(除了两个数中有一个为0的时候)
-        if (i==0 && res[i]==0) continue;
+    for(int i=0;i<res.length;i++){
+        if(res[i]==0 && i==0)continue;
         sb.append(res[i]);
     }
     return sb.toString();
@@ -3609,61 +3620,6 @@ public int removePalindromeSub(String s) {
 
 题目说了只有两个字母a和b，而且要删除的是**回文子序列**，这样一说就清楚了，这才是简单题的水准呐~还是挺有意思的，脑筋急转弯hahaha
 
-## [56. 合并区间](https://leetcode-cn.com/problems/merge-intervals/)
-
-给出一个区间的集合，请合并所有重叠的区间。
-
-**示例 1:**
-
-```java
-输入: [[1,3],[2,6],[8,10],[15,18]]
-输出: [[1,6],[8,10],[15,18]]
-解释: 区间 [1,3] 和 [2,6] 重叠, 将它们合并为 [1,6].
-```
-
-
-**示例 2:**
-
-```java
-输入: [[1,4],[4,5]]
-输出: [[1,5]]
-解释: 区间 [1,4] 和 [4,5] 可被视为重叠区间。
-```
-
-**解法一**
-
-思路也没啥好说的，类似贪心吧
-
-```java
-public int[][] merge(int[][] intervals) {
-    if (intervals ==null || intervals.length<=0) {
-        return new int[][]{};
-    }
-    Arrays.sort(intervals,(a,b)->a[0]-b[0]);
-    LinkedList<int[]> list=new LinkedList<>();
-    for (int i=1;i<intervals.length;i++) {
-        if (intervals[i][0]<=intervals[i-1][1]) {
-            if (intervals[i][1]>intervals[i-1][1]) {
-                intervals[i][0]=intervals[i-1][0];   
-            }else{
-                intervals[i][0]=intervals[i-1][0];
-                intervals[i][1]=intervals[i-1][1];
-            }
-        }else{
-            list.add(intervals[i-1]);
-        }
-    }
-    list.add(intervals[intervals.length-1]);
-    /*  int[][] res=new int[list.size()][2];
-        for (int i=0;i<list.size();i++) {
-            res[i][0]=list.get(i)[0];
-            res[i][1]=list.get(i)[1];
-        }*/
-    return list.toArray(new int[0][0]); //题解哪里学到一招
-}
-```
-
-最大的收获就是学到了一招list转array的方法😁
 
 ## [435. 无重叠区间](https://leetcode-cn.com/problems/non-overlapping-intervals/)
 

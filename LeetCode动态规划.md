@@ -1065,8 +1065,111 @@ public static int numDecodings2(String s) {
 
 类似于**00** 和**30** 这样的， 这样就代表这个字符串无法编码了 **dp[i]=0** 最后返回的就是0
 
-------
+## [5375. 恢复数组](https://leetcode-cn.com/problems/restore-the-array/)
 
+某个程序本来应该输出一个整数数组。但是这个程序忘记输出空格了以致输出了一个数字字符串，我们所知道的信息只有：数组中所有整数都在 [1, k] 之间，且数组中的数字都没有前导 0 。
+
+给你字符串 s 和整数 k 。可能会有多种不同的数组恢复结果。
+
+按照上述程序，请你返回所有可能输出字符串 s 的数组方案数。
+
+由于数组方案数可能会很大，请你返回它对 10^9 + 7 取余 后的结果。
+
+**示例 1：**
+
+```java
+输入：s = "1000", k = 10000
+输出：1
+解释：唯一一种可能的数组方案是 [1000]
+```
+
+**示例 2：**
+
+```java
+输入：s = "1000", k = 10
+输出：0
+解释：不存在任何数组方案满足所有整数都 >= 1 且 <= 10 同时输出结果为 s 。
+```
+
+**示例 3：**
+
+```java
+输入：s = "1317", k = 2000
+输出：8
+解释：可行的数组方案为 [1317]，[131,7]，[13,17]，[1,317]，[13,1,7]，[1,31,7]，[1,3,17]，[1,3,1,7]
+```
+
+
+**示例 4：**
+
+```java
+输入：s = "2020", k = 30
+输出：1
+解释：唯一可能的数组方案是 [20,20] 。 [2020] 不是可行的数组方案，原因是 2020 > 30 。 [2,020] 也不是可行的数组方案，因为 020 含有前导 0 。
+```
+
+
+**示例 5：**
+
+```java
+输入：s = "1234567890", k = 90
+输出：34
+```
+
+**提示：**
+
+- 1 <= s.length <= 10^5.
+- s 只包含数字且不包含前导 0 。
+- 1 <= k <= 10^9.
+
+**解法一**
+
+24th双周赛的T4，其实dp的状态转换还是像出来了，我想的是从左向右，但是细节没理清楚，瞄了一眼评论区，发现从右往左比较简单
+
+```java
+public int numberOfArrays(String s, int k) {
+    int mod=1_000_000_000 + 7;
+    int[] dp=new int[s.length()+1];        
+    dp[0]=1;
+    //dp[i]=dp[i-1]+dp[i-2]+...+dp[0];
+    for (int i=1;i<=s.length();i++) {
+        for (int j=i-1;j>=0 && i-j<=9;j--) {
+            if(s.charAt(j)!='0' && valid(s,j,i,k)){
+                dp[i]=(dp[i]+dp[j])%mod;
+            }
+        }
+    }
+    return dp[s.length()];
+}
+
+//10 0000 0000
+public boolean valid(String s,int j,int i,int k){
+    long value=Long.valueOf(s.substring(j,i));
+    return value<=k && value>=1;
+}
+```
+我开始以为时间复杂度是`O(N^2)`会T掉，后来写出来才发现其实时间复杂度其实是`O(10N)` ，并不难，还是题目写少了啊！！！
+
+**解法二**
+
+一点小优化
+
+```java
+public int numberOfArrays(String s, int k) {
+    int mod=1_000_000_000 + 7;
+    int[] dp=new int[s.length()+1];        
+    dp[0]=1;
+    for (int i=1;i<=s.length();i++) {
+        for (int j=i-1;j>=0 && i-j<=9;j--) {
+            if(s.charAt(j)=='0') continue;
+            long value=Long.valueOf(s.substring(j,i));
+            if(value>k) break; //这一步其实是对上面解法的优化
+            dp[i]=(dp[i]+dp[j])%mod;
+        }
+    }
+    return dp[s.length()];
+}
+```
 ## [300. 最长上升子序列](https://leetcode-cn.com/problems/longest-increasing-subsequence/)
 
 给定一个无序的整数数组，找到其中最长上升子序列的长度。
@@ -3481,6 +3584,87 @@ public int maxCoins(int[] nums) {
 }
 ```
 
+## [877. 石子游戏](https://leetcode-cn.com/problems/stone-game/)
+
+亚历克斯和李用几堆石子在做游戏。偶数堆石子**排成一行**，每堆都有正整数颗石子 `piles[i]` 。
+
+游戏以谁手中的石子最多来决出胜负。石子的总数是奇数，所以没有平局。
+
+亚历克斯和李轮流进行，亚历克斯先开始。 每回合，玩家从行的开始或结束处取走整堆石头。 这种情况一直持续到没有更多的石子堆为止，此时手中石子最多的玩家获胜。
+
+假设亚历克斯和李都发挥出最佳水平，当亚历克斯赢得比赛时返回 `true` ，当李赢得比赛时返回 `false` 。
+
+**示例：**
+
+```java
+输入：[5,3,4,5]
+输出：true
+解释：
+亚历克斯先开始，只能拿前 5 颗或后 5 颗石子 。
+假设他取了前 5 颗，这一行就变成了 [3,4,5] 。
+如果李拿走前 3 颗，那么剩下的是 [4,5]，亚历克斯拿走后 5 颗赢得 10 分。
+如果李拿走后 5 颗，那么剩下的是 [3,4]，亚历克斯拿走后 4 颗赢得 9 分。
+这表明，取前 5 颗石子对亚历克斯来说是一个胜利的举动，所以我们返回 true 。
+```
+
+**提示：**
+
+1. `2 <= piles.length <= 500`
+2. `piles.length` 是偶数。
+3. `1 <= piles[i] <= 500`
+4. `sum(piles)` 是奇数。
+
+**解法一**
+
+博弈型dp，先采用区间dp的解法试试，和上面的戳气球一样（区间dp是真的妙啊！！！
+
+```java
+//通用的区间DP
+public boolean stoneGame(int[] piles) {
+    //[5,3,4,5]
+    int N=piles.length;
+    //(i~j) 先手(0),后手(1)的最大收益
+    int[][][] dp=new int[N][N][2];
+    //base init len=1的情况
+    for(int i=0;i<N;i++){
+        dp[i][i][0]=piles[i];
+        dp[i][i][1]=0;
+    }
+    for (int len=2;len<=N;len++) { //枚举区间长度
+        for (int left=0;left<=N-len;left++) { //枚举所有区间
+            //left+len-1<N
+            int right=left+len-1;
+            //先手拿left或者right的最大收益
+            //我先手拿了left或者right之后，剩下[left+1,right]或[left,right-1]区间
+            //我在剩下的区间中继续选其实就成为了后手，所以我们加上剩下区间的后手最大值
+            int firLeft=piles[left]+dp[left+1][right][1];
+            int firRight=piles[right]+dp[left][right-1][1];
+            if(firLeft>firRight){
+                dp[left][right][0]=firLeft;
+                //先手选left那么就相当于让另一个人（后手）从[left+1,right]中先手取最大值
+                dp[left][right][1]=dp[left+1][right][0];
+            }else{
+                dp[left][right][0]=firRight;
+                //同上
+                dp[left][right][1]=dp[left][right-1][0];
+            }
+        }
+    }
+    return dp[0][N-1][0]-dp[0][N-1][1]>0;
+}
+```
+**解法二**
+
+数学推理的方法，具体的证明给不出来，但是很容易理解它的正确性
+
+```java
+//数学
+public boolean stoneGame(int[] piles) {
+    return true;
+}
+```
+首先题目有两个特殊的条件（这两个条件我解法一没用到）`piles.length` 是偶数，`sum(piles)` 是奇数，这其实说明了不会有平局，因为是偶数，我们把所有的柱子用奇偶来划分，那么奇数柱子和偶数**石头堆的数量**一定是相同的，而且**两者总的石头数一定有一个数量的差异**，不可能相等，我先手拿的话我就可以只考虑拿较大的那一类石头堆，那我能保证我拿到的一定是奇数或偶数的堆吗？其实随便举一个例子就知道了，比如4堆石头，先手的人总是能控制自己一定拿到1，3或者2，4所以先手的一定是可以赢得，推广到N堆石头也同样适用
+
 ## [面试题60. n个骰子的点数](https://leetcode-cn.com/problems/nge-tou-zi-de-dian-shu-lcof/)
 
 把n个骰子扔在地上，所有骰子朝上一面的点数之和为s。输入n，打印出s的所有可能的值出现的概率。
@@ -4081,6 +4265,34 @@ public int longestPalindromeSubseq(String s) {
 是不是有的眼熟？没错，和LCS的dp思路很相似
 
 这里其实还有个需要注意的地方，就是两次循环的方向，我们要保证每次计算dp值的时候右值都是已经计算过的，所以需要调整循环的执行方向让 `i`从右往左，让`j`从`i`向右，这样i+1和j-1的dp就都是计算过的了
+
+**UPDATE**
+
+```java
+//update: 2020.4.19
+//区间dp写法,更加套路化，其实思路是一样的
+public int longestPalindromeSubseq(String s) {
+    if(s==null || s.length()<=0) return 0;
+    int N=s.length();
+    int[][] dp=new int[N][N];
+    //base len=1
+    for(int i=0;i<N;i++){
+        dp[i][i]=1;
+    }
+    for(int len=2;len<=N;len++){
+        for(int i=0;i<=N-len;i++){
+            //j=i+len-1<N
+            int j=i+len-1;
+            if(s.charAt(i)==s.charAt(j)){
+                dp[i][j]=dp[i+1][j-1]+2;
+            }else{
+                dp[i][j]=Math.max(dp[i+1][j],dp[i][j-1]);
+            }
+        }
+    }
+    return dp[0][N-1];
+}
+```
 
 **解法二**
 

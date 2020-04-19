@@ -402,6 +402,132 @@ public int jump(int[] nums){
 
 代码需要细细品，一下可能看不太明白
 
+**解法三**
+
+回顾的时候这道题始终是没搞清楚，[看了一个大佬的题解](https://leetcode-cn.com/problems/jump-game-ii/solution/xun-huan-bu-bian-shi-fen-xi-cban-by-huai-an-2/) （这个大佬好像是个初中的妹子）后明白了
+
+```java
+//参考了一个大佬循环不变表达式的分析
+public int jump(int[] nums){
+    if (nums==null || nums.length<=0) {
+        return 0;
+    }
+    //当前这一跳能选择的最远距离
+    int left=0;
+    //目前能达到的最远距离
+    int right=0;
+    int ptr=0,step=0;
+    while (right<nums.length-1) {
+        left=right;
+        while(ptr<nums.length && ptr<=left) {
+            right=Math.max(right,nums[ptr]+ptr);
+            ptr++;
+        }
+        step++;
+    }
+    return step;
+}
+```
+## [56. 合并区间](https://leetcode-cn.com/problems/merge-intervals/)
+
+给出一个区间的集合，请合并所有重叠的区间。
+
+**示例 1:**
+
+```java
+输入: [[1,3],[2,6],[8,10],[15,18]]
+输出: [[1,6],[8,10],[15,18]]
+解释: 区间 [1,3] 和 [2,6] 重叠, 将它们合并为 [1,6].
+```
+
+
+**示例 2:**
+
+```java
+输入: [[1,4],[4,5]]
+输出: [[1,5]]
+解释: 区间 [1,4] 和 [4,5] 可被视为重叠区间。
+```
+
+**解法一**
+
+思路也没啥好说的，类似贪心吧
+
+```java
+public int[][] merge(int[][] intervals) {
+    if (intervals ==null || intervals.length<=0) {
+        return new int[][]{};
+    }
+    Arrays.sort(intervals,(a,b)->a[0]-b[0]);
+    LinkedList<int[]> list=new LinkedList<>();
+    for (int i=1;i<intervals.length;i++) {
+        if (intervals[i][0]<=intervals[i-1][1]) {
+            if (intervals[i][1]>intervals[i-1][1]) {
+                intervals[i][0]=intervals[i-1][0];   
+            }else{
+                intervals[i][0]=intervals[i-1][0];
+                intervals[i][1]=intervals[i-1][1];
+            }
+        }else{
+            list.add(intervals[i-1]);
+        }
+    }
+    list.add(intervals[intervals.length-1]);
+    /*  int[][] res=new int[list.size()][2];
+        for (int i=0;i<list.size();i++) {
+            res[i][0]=list.get(i)[0];
+            res[i][1]=list.get(i)[1];
+        }*/
+    return list.toArray(new int[0][0]); //题解哪里学到一招
+}
+```
+
+最大的收获就是学到了一招list转array的方法😁
+
+偶然看到，简化下代码
+
+```java
+//update：2020.4.16
+//偶然看到,简化下代码
+public int[][] merge(int[][] intervals) {
+    if (intervals ==null || intervals.length<=0) {
+        return new int[][]{};
+    }
+    Arrays.sort(intervals,(a,b)->a[0]-b[0]);
+    LinkedList<int[]> list=new LinkedList<>();
+    for (int i=1;i<intervals.length;i++) {
+        if (intervals[i][0]<=intervals[i-1][1]) {
+            intervals[i][0]=intervals[i-1][0];
+            intervals[i][1]=Math.max(intervals[i-1][1],intervals[i][1]);
+        }else{
+            list.add(intervals[i-1]);
+        }
+    }
+    list.add(intervals[intervals.length-1]);
+    return list.toArray(new int[0][0]);
+}
+```
+一开始还没注意这个解法，现在回头看看这个方法挺妙的，当无法覆盖的时候将`intervals[i-1]` 入栈，当可以覆盖的时候修改当前元素值，在下一轮继续添加或覆盖，其实还是有一点点不好理解，刚刚又重写了一个，思路很直白
+
+```java
+public int[][] merge(int[][] intervals) {
+    if(intervals==null || intervals.length<=0) return intervals;
+    Arrays.sort(intervals,(a,b)->a[0]!=b[0]?a[0]-b[0]:a[1]-b[1]);
+    List<int[]> res=new ArrayList<>();
+    res.add(intervals[0]);
+    for(int i=1;i<intervals.length;i++){
+        int[] pre=res.get(res.size()-1);
+        if(intervals[i][0]<=pre[1]){
+            if(intervals[i][1]>=pre[1]){
+                pre[1]=intervals[i][1];
+            }
+        }else{
+            res.add(intervals[i]);
+        }
+    }
+    return res.toArray(new int[0][0]);
+}
+```
 ## [435. 无重叠区间](https://leetcode-cn.com/problems/non-overlapping-intervals/)
 
 给定一个区间的集合，找到需要移除区间的最小数量，使剩余区间互不重叠。
@@ -607,7 +733,7 @@ public int videoStitching(int[][] clips, int T) {
 }
 ```
 
-首先按照左边界排序，然后找的时候**每次都在序列中找能覆盖`overlap`上一次右边界的最长区间** ，第一次覆盖其实就是找的左边界能覆盖0的最长的区间，然后下一次就要找能覆盖这个区间右边界的最长的区间。最终的结果就是最少的区间数目，正确性可以通过反证法来证明
+首先按照左边界排序，然后找的时候**每次都在序列中找能覆盖`overlap`上一次右边界的最长区间** ，第一次覆盖其实就是找的左边界能覆盖0的最长的区间，然后下一次就要找能覆盖这个区间右边界的最长的区间。最终的结果就是最少的区间数目，正确性这里其实思考一下就知道了，每次都选择最优区间，对后面的选择没有负面影响，具体如何证明还是留给大佬们吧
 
 ## [406. 根据身高重建队列](https://leetcode-cn.com/problems/queue-reconstruction-by-height/)
 
@@ -873,6 +999,120 @@ public int[] maxDepthAfterSplit(String seq) {
             //根据左括号奇偶判断
             res[i]=--depth%2;
         }
+    }
+    return res;
+}
+```
+
+## [1353. 最多可以参加的会议数目](https://leetcode-cn.com/problems/maximum-number-of-events-that-can-be-attended/) 
+
+给你一个数组 events，其中 events[i] = [startDayi, endDayi] ，表示会议 i 开始于 startDayi ，结束于 endDayi 。
+
+你可以在满足 startDayi <= d <= endDayi 中的任意一天 d 参加会议 i 。注意，一天只能参加一个会议。
+
+请你返回你可以参加的 最大 会议数目。
+
+**示例 1：**
+
+![JELWN9.png](https://s1.ax1x.com/2020/04/17/JELWN9.png)
+
+```java
+输入：events = [[1,2],[2,3],[3,4]]
+输出：3
+解释：你可以参加所有的三个会议。
+安排会议的一种方案如上图。
+第 1 天参加第一个会议。
+第 2 天参加第二个会议。
+第 3 天参加第三个会议。
+```
+
+**示例 2：**
+
+```java
+输入：events= [[1,2],[2,3],[3,4],[1,2]]
+输出：4
+```
+
+**示例 3：**
+
+```java
+输入：events = [[1,4],[4,4],[2,2],[3,4],[1,1]]
+输出：4
+```
+
+**示例 4：**
+
+```java
+输入：events = [[1,100000]]
+输出：1
+```
+
+**示例 5：**
+
+```java
+输入：events = [[1,1],[1,2],[1,3],[1,4],[1,5],[1,6],[1,7]]
+输出：7
+```
+
+**提示：**
+
+- `1 <= events.length <= 10^5`
+- `events[i].length == 2`
+- `1 <= events[i][0] <= events[i][1] <= 10^5`
+
+**解法一**
+
+暴力贪心
+
+```java
+//[[1,4],[4,4],[2,2],[3,4],[1,1]]
+// 1,1  2,2  1,4  3,4  4,4
+// 暴力贪心，按结束时间排序，优先安排结束时间短的，O(N^2)
+public int maxEvents(int[][] events) {
+    if(events==null || events.length<=0) return 0;
+    Arrays.sort(events,(e1,e2)->e1[1]-e2[1]);
+    HashSet<Integer> set=new HashSet<>();
+    int count=0;
+    for(int i=0;i<events.length;i++){
+        int start=events[i][0];
+        int end=events[i][1];
+        for(int j=start;j<=end;j++){ //在对应时间段内进行安排
+            if(!set.contains(j)){
+                set.add(j);
+                count++;
+                break;
+            }
+        }
+    }
+    return count;
+}
+```
+**解法二**
+
+```java
+//优先队列优化，NlogN
+public int maxEvents(int[][] events) {
+    if(events==null || events.length<=0) return 0;
+    Arrays.sort(events,(e1,e2)->e1[0]-e2[0]);
+    //结束时间构建小根堆
+    PriorityQueue<Integer> pq=new PriorityQueue<>();
+    int index=0,res=0,n=events.length;
+    int curDay=1;
+    while(index<n || !pq.isEmpty()){
+        //将当天开始的会议的结束时间加入小根堆
+        while(index<n && curDay==events[index][0]){
+            pq.add(events[index++][1]);
+        }
+        //将过期会议的移除
+        while(!pq.isEmpty() && pq.peek()<curDay){
+            pq.poll();
+        }
+        //优先选择结束时间最短的
+        if(!pq.isEmpty()){
+            pq.poll();
+            res++;
+        }
+        curDay++; //安排下一天
     }
     return res;
 }
