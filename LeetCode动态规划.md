@@ -4658,3 +4658,87 @@ public int longestValidParentheses(String s) {
 }
 ```
 关键的地方就在于将**非法的右括号**入栈，作为一个分界点便于后面计算，初始的-1也很关键
+
+## _数位DP_
+
+## [233. 数字 1 的个数](https://leetcode-cn.com/problems/number-of-digit-one/)
+
+给定一个整数 n，计算所有小于等于 n 的非负整数中数字 1 出现的个数。
+
+**示例:**
+
+```java
+输入: 13
+输出: 6 
+解释: 数字 1 出现在以下数字中: 1, 10, 11, 12, 13 。
+```
+
+**解法一**
+
+这个题其实困扰了我很长时间，之前看了好几次都放弃了，感觉有些找规律的数学解法太难想到了，所以这里直接采用**数位DP**，相对于其他的解法，这种解法会更加套路模板化
+```java
+//dp[pos][sumOne]代表从高位枚举到pos位置，前面1出现的个数sumOne
+int [][] dp=null;
+
+public int countDigitOne(int n) {
+    int len=0;
+    int[] num=new int[64]; //64位肯定够了
+    while(n!=0){
+        num[len++]=n%10;
+        n/=10;
+    }
+    dp=new int[len+1][len+1];
+    //从高位向低位枚举
+    return dfs(num,len-1,0,true,true);
+}
+
+public int dfs(int[] num,int pos,int sumOne,boolean leadZero,boolean limit){
+    //枚举完所有的数位，直接返回sumOne
+    if(pos==-1) return sumOne;
+    //状态重叠，状态要完全一致
+    if(!leadZero && !limit && dp[pos][sumOne]!=0) return dp[pos][sumOne];
+    int res=0;
+    int up=limit?num[pos]:9;
+    for (int i=0;i<=up;i++) {
+        res+=dfs(num,pos-1,sumOne+(i==1?1:0),leadZero&&i==0,i==up&&limit);
+    }
+    if(!leadZero && !limit) dp[pos][sumOne]=res;
+    return res;
+}
+```
+
+优化下代码，前导0对状态存取没有影响，有**前导0**和**没有前导0**的`sumOne`肯定不一样
+
+```java
+//简化下代码，前导0其实没有影响
+//dp[pos][sumOne]代表从高位枚举到pos位置，前面1的个数sumOne
+int [][] dp=null;
+
+public int countDigitOne(int n) {
+    int len=0;
+    int[] num=new int[64]; //64位肯定够了
+    while(n!=0){
+        num[len++]=n%10;
+        n/=10;
+    }
+    dp=new int[len+1][len+1];
+    //从高位向低位枚举
+    return dfs(num,len-1,0,true);
+}
+
+public int dfs(int[] num,int pos,int sumOne,boolean limit){
+    //枚举完所有的数位，直接返回sumOne
+    if(pos==-1) return sumOne;
+    //状态重叠，状态要完全一致
+    if(!limit && dp[pos][sumOne]!=0) return dp[pos][sumOne];
+    int res=0;
+    int up=limit?num[pos]:9;
+    for (int i=0;i<=up;i++) {
+        res+=dfs(num,pos-1,sumOne+(i==1?1:0),i==up&&limit);
+    }
+    if(!limit) dp[pos][sumOne]=res;
+    return res;
+}
+```
+
+**数位DP**的概念和模板其实我也是下午在网上查的，然后找到了两个写的比较好的文章 [数位dp总结 之 从入门到模板](https://blog.csdn.net/wust_zzwh/article/details/52100392)，[数字组成的奥妙——数位dp](https://www.luogu.com.cn/blog/virus2017/shuweidp) 以后遇到类似的题又多了一种解法（数学的解法至今仍没学会🤣）只有这一题想搞懂**数位DP**还是不太够，这题还是比较简单的，还是要多做题，多总结才能慢慢体会，lc上好像数位dp好像并不多，过两天都做一下试试
