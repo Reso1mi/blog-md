@@ -1483,23 +1483,24 @@ public int numberOfSubarrays(int[] nums, int k) {
 其实这里就是把奇数都看作 1，偶数都看作0，这样问题就变成了求和为k的区间个数有多少个，然后在根据上面的前缀和+Hash表，就可以很容易的得到答案，还有一点就是题目说了数据都是正数，所以在判断的时候可以加一个`sum>=k` 来减少一点判断，当然这题题目指定了数据的范围，所以还可以直接用数组做map映射
 
 ```java
-public static int numberOfSubarrays(int[] nums, int k) {
-    int res=0;
-    int sum=0;
-    //HashMap<Integer,Integer> map=new HashMap<>();
-    int[] map=new int[100001];
+//update: 2020.4.21 之前的数组开大了，开了10w。。。
+public int numberOfSubarrays(int[] nums, int k) {
+    int[] map=new int[50001];  
     map[0]=1;
-    for (int i=0;i<nums.length;i++) {
-        if (nums[i]%2==1) {
-            sum++;
-        }
-        if (sum>=k) {
+    int sum=0;
+    int res=0;
+    for(int i=0;i<nums.length;i++){
+        sum+=nums[i]&1;
+        map[sum]++;
+        //sum-x=k
+        if(sum-k >=0 && map[sum-k]!=0){
             res+=map[sum-k];
         }
-        map[sum]++;
-        //System.out.println(sum+":"+map[sum]);
     }
     return res;
 }
 ```
 
+> 这题还有其他的数学解法，暂时不太想写，后面有时间再写吧，大致思路就是
+>
+> [2，2，1，1，2，2，2] res=3*4=12
