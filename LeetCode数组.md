@@ -4972,6 +4972,69 @@ public int countPrimes(int n) {
     return res;
 }
 ```
+## [171. Excel表列序号](https://leetcode-cn.com/problems/excel-sheet-column-number/)
+
+给定一个Excel表格中的列名称，返回其相应的列序号。
+
+例如，
+
+    A -> 1
+    B -> 2
+    C -> 3
+    ...
+    Z -> 26
+    AA -> 27
+    AB -> 28 
+    ...
+**示例 1:**
+
+```java
+输入: "A"
+输出: 1
+```
+
+**示例 2:**
+
+```java
+输入: "AB"
+输出: 28
+```
+
+**示例 3:**
+
+```java
+输入: "ZY"
+输出: 701
+```
+
+**解法一**
+
+朋友作业帮面试问了这道题，其实就是进制的转换，写了个回转的
+
+```java
+//26进制转10进制
+public int titleToNumber(String s) {
+    if(s==null || s.length()<=0) return 0;
+    int res=0,n=s.length();
+    int temp=1;
+    for (int i=n-1;i>=0;i--) {
+        res+=(s.charAt(i)-'A'+1)*temp;
+        temp*=26;
+    }
+    return res;
+}
+
+//10进制转26进制
+public String numberToTitle(int s) {
+    StringBuilder res=new StringBuilder();
+    while(s!=0){
+        //这个s-1要注意啊woc
+        res.append((char)((s-1)%26+65));
+        s=(s-1)/26;
+    }
+    return res.reverse().toString();
+}
+```
 ##  二进制
 
 ## [136. 只出现一次的数字](https://leetcode-cn.com/problems/single-number/)
@@ -5037,11 +5100,13 @@ public int[] singleNumber(int[] nums) {
     for (int i=1;i<nums.length;i++) {
         xor^=nums[i];
     }
-    int index=0; //ab不同的index
+    int index=0; //ab二进制不同的index
     while((xor&1)==0){
         xor>>>=1;
         index++;
     }
+    //a,b在index位置的二进制位不同，异或结果为1，然后我们就可以根据这个不同点，将整个数组按照这个划分为两部分
+    //这样相同的数肯定会被分配到同一组，问题就转换成了136，这样我们再分别异或就能得到最终的a,b
     int a=0,b=0;
     for (int i=0;i<nums.length;i++) {
         if(((nums[i]>>>index)&1)==1){ //根据index位置的元素0，1来划分为两个数组
@@ -5053,9 +5118,8 @@ public int[] singleNumber(int[] nums) {
     return new int[]{a,b};
 }
 ```
-> 为啥没有 只出现一次的数字Ⅱ？
+> 为啥没有 只出现一次的数字Ⅱ？ 别问，问就是不会🤣
 >
-> 别问，问就是不会
 
 ## [268. 缺失数字](https://leetcode-cn.com/problems/missing-number/)
 
