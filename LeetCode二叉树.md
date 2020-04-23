@@ -707,6 +707,36 @@ public List<Integer> rightSideView(TreeNode root) {
 ```
 只记录每一层最后一个节点，最后得到的就是右视图
 
+**解法二**
+
+dfs，其实就是一直向右走，走不动就向左走，这样遍历的轨迹就是沿着二叉树的右边缘向下的，我们只需要记录层数，然后当层数和res数量相等的时候记录结果就行了
+
+```go
+var res []int
+
+func rightSideView(root *TreeNode) []int {
+    res = []int{}
+    if root==nil{
+        return res
+    }
+    dfs(root,0)
+    return res
+}
+
+func dfs(root *TreeNode,depth int){
+    if root==nil {
+        return
+    }
+    if depth==len(res){
+        res=append(res,root.Val)
+    }
+    dfs(root.Right,depth+1)
+    dfs(root.Left,depth+1)
+}
+```
+
+
+
 ## [637. 二叉树的层平均值](https://leetcode-cn.com/problems/average-of-levels-in-binary-tree/) 
 
 给定一个非空二叉树, 返回一个由每层节点平均值组成的数组.

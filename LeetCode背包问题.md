@@ -623,6 +623,33 @@ public int takeCoins(int amount,int[] coins,int index){
     return cache[index][amount]=takeCoins(amount-coins[index],coins,index)+takeCoins(amount,coins,index+1);
 }
 ```
+## [面试题 08.11. 硬币](https://leetcode-cn.com/problems/coin-lcci/)
+
+硬币。给定数量不限的硬币，币值为25分、10分、5分和1分，编写代码计算n分有几种表示法。(结果可能会很大，你需要将结果模上1000000007)
+
+**解法一**
+
+和上面的一样的，但是这里有一些其他的方法，记录下，元素解法就不写了，和上面的一样
+
+```java
+int mod=1000000007;
+
+public int waysToChange(int n) {
+    n/=5; //余数没有影响，都用1补
+    int[] coins={5,2,1}; //币值也/5
+    long[] dp=new long[n+1];
+    Arrays.fill(dp,1L); //排除1分的硬币，所有的面额都可以用1分的凑出来
+    for(int i=0;i<coins.length;i++){
+        for(int j=coins[i];j<=n;j++){
+            dp[j]=(dp[j]+dp[j-coins[i]])%mod;
+        }
+    }
+    return (int)(dp[n]%mod);
+}
+```
+
+直接把时间从114ms干到了17ms，其实时间复杂度没变，但是缩小了解空间，所以整体的时间会提高很多，当然这里能缩小的原因主要还是因为题目比较特殊
+
 ## [377. 组合总和 Ⅳ](https://leetcode-cn.com/problems/combination-sum-iv/)
 
 给定一个由正整数组成且不存在重复数字的数组，找出和为给定目标正整数的组合的个数。
