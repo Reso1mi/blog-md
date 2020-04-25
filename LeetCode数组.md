@@ -927,53 +927,53 @@ public int majorityElement(int[] nums) {
 
 **解法一**
 
-和上面的方法一样，抵消去除三个不同的元素对众数没有任何影响
+和上面的方法一样，抵消去除三个不同的元素对众数没有任何影响，但是最后需要判断是否都是符合条件的
 
-```java
-public static List<Integer> majorityElement(int[] nums) {
-    List<Integer> res = new ArrayList<>();
-    if (nums == null || nums.length == 0)
-        return res;
-    int candidateA = nums[0];
-    int candidateB = nums[0];
-    int countA = 0;
-    int countB = 0;
+```go
+//update：2020.4.23 用go在web上随手写了一个，感觉比之前java写的哪个好理解
+func majorityElement(nums []int) []int {
+    var res []int
+    //超过n/3的元素最多2个
+    cand1:=-1 //设置成nums中不存在的值比较好,比如-1
+    count1:=0
+    cand2:=-1
+    count2:=0
+    for _,num:=range nums{
+        if num==cand1{ //投1
+            count1++
+        }else if num==cand2{ //投2
+            count2++
+        }else { //都不投
+            if count1==0 {
+                cand1=num
+                count1=1
+            }else if count2==0{
+                cand2=num
+                count2=1
+            }else{
+                count1--
+                count2--
+            }
+        }
+    }
+    temp1:=0
+    temp2:=0
+    for _,num:= range nums{
+        if num==cand1{
+            temp1++
+        }
+        if num==cand2{
+            temp2++
+        }
+    }
 
-    for (int num : nums) {
-        if (num == candidateA) {
-            countA++;//投A
-            continue;
-        }
-        if (num == candidateB) {
-            countB++;//投B
-            continue;
-        }
-        if (countA == 0) {
-            candidateA = num;
-            countA++;
-            continue;
-        }
-        if (countB == 0) {
-            candidateB = num;
-            countB++;
-            continue;
-        }
-        countA--;
-        countB--;
+    if temp1>len(nums)/3 {
+        res=append(res,cand1)
     }
-    countA = 0;
-    countB = 0;
-    for (int num : nums) {
-        if (num == candidateA)
-            countA++;
-        else if (num == candidateB)
-            countB++;
+    if temp2>len(nums)/3 {
+        res=append(res,cand2)
     }
-    if (countA > nums.length / 3)
-        res.add(candidateA);
-    if (countB > nums.length / 3)
-        res.add(candidateB);
-    return res;
+    return res
 }
 ```
 
@@ -1556,6 +1556,227 @@ public long merge(int[] nums,int left,int mid,int right){
 ```
 
 归并排序的思路，最开始我是在每次i>j和最后收尾的时候res++，然后结果总是不对，然后取查了答案才意识到不能这样算，当`nums[i] > nums[j]` 的时候，`i~j` 形成的逆序对其实不只一个，而是`[i,mid]` 区间的所有元素，如果你只是+1的话就会漏掉许多情况，因为下一步 `j++` 就会将 `j` 向后移动，那些情况就考虑不到了
+
+## [315. 计算右侧小于当前元素的个数](https://leetcode-cn.com/problems/count-of-smaller-numbers-after-self/)
+
+给定一个整数数组 nums，按要求返回一个新数组 counts。数组 counts 有该性质： counts[i] 的值是  nums[i] 右侧小于 nums[i] 的元素的数量。
+
+**示例:**
+
+```java
+输入: [5,2,6,1]
+输出: [2,1,1,0] 
+解释:
+5 的右侧有 2 个更小的元素 (2 和 1).
+2 的右侧仅有 1 个更小的元素 (1).
+6 的右侧有 1 个更小的元素 (1).
+1 的右侧有 0 个更小的元素.
+```
+
+**错误解法一**
+
+这个bug我大概看了有两三个小时，人都看傻了，必须放上来纪念下
+
+```go
+import(
+    "fmt"
+)
+type Element struct{
+    idx int
+    val int
+}
+
+func countSmaller(nums []int) []int {
+    n:=len(nums)
+    count:=make([]int,n)
+    elements:=make([]Element,n)
+    for i,num:=range nums{
+        elements[i].idx=i
+        elements[i].val=num
+    }
+    fmt.Println(elements);
+    mergeSort(elements,0,n-1,count)
+    return count
+}
+
+func mergeSort(num []Element,left int,right int,count []int){
+    if left>=right{
+        return
+    }
+    mid:=left+(right-left)/2
+    mergeSort(num,left,mid,count)
+    mergeSort(num,mid+1,right,count)
+    merge(num,left,mid,right,count)
+}
+
+func merge(num []Element,left int,mid int,right int,count []int){
+    help:=make([]int,right-left+1)
+    i:=left
+    j:=mid+1
+    index:=0
+    for i<=mid && j<=right {
+        if num[i].val<=num[j].val{ //说明j前面的元素都小于i
+            count[num[i].idx]+=(j-mid-1)
+            help[index]=num[i].val
+            i++
+        }else{
+            help[index]=num[j].val
+            j++
+        }
+        index++
+    }
+    for i<=mid{
+        count[num[i].idx]+=(j-mid-1)
+        help[index]=num[i].val
+        index++
+        i++
+    }
+    for j<=right{
+        help[index]=num[j].val
+        index++
+        j++
+    }
+    for i:=left;i<=right;i++{
+        num[i].val=help[i-left]
+    }
+}
+```
+
+一开始用go写的，调了半天没调出来，我以为是go的啥问题（刚学go不太熟）然后用Java又写了一遍
+
+```java
+class Solution {
+    public List<Integer> countSmaller(int[] nums) {
+        Pair[] pair=new Pair[nums.length];
+        for(int i=0;i<nums.length;i++){
+            pair[i]=new Pair(i,nums[i]);
+        }
+        int[] count=new int[nums.length];
+        mergeSort(pair,0,nums.length-1,count);
+        List<Integer> res=new ArrayList<>();
+        for(int i=0;i<count.length;i++){
+            res.add(count[i]);
+        }
+        return res;
+    }
+
+    public void mergeSort(Pair[] nums,int left,int right,int[] count){
+        if(left>=right){
+            return;
+        }
+        int mid=left+(right-left)/2;
+        mergeSort(nums,left,mid,count);
+        mergeSort(nums,mid+1,right,count);
+        merge(nums,left,mid,right,count);
+    }
+
+    public void merge(Pair [] nums,int left,int mid,int right,int[] count){
+        int i=left,j=mid+1;
+        //出Bug的地方，应该用 Pair[] 
+        int[] helper=new int[right-left+1];
+        int index=0;
+        while(i<=mid && j<=right){
+            if(nums[i].value>nums[j].value){
+                helper[index++]=nums[j++].value;
+            }else{
+                count[nums[i].index]+=j-mid-1;
+                helper[index++]=nums[i++].value;
+            }
+        }
+        while(i<=mid){
+            count[nums[i].index]+=j-mid-1;
+            helper[index++]=nums[i++].value;
+        }
+        while(j<=right){
+            helper[index++]=nums[j++].value;
+        }
+        for(int k=0;k<helper.length;k++){
+            //这里无形之中将索引和数据的对应关系打乱了。。。。。
+            nums[left+k].value=helper[k];
+        }
+    }
+
+    class Pair{
+        int index;
+        int value;
+        public Pair(int i,int v){
+            index=i;
+            value=v;
+        }
+    }
+}
+```
+
+还是不对，和之前go的结果是一样的，这段代码我反复地看了3个小时，楞是没看出来哪里写错了，我是真的菜啊！！！！！！！！！
+
+**解法一**
+
+其实和逆序对的解法是类似的，思路都在注释中
+
+```java
+public List<Integer> countSmaller(int[] nums) {
+    Pair[] pair=new Pair[nums.length];
+    for(int i=0;i<nums.length;i++){
+        pair[i]=new Pair(i,nums[i]);
+    }
+    int[] count=new int[nums.length];
+    mergeSort(pair,0,nums.length-1,count);
+    List<Integer> res=new ArrayList<>();
+    for(int i=0;i<count.length;i++){
+        res.add(count[i]);
+    }
+    return res;
+}
+
+public void mergeSort(Pair[] nums,int left,int right,int[] count){
+    if(left>=right){
+        return;
+    }
+    int mid=left+(right-left)/2;
+    mergeSort(nums,left,mid,count);
+    mergeSort(nums,mid+1,right,count);
+    merge(nums,left,mid,right,count);
+}
+
+public void merge(Pair [] nums,int left,int mid,int right,int[] count){
+    int i=left,j=mid+1;
+    Pair[] helper=new Pair[right-left+1];
+    int index=0;
+    while(i<=mid && j<=right){
+        if(nums[i].value>nums[j].value){
+            helper[index++]=nums[j++];
+        }else{
+            //i<=j 那么mid+1~j-1的肯定都比i小
+            //(j-1)-(mid+1)+1=j-mid-1
+            count[nums[i].index]+=j-mid-1;
+            helper[index++]=nums[i++];
+        }
+    }
+    while(i<=mid){
+        //j没了，那么所有的j的元素都比i小
+        //等价于right-mid
+        count[nums[i].index]+=j-mid-1;
+        helper[index++]=nums[i++];
+    }
+    while(j<=right){
+        helper[index++]=nums[j++];
+    }
+    for(int k=0;k<helper.length;k++){
+        nums[left+k]=helper[k];
+    }
+}
+
+class Pair{
+    int index;
+    int value;
+    public Pair(int i,int v){
+        index=i;
+        value=v;
+    }
+}
+```
+
+> 这题还可以用**树状数组**解，但是我暂时还不会，后面有时间学了再来补充，其实还可以用线段树，二叉搜索树等等，有点麻烦，算了
 
 ## [118. 杨辉三角](https://leetcode-cn.com/problems/pascals-triangle/)
 
@@ -5035,6 +5256,70 @@ public String numberToTitle(int s) {
     return res.reverse().toString();
 }
 ```
+## [168. Excel表列名称](https://leetcode-cn.com/problems/excel-sheet-column-title/)
+
+给定一个正整数，返回它在 Excel 表中相对应的列名称。
+
+例如，
+
+```java
+1 -> A
+2 -> B
+3 -> C
+...
+26 -> Z
+27 -> AA
+28 -> AB 
+...
+```
+**示例 1:**
+
+```java
+输入: 1
+输出: "A"
+```
+
+**示例 2:**
+
+```java
+输入: 28
+输出: "AB"
+```
+
+**示例 3:**
+
+```java
+输入: 701
+输出: "ZY"
+```
+
+**解法一**
+
+```java
+public String numberToTitle(int s) {
+    StringBuilder res=new StringBuilder();
+    while(s!=0){
+        //这个s-1要注意啊woc
+        res.append((char)((s-1)%26+65));
+        s=(s-1)/26;
+    }
+    return res.reverse().toString();
+}
+```
+
+go写法
+
+```go
+func convertToTitle(n int) string {
+    var res string
+    for n>0{
+        res=string((n-1)%26+'A')+res
+        n=(n-1)/26
+    }
+    return res
+}
+```
+
 ##  二进制
 
 ## [136. 只出现一次的数字](https://leetcode-cn.com/problems/single-number/)

@@ -3413,6 +3413,80 @@ public void dfs(TreeNode node,int depth,int index,List<Integer> leftIdxs){
 ```
 这个版本在空间复杂度可能会低一点，list中只存每个层最左的节点，当深度大于等于list的长度时候说明当前节点一定是新一层的最左节点，这个时候添加进去就ok，然后求每个节点和当前层最左的节点index差值就最后更新最大值就ok，这个解法还是没有那么自然，还是上面的BFS好理解一点
 
+## [671. 二叉树中第二小的节点](https://leetcode-cn.com/problems/second-minimum-node-in-a-binary-tree/)
+
+给定一个非空特殊的二叉树，每个节点都是正数，并且每个节点的子节点数量只能为 2 或 0。如果一个节点有两个子节点的话，那么这个节点的值不大于它的子节点的值。 
+
+给出这样的一个二叉树，你需要输出所有节点中的第二小的值。如果第二小的值不存在的话，输出 -1 。
+
+**示例 1:**
+
+```java
+输入: 
+    2
+   / \
+  2   5
+     / \
+    5   7
+
+输出: 5
+说明: 最小的值是 2 ，第二小的值是 5 。
+```
+
+**示例 2:**
+
+```java
+输入: 
+    2
+   / \
+  2   2
+
+输出: -1
+说明: 最小的值是 2, 但是不存在第二小的值。
+```
+
+**解法一**
+
+```go
+//自然的从上到下的思路
+var INT_MAX = int(^uint(0) >> 1)
+
+func findSecondMinimumValue(root *TreeNode) int {
+	res := dfs(root)
+	if res == INT_MAX {
+		return -1
+	}
+	return res
+}
+
+func dfs(root *TreeNode) int {
+	if root == nil || root.Left == nil {
+		return INT_MAX
+	}
+	//和左右子树都不等，谁小就是谁
+	if root.Val != root.Left.Val && root.Val != root.Right.Val {
+		return min(root.Left.Val, root.Right.Val)
+	}
+	//和左右子树都相等，分别在左右子树中找第二小比较
+	if root.Val == root.Left.Val && root.Val == root.Right.Val {
+		return min(dfs(root.Left), dfs(root.Right))
+	}
+	//和左子树相等,在左子树中找第二小和右子树比较
+	if root.Val == root.Left.Val {
+		return min(dfs(root.Left), root.Right.Val)
+	}
+	//同上
+	return min(dfs(root.Right), root.Left.Val)
+}
+
+func min(a, b int) int {
+	if a > b {
+		return b
+	}
+	return a
+}
+```
+
 ## [938. 二叉搜索树的范围和](https://leetcode-cn.com/problems/range-sum-of-bst/)
 
 给定二叉搜索树的根结点 root，返回 L 和 R（含）之间的所有结点的值的和。
@@ -4688,3 +4762,63 @@ public boolean verify(int[] postorder,int left,int right){
 **解法二**
 
 单调栈的解法，放在栈专题中
+
+## [654. 最大二叉树](https://leetcode-cn.com/problems/maximum-binary-tree/)
+
+给定一个不含重复元素的整数数组。一个以此数组构建的最大二叉树定义如下：
+
+1. 二叉树的根是数组中的最大元素。
+2. 左子树是通过数组中最大值左边部分构造出的最大二叉树。
+3. 右子树是通过数组中最大值右边部分构造出的最大二叉树。
+
+通过给定的数组构建最大二叉树，并且输出这个树的根节点。
+
+**示例 ：**
+
+```java
+输入：[3,2,1,6,0,5]
+输出：返回下面这棵树的根节点：
+	  6
+	/   \
+   3     5
+    \    / 
+     2  0   
+       \
+        1
+```
+
+**提示：**
+
+1. 给定的数组的大小在 [1, 1000] 之间。
+
+**解法一**
+
+```java
+//不做预处理,直接搜索2ms,我这个50ms+.....懒得改的就当练手了
+public TreeNode constructMaximumBinaryTree(int[] nums) {
+    int n=nums.length;
+    int[][] max=new int[n][n];
+    for(int i=0;i<n;i++){
+        max[i][i]=i;
+        for(int j=i+1;j<n;j++){
+            max[i][j]=nums[j]>nums[max[i][j-1]]?j:max[i][j-1];
+        }
+    }
+    return dfs(nums,0,n-1,max);
+}
+
+public TreeNode dfs(int[] nums,int left,int right,int[][] max){
+    if(left>right) return null;
+    int maxIdx=max[left][right];
+    TreeNode root=new TreeNode(nums[maxIdx]);
+    root.left=dfs(nums,left,maxIdx-1,max);
+    root.right=dfs(nums,maxIdx+1,right,max);
+    return root;
+}
+```
+
+> 慢的主要原因是构建这个树的话大概只会查询logN次（树高度）最大值，而每层查询的复杂度和为N，所以整体的复杂度其实只要O(NlogN)，除非数组完全有序，这样每次分割都及其不均匀，数的高度为N时间复杂度才会到N^2，而我这个就直接是N^2了hhhhh，太菜了，预处理的思想是好的，但是还是要看具体的题目，这里其实很多的区间值都用不上（除非搞线段树🤣
+
+**解法二**
+
+这题也可以用单调栈做，明天写，这题还有个2，明天一起做了
