@@ -3940,6 +3940,51 @@ public int lcs(String text1, int a,String text2,int b) {
     }
 }
 ```
+## [718. 最长重复子数组](https://leetcode-cn.com/problems/maximum-length-of-repeated-subarray/)
+
+给两个整数数组 `A` 和 `B` ，返回两个数组中公共的、长度最长的子数组的长度。
+
+**示例 1:**
+
+```java
+输入:
+A: [1,2,3,2,1]
+B: [3,2,1,4,7]
+输出: 3
+解释: 
+长度最长的公共子数组是 [3, 2, 1]。
+```
+
+**说明:**
+
+1. 1 <= len(A), len(B) <= 1000
+2. 0 <= A[i], B[i] < 100
+
+**解法一**
+
+简单的递推，注意别写成上面的lcs了，这里的`dp[i][j]` 代表的其实是**公共子串**以`A[i]`和`B[i]` 结尾的最长重复子数组长度，如果`A[i]`和`B[i]`不相等那就是0
+
+```java
+public int findLength(int[] A, int[] B) {
+    int lenA=A.length;
+    int lenB=B.length;
+    int[][] dp=new int[lenA+1][lenB+1];
+    int res=0;
+    for(int i=1;i<=lenA;i++){
+        for(int j=1;j<=lenB;j++){
+            if(A[i-1]==B[j-1]){
+                dp[i][j]=dp[i-1][j-1]+1;
+                res=Math.max(dp[i][j],res);
+            }
+        }
+    }
+    return res;
+}
+```
+**解法二**
+
+> 本来是想练练二分，在二分的tag里面看见的这题，结果发现这题dp似乎更容易，看了官方的二分的解法，其实就是二分公共子串的长度，然后检查，检查这一步有一些操作，不是很理解，以后有机会再来补充
+
 ## [72. 编辑距离](https://leetcode-cn.com/problems/edit-distance/)
 
 给定两个单词 word1 和 word2，计算出将 word1 转换成 word2 所使用的最少操作数 。
@@ -5242,3 +5287,4 @@ public boolean dfs(int max,int total,int state){
     return false;
 }
 ```
+

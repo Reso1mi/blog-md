@@ -1938,6 +1938,68 @@ public void sumNumber(int parent,TreeNode root) {
 }
 ```
 
+## [1022. 从根到叶的二进制数之和](https://leetcode-cn.com/problems/sum-of-root-to-leaf-binary-numbers/)
+
+给出一棵二叉树，其上每个结点的值都是 `0` 或 `1` 。每一条从根到叶的路径都代表一个从最高有效位开始的二进制数。例如，如果路径为 `0 -> 1 -> 1 -> 0 -> 1`，那么它表示二进制数 `01101`，也就是 `13` 。
+
+对树上的每一片叶子，我们都要找出从根到该叶子的路径所表示的数字。
+
+以 **10^9 + 7** 为**模**，返回这些数字之和。
+
+**示例：**
+
+![JI4uDI.png](https://s1.ax1x.com/2020/04/28/JI4uDI.png)
+
+```java
+输入：[1,0,1,0,1,0,1]
+输出：22
+解释：(100) + (101) + (110) + (111) = 4 + 5 + 6 + 7 = 22
+```
+
+ 
+
+**提示：**
+
+1. 树中的结点数介于 `1` 和 `1000` 之间。
+2. node.val 为 `0` 或 `1` 。
+
+**解法一**
+
+和上一题一摸一样，没啥好说的，只不过一个是10进制，一个是二进制
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+var mod=int(1e9+7)
+
+func sumRootToLeaf(root *TreeNode) int {
+    sum:=0;
+    dfs(root,0,&sum)
+    return sum
+}
+
+func dfs(root *TreeNode,cur int,sum *int){
+    if root==nil{
+        return
+    }
+    cur=(cur<<1+root.Val)%mod
+    if root!=nil && root.Left==nil && root.Right==nil{
+        *sum=(*sum+cur)%mod
+        return
+    }
+    dfs(root.Left,cur,sum)
+    dfs(root.Right,cur,sum)
+}
+```
+
+> 这题的数据太弱了，甚至都不用取模照样可以过。。。。我一开始看到1000个节点，还考虑要不要处理大数的情况，看到返回值是int才作罢🤣
+
 ## [437. 路径总和 III](https://leetcode-cn.com/problems/path-sum-iii/)
 
 给定一个二叉树，它的每个结点都存放着一个整数值。
