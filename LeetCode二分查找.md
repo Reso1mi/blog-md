@@ -485,7 +485,7 @@ class Solution {
         int left=0,right=nums.length-1;
         while(left<right){
             int mid=left+(right-left)/2;
-            //这一步 (nums[mid]>=nums[0])==(target>=nums[0]) 很巧秒
+            //这一步 (nums[mid]>=nums[0])==(target>=nums[0]) 很巧秒，其实用异或也可以
             int midNum=(nums[mid]>=nums[0])==(target>=nums[0])?nums[mid]:
                         nums[mid]>=nums[0]?Integer.MIN_VALUE:Integer.MAX_VALUE;
             if(midNum<target){
@@ -500,6 +500,75 @@ class Solution {
 ```
 
 `(nums[mid]>=nums[0])==(target>=nums[0])` 这一步很巧妙，满足这个关系就说明mid和target在同一段，不用变化，可以直接求，否则就根据mid的位置考虑如何变化
+
+## [81. 搜索旋转排序数组 II](https://leetcode-cn.com/problems/search-in-rotated-sorted-array-ii/)
+
+假设按照升序排序的数组在预先未知的某个点上进行了旋转。
+
+( 例如，数组 `[0,0,1,2,2,5,6]` 可能变为 `[2,5,6,0,0,1,2]` )。
+
+编写一个函数来判断给定的目标值是否存在于数组中。若存在返回 `true`，否则返回 `false`。
+
+**示例 1:**
+
+```go
+输入: nums = [2,5,6,0,0,1,2], target = 0
+输出: true
+```
+
+**示例 2:**
+
+```go
+输入: nums = [2,5,6,0,0,1,2], target = 3
+输出: false
+```
+
+**进阶:**
+
+- 这是 [搜索旋转排序数组](https://leetcode-cn.com/problems/search-in-rotated-sorted-array/description/) 的延伸题目，本题中的 `nums`  可能包含重复元素。
+- 这会影响到程序的时间复杂度吗？会有怎样的影响，为什么？
+
+**解法一**
+
+WA哭了，好难搞，要是在工程上我肯定直接遍历了，太细节了这波
+
+```go
+func search(nums []int, target int) bool {
+    n:=len(nums)
+    if n==0{
+        return false
+    }
+    left:=0
+    right:=n-1
+    for left<right {
+        mid:=left+(right-left)/2+1
+        if nums[mid]>nums[right] { //左半边
+            //target在[left,mid)的有序区间内
+            if nums[left]<=target && target<nums[mid]{
+                right=mid-1
+            }else{
+                left=mid
+            }
+        }else if nums[mid]<nums[right]{
+            //target在[mid,right]
+            if nums[mid]<=target && target<=nums[right]{
+                left=mid
+            }else{
+                right=mid-1
+            }
+        }else{
+            //mid==right看right是不是target
+            if nums[right]==target{
+                return true
+            }
+            right--
+        }
+    }
+    return nums[left]==target
+}
+```
+
+看着别人的题解写都WA了5，6次。。。。这个其实就不能按照上一题的思路来了，因为有重复的，不好判断mid和target是不是在同一边
 
 ## [34. 在排序数组中查找元素的第一个和最后一个位置](https://leetcode-cn.com/problems/find-first-and-last-position-of-element-in-sorted-array/)
 

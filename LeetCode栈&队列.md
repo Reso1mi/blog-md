@@ -3410,3 +3410,124 @@ public int pop_front() {
 一直以为是和最小栈一样，结果WA了两发才意识到搞错了。。。这里是一个队列，进出方向是不一样的
 
 其实这题和之前的一道 [滑动窗口最大值](http://imlgw.top/2019/07/20/leetcode-hua-dong-chuang-kou/#239-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E6%9C%80%E5%A4%A7%E5%80%BC) 一样，维护一个单调递减的单调栈然后维护这个单调栈就行了
+
+## [5402. 绝对差不超过限制的最长连续子数组](https://leetcode-cn.com/problems/longest-continuous-subarray-with-absolute-diff-less-than-or-equal-to-limit/) 
+
+给你一个整数数组 `nums` ，和一个表示限制的整数 `limit`，请你返回最长连续子数组的长度，该子数组中的任意两个元素之间的绝对差必须小于或者等于 `limit` *。*
+
+如果不存在满足条件的子数组，则返回 `0` 。
+
+**示例 1：**
+
+```java
+输入：nums = [8,2,4,7], limit = 4
+输出：2 
+解释：所有子数组如下：
+[8] 最大绝对差 |8-8| = 0 <= 4.
+[8,2] 最大绝对差 |8-2| = 6 > 4. 
+[8,2,4] 最大绝对差 |8-2| = 6 > 4.
+[8,2,4,7] 最大绝对差 |8-2| = 6 > 4.
+[2] 最大绝对差 |2-2| = 0 <= 4.
+[2,4] 最大绝对差 |2-4| = 2 <= 4.
+[2,4,7] 最大绝对差 |2-7| = 5 > 4.
+[4] 最大绝对差 |4-4| = 0 <= 4.
+[4,7] 最大绝对差 |4-7| = 3 <= 4.
+[7] 最大绝对差 |7-7| = 0 <= 4. 
+因此，满足题意的最长子数组的长度为 2 。
+```
+
+**示例 2：**
+
+```java
+输入：nums = [10,1,2,4,7,2], limit = 5
+输出：4 
+解释：满足题意的最长子数组是 [2,4,7,2]，其最大绝对差 |2-7| = 5 <= 5 。
+```
+
+**示例 3：**
+
+```java
+输入：nums = [4,2,2,2,4,4,2,2], limit = 0
+输出：3
+```
+
+**提示：**
+
+- `1 <= nums.length <= 10^5`
+- `1 <= nums[i] <= 10^9`
+- `0 <= limit <= 10^9`
+
+187th周赛t3，时隔这么久又回头打一次周赛，可惜，又只做了两题，前两题10分钟不到就写完了，心想这回怎么说也得做个3题，结果。。。
+
+**解法一**
+
+```java
+public int longestSubarray2(int[] nums, int limit) {
+    if (nums==null || nums.length<=0) {
+        return 0;
+    }
+    int left=0,right=0;
+    int min=0,max=0;
+    int res=1;
+    PriorityQueue<Integer> minpq=new PriorityQueue<>();
+    minpq.add(nums[0]);
+    PriorityQueue<Integer> maxpq=new PriorityQueue<>((a,b)->b-a);
+    maxpq.add(nums[0]);
+    //7 2
+    while(left<=right && right<nums.length){
+        while (right< nums.length && maxpq.peek()-minpq.peek()<=limit) {
+            res=Math.max(right-left+1,res);
+            right++;
+            if (right<nums.length) {
+                maxpq.add(nums[right]);
+                minpq.add(nums[right]);   
+            }
+        }
+        maxpq.remove(nums[left]);
+        minpq.remove(nums[left]);
+        left++;
+    }
+    return res;
+}
+```
+这个是当时比赛调了半天没调出来，结束之后调出来的代码，用两优先队列维护区间最值，然后滑窗就行了，我这里就是调滑窗的时候调了半天，之前写滑窗就是乱写的，没什么章法，边WA边改，看来最近得好好总结下滑窗的题了，得搞个板子出来
+
+**解法二**
+
+最优解，O(N)单调队列
+
+```java
+public int longestSubarray(int[] nums, int limit) {
+    if (nums==null || nums.length<=0) {
+        return 0;
+    }
+    int left=0;
+    int min=0,max=0;
+    int res=1;
+    //单调队列记录区间最值索引
+    LinkedList<Integer> maxQue=new LinkedList<>();
+    LinkedList<Integer> minQue=new LinkedList<>();
+    for(int right=0;right<nums.length;right++){
+        while(!maxQue.isEmpty() && nums[maxQue.getLast()]<nums[right]){
+            maxQue.removeLast();
+        }
+        maxQue.addLast(right);
+        while(!minQue.isEmpty() && nums[minQue.getLast()]>nums[right]){
+            minQue.removeLast();
+        }
+        minQue.addLast(right);
+        max=maxQue.getFirst();
+        min=minQue.getFirst();
+        if(nums[max]-nums[min]<=limit) {
+            res=Math.max(res,right-left+1);
+        }else{
+            //不符合要求，左边界左移，当左边界是最值的时候que弹出
+            if (left==max) maxQue.removeFirst();
+            if (left==min) minQue.removeFirst();
+            left++;
+        }
+    }
+    return res;
+}
+```
+其实当时我确实也尝试去用两个单调队列维护最值，但是！！！还是被滑窗的边界给搞得不知道这么写了，然后就没又然后了，上面的代码也是比赛完之后自己写出来的，说到底还是菜啊！😭

@@ -835,6 +835,111 @@ public int findTargetSumWays(int[] nums, int S) {
 }
 ```
 
+## [1049. 最后一块石头的重量 II](https://leetcode-cn.com/problems/last-stone-weight-ii/)
+
+有一堆石头，每块石头的重量都是正整数。
+
+每一回合，从中选出**任意两块石头**，然后将它们一起粉碎。假设石头的重量分别为 `x` 和 `y`，且 `x <= y`。那么粉碎的可能结果如下：
+
+- 如果 `x == y`，那么两块石头都会被完全粉碎；
+- 如果 `x != y`，那么重量为 `x` 的石头将会完全粉碎，而重量为 `y` 的石头新重量为 `y-x`。
+
+最后，最多只会剩下一块石头。返回此石头**最小的可能重量**。如果没有石头剩下，就返回 `0`。
+
+**示例：**
+
+```go
+输入：[2,7,4,1,8,1]
+输出：1
+解释：
+组合 2 和 4，得到 2，所以数组转化为 [2,7,1,8,1]，
+组合 7 和 8，得到 1，所以数组转化为 [2,1,1,1]，
+组合 2 和 1，得到 1，所以数组转化为 [1,1,1]，
+组合 1 和 1，得到 0，所以数组转化为 [1]，这就是最优值。
+```
+
+**提示：**
+
+1. `1 <= stones.length <= 30`
+2. `1 <= stones[i] <= 1000`
+
+**解法一**
+
+想了一下，其实就是在所有石头中选取部分石头，求这部分的石头和大于`sum/2`的最小值（和正常的背包思路反着来的）
+
+```java
+//   sum   = psum + nsum
+//  target = psum - nsum  (psum >= nsum)
+//  sum+target = 2*psum
+//  target = 2*psum-sum
+//  2*psum-sum>=0
+//记忆化递归
+Integer[][] dp=null;
+
+public int lastStoneWeightII(int[] stones) {
+    int sum=0;
+    for (int i=0;i<stones.length;i++) {
+        sum+=stones[i];
+    }
+    dp=new Integer[stones.length+1][sum];
+    return 2*dfs(stones,0,0,sum)-sum;
+}
+
+public int dfs(int[] stones,int index,int psum,int sum){
+    if(2*psum>=sum){
+        return psum;
+    }
+    if(dp[index][psum]!=null){
+        return dp[index][psum];
+    }
+    int min=Integer.MAX_VALUE;
+    for (int i=index;i<stones.length;i++) {
+        min=Math.min(dfs(stones,i+1,psum+stones[i],sum),min);
+    }
+    return dp[index][psum]=min;
+}
+```
+当我按照这个思路i写出来后发现不好改递推了😂，这个思路确实有一点点怪
+
+**解法二**
+
+正常的01背包解法，其实把上面的结论反过来就行了，既然要求一个大于等于`sum/2`的最小值，其实就是求一个小于等于`sum/2` 的最大值，这样一说就很清楚了，经典的01背包
+
+```java
+public int lastStoneWeightII(int[] stones) {
+    if(stones==null ||stones.length<=0){
+        return 0;
+    }
+    int n=stones.length;
+    int sum=0;
+    for(int i=0;i<n;i++){
+        sum+=stones[i];
+    }
+    //背包容量为sum/2,求最多能装多少,经典的01背包
+    int amount=sum/2;
+    int[] dp=new int[amount+1];
+    for (int i=0;i<stones.length;i++) {
+        for (int j=amount;j>=stones[i];j--) {
+            dp[j]=Math.max(dp[j],dp[j-stones[i]]+stones[i]);
+        }
+    }
+    //wrong: return (amount-dp[amount])*2;
+    //return sum%2==0?(amount-dp[amount])*2:(amount-dp[amount])*2+1
+    //nsum=dp[amount]
+    //target=psum-nsum = sum-nusm-nsum
+    return sum-2*dp[amount];
+}
+```
+这里的retrun有两种写法，推荐第二种，第一种还要判奇偶
+
+> 拿到这题的的第一个解法其实是贪心，每次消除两个最大的，用优先队列维护石头大小
+>
+> 天真的错误解法 74 / 82 个通过测试用例
+> [21,26,31,33,40] ->[7,21,26,31] -> [5,7,21] -> [5,14] ->[9]
+> [21,26,31,33,40] ->[19,26,31,33]->[5]
+>
+> 这个思路其实是 这题的弱化版本 [1046. 最后一块石头的重量](https://leetcode-cn.com/problems/last-stone-weight/) 的解法
+
 ## [474. 一和零](https://leetcode-cn.com/problems/ones-and-zeroes/)
 
 在计算机界中，我们总是追求用有限的资源获取最大的收益。
@@ -906,113 +1011,6 @@ public int[] count(String str){
     return new int[]{zero,one};
 }
 ```
-
-## [139. 单词拆分](https://leetcode-cn.com/problems/word-break/)
-
-给定一个非空字符串 s 和一个包含非空单词列表的字典 wordDict，判定 s 是否可以被空格拆分为一个或多个在字典中出现的单词。
-
-**说明：**
-
-- 拆分时可以重复使用字典中的单词。
-- 你可以假设字典中没有重复的单词。
-
-**示例 1：**
-
-```java
-输入: s = "leetcode", wordDict = ["leet", "code"]
-输出: true
-解释: 返回 true 因为 "leetcode" 可以被拆分成 "leet code"。
-```
-
-
-**示例 2：**
-
-```java
-输入: s = "applepenapple", wordDict = ["apple", "pen"]
-输出: true
-解释: 返回 true 因为 "applepenapple" 可以被拆分成 "apple pen apple"。
-     注意你可以重复使用字典中的单词。
-```
-
-
-**示例 3：**
-
-```java
-输入: s = "catsandog", wordDict = ["cats", "dog", "sand", "and", "cat"]
-输出: false
-```
-
-**解法一**
-
-记忆化递归，值得注意的点就是递归的终止条件
-
-```java
-//记忆化递归
-Boolean[] cache=null;
-
-public boolean wordBreak(String s, List<String> wordDict) {
-    if (s==null || s.length()<=0) {
-        return false;
-    }
-    cache=new Boolean[s.length()];
-    HashSet<String> set=new HashSet<>(wordDict);
-    return dfs(s,set,0);
-}
-
-//判断【index,s.len】中的字符是否能拆分
-public boolean dfs(String s, HashSet<String> dict,int index) {
-    //终止条件一开始写的false....
-    //这里的终止条件还是有点迷惑的,这里index只有在字典中存在当前元素的时候才会向后移动
-    //所以当index移动到s==length的时候就说明前面的单词都匹配上了
-    if (index==s.length()) {
-        return true;
-    }
-    if (cache[index]!=null) {
-        return cache[index];
-    }
-    for (int i=index+1;i<=s.length();i++) {
-        //System.out.println(s.substring(index,i));
-        //这里下一次dfs的index也要注意
-        if (dict.contains(s.substring(index,i)) && dfs(s,dict,i)){
-            return cache[index]=true;
-        }
-    }
-    return cache[index]=false;
-}
-```
-**解法二**
-
-看了官方的解有BFS，然后也实现了一下
-
-```java
-//BFS,需要一个visit保证不会重复访问
-public boolean wordBreak(String s, List<String> wordDict) {
-    if (s==null || s.length()<=0) {
-        return false;
-    }
-    HashSet<String> dict=new HashSet<>(wordDict);
-    //queue中存index
-    LinkedList<Integer> queue=new LinkedList<>();
-    boolean[] visit=new boolean[s.length()];
-    queue.add(0);
-    while(!queue.isEmpty()){
-        int index=queue.poll();
-        if (!visit[index]) {
-            for (int i=index+1;i<=s.length();i++) {
-                if(dict.contains(s.substring(index,i))){
-                    if (i==s.length()) {
-                        return true;
-                    }
-                    queue.add(i);
-                }
-            }
-            visit[index]=true;
-        }
-    }
-    return false;
-}
-```
-一开始没想到用visit数组，感觉index是递增的好像没什么重复的元素，但是其实是有的，不用visit会超时
 
 ## [1255. 得分最高的单词集合](https://leetcode-cn.com/problems/maximum-score-words-formed-by-letters/)
 
@@ -1120,3 +1118,4 @@ public int getScore(int[] les,String word,int[] score){
     return sc;
 }
 ```
+
