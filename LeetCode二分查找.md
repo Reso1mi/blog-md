@@ -77,6 +77,80 @@ public int search(int[] nums, int target) {
     return left!=nums.length&&nums[left]==target?left:-1;
 }
 ```
+## [69. x 的平方根](https://leetcode-cn.com/problems/sqrtx/)
+
+实现 `int sqrt(int x)` 函数。
+
+计算并返回 *x* 的平方根，其中 *x* 是非负整数。
+
+由于返回类型是整数，结果只保留整数的部分，小数部分将被舍去。
+
+**示例 1:**
+
+```java
+输入: 4
+输出: 2
+```
+
+**示例 2:**
+
+```java
+输入: 8
+输出: 2
+说明: 8 的平方根是 2.82842..., 
+     由于返回类型是整数，小数部分将被舍去。
+```
+
+**解法一**
+
+二分解法
+
+```go
+func mySqrt(x int) int {
+    lx := int64(x)
+    var left int64 = 0
+    var right int64 = lx/2 + 1
+    for left < right {
+        mid := left + (right-left)/2
+        if mid*mid < lx {
+            left = mid + 1
+            //向下取整的，所以需要额外判断或者取右中位数
+            if left*left > lx {
+                return int(mid)
+            }
+        } else {
+            right = mid
+        }
+    }
+    return int(left)
+}
+```
+
+还有一种比较好的解法，更加贴合模板
+
+```go
+//这个其实更能体现模板的好处
+func mySqrt(x int) int {
+    lx := int64(x)
+    var left int64 = 0
+    var right int64 = lx/2 + 1
+    for left < right {
+        mid := left + (right-left)/2 + 1
+        //大于lx的一定不是res可以排除，但是小于的不一定不是，题目是向下取整的
+        if mid*mid > lx { 
+            right = mid - 1
+        } else {
+            left = mid
+        }
+    }
+    return int(left)
+}
+```
+
+**解法二**
+
+> 牛顿迭代法，还没时间仔细去研究，后面有时间再看看
+
 ## [35. 搜索插入位置](https://leetcode-cn.com/problems/search-insert-position/)
 
 给定一个排序数组和一个目标值，在数组中找到目标值，并返回其索引。如果目标值不存在于数组中，返回它将会被按顺序插入的位置。
@@ -113,75 +187,12 @@ public int search(int[] nums, int target) {
 
 **解法一**
 
-```java
-public static  int searchInsert(int[] nums, int target) {
-    int len=nums.length;
-    int lo=0,hi=len-1;
-    if(nums[hi]<target){
-        return len;
-    }
-    if(nums[0]>=target){
-        return 0;
-    }
-    while(lo<=hi){
-        int mid=lo+(hi-lo)/2;
-        if(nums[mid]<target){
-            lo=mid+1;
-            if(lo<nums.length&&nums[lo]>target){
-                return mid+1;
-            }
-        } else if(nums[mid]>target){
-            hi=mid-1;
-            if(hi>=0&&nums[hi]<target){
-                return hi+1;
-            }
-        } else{
-            return mid;
-            //相等的情况，直接返回这个index
-        }
-    }
-    return 0;
-    //到不了这里
-}
-```
-
-其实上面的代码写的并不好，写的很奇怪。
+跟谁学笔试现场写的，上面的都是dd（删除了之前的解法）
 
 ```java
 public int searchInsert(int[] nums, int target) {
     int len=nums.length;
-    int lo=0,hi=len-1;
-    if(nums[hi]<target){
-        return len;
-    }
-    if(nums[0]>=target){
-        return 0;
-    }
-    while(lo<=hi){
-        int mid=lo+(hi-lo)/2;
-        if(nums[mid]<target){
-            lo=mid+1;
-        } else if(nums[mid]>target){
-            hi=mid-1;
-        } else{
-            return mid;
-        }
-    }
-    return lo;
-    //return hi+1
-}
-```
-
-如果熟悉二分的过程，其实最后返回`lo`或者`hi+1`就可以了。
-
-**解法二**
-
-跟谁学笔试现场写的，上面的都是dd
-
-```java
-public int searchInsert(int[] nums, int target) {
-    int len=nums.length;
-    int lo=0,hi=len;
+    int lo=0,hi=len; //和模板不一样，因为这里是搜索插入位置是可以到达right的
     while(lo< hi){
         int mid=lo+(hi-lo)/2;
         if(nums[mid]<target){

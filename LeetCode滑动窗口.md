@@ -674,7 +674,7 @@ public static int minSubArrayLen2(int s, int[] nums) {
 
 **解法三**
 
-找到一个板子，统一一下写法
+~~找到一个模板，统一一下写法~~
 
 ```java
 public static int minSubArrayLen3(int s, int[] nums) {
@@ -695,6 +695,39 @@ public static int minSubArrayLen3(int s, int[] nums) {
         }
     }
     return minLen==Integer.MAX_VALUE?0:minLen;
+}
+```
+
+**Update(2020.5.4)**
+
+上面的这也配叫模板？下面的是重做的时候统一的写法
+
+```go
+var INF = 1 << 31
+
+func minSubArrayLen(s int, nums []int) int {
+    left := 0
+    sum := 0
+    res := INF
+    for right := 0; right < len(nums); right++ {
+        sum += nums[right]
+        for sum >= s {
+            res = Min(res, right-left+1)
+            sum -= nums[left]
+            left++
+        }
+    }
+    if res == INF {
+        return 0
+    }
+    return res
+}
+
+func Min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
 }
 ```
 
@@ -1326,11 +1359,40 @@ public int balancedString(String s) {
         }
         right++;
     }
-    return left==right?0:res;
+    return left==right?0:res; //这里其实做了特判
 }
 ```
 
-## [5325. 包含所有三种字符的子字符串数目](https://leetcode-cn.com/problems/number-of-substrings-containing-all-three-characters/)  
+**UPDATE: (2020.5.4)**
+
+按照先前的模板来分析下，这里要求的是最小的修改次数，很明显不能用`for-if`，所以采用`for-while`的结构，`for-while`最基本的结构就是外层枚举所有`right`，内层根据题目要求缩减`left`，但是这题left也需要控制边界，我这里用的是`left<=right` 但是实际上这样会有一类case结果不对，比如"QWER"这样的，返回的结果是1，我上面在最后做了特判，其实这里还可以修改下边界，改成`left<N`，这样就没问题了，这样left就可以超过right达到right+1，这样对”QWER"就能得到正确的结果，并且根据题目信息当`left=right+1`之后`left`就不会再增加了，while条件就无法满足了，但是有的题目`left`是不用设置限制的，基本上都是在达到right+1之后就不会继续增加了
+
+```java
+class Solution {
+    public int balancedString(String s) {
+        if(s==null || s.length()<=0){
+            return 0;
+        }
+        int N=s.length();
+        int left=0;
+        int res=N;
+        int[] freq=new int[26];
+        for(int i=0;i<N;i++) {
+            freq[s.charAt(i)-'A']++;
+        }
+        for(int right=0;right<N;right++){
+            freq[s.charAt(right)-'A']--;
+            while(left<N && freq['Q'-'A']<=N/4 && freq['W'-'A']<=N/4 && freq['E'-'A']<=N/4 && freq['R'-'A']<=N/4){
+                res=Math.min(res,right-left+1);
+                freq[s.charAt(left++)-'A']++;
+            }
+        }
+        return res;
+    }
+}
+```
+
+## [1358. 包含所有三种字符的子字符串数目](https://leetcode-cn.com/problems/number-of-substrings-containing-all-three-characters/)  
 
 给你一个字符串 s ，它只包含三种字符 a, b 和 c 。
 
@@ -1391,6 +1453,27 @@ public boolean valid(int[] freq){
 ```
 枚举所有的左边界，然后找到最短的可以满足的右边界，那么包括右边界和之后的所有的都满足条件，直接计算就可以了，时间复杂度`O(N)`
 
+**解法二**
+
+2020.5.4 用自己总结的滑窗模板重写，也是`for-while`结构，right和left不能同时扩展。比如`"aaacb"`这样的case
+
+```java
+public int numberOfSubstrings(String s) {
+    int left=0;
+    int res=0;
+    int n=s.length();
+    int[] freq=new int[3];
+    for(int right=0;right<n;right++){
+        freq[s.charAt(right)-'a']++;
+        while(freq[0]>0 && freq[1]>0 && freq[2]>0){
+            res+=n-right;
+            freq[s.charAt(left)-'a']--;
+            left++;
+        }
+    }
+    return res;
+}
+```
 ## [1423. 可获得的最大点数](https://leetcode-cn.com/problems/maximum-points-you-can-obtain-from-cards/)
 
 几张卡牌 **排成一行**，每张卡牌都有一个对应的点数。点数由整数数组 `cardPoints` 给出。
@@ -1452,39 +1535,139 @@ public boolean valid(int[] freq){
 
 ```go
 func maxScore(cardPoints []int, k int) int {
-    if cardPoints==nil || len(cardPoints)==0 {
+    if cardPoints == nil || len(cardPoints) == 0 {
         return 0
     }
-    n:=len(cardPoints)
-    left:=0
-    right:=n-k-1
-    sum:=0
-    windowSum:=0
-    for i,num:=range cardPoints{
-        sum+=num
-        if i == right{
+    n := len(cardPoints)
+    left := 0
+    right := n - k - 1
+    sum := 0
+    windowSum := 0
+    for i, num := range cardPoints {
+        sum += num
+        if i == right {
             windowSum = sum
         }
     }
-    if k==n {
+    if k == n {
         return sum
     }
-    minWin:=windowSum
-    for right+1<n{
-        windowSum+=(cardPoints[right+1]-cardPoints[left])
-        minWin = min(windowSum,minWin)
+    minWin := windowSum
+    for right+1 < n {
+        windowSum += (cardPoints[right+1] - cardPoints[left])
+        minWin = min(windowSum, minWin)
         right++
         left++
     }
-    return sum-minWin
+    return sum - minWin
 }
 
-func min(a,b int)int{
-    if a<b{
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+
+```
+
+Tag里面有dp，确实这题和前面的[石子游戏](http://imlgw.top/2019/09/01/leetcode-dong-tai-gui-hua/#877-%E7%9F%B3%E5%AD%90%E6%B8%B8%E6%88%8F)有一点像，但是还是滑窗来的比较直接。。
+
+## [1208. 尽可能使字符串相等](https://leetcode-cn.com/problems/get-equal-substrings-within-budget/)
+
+给你两个长度相同的字符串，`s` 和 `t`。
+
+将 `s` 中的第 `i` 个字符变到 `t` 中的第 `i` 个字符需要 `|s[i] - t[i]|` 的开销（开销可能为 0），也就是两个字符的 ASCII 码值的差的绝对值。
+
+用于变更字符串的最大预算是 `maxCost`。在转化字符串时，总开销应当小于等于该预算，这也意味着字符串的转化可能是不完全的。
+
+如果你可以将 `s` 的子字符串转化为它在 `t` 中对应的子字符串，则返回可以转化的最大长度。
+
+如果 `s` 中没有子字符串可以转化成 `t` 中对应的子字符串，则返回 `0`。
+
+**示例 1：**
+
+```go
+输入：s = "abcd", t = "bcdf", cost = 3
+输出：3
+解释：s 中的 "abc" 可以变为 "bcd"。开销为 3，所以最大长度为 3。
+```
+
+**示例 2：**
+
+```go
+输入：s = "abcd", t = "cdef", cost = 3
+输出：1
+解释：s 中的任一字符要想变成 t 中对应的字符，其开销都是 2。因此，最大长度为 1。
+```
+
+**示例 3：**
+
+```go
+输入：s = "abcd", t = "acde", cost = 0
+输出：1
+解释：你无法作出任何改动，所以最大长度为 1。
+```
+
+**提示：**
+
+- `1 <= s.length, t.length <= 10^5`
+- `0 <= maxCost <= 10^6`
+- `s` 和 `t` 都只含小写英文字母。
+
+**解法一**
+
+```go
+func equalSubstring(s string, t string, maxCost int) int {
+    left := 0
+    cost := 0
+    res := 0
+    for right := 0; right < len(s); right++ {
+        cost += getCost(s[right], t[right])
+        if cost <= maxCost {
+            res = max(res, right-left+1)
+        } else {
+            cost -= getCost(s[left], t[left])
+            left++
+        }
+    }
+    return res
+}
+
+func getCost(a, b byte) int {
+    if a < b { //a-b<0 byte是uint8直接这样减会变成正数
+        return int(b - a)
+    }
+    return int(a - b)
+}
+
+func max(a, b int) int {
+    if a > b {
         return a
     }
     return b
 }
 ```
 
-Tag里面有dp，确实这题和前面的[石子游戏](http://imlgw.top/2019/09/01/leetcode-dong-tai-gui-hua/#877-%E7%9F%B3%E5%AD%90%E6%B8%B8%E6%88%8F)有一点像，但是还是滑窗来的比较直接。。
+这个题本身不难，主要是为了学习滑窗类型的题，这题我又改了好长时间，果然做滑窗的题还是有点乱，不过做了这一题之后已经有点感觉了，目前打算把所有的滑窗都重做一遍，然后总结一下套路
+
+**思考**
+
+这样`for-while`的结构似乎更加统一，上面`for-if`的结构只能用在求**最长，最大**的情况下，这种时候`left`和`right`允许同时++，所以用`if`也是可以的，但是求最短的时候，比如上面[209. 长度最小的子数组](#209. 长度最小的子数组)就不能用`for-if` ，当right到达边界的时候left可能还需要继续移动，所以不能用`if`
+
+```go
+func equalSubstring(s string, t string, maxCost int) int {
+    left := 0
+    cost := 0
+    res := 0
+    for right := 0; right < len(s); right++ {
+        cost += getCost(s[right], t[right])
+        for cost > maxCost {
+            cost -= getCost(s[left], t[left])
+            left++
+        }
+        res = max(res, right-left+1)
+    }
+    return res
+}
+```
