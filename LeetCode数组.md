@@ -5599,7 +5599,57 @@ func pivotIndex(nums []int) int {
 }
 ```
 
-##  二进制
+## [945. 使数组唯一的最小增量](https://leetcode-cn.com/problems/minimum-increment-to-make-array-unique/)
+
+给定整数数组 A，每次 *move* 操作将会选择任意 `A[i]`，并将其递增 `1`。
+
+返回使 `A` 中的每个值都是唯一的最少操作次数。
+
+**示例 1:**
+
+```java
+输入：[1,2,2]
+输出：1
+解释：经过一次 move 操作，数组将变为 [1, 2, 3]。
+```
+
+**示例 2:**
+
+```java
+输入：[3,2,1,2,1,7]
+输出：6
+解释：经过 6 次 move 操作，数组将变为 [3, 4, 1, 2, 5, 7]。
+可以看出 5 次或 5 次以下的 move 操作是不能让数组的每个值唯一的。
+```
+
+**提示：**
+
+1. `0 <= A.length <= 40000`
+2. `0 <= A[i] < 40000`
+
+**解法一**
+
+之前写了，没记录，这次PDD笔试考了这题
+
+```java
+public int minIncrementForUnique(int[] A) {
+    Arrays.sort(A);
+    int move=0;
+    for(int i=1;i<A.length;i++){
+        if(A[i]<=A[i-1]){
+            move+=A[i-1]-A[i];
+            A[i]=A[i-1]+1;
+        }
+    }
+    return move;
+}
+```
+
+暴力的解法很好想，首先肯定要排序，然后遇到小于相等的时候就`move+1`，直到不相等，但是这里是可以优化的，一次次的加没有啥意义，可以直接一步到位直接从`A[i]`增加到`A[i-1]+1`
+
+> 这题还有一些方法优化，首先是排序可以用桶排序，然后还可以用并查集（比较麻烦），或者也有数学分析找规律的方法
+
+##  _二进制_
 
 ## [136. 只出现一次的数字](https://leetcode-cn.com/problems/single-number/)
 

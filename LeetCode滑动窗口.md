@@ -470,6 +470,30 @@ public int lengthOfLongestSubstring(String s) {
     return max;
 }
 ```
+**_以上解法全部作废_**
+
+统一使用`for-while`结构，能用`for-if`的一定可以用`for-while`，反过来就不行
+
+```java
+//2020.5.5根据自己总结的滑窗模板重写
+public int lengthOfLongestSubstring(String s) {
+    if(s==null || s.length()<=0) {
+        return 0;
+    }
+    int n=s.length();
+    int left=0;
+    int res=1;
+    boolean[] freq=new boolean[128];
+    for(int right=0;right<n;right++){
+        while(freq[s.charAt(right)]){
+            freq[s.charAt(left++)]=false; //left不用限制
+        }
+        freq[s.charAt(right)]=true;
+        res=Math.max(res,right-left+1);
+    }
+    return res;
+}
+```
 ## [219. 存在重复元素 II](https://leetcode-cn.com/problems/contains-duplicate-ii/)
 
 给定一个整数数组和一个整数 *k*，判断数组中是否存在两个不同的索引 *i* 和 *j*，使得 **nums [i] = nums [j]**，并且 *i* 和 *j* 的差的绝对值最大(不超过)为 *k*。
@@ -1225,6 +1249,74 @@ public int characterReplacement(String s, int k) {
 }
 ```
 
+**UPDATE: (2020.5.5)**
+
+按照模板重写，果然滑窗的题都是一样的
+
+```java
+public int characterReplacement(String s, int k) {
+    if(s==null || s.length()<=0){
+        return 0;
+    }
+    int n=s.length();
+    int res=1;
+    int left=0;
+    int[] freq=new int[128];
+    int maxFreq=0;
+    for(int right=0;right<n;right++){
+        char c=s.charAt(right);
+        freq[c]++;
+        maxFreq=Math.max(maxFreq,freq[c]);
+        while((right-left+1-maxFreq)>k){
+            freq[s.charAt(left)]--;
+            left++; //这里实际上只会执行一次，改成if也是可以的，不过为了统一写法就不改了
+        }
+        res=Math.max(res,right-left+1);
+    }
+    return res;
+}
+```
+
+重写这题的时候发现这题还是挺有意思的，这个里面的`maxFreq`是一个只增不减的量，是一个历史最大值，只有当出现更大的freq的时候才会更新`maxFreq`，当`maxFreq`保持不变的时候结果不会受到影响，只有出现了更大freq的时候才有可能会使结果变大
+
+> [拷贝自题解区](https://leetcode-cn.com/problems/longest-repeating-character-replacement/solution/hua-dong-chuang-kou-chang-gui-tao-lu-by-xiaoneng/) 
+>
+> 因为我们只对最长有效的子字符串感兴趣，所以我们的滑动窗口不需要收缩，即使窗口可能覆盖无效的子字符串。我们可以通过在右边添加一个字符来扩展窗口，或者将整个窗口向右边移动一个字符。而且我们只在新字符的计数超过历史最大计数(来自覆盖有效子字符串的前一个窗口)时才增长窗口。也就是说，我们不需要精确的当前窗口的最大计数;我们只关心最大计数是否超过历史最大计数;这只会因为新字符而发生。
+
+**解法二**
+
+憨憨的解法，不过绝对是能AC的，时间复杂度并没有问题，依然是`O(N)`
+
+```java
+public int characterReplacement(String s, int k) {
+    if(s==null || s.length()<=0){
+        return 0;
+    }
+    int n=s.length();
+    int res=1;
+    for(int c='A';c<='Z';c++){
+        int[] freq=new int[128];
+        int temp=1;
+        int left=0;
+        for(int right=0;right<n;right++){
+            if(s.charAt(right)==c){
+                freq[c]++;
+            }
+            while((right-left+1-freq[c])>k){
+                if(s.charAt(left)==c){
+                    freq[c]--;
+                }
+                left++;
+            }
+            temp=Math.max(temp,right-left+1);
+        }
+        res=Math.max(res,temp);
+    }
+    return res;
+}
+```
+既然题目说了只有大写字母，那就直接枚举所有的字符然后滑窗就行了😂，简单直白
+
 ## [1234. 替换子串得到平衡字符串](https://leetcode-cn.com/problems/replace-the-substring-for-balanced-string/)
 
 有一个只含有 `'Q', 'W', 'E', 'R'` 四种字符，且长度为 n 的字符串。
@@ -1671,3 +1763,62 @@ func equalSubstring(s string, t string, maxCost int) int {
     return res
 }
 ```
+
+## [1052. 爱生气的书店老板](https://leetcode-cn.com/problems/grumpy-bookstore-owner/)
+
+今天，书店老板有一家店打算试营业 `customers.length` 分钟。每分钟都有一些顾客（`customers[i]`）会进入书店，所有这些顾客都会在那一分钟结束后离开。
+
+在某些时候，书店老板会生气。 如果书店老板在第 `i` 分钟生气，那么 `grumpy[i] = 1`，否则 `grumpy[i] = 0`。 当书店老板生气时，那一分钟的顾客就会不满意，不生气则他们是满意的。
+
+书店老板知道一个秘密技巧，能抑制自己的情绪，可以让自己连续 `X` 分钟不生气，但却只能使用一次。
+
+请你返回这一天营业下来，最多有多少客户能够感到满意的数量。
+
+**示例：**
+
+```
+输入：customers = [1,0,1,2,1,1,7,5], grumpy = [0,1,0,1,0,1,0,1], X = 3
+输出：16
+解释：
+书店老板在最后 3 分钟保持冷静。
+感到满意的最大客户数量 = 1 + 1 + 1 + 1 + 7 + 5 = 16.
+```
+
+**提示：**
+
+- `1 <= X <= customers.length == grumpy.length <= 20000`
+- `0 <= customers[i] <= 1000`
+- `0 <= grumpy[i] <= 1`
+
+**解法一**
+
+滑动窗口的感觉来了，越来越熟练了，这题直接bugfree了😁
+
+```java
+public int maxSatisfied(int[] customers, int[] grumpy, int X) {
+    if(grumpy==null || grumpy.length<0) return 0;
+    int N=grumpy.length;
+    int left=0;
+    int window=0;//窗口内反转人数
+    int max=0; //最多反转人数
+    for(int right=0;right<N;right++){
+        if(grumpy[right]==1){
+            window+=customers[right];
+        }
+        //while和if都可以,个人比较喜欢while通用性比较强
+        while(right-left+1>X){
+            if(grumpy[left]==1){
+                window-=customers[left];
+            }
+            left++;
+        }
+        max=Math.max(window,max);
+    }
+    int res=0;
+    for(int i=0;i<N;i++){
+        res+=(grumpy[i]==0?customers[i]:0);
+    }
+    return res+max;
+}
+```
+可以看到仍然是前面总结的`for-while`结构，等我把所有的滑窗tag做完了再来总结一波
