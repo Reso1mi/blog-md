@@ -1249,6 +1249,29 @@ public boolean isSame(TreeNode A,TreeNode B){
 ```
 这里说的是子结构不是子树，isSame函数不需要保证完全相等，这里就需要注意了，当`A!=null && B==null`的时候就说明B已经匹配完了A还没有，这就说明B是A的子结构
 
+**UPDATE(2020.5.7)**
+
+换了一下写法，不用考虑顺序了
+
+```go
+func isSubStructure(A *TreeNode, B *TreeNode) bool {
+    if B==nil || A==nil{
+        return false
+    }
+    return dfs(A,B) || isSubStructure(A.Left,B) || isSubStructure(A.Right,B)
+}
+
+func dfs(A *TreeNode, B *TreeNode)bool{
+    if A==nil && B==nil{
+        return true
+    }
+    if A==nil || B==nil{
+        return B==nil
+    }
+    return A.Val==B.Val && dfs(A.Left,B.Left) && dfs(A.Right,B.Right)
+}
+```
+
 ## [222. 完全二叉树的节点个数](https://leetcode-cn.com/problems/count-complete-tree-nodes/)
 
 给出一个**完全二叉树**，求出该树的节点个数。

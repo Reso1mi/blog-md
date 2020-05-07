@@ -7,7 +7,6 @@ categories:
 	[并发]
 date: 2019/7/30
 cover: http://static.imlgw.top/blog/20190806/wdUz2J3lFXcL.jpg?imageslim
-top: True
 ---
 
 ## 深入ThreadPoolExecutor源码

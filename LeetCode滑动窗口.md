@@ -1196,6 +1196,61 @@ public List<Integer> findAnagrams(String s, String p) {
 ```
 15ms，86%时间复杂度`O(M+N)`，但是这很明显并不是最优解，因为这题的窗口长度其实是可以固定的，滑动的可以更快，只用遍历一遍，等以后有时间再研究吧
 
+## [1004. 最大连续1的个数 III](https://leetcode-cn.com/problems/max-consecutive-ones-iii/)
+
+给定一个由若干 `0` 和 `1` 组成的数组 `A`，我们最多可以将 `K` 个值从 0 变成 1 。
+
+返回仅包含 1 的最长（连续）子数组的长度。
+
+**示例 1：**
+
+```java
+输入：A = [1,1,1,0,0,0,1,1,1,1,0], K = 2
+输出：6
+解释： 
+[1,1,1,0,0,1,1,1,1,1,1]
+粗体数字从 0 翻转到 1，最长的子数组长度为 6。
+```
+
+**示例 2：**
+
+```java
+输入：A = [0,0,1,1,0,0,1,1,1,0,1,1,0,0,0,1,1,1,1], K = 3
+输出：10
+解释：
+[0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1]
+粗体数字从 0 翻转到 1，最长的子数组长度为 10。
+```
+
+**提示：**
+
+1. `1 <= A.length <= 20000`
+2. `0 <= K <= A.length`
+3. `A[i]` 为 `0` 或 `1` 
+
+**解法一**
+
+这题其实下面一题[424. 替换后的最长重复字符](#424-替换后的最长重复字符)的弱化版本
+
+```java
+//简单的滑窗
+public int longestOnes(int[] A, int K) {
+    if(A==null || A.length<=0) return 0;
+    int N=A.length;
+    int left=0,res=0,countA=0;
+    for(int right=0;right<N;right++){
+        countA+=(A[right]&1);
+        //if也可以，个人喜欢while通用性更强
+        while(right-left+1-countA>K){ 
+            countA-=(A[left++]&1);
+        }
+        res=Math.max(res,right-left+1);
+    }
+    return res;
+}
+```
+按照模板来写简直是信手拈来（其实也没有什么模板，就是规范了写法而已）
+
 ## [424. 替换后的最长重复字符](https://leetcode-cn.com/problems/longest-repeating-character-replacement/)
 
 给你一个仅由大写英文字母组成的字符串，你可以将任意位置上的字符替换成另外的字符，总共可最多替换 k 次。在执行上述操作后，找到包含重复字母的最长子串的长度。
@@ -1227,6 +1282,8 @@ s = "AABABBA", k = 1
 ```
 
 **解法一**
+
+上面一题的加强版
 
 ```java
 public int characterReplacement(String s, int k) {
@@ -1375,7 +1432,7 @@ public int characterReplacement(String s, int k) {
 
 (update: 2020.4.15)
 
-我拿到这题，首先想到的是无脑套路滑窗，既然要保证平衡，那么每个字符出现的次数都应该是`N/4`，所以我们可以统计下多出来的有几个，比如`QQQW`，那么多出来的就是2个**`Q`**，也就是说我们要求的窗口内**至少**有2个Q，这样问题其实就转换成了 [76. 最小覆盖子串](https://leetcode-cn.com/problems/minimum-window-substring/)（这明明是个mid题，你咋还给转换成hard了，你是不是傻🤣）
+我拿到这题，首先想到的是无脑套路滑窗，既然要保证平衡，那么每个字符出现的次数都应该是`N/4`，所以我们可以统计下多出来的有几个，比如`QQQW`，那么多出来的就是2个**`Q`**，也就是说我们要求的窗口内**至少**有2个Q，这样问题其实就转换成了 [76. 最小覆盖子串](#76-最小覆盖子串)（这明明是个mid题，你咋还给转换成hard了，你是不是傻🤣）
 
 其实最小覆盖子串看起来好像挺难，但是是有套路的，我们直接套模板就可以了
 
@@ -1745,7 +1802,7 @@ func max(a, b int) int {
 
 **思考**
 
-这样`for-while`的结构似乎更加统一，上面`for-if`的结构只能用在求**最长，最大**的情况下，这种时候`left`和`right`允许同时++，所以用`if`也是可以的，但是求最短的时候，比如上面[209. 长度最小的子数组](#209. 长度最小的子数组)就不能用`for-if` ，当right到达边界的时候left可能还需要继续移动，所以不能用`if`
+这样`for-while`的结构似乎更加统一，上面`for-if`的结构只能用在求**最长，最大**的情况下，这种时候`left`和`right`允许同时++，所以用`if`也是可以的，但是求最短的时候，比如上面[209. 长度最小的子数组](#209-长度最小的子数组)就不能用`for-if` ，当right到达边界的时候left可能还需要继续移动，所以不能用`if`
 
 ```go
 func equalSubstring(s string, t string, maxCost int) int {

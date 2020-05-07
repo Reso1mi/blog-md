@@ -7,7 +7,6 @@ categories:
 	[并发]
 cover: http://static.imlgw.top/blog/20190924/fjWv53purgaU.jpg?imageslim
 date: 2019/9/24
-top: True
 ---
 
 ## AbstractQueuedSynchronized

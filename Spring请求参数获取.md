@@ -20,7 +20,7 @@ date: 2018/5/17 9:00
         System.out.println("password is:"+password); return "demo/index";
     }
 ```
-<!--more-->url形式：[http://localhost/SSMDemo/demo/addUser1?username=lixiaoxi&password=111111](http://localhost/SSMDemo/demo/addUser1?username=lixiaoxi&password=111111) 提交的参数需要和Controller方法中的入参名称一致。
+url形式：[http://localhost/SSMDemo/demo/addUser1?username=lixiaoxi&password=111111](http://localhost/SSMDemo/demo/addUser1?username=lixiaoxi&password=111111) 提交的参数需要和Controller方法中的入参名称一致。
 
 **2、通过HttpServletRequest接收，post方式和get方式都可以。**
 
