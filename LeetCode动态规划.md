@@ -2615,7 +2615,7 @@ public static int maxProduct(int[] nums) {
 
 **解法一**
 
-递推公式：`dp[i][j]=1+min(dp[i-1][j-1],dp[i-1][j],dp[i][j-1])`  嗯，想不到就很可惜
+递推公式：`dp[i][j]=1+min(dp[i-1][j-1],dp[i-1][j],dp[i][j-1])`  有的类似短板理论，取决于最小的哪一个正方形
 
 ```java
 public int maximalSquare(char[][] matrix) {

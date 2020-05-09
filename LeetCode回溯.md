@@ -1980,7 +1980,146 @@ public List<String> dfs(String s,HashSet<String> dict){
 
 其实我这里也是参考了评论区的解法，我上面的那种回溯的方式要改成记忆化有点不好搞，有两个变量，另外我感觉这种**回溯分割**的方式感觉更加的直观易懂 get
 
-## 二维平面上的回溯
+## [473. 火柴拼正方形](https://leetcode-cn.com/problems/matchsticks-to-square/)
+
+还记得童话《卖火柴的小女孩》吗？现在，你知道小女孩有多少根火柴，请找出一种能使用所有火柴拼成一个正方形的方法。不能折断火柴，可以把火柴连接起来，并且每根火柴都要用到。
+
+输入为小女孩拥有火柴的数目，每根火柴用其长度表示。输出即为是否能用所有的火柴拼成正方形。
+
+**示例 1:**
+
+```java
+输入: [1,1,2,2,2]
+输出: true
+
+解释: 能拼成一个边长为2的正方形，每边两根火柴。
+```
+
+**示例 2:**
+
+```java
+输入: [3,3,3,3,4]
+输出: false
+
+解释: 不能用所有火柴拼成一个正方形。
+```
+
+**注意:**
+
+1. 给定的火柴长度和在 `0` 到 `10^9`之间。
+2. 火柴数组的长度不超过15。
+
+**解法一**
+
+```java
+//等价于能否将nums分为4等分
+public boolean makesquare(int[] nums) {
+    if(nums==null || nums.length<4){
+        return false;
+    }
+    int N=nums.length;
+    int sum=0;
+    for(int i=0;i<N;i++){
+        sum+=nums[i];
+    }
+    if(sum%4!=0) return false;
+    int[] side=new int[4];
+    Arrays.sort(nums);
+    return dfs(nums,N-1,side,sum/4);
+}
+
+public boolean dfs(int[] nums,int index,int[] side,int avg){
+    if(index==-1){
+        return true;
+    }
+    for(int i=0;i<side.length;i++){
+        //if(side[i]+nums[index]<=avg){
+        int rest=avg-side[i]-nums[index];
+        if(rest==0 || rest>=nums[0]){ //改进剪枝方式
+            side[i]+=nums[index];
+            if(dfs(nums,index-1,side,avg)){
+                return true;
+            }
+            side[i]-=nums[index];
+        }
+    }
+    return false;
+}
+```
+一开始没想到分桶的做法，只想着这么搜索4等分，看了一眼评论区就明白了，抽象出4条边，然后遍历所有火柴，尝试将火柴放入所有的盒子，看有没有一种可能是4等分的，说白了其实就是暴力搜索，然后加上一点剪枝优化，这题就不细说了，关键看下面这题
+
+## [698. 划分为k个相等的子集](https://leetcode-cn.com/problems/partition-to-k-equal-sum-subsets/)
+
+给定一个整数数组  `nums` 和一个正整数 `k`，找出是否有可能把这个数组分成 `k` 个非空子集，其总和都相等。
+
+**示例 1：**
+
+```java
+输入： nums = [4, 3, 2, 3, 5, 2, 1], k = 4
+输出： True
+说明： 有可能将其分成 4 个子集（5），（1,4），（2,3），（2,3）等于总和。
+```
+
+**注意:**
+
+- `1 <= k <= len(nums) <= 16`
+- `0 < nums[i] < 10000`
+
+**解法一**
+
+[473. 火柴拼正方形](#473-火柴拼正方形)其实只是这道题的一个子问题，关键搞懂这题就行了
+
+```java
+public boolean canPartitionKSubsets(int[] nums, int k) {
+    if(nums==null || nums.length<=0){
+        return false;
+    }
+    int sum=0;
+    for(int i=0;i<nums.length;i++){
+        sum+=nums[i];
+    }
+    if(sum%k!=0) return false;
+    Arrays.sort(nums);
+    return dfs(nums,nums.length-1,new int[k],sum);
+}
+
+public boolean dfs(int[] nums,int index,int[] bucket,int sum){
+    //sum(bucket)==sum
+    //if条件: bucket[i]<=sum/bucket.len => bucket[i]<=sum(bucket)/bucket.len
+    //所以不用单独去判断是否都相等,直接retuen true
+    if(index==-1){
+        return true;
+    }
+    for(int i=0;i<bucket.length;i++){
+        //普通的剪枝 60ms，只判断了是否小于平均值
+        //if(bucket[i]+nums[index]<=sum/bucket.length){
+        //更好的剪枝方式1ms，判断剩余空间不为0的时候还能不能填其他元素
+        int rest=sum/bucket.length-bucket[i]-nums[index];
+        if(rest==0 || rest>=nums[0]){ //小于nums[0]就啥也填不了了
+            bucket[i]+=nums[index];
+            if(dfs(nums,index-1,bucket,sum)){
+                return true;
+            }
+            bucket[i]-=nums[index];
+        }
+    }
+    return false;
+}
+```
+
+其实总体上来说还是暴力的搜索，然后加上一些剪枝优化的手段，首先能想到的是**约束桶内元素和要小于等于`sum/k`**，这样就能减去很多无效搜索，但是仅仅这样还是无法AC这题，还有一步很关键的优化点是**排序**，排序后我们从大往小搜索，也就是优先将大的元素放入桶中，尽快满足if条件，经过上面的优化就可以成功的AC了，耗时60ms左右，但是看了评论区的大佬的解法后发现还有一种更好的剪枝方式，就是考虑放下当前元素后还能不能放下其他的元素，如果刚好放下就直接放，如果放下后还有剩余空间，且这个剩余空间很小，连`nums[0]`都放不下（前面排序了）那么这种情况也是可以直接剪掉的，时间优化到1ms
+
+> `index==-1`为什么就直接返回true了？简单推一下就行了
+>
+> 首先`index==-1`说明所有元素都已经放入`bucket`中了，所以`sum(bucket)=sum(nums)`
+>
+> 再来看我们的if条件：约束桶内元素小于等于`sum/k`，也就是`bucket[i]<=sum/k` 借助上面的结论，转换一下就是 `bucket[i]<=sum(bucket)/k`也就是`bucket[i]<=avg(bucket)`很明显，只有在每个桶内元素都相等的时候才成立，故这里可以直接返回true
+
+**解法二**
+
+官方提供了一个状压的方法，但是没看懂，自己试着压了下没过，懒得去研究了
+
+## _二维平面上的回溯_
 
 ## [79. 单词搜索](https://leetcode-cn.com/problems/word-search/)
 
@@ -3052,3 +3191,88 @@ public boolean valid(int m,int n,int x,int y,int k){
 }
 ```
 
+## [1020. 飞地的数量](https://leetcode-cn.com/problems/number-of-enclaves/)
+
+给出一个二维数组 `A`，每个单元格为 0（代表海）或 1（代表陆地）。
+
+移动是指在陆地上从一个地方走到另一个地方（朝四个方向之一）或离开网格的边界。
+
+返回网格中**无法**在任意次数的移动中离开网格边界的陆地单元格的数量。
+
+**示例 1：**
+
+```java
+输入：[[0,0,0,0],[1,0,1,0],[0,1,1,0],[0,0,0,0]]
+输出：3
+解释： 
+有三个 1 被 0 包围。一个 1 没有被包围，因为它在边界上。
+```
+
+**示例 2：**
+
+```java
+输入：[[0,1,1,0],[0,0,1,0],[0,0,1,0],[0,0,0,0]]
+输出：0
+解释：
+所有 1 都在边界上或可以到达边界。
+```
+
+**提示：**
+
+1. `1 <= A.length <= 500`
+2. `1 <= A[i].length <= 500`
+3. `0 <= A[i][j] <= 1`
+4. 所有行的大小都相同
+
+**解法一**
+
+dfs搜索就完事儿了，水题
+
+```java
+//DFS
+int[][] dir={{1,0},{0,1},{-1,0},{0,-1}};
+
+public int numEnclaves(int[][] A) {
+    if(A==null || A.length<=0) return 0;
+    int N=A.length;
+    int M=A[0].length;
+    boolean[][] visit=new boolean[N][M];
+    int a=0,b=0;
+    while(a<N){ //左右边界
+        if(A[a][0]==1 && !visit[a][0]) dfs(A,a,0,visit);
+        if(A[a][M-1]==1 && !visit[a][M-1]) dfs(A,a,M-1,visit);
+        a++;
+    }
+    while(b<M){ //上下边界
+        if(A[0][b]==1&& !visit[0][b]) dfs(A,0,b,visit);
+        if(A[N-1][b]==1&& !visit[N-1][b]) dfs(A,N-1,b,visit);
+        b++;
+    }
+    int res=0;
+    for (int i=0;i<N;i++) {
+        for (int j=0;j<M;j++) {
+            if(A[i][j]==1 && !visit[i][j]){
+                res++;
+            }
+        }
+    }
+    return res;
+}
+
+public void dfs(int[][] A,int x,int y,boolean[][] visit){
+    visit[x][y]=true;
+    for (int i=0;i<dir.length;i++) {
+        int nx=x+dir[i][0];
+        int ny=y+dir[i][1];
+        if(valid(A,nx,ny) && !visit[nx][ny] && A[nx][ny]==1){
+            dfs(A,nx,ny,visit);
+        }
+    }
+}
+
+public boolean valid(final int[][] A,int x,int y){
+    return x>=0 && x<A.length && y>=0 && y<A[0].length;
+}
+```
+
+并查集的解法放在 [并查集专题](http://imlgw.top/2020/02/02/bing-cha-ji/) 中

@@ -5132,3 +5132,69 @@ public TreeNode dfs(int[] nums,int left,int right,int[][] max){
 **解法二**
 
 这题也可以用单调栈做，明天写，这题还有个2，明天一起做了
+
+## [653. 两数之和 IV - 输入 BST](https://leetcode-cn.com/problems/two-sum-iv-input-is-a-bst/)
+
+给定一个二叉搜索树和一个目标结果，如果 BST 中存在两个元素且它们的和等于给定的目标结果，则返回 true。
+
+**案例 1:**
+
+```java
+输入: 
+    5
+   / \
+  3   6
+ / \   \
+2   4   7
+
+Target = 9
+
+输出: True
+```
+
+**案例 2:**
+
+```java
+输入: 
+    5
+   / \
+  3   6
+ / \   \
+2   4   7
+
+Target = 28
+
+输出: False
+```
+
+**解法一**
+
+开始还想着在logN的解法，发现好像搞不了，而且这是个easy题，所以肯定就是直接中序+双指针了
+
+```go
+func findTarget(root *TreeNode, k int) bool {
+    var inorder []int
+    dfs(root, &inorder)
+    i, j := 0, len(inorder)-1
+    for i < j {
+        if inorder[i]+inorder[j] < k {
+            i++
+        } else if inorder[i]+inorder[j] > k {
+            j--
+        } else {
+            return true
+        }
+    }
+    return false
+}
+
+func dfs(root *TreeNode, inorder *[]int) {
+    if root == nil {
+        return
+    }
+    dfs(root.Left, inorder)
+    *inorder = append(*inorder, root.Val)
+    dfs(root.Right, inorder)
+}
+```
+
