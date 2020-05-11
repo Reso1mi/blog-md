@@ -175,102 +175,6 @@ public int rob(int[] nums,int start,int end) {
 }
 ```
 
-## [337. 打家劫舍 III](https://leetcode-cn.com/problems/house-robber-iii/)
-
-在上次打劫完一条街道之后和一圈房屋后，小偷又发现了一个新的可行窃的地区。这个地区只有一个入口，我们称之为“根”。 除了“根”之外，每栋房子有且只有一个“父“房子与之相连。一番侦察之后，聪明的小偷意识到“这个地方的所有房屋的排列类似于一棵二叉树”。 如果两个直接相连的房子在同一天晚上被打劫，房屋将自动报警。
-
-计算在不触动警报的情况下，小偷一晚能够盗取的最高金额。
-
-**示例 1:**
-
-```java
-输入: [3,2,3,null,3,null,1]
- 	 3
-	/ \
-   2   3
-    \   \ 
-     3   1
-
-输出: 7 
-解释: 小偷一晚能够盗取的最高金额 = 3 + 3 + 1 = 7.
-```
-
-**示例 2:**
-
-~~~java
-输入: [3,4,5,1,3,null,1]
-
- 	 3
-	/ \
-   4   5
-  / \   \ 
- 1   3   1
-
-输出: 9
-解释: 小偷一晚能够盗取的最高金额 = 4 + 5 = 9.
-~~~
-
-**解法一**
-
-暴力递归，应该还是写得出来
-
-```java
-//AC了,但是效率很低
-//可以用hashMap缓存一下每个节点rob的值,但是没必要
-public int rob(TreeNode root) {
-    return tryRob(root);
-}
-
-public int tryRob(TreeNode root) {
-    if (root==null) {
-        return 0;
-    }
-    if (root.left==null && root.right==null) {
-        return root.val;
-    }
-    //偷取当前节点
-    int res=root.val;
-    if (root.left!=null) {
-        res+=tryRob(root.left.left)+tryRob(root.left.right);
-    }
-    if (root.right!=null) {
-        res+=tryRob(root.right.left)+tryRob(root.right.right);
-    }
-    //不偷当前节点
-    int res2=0;
-    res2=tryRob(root.left)+tryRob(root.right);
-    return Math.max(res,res2);
-}
-```
-**解法二**
-
-看评论区说是啥树状dp ? 知识盲区了hahaha
-
-```java
-public int rob(TreeNode root) {
-    int[] res=tryRob(root);
-    return Math.max(res[0],res[1]);
-}
-
-//树形dp???
-//看的懂，但是肯定写不出来 。。。。
-public int[] tryRob(TreeNode root) {
-    int[] dp=new int[2];
-    if (root==null) {
-        return dp;
-    }
-
-    int[] left=tryRob(root.left);
-    int[] right=tryRob(root.right);
-    //不包含当前节点的最大值
-    dp[0]=Math.max(left[0],left[1])+Math.max(right[0],right[1]);
-    //包含当前节点的最大值
-    dp[1]=left[0]+right[0]+root.val;
-    return dp;
-}
-```
-不是我吹，就这样的题目，再遇见多少次我都写不出来这样的解（笑
-
 ## [64. 最小路径和](https://leetcode-cn.com/problems/minimum-path-sum/)
 
 给定一个包含非负整数的 m x n 网格，请找出一条从左上角到右下角的路径，使得路径上的数字总和为最小。
@@ -541,6 +445,109 @@ public int uniquePathsWithObstacles(int[][] obstacleGrid) {
     return dp[obstacleGrid[0].length-1];
 }
 ```
+## [576. 出界的路径数](https://leetcode-cn.com/problems/out-of-boundary-paths/)
+
+给定一个 **m × n** 的网格和一个球。球的起始坐标为 **(i,j)** ，你可以将球移到**相邻**的单元格内，或者往上、下、左、右四个方向上移动使球穿过网格边界。但是，你**最多**可以移动 **N** 次。找出可以将球移出边界的路径数量。答案可能非常大，返回 结果 mod 109 + 7 的值。
+
+**示例 1：**
+
+```java
+输入: m = 2, n = 2, N = 2, i = 0, j = 0
+输出: 6
+解释:
+```
+
+**示例 2：**
+
+```java
+输入: m = 1, n = 3, N = 3, i = 0, j = 1
+输出: 12
+解释:
+```
+
+**说明:**
+
+1. 球一旦出界，就不能再被移动回网格内。
+2. 网格的长度和高度在 [1,50] 的范围内。
+3. N 在 [0,50] 的范围内。
+
+**解法一**
+
+首先写出来的解法，自顶向下，记忆化递归
+
+```java
+int[][] dir={{0,1},{1,0},{-1,0},{0,-1}};
+
+int mod=(int)1e9+7;
+
+Long[][][] dp=null;
+
+public int findPaths(int m, int n, int N, int i, int j) {
+    dp=new Long[m][n][N+1];
+    return (int)(dfs(m,n,i,j,N)%mod);
+}
+
+public long dfs(int m,int n,int x,int y,int k){
+    if(k==0) return 0;
+    if(dp[x][y][k]!=null){
+        return dp[x][y][k];
+    }
+    long count=0;
+    for(int i=0;i<dir.length;i++){
+        int nx=x+dir[i][0];
+        int ny=y+dir[i][1];
+        if(!valid(m,n,nx,ny)){
+            count++;
+            continue;
+        }
+        count=(count+dfs(m,n,nx,ny,k-1))%mod;
+    }
+    return dp[x][y][k]=(count)%mod;
+}
+
+public boolean valid(int m,int n,int x,int y){
+    return x>=0 && x<m && y>=0 && y<n;
+}
+```
+
+有一点需要注意，这里不需要visit，因为有K的限制，不用担心死循环，感觉加了visit反而会错？
+
+**解法二**
+
+整体上来说还是属于比较简单的动态规划，至少递推方程好想
+
+```java
+//自底向上递推
+public int findPaths(int m, int n, int N, int i, int j) {
+    int mod=(int)1e9+7;
+    //群里偷学到的
+    int[] dir={0,1,0,-1,0};
+    long[][][] dp=new long[m][n][N+1];
+    for (int k=1;k<=N;k++) { //想想K为什么在最外层
+        for (int r=0;r<m;r++) {
+            for (int c=0;c<n;c++) {
+                for (int d=0;d<4;d++) {
+                    int nx=r+dir[d];
+                    int ny=c+dir[d+1];
+                    if(nx<0 || ny<0 || nx>=m ||ny>=n){
+                        dp[r][c][k]++;
+                    }else{
+                        dp[r][c][k]=(dp[r][c][k]+dp[nx][ny][k-1])%mod;
+                    }
+                }
+                //提前结束，只需要i,j,N就行了(貌似没有快多少)
+                if(k==N && r==i && c==j){
+                    return (int)(dp[i][j][N]);
+                }
+            }
+        }
+    }
+    //return (int)(dp[m-1][n-1][N]); md一开始返回错了，看了半天
+    return 0;
+}
+```
+K放在最外层的原因其实很容易想到，我们求某一个点的时候，我们需要周围4个方向的`K-1`的值，这些值必须是已经计算过的，所以K肯定是要放在最外层的
+
 ## [303. 区域和检索 - 数组不可变](https://leetcode-cn.com/problems/range-sum-query-immutable/)
 
 给定一个整数数组  nums，求出数组从索引 i 到 j  (i ≤ j) 范围内元素的总和，包含 i,  j 两点。
@@ -598,8 +605,6 @@ class NumArray {
 这题关键有两个地方，一个是 `sumRange(i , j) = sumRange(0, j)-sumRange(0, i-1)` ，另一个关键就是在构造器里面将所有的 `sumRange(0 , i)` 给预先求出来，这样在后面的调用时时间复杂度就是`O(1)`的了。
 
 这里求`sumRange(0, i)`的过程就是一个很简单的dp.
-
-------
 
 ## [413. 等差数列划分](https://leetcode-cn.com/problems/arithmetic-slices/)
 

@@ -1357,197 +1357,6 @@ public int countNodes(TreeNode root) {
 ```
 不得不说这样的方式还是挺巧妙的，时间复杂度应该是`O(2logN)`? 
 
-## [110. 平衡二叉树](https://leetcode-cn.com/problems/balanced-binary-tree/)
-
-给定一个二叉树，判断它是否是高度平衡的二叉树。
-
-本题中，一棵高度平衡二叉树定义为：
-
->  一个二叉树每个节点 的左右两个子树的高度差的绝对值不超过1
-
-**示例 1:**
-
-给定二叉树 [3,9,20,null,null,15,7]
-
-```java
-    3
-   / \
-  9  20
-    /  \
-   15   7
-```
-
-返回 true 。
-
-**示例 2:**
-
-给定二叉树 [1,2,2,3,3,null,null,4,4]
-
-```java
-       1
-      / \
-     2   2
-    / \
-   3   3
-  / \
- 4   4
-```
-
-
-返回 false 。
-
-**解法一**
-
-暴力法，结合上面的[二叉树最大深度](#104. 二叉树的最大深度)，**自顶向下**，求左右子树的高度差
-
-```java
-//top 2 bottom
-public boolean isBalanced(TreeNode root) {
-    if (root==null) return true;
-    if (Math.abs(hight(root.left)-hight(root.right))>1) {
-        return false;
-    }
-    return isBalanced(root.left) && isBalanced(root.right);
-}
-
-public int hight(TreeNode root){
-    if (root==null) {
-        return 0;
-    }
-    return Math.max(hight(root.right),hight(root.left))+1;
-}
-```
-自顶向下，先判断根节点，然后判断左右子树，很明显。在判断左右子树的时候，会重复的遍历判断根节点的时候已经遍历过的节点，时间复杂度应该是`O(N^2)`
-
-**解法二**
-
-自底向上，利用一个实例变量保存结果，其实就是在上面的求heigh过程中将左右子树的高度先取出来直接比较，如果差距大于1就直接记录下结果false，但是其实这里还是可以优化下
-
-```java
-private boolean ans=true;
-
-//buttom 2 top
-public boolean isBalanced(TreeNode root) {
-    if (root==null) return true;
-    hight(root);
-    return ans;
-}
-
-public int hight(TreeNode root){
-    if (root==null) {
-        return 0;
-    }
-    //递归分治，自底向上，在求高度的过程中计算左右高度差
-    int left=hight(root.left);
-    int right=hight(root.right);
-    if (Math.abs(left-right)>1) {
-        ans=false;
-    }
-    return Math.max(left,right)+1;
-}
-```
-自底向上，只需要遍历一遍二叉树就可以得到结果，时间复杂度`O(N)` 
-
-**解法三**
-
-```java
-public boolean isBalanced(TreeNode root) {
-    if (root==null) return true;
-    return hight(root)!=-1;
-}
-
-public int hight(TreeNode root){
-    if (root==null) {
-        return 0;
-    }
-    int left=hight(root.left);
-    if (left==-1) {
-        return -1;
-    }
-    int right=hight(root.right);
-    if (right==-1) {
-        return -1;
-    }
-    return Math.abs(left-right)>1?-1:Math.max(left,right)+1;
-}
-```
-
-在不符合的时候一路`return -1` 节省后面的计算
-
-## [563. 二叉树的坡度](https://leetcode-cn.com/problems/binary-tree-tilt/)
-
-给定一个二叉树，计算整个树的坡度。
-
-一个树的节点的坡度定义即为，该节点左子树的结点之和和右子树结点之和的差的绝对值。空结点的的坡度是0。
-
-整个树的坡度就是其所有节点的坡度之和。
-
-**示例:**
-
-```java
-输入: 
-         1
-       /   \
-      2     3
-输出: 1
-解释: 
-结点的坡度 2 : 0
-结点的坡度 3 : 0
-结点的坡度 1 : |2-3| = 1
-树的坡度 : 0 + 0 + 1 = 1
-```
-
-**注意:**
-
-1. 任何子树的结点的和不会超过32位整数的范围。
-2. 坡度的值不会超过32位整数的范围。. 
-
-**解法一**
-
-很快写出来的解法，发现这题和上面的 **平衡二叉树** 有异曲同工之妙！
-
-```java
-//首先想到的解法
-public int findTilt(TreeNode root) {
-    if (root==null) {
-        return 0;
-    }
-    return findTilt(root.left)+findTilt(root.right)+Math.abs(childSum(root.left)-childSum(root.right));
-}
-
-public int childSum(TreeNode root) {
-    if (root==null) {
-        return 0;
-    }
-    return childSum(root.left)+childSum(root.right)+root.val;
-}
-```
-嵌套递归，相当暴力
-
-**解法二**
-
-上面的做法确实有点可惜，其实在计算childSum的时候就可以字节把坡度算出来然后累加就是整体的坡度
-
-```java
-int tilt=0;
-
-//结果发现上面的做法傻逼了。。。其实我知道是不对的,但是不知道咋改,不过写了个嵌套递归也还行hahaha
-public int findTilt(TreeNode root) {
-    childSum(root);
-    return tilt;
-}
-
-public int childSum(TreeNode root) {
-    if (root==null) {
-        return 0;
-    }
-    int left=childSum(root.left);
-    int right=childSum(root.right);
-    tilt+=Math.abs(left-right);
-    return left+right+root.val;
-}
-```
-
 ## [112. 路径总和](https://leetcode-cn.com/problems/path-sum/)
 
 给定一个二叉树和一个目标和，判断该树中是否存在**根节点到叶子节点**的路径，这条路径上所有节点值相加等于目标和。
@@ -2419,36 +2228,37 @@ public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
 2020.4.9新增解法，利用Map记录父节点，然后根据p,q倒推就行了
 
 ```java
+//update: 2020.5.10原来用的TreeNode做键，居然能过也是很神奇，我试了下，TreeNode应该是没有覆盖equals的
+//所以要是碰撞的够多，那种做法就错了
 public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
     if (root == null || p==root ||q==root) {
         return root;
     }
     Deque<TreeNode> stack=new ArrayDeque<>();
-    HashMap<TreeNode,TreeNode> map=new HashMap<>();
+    //题目说了值唯一，所以可以用Integer当键
+    HashMap<Integer,TreeNode> map=new HashMap<>();
+    map.put(root.val,null); //根节点
     stack.push(root);
     while(!stack.isEmpty()){
         TreeNode cur=stack.poll();
         if(cur.right!=null){
             stack.push(cur.right);
-            map.put(cur.right,cur);
+            map.put(cur.right.val,cur);
         }
         if(cur.left!=null){
             stack.push(cur.left);
-            map.put(cur.left,cur);
+            map.put(cur.left.val,cur);
         }
     }
     HashSet<Integer> set=new HashSet<>();
     while(p!=null){
         set.add(p.val);
-        p=map.get(p);
+        p=map.get(p.val);
     }
-    while(q!=null){
-        if(set.contains(q.val)){
-            return q;
-        }
-        q=map.get(q);
+    while(!set.contains(q.val)){
+        q=map.get(q.val);
     }
-    return null;
+    return q;
 }
 ```
 ## [101. 对称二叉树](https://leetcode-cn.com/problems/symmetric-tree/)
@@ -4138,363 +3948,9 @@ public int dfs(TreeNode node,int fa,int ga){
 }
 ```
 
-## [543. 二叉树的直径](https://leetcode-cn.com/problems/diameter-of-binary-tree/)
 
-给定一棵二叉树，你需要计算它的直径长度。一棵二叉树的直径长度是任意两个结点路径长度中的最大值。这条路径可能穿过根结点。
 
-**示例 :**
-给定二叉树
 
-```java
-      1
-     / \
-    2   3
-   / \     
-  4   5    
-```
-返回 3, 它的长度是路径 [4,2,1,3] 或者 [5,2,1,3]。
-
-**注意：**两结点之间的路径长度是以它们之间边的数目表示
-
-**解法一**
-
-树的题目做多了，发现其实也就几种题型，都很熟悉，这题就和上面的 [二叉树的坡度]() ，[平衡二叉树]() 很类似，这题需要注意**直径不一定过根节点**
-
-```java
-int max=Integer.MIN_VALUE;
-
-public int diameterOfBinaryTree(TreeNode root) {
-    if (root==null) {
-        return 0;
-    }
-    hight(root);
-    return max;
-}
-
-public int hight(TreeNode node){
-    if (node==null) {
-        return 0;
-    }
-    int left=hight(node.left);
-    int right=hight(node.right);
-    max=Math.max(left+right,max);
-    return Math.max(left,right)+1;
-}
-```
-
-**解法二**
-
-和之前一样，先写了个暴力的嵌套递归😂，代码确实简介，难道这就是暴力美学么，i了
-
-```java
-public int diameterOfBinaryTree(TreeNode root) {
-    return root==null?0:Math.max(hight(root.left)+hight(root.right),Math.max(diameterOfBinaryTree(root.right),diameterOfBinaryTree(root.left)));
-}
-
-public int hight(TreeNode node){
-    return node==null?0:Math.max(hight(node.left),hight(node.right))+1;
-}
-```
-
-## [124. 二叉树中的最大路径和](https://leetcode-cn.com/problems/binary-tree-maximum-path-sum/)
-
-给定一个**非空**二叉树，返回其最大路径和。
-
-本题中，路径被定义为一条从树中任意节点出发，达到任意节点的序列。该路径至少包含一个节点，且不一定经过根节点。
-
-**示例 1:**
-
-```java
-输入: [1,2,3]
-   1
-  / \
- 2   3
-输出: 6
-```
-
-**示例 2:**
-
-```java
-输入: [-10,9,20,null,null,15,7]
-   -10
-   / \
-  9  20
-    /  \
-   15   7
-
-输出: 42
-```
-
-**错误解法**
-
-先上一个错误答案，过了 `71/93` 个case（lc的case好少）
-
-```java
-public int maxPathSum(TreeNode root) {
-    if (root==null) {
-        return Integer.MIN_VALUE;
-    }
-    if (root.left==null && root.right==null) {
-        return root.val;
-    }
-    int res=helper(root);
-    return Math.max(res,Math.max(maxPathSum(root.left),maxPathSum(root.right)));
-}
-
-//以当前节点为根的最大路径和
-public int helper(TreeNode root){
-    if(root==null) return Integer.MIN_VALUE;;
-    if (root.left==null && root.right==null) {
-        return root.val;
-    }
-    int left=helper(root.left);
-    int right=helper(root.right);
-    return root.val+(left>0?left:0)+(right>0?right:0);
-}
-```
-我一开始的想法是按照根节点来讨论的，每个节点的最大值就是 左右子树的最大路径和（大于0）加上当前节点的值，改了半天WA了几发后发现是有问题的
-
-```java
-     1 
-   /   \
-  2     3
- / \   / \
-7   9  5  6
-```
-
-比如这样的，2为根的最长路径是1，2，9但是这个在1为根的节点中是不合法的，所以我们需要的只有单边的路径和，如上图的树，我们需要的就是 `2->9` 这条路径，所以我们需要再添加一个求最长路径的函数
-
-**解法二**
-
-可AC，但是效率较低
-
-```java
-public int maxPathSum(TreeNode root) {
-    if (root==null) {
-        return Integer.MIN_VALUE;
-    }
-    if (root.left==null && root.right==null) {
-        return root.val;
-    }
-    int res=helper(root);
-    return Math.max(res,Math.max(maxPathSum(root.left),maxPathSum(root.right)));
-}
-
-//以当前节点为根的最大路径和(双边)
-public int helper(TreeNode root){
-    if(root==null) return Integer.MIN_VALUE;
-    if (root.left==null && root.right==null) {
-        return root.val;
-    }
-    int left=dfs(root.left);
-    int right=dfs(root.right);
-    return root.val+(left>0?left:0)+(right>0?right:0);
-}
-
-//root为起始节点的最大路径和(单边)
-//这里可以cache一下
-//cache 前 219ms
-//cache 后 30ms
-
-private  HashMap<String,Integer> cache=new HashMap<>();
-
-public int dfs(TreeNode root){
-    if (root==null) {
-        return Integer.MIN_VALUE;
-    }
-    if (cache.containsKey(root.toString())) {
-        return cache.get(root.toString());
-    }
-    int left=dfs(root.left);
-    int right=dfs(root.right);
-    int max=Math.max(left,right);
-    cache.put(root.toString(),root.val+(max>0?max:0));
-    return root.val+(max>0?max:0);
-}
-```
-**解法三**
-
-这个解法其实就是将我前面的代码逻辑简化了，核心的思路还是一样的
-
-```java
-private int res=Integer.MIN_VALUE;
-
-public int maxPathSum(TreeNode root) {
-    helper(root);
-    return res;
-}
-
-//返回以当前节点为*起点*的最大路径和(单边,左右子树中选最大的一个)
-public int helper(TreeNode root){
-    if(root==null) return 0;
-    int left=Math.max(helper(root.left),0);
-    int right=Math.max(helper(root.right),0);
-    res=Math.max(res,root.val+left+right); //在这里记录最大值
-    return root.val+Math.max(left,right); //返回的实际上是我上面dfs的结果
-}
-```
-
-在递归函数中用全局变量记录最大值，最后返回的却是**单边**的最大值，也就是我上面写的dfs函数返回的值，可以说是相当巧妙了，除此外对递归的出口也进行了简化
-
-## [687. 最长同值路径](https://leetcode-cn.com/problems/longest-univalue-path/)
-
-给定一个二叉树，找到最长的路径，这个路径中的每个节点具有相同值。 这条路径可以经过也可以不经过根节点。
-
-**注意**：两个节点之间的路径长度由它们之间的边数表示。
-
-**示例 1:**
-
-输入:
-
-```java
-              5
-             / \
-            4   5
-           / \   \
-          1   1   5
-```
-
-输出:
-
-```java
-2
-```
-
-**示例 2:**
-
-输入:
-
-```java
-              1
-             / \
-            4   5
-           / \   \
-          4   4   5
-```
-
-输出:
-
-```java
-2
-```
-
-**注意:** 给定的二叉树不超过10000个结点。 树的高度不超过1000。
-
-**错误解法**
-
-其实写了一会儿就意识到和上面的[124.二叉树的最大路径和]()，[543.二叉树的最大路径和]()是一样的思路，但是自己还是没写好，递归函数的写着写着就写变了，脱离了最开始的定义
-
-```java
-//错误解法，其实整体思路是对的，但是细节没处理好
-public int longestUnivaluePath(TreeNode root) {
-    dfs(root);
-    return res;
-}
-
-int res=0;
-
-public int dfs(TreeNode root){
-    if(root==null){
-        return 0;
-    }
-    int leftMax=dfs(root.left);
-    int rightMax=dfs(root.right);
-    int flag=0;
-    if(root.left!=null && root.left.val==root.val){
-        flag++;
-        leftMax++;
-    }
-    if(root.right!=null && root.right.val==root.val){
-        flag++;
-        rightMax++;
-    }
-    if(flag==2){
-        res=Math.max(res,leftMax+rightMax);
-    }
-    res=Math.max(res,Math.max(leftMax,rightMax));
-    return flag==0?0:Math.max(leftMax,rightMax);
-}
-```
-
-**解法二**
-
-在看了题解后对上面错误解法的纠正
-
-```java
-public int longestUnivaluePath(TreeNode root) {
-    if(root==null) return 0;
-    dfs(root);
-    return res;
-}
-
-int res=0;
-
-//以root开头的同值路径长度
-public int dfs(TreeNode root){
-    if(root==null){
-        return 0;
-    }
-    int leftMax=dfs(root.left);
-    int rightMax=dfs(root.right);
-    if(root.left!=null){
-        leftMax=root.left.val==root.val?leftMax+1:0;
-    }
-    if(root.right!=null){
-        rightMax=root.right.val==root.val?rightMax+1:0;
-    }
-    //其实3种情况都包含了
-    res=Math.max(res,leftMax+rightMax);
-    return Math.max(leftMax,rightMax);
-}
-```
-
-注意dfs函数的定义：_**以root开头的最长同值路径**_
-
-既然是以root开头，所以代表的其实是**单侧**的最长路径，也就是说这个路径不能穿过root，所以我们要分别求左右的值，然后取最大值，再判断和左右节点是否相等
-
-再然后我们需要判断root和左右节点值是否相等，如果和左右节点不想等，那么`leftMax`和`rightMax`应该直接置为0，不应该再代入做计算，上面的错误解法就是错在这里，如果相等那就应该+1，然后统计最大值的时候也就可以很轻松的包含所有的3种情况
-
-> 这里为什么要先求最大值，再判断，先判断在求最大值不行么？
->
-> 其实想想就知道不行，先判断其实相当于`前序遍历`，在访问节点第一次的时候如果不符合条件就直接返回了，这样根本无法遍历完所有的节点自然是不行，所以这种类型的一般都是`后序遍历`，待子节点都处理完之后再返回根节点做处理，和分治的思想很像
-
-**解法三**
-
-另一种dfs的思路，代码更加简洁一点，但是稍微有一点不好想
-
-```java
-public int longestUnivaluePath(TreeNode root) {
-    if(root==null) return 0;
-    //起点的值无所谓,root节点没有父节点不用向上层函数返回值
-    dfs(root,-1); 
-    return res;
-}
-
-int res=0;
-
-//以 root父节点和root 开始的同值路径长度
-public int dfs(TreeNode root,int parent){
-    if(root==null){
-        return 0;
-    }
-    int leftMax=dfs(root.left,root.val);
-    int rightMax=dfs(root.right,root.val);
-    //这里res的计算其实3种情况都包含了
-    res=Math.max(res,leftMax+rightMax);
-    if(root.val==parent){
-        //和父节点同值,返回左右最大值+1
-        return Math.max(leftMax,rightMax)+1;
-    }
-    //和父节点不同值，直接返回0
-    return 0;
-}
-```
-
-注意dfs函数的定义：_**以node父节点和node开始的同值路径长度**_
-
-在函数中添加一个父节点的值，然后在遍历到一个节点的时候判断当前节点和父节点的关系就行了，如果和父节点不相等，那么直接返回0，相等就返回左右最大值+1（这个+1加的是当前节点），然后同样采用后序遍历，这个思路没有那么自然，不过也挺不错的
-
-> 还有一种暴力解法，这里就不贴了
 
 ## [1026. 节点与其祖先之间的最大差值](https://leetcode-cn.com/problems/maximum-difference-between-node-and-ancestor/) 
 
@@ -5198,3 +4654,654 @@ func dfs(root *TreeNode, inorder *[]int) {
 }
 ```
 
+## _树形DP_
+
+> 2020.5.10更新，在看了左神的书后，大概了解了树形DP，所谓的树形DP实际上就是把递推方程搬到了树结构上，按我的理解树形DP很大的特点就是最终的解可能存在于树上每个节点，像我下面的题有的暴力解用的就是双重递归，就是dfs遍历没个节点，然后再对每个节点递归求解，但是对根节点求解的时候，实际上其他的子节点都成了子问题，所以后面再对子节点求解的时候问题就重复了，所以就可以采用后序遍历，自底向上，先求左右节点的值再更新根节点，**下面的题其实我不知道到底是不是属于树形DP，可能太简单了，但是再我看来解法比较统一，很有套路所以整理到一起**，我查了下网上介绍的树形DP还是挺难的，后面有时间了解后再来记录
+
+## [110. 平衡二叉树](https://leetcode-cn.com/problems/balanced-binary-tree/)
+
+给定一个二叉树，判断它是否是高度平衡的二叉树。
+
+本题中，一棵高度平衡二叉树定义为：
+
+>  一个二叉树每个节点 的左右两个子树的高度差的绝对值不超过1
+
+**示例 1:**
+
+给定二叉树 [3,9,20,null,null,15,7]
+
+```java
+    3
+   / \
+  9  20
+    /  \
+   15   7
+```
+
+返回 true 。
+
+**示例 2:**
+
+给定二叉树 [1,2,2,3,3,null,null,4,4]
+
+```java
+       1
+      / \
+     2   2
+    / \
+   3   3
+  / \
+ 4   4
+```
+
+
+返回 false 。
+
+**解法一**
+
+暴力法，结合上面的[二叉树最大深度](#104. 二叉树的最大深度)，**自顶向下**，求左右子树的高度差
+
+```java
+//top 2 bottom
+public boolean isBalanced(TreeNode root) {
+    if (root==null) return true;
+    if (Math.abs(hight(root.left)-hight(root.right))>1) {
+        return false;
+    }
+    return isBalanced(root.left) && isBalanced(root.right);
+}
+
+public int hight(TreeNode root){
+    if (root==null) {
+        return 0;
+    }
+    return Math.max(hight(root.right),hight(root.left))+1;
+}
+```
+自顶向下，先判断根节点，然后判断左右子树，很明显。在判断左右子树的时候，会重复的遍历判断根节点的时候已经遍历过的节点，时间复杂度应该是`O(N^2)`
+
+**解法二**
+
+自底向上，利用一个实例变量保存结果，其实就是在上面的求heigh过程中将左右子树的高度先取出来直接比较，如果差距大于1就直接记录下结果false，但是其实这里还是可以优化下
+
+```java
+private boolean ans=true;
+
+//buttom 2 top
+public boolean isBalanced(TreeNode root) {
+    if (root==null) return true;
+    hight(root);
+    return ans;
+}
+
+public int hight(TreeNode root){
+    if (root==null) {
+        return 0;
+    }
+    //递归分治，自底向上，在求高度的过程中计算左右高度差
+    int left=hight(root.left);
+    int right=hight(root.right);
+    if (Math.abs(left-right)>1) {
+        ans=false;
+    }
+    return Math.max(left,right)+1;
+}
+```
+自底向上，只需要遍历一遍二叉树就可以得到结果，时间复杂度`O(N)` 
+
+**解法三**
+
+```java
+public boolean isBalanced(TreeNode root) {
+    if (root==null) return true;
+    return hight(root)!=-1;
+}
+
+public int hight(TreeNode root){
+    if (root==null) {
+        return 0;
+    }
+    int left=hight(root.left);
+    if (left==-1) {
+        return -1;
+    }
+    int right=hight(root.right);
+    if (right==-1) {
+        return -1;
+    }
+    return Math.abs(left-right)>1?-1:Math.max(left,right)+1;
+}
+```
+
+在不符合的时候一路`return -1` 节省后面的计算
+
+## [563. 二叉树的坡度](https://leetcode-cn.com/problems/binary-tree-tilt/)
+
+给定一个二叉树，计算整个树的坡度。
+
+一个树的节点的坡度定义即为，该节点左子树的结点之和和右子树结点之和的差的绝对值。空结点的的坡度是0。
+
+整个树的坡度就是其所有节点的坡度之和。
+
+**示例:**
+
+```java
+输入: 
+         1
+       /   \
+      2     3
+输出: 1
+解释: 
+结点的坡度 2 : 0
+结点的坡度 3 : 0
+结点的坡度 1 : |2-3| = 1
+树的坡度 : 0 + 0 + 1 = 1
+```
+
+**注意:**
+
+1. 任何子树的结点的和不会超过32位整数的范围。
+2. 坡度的值不会超过32位整数的范围。. 
+
+**解法一**
+
+很快写出来的解法，发现这题和上面的 **平衡二叉树** 有异曲同工之妙！
+
+```java
+//首先想到的解法
+public int findTilt(TreeNode root) {
+    if (root==null) {
+        return 0;
+    }
+    return findTilt(root.left)+findTilt(root.right)+Math.abs(childSum(root.left)-childSum(root.right));
+}
+
+public int childSum(TreeNode root) {
+    if (root==null) {
+        return 0;
+    }
+    return childSum(root.left)+childSum(root.right)+root.val;
+}
+```
+嵌套递归，相当暴力
+
+**解法二**
+
+上面的做法确实有点可惜，其实在计算childSum的时候就可以字节把坡度算出来然后累加就是整体的坡度
+
+```java
+int tilt=0;
+
+//结果发现上面的做法傻逼了。。。其实我知道是不对的,但是不知道咋改,不过写了个嵌套递归也还行hahaha
+public int findTilt(TreeNode root) {
+    childSum(root);
+    return tilt;
+}
+
+public int childSum(TreeNode root) {
+    if (root==null) {
+        return 0;
+    }
+    int left=childSum(root.left);
+    int right=childSum(root.right);
+    tilt+=Math.abs(left-right);
+    return left+right+root.val;
+}
+```
+
+## [543. 二叉树的直径](https://leetcode-cn.com/problems/diameter-of-binary-tree/)
+
+给定一棵二叉树，你需要计算它的直径长度。一棵二叉树的直径长度是任意两个结点路径长度中的最大值。这条路径可能穿过根结点。
+
+**示例 :**
+给定二叉树
+
+```java
+      1
+     / \
+    2   3
+   / \     
+  4   5    
+```
+返回 3, 它的长度是路径 [4,2,1,3] 或者 [5,2,1,3]。
+
+**注意：**两结点之间的路径长度是以它们之间边的数目表示
+
+**解法一**
+
+树的题目做多了，发现其实也就几种题型，都很熟悉，这题就和上面的 [二叉树的坡度]() ，[平衡二叉树]() 很类似，这题需要注意**直径不一定过根节点**
+
+```java
+int max=Integer.MIN_VALUE;
+
+public int diameterOfBinaryTree(TreeNode root) {
+    if (root==null) {
+        return 0;
+    }
+    hight(root);
+    return max;
+}
+
+public int hight(TreeNode node){
+    if (node==null) {
+        return 0;
+    }
+    int left=hight(node.left);
+    int right=hight(node.right);
+    max=Math.max(left+right,max);
+    return Math.max(left,right)+1;
+}
+```
+
+**解法二**
+
+和之前一样，先写了个暴力的嵌套递归😂，代码确实简介，难道这就是暴力美学么，i了
+
+```java
+public int diameterOfBinaryTree(TreeNode root) {
+    return root==null?0:Math.max(hight(root.left)+hight(root.right),Math.max(diameterOfBinaryTree(root.right),diameterOfBinaryTree(root.left)));
+}
+
+public int hight(TreeNode node){
+    return node==null?0:Math.max(hight(node.left),hight(node.right))+1;
+}
+```
+
+## [124. 二叉树中的最大路径和](https://leetcode-cn.com/problems/binary-tree-maximum-path-sum/)
+
+给定一个**非空**二叉树，返回其最大路径和。
+
+本题中，路径被定义为一条从树中任意节点出发，达到任意节点的序列。该路径至少包含一个节点，且不一定经过根节点。
+
+**示例 1:**
+
+```java
+输入: [1,2,3]
+   1
+  / \
+ 2   3
+输出: 6
+```
+
+**示例 2:**
+
+```java
+输入: [-10,9,20,null,null,15,7]
+   -10
+   / \
+  9  20
+    /  \
+   15   7
+
+输出: 42
+```
+
+**错误解法**
+
+先上一个错误答案，过了 `71/93` 个case（lc的case好少）
+
+```java
+public int maxPathSum(TreeNode root) {
+    if (root==null) {
+        return Integer.MIN_VALUE;
+    }
+    if (root.left==null && root.right==null) {
+        return root.val;
+    }
+    int res=helper(root);
+    return Math.max(res,Math.max(maxPathSum(root.left),maxPathSum(root.right)));
+}
+
+//以当前节点为根的最大路径和
+public int helper(TreeNode root){
+    if(root==null) return Integer.MIN_VALUE;;
+    if (root.left==null && root.right==null) {
+        return root.val;
+    }
+    int left=helper(root.left);
+    int right=helper(root.right);
+    return root.val+(left>0?left:0)+(right>0?right:0);
+}
+```
+我一开始的想法是按照根节点来讨论的，每个节点的最大值就是 左右子树的最大路径和（大于0）加上当前节点的值，改了半天WA了几发后发现是有问题的
+
+```java
+     1 
+   /   \
+  2     3
+ / \   / \
+7   9  5  6
+```
+
+比如这样的，2为根的最长路径是1，2，9但是这个在1为根的节点中是不合法的，所以我们需要的只有单边的路径和，如上图的树，我们需要的就是 `2->9` 这条路径，所以我们需要再添加一个求最长路径的函数
+
+**解法二**
+
+可AC，但是效率较低
+
+```java
+public int maxPathSum(TreeNode root) {
+    if (root==null) {
+        return Integer.MIN_VALUE;
+    }
+    if (root.left==null && root.right==null) {
+        return root.val;
+    }
+    int res=helper(root);
+    return Math.max(res,Math.max(maxPathSum(root.left),maxPathSum(root.right)));
+}
+
+//以当前节点为根的最大路径和(双边)
+public int helper(TreeNode root){
+    if(root==null) return Integer.MIN_VALUE;
+    if (root.left==null && root.right==null) {
+        return root.val;
+    }
+    int left=dfs(root.left);
+    int right=dfs(root.right);
+    return root.val+(left>0?left:0)+(right>0?right:0);
+}
+
+//root为起始节点的最大路径和(单边)
+//这里可以cache一下
+//cache 前 219ms
+//cache 后 30ms
+
+private  HashMap<String,Integer> cache=new HashMap<>();
+
+public int dfs(TreeNode root){
+    if (root==null) {
+        return Integer.MIN_VALUE;
+    }
+    if (cache.containsKey(root.toString())) {
+        return cache.get(root.toString());
+    }
+    int left=dfs(root.left);
+    int right=dfs(root.right);
+    int max=Math.max(left,right);
+    cache.put(root.toString(),root.val+(max>0?max:0));
+    return root.val+(max>0?max:0);
+}
+```
+**解法三**
+
+这个解法其实就是将我前面的代码逻辑简化了，核心的思路还是一样的
+
+```java
+private int res=Integer.MIN_VALUE;
+
+public int maxPathSum(TreeNode root) {
+    helper(root);
+    return res;
+}
+
+//返回以当前节点为*起点*的最大路径和(单边,左右子树中选最大的一个)
+public int helper(TreeNode root){
+    if(root==null) return 0;
+    int left=Math.max(helper(root.left),0);
+    int right=Math.max(helper(root.right),0);
+    res=Math.max(res,root.val+left+right); //在这里记录最大值
+    return root.val+Math.max(left,right); //返回的实际上是我上面dfs的结果
+}
+```
+
+在递归函数中用全局变量记录最大值，最后返回的却是**单边**的最大值，也就是我上面写的dfs函数返回的值，可以说是相当巧妙了，除此外对递归的出口也进行了简化
+
+## [687. 最长同值路径](https://leetcode-cn.com/problems/longest-univalue-path/)
+
+给定一个二叉树，找到最长的路径，这个路径中的每个节点具有相同值。 这条路径可以经过也可以不经过根节点。
+
+**注意**：两个节点之间的路径长度由它们之间的边数表示。
+
+**示例 1:**
+
+输入:
+
+```java
+              5
+             / \
+            4   5
+           / \   \
+          1   1   5
+```
+
+输出:
+
+```java
+2
+```
+
+**示例 2:**
+
+输入:
+
+```java
+              1
+             / \
+            4   5
+           / \   \
+          4   4   5
+```
+
+输出:
+
+```java
+2
+```
+
+**注意:** 给定的二叉树不超过10000个结点。 树的高度不超过1000。
+
+**错误解法**
+
+其实写了一会儿就意识到和上面的[124.二叉树的最大路径和]()，[543.二叉树的最大路径和]()是一样的思路，但是自己还是没写好，递归函数的写着写着就写变了，脱离了最开始的定义
+
+```java
+//错误解法，其实整体思路是对的，但是细节没处理好
+public int longestUnivaluePath(TreeNode root) {
+    dfs(root);
+    return res;
+}
+
+int res=0;
+
+public int dfs(TreeNode root){
+    if(root==null){
+        return 0;
+    }
+    int leftMax=dfs(root.left);
+    int rightMax=dfs(root.right);
+    int flag=0;
+    if(root.left!=null && root.left.val==root.val){
+        flag++;
+        leftMax++;
+    }
+    if(root.right!=null && root.right.val==root.val){
+        flag++;
+        rightMax++;
+    }
+    if(flag==2){
+        res=Math.max(res,leftMax+rightMax);
+    }
+    res=Math.max(res,Math.max(leftMax,rightMax));
+    return flag==0?0:Math.max(leftMax,rightMax);
+}
+```
+
+**解法二**
+
+在看了题解后对上面错误解法的纠正
+
+```java
+public int longestUnivaluePath(TreeNode root) {
+    if(root==null) return 0;
+    dfs(root);
+    return res;
+}
+
+int res=0;
+
+//以root开头的同值路径长度
+public int dfs(TreeNode root){
+    if(root==null){
+        return 0;
+    }
+    int leftMax=dfs(root.left);
+    int rightMax=dfs(root.right);
+    if(root.left!=null){
+        //不相等就直接设置成0
+        leftMax=root.left.val==root.val?leftMax+1:0;
+    }
+    if(root.right!=null){
+        rightMax=root.right.val==root.val?rightMax+1:0;
+    }
+    //其实3种情况都包含了
+    res=Math.max(res,leftMax+rightMax);
+    return Math.max(leftMax,rightMax);
+}
+```
+
+注意dfs函数的定义：_**以root开头的最长同值路径**_
+
+既然是以root开头，所以代表的其实是**单侧**的最长路径，也就是说这个路径不能穿过root，所以我们要分别求左右的值，然后取最大值，再判断和左右节点是否相等
+
+再然后我们需要判断root和左右节点值是否相等，如果和左右节点不想等，那么`leftMax`和`rightMax`应该直接置为0，不应该再代入做计算，上面的错误解法就是错在这里，如果相等那就应该+1，然后统计最大值的时候也就可以很轻松的包含所有的3种情况
+
+> 这里为什么要先求最大值，再判断，先判断在求最大值不行么？
+>
+> 其实想想就知道不行，先判断其实相当于`前序遍历`，在访问节点第一次的时候如果不符合条件就直接返回了，这样根本无法遍历完所有的节点自然是不行，所以这种类型的一般都是`后序遍历`，待子节点都处理完之后再返回根节点做处理，和分治的思想很像
+
+**解法三**
+
+另一种dfs的思路，代码更加简洁一点，但是稍微有一点不好想
+
+```java
+public int longestUnivaluePath(TreeNode root) {
+    if(root==null) return 0;
+    //起点的值无所谓,root节点没有父节点不用向上层函数返回值
+    dfs(root,-1); 
+    return res;
+}
+
+int res=0;
+
+//以 root父节点和root 开始的同值路径长度
+public int dfs(TreeNode root,int parent){
+    if(root==null){
+        return 0;
+    }
+    int leftMax=dfs(root.left,root.val);
+    int rightMax=dfs(root.right,root.val);
+    //这里res的计算其实3种情况都包含了
+    res=Math.max(res,leftMax+rightMax);
+    if(root.val==parent){
+        //和父节点同值,返回左右最大值+1
+        return Math.max(leftMax,rightMax)+1;
+    }
+    //和父节点不同值，直接返回0
+    return 0;
+}
+```
+
+注意dfs函数的定义：_**以node父节点和node开始的同值路径长度**_
+
+在函数中添加一个父节点的值，然后在遍历到一个节点的时候判断当前节点和父节点的关系就行了，如果和父节点不相等，那么直接返回0，相等就返回左右最大值+1（这个+1加的是当前节点），然后同样采用后序遍历，这个思路没有那么自然，不过也挺不错的
+
+> 还有一种暴力解法，这里就不贴了
+
+## [337. 打家劫舍 III](https://leetcode-cn.com/problems/house-robber-iii/)
+
+在上次打劫完一条街道之后和一圈房屋后，小偷又发现了一个新的可行窃的地区。这个地区只有一个入口，我们称之为“根”。 除了“根”之外，每栋房子有且只有一个“父“房子与之相连。一番侦察之后，聪明的小偷意识到“这个地方的所有房屋的排列类似于一棵二叉树”。 如果两个直接相连的房子在同一天晚上被打劫，房屋将自动报警。
+
+计算在不触动警报的情况下，小偷一晚能够盗取的最高金额。
+
+**示例 1:**
+
+```java
+输入: [3,2,3,null,3,null,1]
+ 	 3
+	/ \
+   2   3
+    \   \ 
+     3   1
+
+输出: 7 
+解释: 小偷一晚能够盗取的最高金额 = 3 + 3 + 1 = 7.
+```
+
+**示例 2:**
+
+~~~java
+输入: [3,4,5,1,3,null,1]
+
+ 	 3
+	/ \
+   4   5
+  / \   \ 
+ 1   3   1
+
+输出: 9
+解释: 小偷一晚能够盗取的最高金额 = 4 + 5 = 9.
+~~~
+
+**解法一**
+
+暴力递归，应该还是写得出来
+
+```java
+//AC了,但是效率很低
+//可以用hashMap缓存一下每个节点rob的值,但是没必要
+public int rob(TreeNode root) {
+    return tryRob(root);
+}
+
+public int tryRob(TreeNode root) {
+    if (root==null) {
+        return 0;
+    }
+    if (root.left==null && root.right==null) {
+        return root.val;
+    }
+    //偷取当前节点
+    int res=root.val;
+    if (root.left!=null) {
+        res+=tryRob(root.left.left)+tryRob(root.left.right);
+    }
+    if (root.right!=null) {
+        res+=tryRob(root.right.left)+tryRob(root.right.right);
+    }
+    //不偷当前节点
+    int res2=0;
+    res2=tryRob(root.left)+tryRob(root.right);
+    return Math.max(res,res2);
+}
+```
+**解法二**
+
+看评论区说是啥树形dp ? 知识盲区了hahaha
+
+```java
+public int rob(TreeNode root) {
+    int[] res=tryRob(root);
+    return Math.max(res[0],res[1]);
+}
+
+//树形dp???
+//看的懂，但是肯定写不出来 。。。。
+public int[] tryRob(TreeNode root) {
+    int[] dp=new int[2];
+    if (root==null) {
+        return dp;
+    }
+
+    int[] left=tryRob(root.left);
+    int[] right=tryRob(root.right);
+    //不包含当前节点的最大值
+    dp[0]=Math.max(left[0],left[1])+Math.max(right[0],right[1]);
+    //包含当前节点的最大值
+    dp[1]=left[0]+right[0]+root.val;
+    return dp;
+}
+```
+~~不是我吹，就这样的题目，再遇见多少次我都写不出来这样的解（笑~~
+
+> 2020.5.10更新，在看了左神的书后，了解到这种其实就是树形DP，所谓的树形DP实际上就是把递推方程搬到了树结构上，按我的理解树形DP很大的特点就是最终的解可能存在于树上每个节点，所以没个节点都是个子问题
