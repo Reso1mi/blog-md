@@ -278,8 +278,68 @@ public static ListNode reverseBetween(ListNode head, int m, int n) {
 ```
 代码写的比较烂但是思路还是比较清晰，只扫描了一遍链表 2ms beat 100%，但是创建的指针有点多，抠边界要细心。
 
----
+**解法二**
+
+被本来是像把上面的解法删掉的，想了一下还是留着，提醒下自己，上面的解法不够通用，属于一次性的解法，细节也很多，当初可能是追求在一个循环内写完，所以可能写的比较难看
+
+```go
+func reverseBetween2(head *ListNode, m int, n int) *ListNode {
+    dummyNode := &ListNode{
+        Val:  -1,
+        Next: head,
+    }
+    mpre := dummyNode //m节点前的节点
+    for i := m; i > 1; i-- {
+        mpre = mpre.Next
+    }
+    pre := mpre
+    cur := mpre.Next
+    //  2   4
+    //1 2 3 4 5
+    for i := m; i <= n; i++ {
+        next := cur.Next
+        cur.Next = pre
+        pre = cur
+        cur = next
+    }
+    mpre.Next.Next = cur //2.next=5
+    mpre.Next = pre      //1.next=4
+    return dummyNode.Next
+}
+```
+
+这个解法实际上就是普通一个翻转，然后处理翻转部分的头尾节点连接，但是代码比上面的简洁多了
+
+**解法三**
+
+头插法的应用，将翻转部分节点用头插法插入pre后，也挺不错
+
+```go
+//头插法
+func reverseBetween(head *ListNode, m int, n int) *ListNode {
+    dummyNode := &ListNode{
+        Val:  -1,
+        Next: head,
+    }
+    mpre := dummyNode //m节点前的节点
+    for i := m; i > 1; i-- {
+        mpre = mpre.Next
+    }
+    cur := mpre.Next
+    //1 |2 3 4| 5
+    for i := m; i < n; i++ {
+        //除非m=n=len不然next肯定不为空,但是已经被循环的条件过滤了
+        next := cur.Next
+        cur.Next = next.Next
+        next.Next = mpre.Next
+        mpre.Next = next
+    }
+    return dummyNode.Next
+}
+```
+
 ## **[725. 分隔链表](https://leetcode-cn.com/problems/split-linked-list-in-parts/)**
+
 Given a (singly) linked list with head node `root`, write a function to split the linked list into `k` consecutive linked list "parts".
 
 The length of each part should be as equal as possible: no two parts should have a size differing by more than 1. This may lead to some parts being null.

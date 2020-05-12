@@ -1342,6 +1342,83 @@ public boolean checkInclusion(String s1, String s2) {
 
 这题其实还可以暴力做，窗口大小固定，每滑动一次就判断窗口和`freq`是不是相等，因为题目说了都是小写字母所以也是行得通的，只是常数会大一些，这里我就不写了，笔试推荐这样写，代码好写一点
 
+## [面试题 17.18. 最短超串](https://leetcode-cn.com/problems/shortest-supersequence-lcci/)
+
+假设你有两个数组，一个长一个短，短的元素均不相同。找到长数组中包含短数组所有的元素的最短子数组，其出现顺序无关紧要。
+
+返回最短子数组的左端点和右端点，如有多个满足条件的子数组，返回左端点最小的一个。若不存在，返回空数组。
+
+**示例 1:**
+
+```java
+输入:
+big = [7,5,9,0,2,1,3,5,7,9,1,1,5,8,8,9,7]
+small = [1,5,9]
+输出: [7,10]
+```
+
+**示例 2:**
+
+```java
+输入:
+big = [1,2,3]
+small = [4]
+输出: []
+```
+
+**提示：**
+
+- `big.length <= 100000`
+- `1 <= small.length <= 100000`
+
+**解法一**
+
+也是属于 [76.最小覆盖子串](#76-最小覆盖子串)的弱化，虽然解法都一样，没啥好说的，注意细节
+
+```java
+//没啥好说的，套模板就行了
+public int[] shortestSeq(int[] big, int[] small) {
+    if(big==null || big.length<=0) {
+        return new int[0];
+    }
+    int slen=small.length;
+    int blen=big.length;
+    int[] res=new int[2];
+    res[0]=-1;res[1]=-1;
+    int min=Integer.MAX_VALUE;
+    HashSet<Integer> set=new HashSet<>();
+    for(int i:small) set.add(i);
+    HashMap<Integer,Integer> window=new HashMap<>();
+    int match=0;
+    int left=0;
+    for(int right=0;right<blen;right++){
+        int wr=big[right];
+        if(set.contains(wr)){
+            window.put(wr,window.getOrDefault(wr,0)+1);
+            if(window.get(wr)==1){
+                match++;
+            }
+        }
+        while(match==slen){
+            if(right-left+1<min){
+                res[0]=left;
+                res[1]=right;
+                min=right-left+1;
+            }
+            int wl=big[left];
+            if(set.contains(wl)){
+                window.put(wl,window.get(wl)-1);
+                if(window.get(wl)==0){
+                    match--;
+                }
+            }
+            left++;
+        }
+    }
+    return res[0]==-1?new int[0]:res;
+}
+```
+
 ## [1004. 最大连续1的个数 III](https://leetcode-cn.com/problems/max-consecutive-ones-iii/)
 
 给定一个由若干 `0` 和 `1` 组成的数组 `A`，我们最多可以将 `K` 个值从 0 变成 1 。
