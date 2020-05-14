@@ -1838,7 +1838,7 @@ public int numberOfSubstrings(String s) {
     for(int right=0;right<n;right++){
         freq[s.charAt(right)-'a']++;
         while(freq[0]>0 && freq[1]>0 && freq[2]>0){
-            res+=n-right;
+            res+=n-right; //后面的都符合条件
             freq[s.charAt(left)-'a']--;
             left++;
         }
@@ -1903,7 +1903,7 @@ public int numberOfSubstrings(String s) {
 
 **解法一**
 
-186周赛T2，很明显的滑动窗口，也可以用前缀和，思路都一样
+186周赛T2，很明显的滑动窗口，前后拿K张最大，只需要求一个最小的`[n-k]`区间值就行了，也可以用前缀和，思路都一样
 
 ```go
 func maxScore(cardPoints []int, k int) int {
@@ -2025,7 +2025,7 @@ func max(a, b int) int {
 
 **思考**
 
-这样`for-while`的结构似乎更加统一，上面`for-if`的结构只能用在求**最长，最大**的情况下，这种时候`left`和`right`允许同时++，所以用`if`也是可以的，但是求最短的时候，比如上面[209. 长度最小的子数组](#209-长度最小的子数组)就不能用`for-if` ，当right到达边界的时候left可能还需要继续移动，所以不能用`if`
+下面`for-while`的结构似乎更加统一，上面`for-if`的结构只能用在求**最长，最大**的情况下，这种时候`left`和`right`允许同时加加，所以用`if`也是可以的，但是求最短的时候，比如上面[209. 长度最小的子数组](#209-长度最小的子数组)就不能用`for-if` ，当right到达边界的时候left可能还需要继续移动，所以不能用`if`
 
 ```go
 func equalSubstring(s string, t string, maxCost int) int {

@@ -4589,6 +4589,72 @@ public TreeNode dfs(int[] nums,int left,int right,int[][] max){
 
 这题也可以用单调栈做，明天写，这题还有个2，明天一起做了
 
+## [652. 寻找重复的子树](https://leetcode-cn.com/problems/find-duplicate-subtrees/)
+
+给定一棵二叉树，返回所有重复的子树。对于同一类的重复子树，你只需要返回其中任意**一棵**的根结点即可。
+
+两棵树重复是指它们具有相同的结构以及相同的结点值。
+
+**示例 1：**
+
+```java
+        1
+       / \
+      2   3
+     /   / \
+    4   2   4
+       /
+      4
+```
+
+下面是两个重复的子树：
+
+```java
+      2
+     /
+    4
+```
+
+和
+
+```java
+    4
+```
+
+因此，你需要以列表的形式返回上述重复子树的根结点。
+
+**解法一**
+
+做了忘了加上了，序列化子树，用哈希表判重就行了
+
+```java
+HashMap<String,Integer> map=new HashMap<>();
+
+List<TreeNode> res=new ArrayList<>();
+
+public List<TreeNode> findDuplicateSubtrees(TreeNode root) {
+    dfs(root);
+    return res;
+}
+
+public String dfs(TreeNode root){
+    if(root==null){
+        //return "#null";
+        return "null";
+    }
+    //String key="#"+root.val+dfs(root.left)+dfs(root.right);
+    String key=root.val+dfs(root.left)+dfs(root.right);
+    int count=map.getOrDefault(key,0);
+    if(count==1){
+        res.add(root);
+    }
+    map.put(key,count+1);
+    return key;
+}
+```
+
+> 这题少了case，不加分隔符也能A，我以为会卡这个，试了下结果没卡，100积分到手 ==>  [issue](https://github.com/LeetCode-Feedback/LeetCode-Feedback/issues/284) 
+
 ## [653. 两数之和 IV - 输入 BST](https://leetcode-cn.com/problems/two-sum-iv-input-is-a-bst/)
 
 给定一个二叉搜索树和一个目标结果，如果 BST 中存在两个元素且它们的和等于给定的目标结果，则返回 true。
@@ -4653,6 +4719,46 @@ func dfs(root *TreeNode, inorder *[]int) {
     dfs(root.Right, inorder)
 }
 ```
+
+## [872. 叶子相似的树](https://leetcode-cn.com/problems/leaf-similar-trees/)
+
+请考虑一颗二叉树上所有的叶子，这些叶子的值按从左到右的顺序排列形成一个 *叶值序列* 。
+
+![YDcL28.png](https://s1.ax1x.com/2020/05/14/YDcL28.png)
+
+举个例子，如上图所示，给定一颗叶值序列为 `(6, 7, 4, 9, 8)` 的树。
+
+如果有两颗二叉树的叶值序列是相同，那么我们就认为它们是 *叶相似* 的。
+
+如果给定的两个头结点分别为 `root1` 和 `root2` 的树是叶相似的，则返回 `true`；否则返回 `false` 。
+
+**提示：**
+
+- 给定的两颗树可能会有 `1` 到 `200` 个结点。
+- 给定的两颗树上的值介于 `0` 到 `200` 之间。
+
+**解法一**
+
+换成`StringBuilder`可能会快一点
+
+```java
+//没啥好说的
+public boolean leafSimilar(TreeNode root1, TreeNode root2) {
+    if(root1==null || root2==null) return false;
+    return dfs(root1).equals(dfs(root2));
+}
+
+public String dfs(TreeNode root){
+    if(root==null){
+        return "";
+    }
+    if(root.left==null && root.right==null){
+        return "#"+root.val;
+    }
+    return dfs(root.left)+dfs(root.right);
+}
+```
+> 当时看到这题就着会不会又有case遗漏，比如不加分隔符什么的，结果看到github已经有人先手提交了
 
 ## _树形DP_
 
