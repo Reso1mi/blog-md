@@ -4589,6 +4589,26 @@ public TreeNode dfs(int[] nums,int left,int right,int[][] max){
 
 这题也可以用单调栈做，明天写，这题还有个2，明天一起做了
 
+## [998. 最大二叉树 II](https://leetcode-cn.com/problems/maximum-binary-tree-ii/)
+
+题目描述很辣鸡，简单来说就是在`最大二叉树A`的右边插入一个val，仍然是最大二叉树
+
+**解法一**
+
+```java
+public TreeNode insertIntoMaxTree(TreeNode root, int val) {
+    if(root==null){
+        return new TreeNode(val);
+    }
+    if(root.val>val){
+        root.right=insertIntoMaxTree(root.right,val);    
+        return root;
+    }
+    TreeNode newRoot=new TreeNode(val);
+    newRoot.left=root;
+    return newRoot;
+}
+```
 ## [652. 寻找重复的子树](https://leetcode-cn.com/problems/find-duplicate-subtrees/)
 
 给定一棵二叉树，返回所有重复的子树。对于同一类的重复子树，你只需要返回其中任意**一棵**的根结点即可。
@@ -4759,6 +4779,10 @@ public String dfs(TreeNode root){
 }
 ```
 > 当时看到这题就着会不会又有case遗漏，比如不加分隔符什么的，结果看到github已经有人先手提交了
+
+
+
+
 
 ## _树形DP_
 

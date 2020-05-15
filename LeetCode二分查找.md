@@ -11,6 +11,8 @@ cover: http://static.imlgw.top/5.jpg
 
 >  从 [数组专题](http://imlgw.top/2019/05/04/leetcode-shu-zu/) 中抽取出来的 
 
+## _二分搜索_
+
 ## [704. 二分查找](https://leetcode-cn.com/problems/binary-search/)
 
 给定一个 n 个元素有序的（升序）整型数组 nums 和一个目标值 target  ，写一个函数搜索 nums 中的 target，如果目标值存在返回下标，否则返回 -1。
@@ -1015,69 +1017,6 @@ func binarySearchDown(mountainArr *MountainArray, target, left, right int) int {
 
 这两个二分是可以合并的，懒得合了（太懒了吧你也😅）
 
-## [1283. 使结果不超过阈值的最小除数](https://leetcode-cn.com/problems/find-the-smallest-divisor-given-a-threshold/)
-
-给你一个整数数组 `nums` 和一个正整数 `threshold`  ，你需要选择一个正整数作为除数，然后将数组里每个数都除以它，并对除法结果求和。
-
-请你找出能够使上述结果小于等于阈值 `threshold` 的除数中 最小 的那个。
-
-每个数除以除数后都向上取整，比方说 7/3 = 3 ， 10/2 = 5 。
-
-题目保证一定有解。
-
-**示例 1：**
-
-```java
-输入：nums = [1,2,5,9], threshold = 6
-输出：5
-解释：如果除数为 1 ，我们可以得到和为 17 （1+2+5+9）。
-如果除数为 4 ，我们可以得到和为 7 (1+1+2+3) 。如果除数为 5 ，和为 5 (1+1+1+2)。
-```
-
-**示例 2：**
-
-```java
-输入：nums = [2,3,5,7,11], threshold = 11
-输出：3
-```
-
-**示例 3：**
-
-```java
-输入：nums = [19], threshold = 5
-输出：4
-```
-
-**提示：**
-
-- `1 <= nums.length <= 5 * 10^4`
-- `1 <= nums[i] <= 10^6`
-- `nums.length <= threshold <= 10^6`
-
-**解法一**
-
-周赛的题，太蠢了，没做出来。。。。
-
-```java
-public int smallestDivisor(int[] nums, int threshold) {
-    int left=1,right=1000000;
-    while(left<right){
-        int mid=left+(right-left)/2;
-        int sum=0;
-        for (int i=0;i<nums.length;i++) {
-            sum+=(nums[i]+mid-1)/mid; //向上取整
-        }
-        if (sum>threshold) {
-            left=mid+1;
-        }else{
-            right=mid;
-        }
-    }
-    return left;
-}
-```
-其实只要明确一点这题就很容易想到二分，解空间为：`[1，max(nums[i])]` 我们只需要在这个区间之内做二分搜索就ok了，再然后就是向上取整的一个小技巧
-
 ## [162. 寻找峰值](https://leetcode-cn.com/problems/find-peak-element/)
 
 峰值元素是指其值大于左右相邻值的元素。
@@ -1311,3 +1250,185 @@ k/2=3,分别在两数组中找第三个元素，也即是3，4明显3比较小�
 
 然后重复上面的过程，每次排除`k/2` 的元素，最后在`log(k)` 的时间复杂度下就能找到两个数组的mid，而这里`k=(m+n+1)/2` 所以是符合题目要求的，除此之外，我们还需要考虑奇数和偶数的情况，那我们就可以分别计算一下，我们求一下左中位数和右中位数，如果是奇数左中和右中就是同一个`(k)/2==(k+1)/2` ，偶数的话就是`(k)/2`和`(k+1)/2`分别就是左中和右中，然后我们直接/2就得到了解
 
+## _二分答案_
+## [1283. 使结果不超过阈值的最小除数](https://leetcode-cn.com/problems/find-the-smallest-divisor-given-a-threshold/)
+
+给你一个整数数组 `nums` 和一个正整数 `threshold`  ，你需要选择一个正整数作为除数，然后将数组里每个数都除以它，并对除法结果求和。
+
+请你找出能够使上述结果小于等于阈值 `threshold` 的除数中 最小 的那个。
+
+每个数除以除数后都向上取整，比方说 7/3 = 3 ， 10/2 = 5 。
+
+题目保证一定有解。
+
+**示例 1：**
+
+```java
+输入：nums = [1,2,5,9], threshold = 6
+输出：5
+解释：如果除数为 1 ，我们可以得到和为 17 （1+2+5+9）。
+如果除数为 4 ，我们可以得到和为 7 (1+1+2+3) 。如果除数为 5 ，和为 5 (1+1+1+2)。
+```
+
+**示例 2：**
+
+```java
+输入：nums = [2,3,5,7,11], threshold = 11
+输出：3
+```
+
+**示例 3：**
+
+```java
+输入：nums = [19], threshold = 5
+输出：4
+```
+
+**提示：**
+
+- `1 <= nums.length <= 5 * 10^4`
+- `1 <= nums[i] <= 10^6`
+- `nums.length <= threshold <= 10^6`
+
+**解法一**
+
+周赛的题，太蠢了，没做出来。。。。
+
+```java
+public int smallestDivisor(int[] nums, int threshold) {
+    int left=1,right=1000000;
+    while(left<right){
+        int mid=left+(right-left)/2;
+        int sum=0;
+        for (int i=0;i<nums.length;i++) {
+            sum+=(nums[i]+mid-1)/mid; //向上取整
+        }
+        if (sum>threshold) {
+            left=mid+1;
+        }else{
+            right=mid;
+        }
+    }
+    return left;
+}
+```
+其实只要明确一点这题就很容易想到二分，解空间为：`[1，max(nums[i])]` 我们只需要在这个区间之内做二分搜索就ok了，再然后就是向上取整的一个小技巧
+
+## [1011. 在 D 天内送达包裹的能力](https://leetcode-cn.com/problems/capacity-to-ship-packages-within-d-days/)
+
+传送带上的包裹必须在 D 天内从一个港口运送到另一个港口。
+
+传送带上的第 `i` 个包裹的重量为 `weights[i]`。每一天，我们都会按给出重量的顺序往传送带上装载包裹。我们装载的重量不会超过船的最大运载重量。
+
+返回能在 `D` 天内将传送带上的所有包裹送达的船的最低运载能力。
+
+**示例 1：**
+
+```java
+输入：weights = [1,2,3,4,5,6,7,8,9,10], D = 5
+输出：15
+解释：
+船舶最低载重 15 就能够在 5 天内送达所有包裹，如下所示：
+第 1 天：1, 2, 3, 4, 5
+第 2 天：6, 7
+第 3 天：8
+第 4 天：9
+第 5 天：10
+
+请注意，货物必须按照给定的顺序装运，因此使用载重能力为 14 的船舶并将包装分成 (2, 3, 4, 5), (1, 6, 7), (8), (9), (10) 是不允许的。 
+```
+
+**示例 2：**
+
+```java
+输入：weights = [3,2,2,4,1,4], D = 3
+输出：6
+解释：
+船舶最低载重 6 就能够在 3 天内送达所有包裹，如下所示：
+第 1 天：3, 2
+第 2 天：2, 4
+第 3 天：1, 4
+```
+
+**示例 3：**
+
+```java
+输入：weights = [1,2,3,1,1], D = 4
+输出：3
+解释：
+第 1 天：1
+第 2 天：2
+第 3 天：3
+第 4 天：1, 1
+```
+
+**提示：**
+
+1. `1 <= D <= weights.length <= 50000`
+2. `1 <= weights[i] <= 500`
+
+**解法一**
+
+问题的解空间是单调的，所以可以直接二分答案，然后验证是否满足条件就可以了，时间复杂度`O(NlogN)`
+
+```java
+public int shipWithinDays(int[] weights, int D) {
+    int sum=0,max=0;
+    for(int w:weights){
+        max=Math.max(w,max);
+        sum+=w;
+    }
+    int left=Math.max(sum/D,max),right=sum;
+    int res=0;
+    while(left<=right){
+        int mid=left+(right-left)/2;
+        if(check(weights,mid,D)){
+            res=mid;
+            right=mid-1;
+        }else{
+            left=mid+1;
+        }
+    }
+    return res;
+}
+
+//模拟判断
+public boolean check(int[] weights,int load,int D){
+    int temp=0;
+    for(int w:weights){
+        if(temp+w>load){
+            temp=0;
+            D--;
+        }
+        temp+=w;
+    }
+    //return D>=0;
+    return D>0;
+}
+```
+
+上面是用的一个[大佬](https://www.bilibili.com/video/BV1YT4y137G4)的模板，不是之前的模板，之前的模板我刚刚写了一发，又写错了。。。。
+
+```java
+//之前的二分模板
+public int shipWithinDays(int[] weights, int D) {
+    int sum=0,max=0;
+    for(int w:weights){
+        max=Math.max(w,max);
+        sum+=w;
+    }
+    int left=Math.max(sum/D,max),right=sum;
+    int res=0;
+    while(left<right){ //这里一开始写成<=了，
+        int mid=left+(right-left)/2;
+        if(check(weights,mid,D)){
+            right=mid;
+        }else{
+            left=mid+1;
+        }
+    }
+    return left;
+}
+```
+
+看来时候换更加优秀的模板了！！！zsc大佬的模板更加简单，而且不容易出错
