@@ -583,6 +583,75 @@ func search(nums []int, target int) bool {
 
 看着别人的题解写都WA了5，6次。。。。这个其实就不能按照上一题的思路来了，因为有重复的，不好判断mid和target是不是在同一边
 
+## [744. 寻找比目标字母大的最小字母](https://leetcode-cn.com/problems/find-smallest-letter-greater-than-target/)
+
+给你一个排序后的字符列表 `letters` ，列表中只包含小写英文字母。另给出一个目标字母 `target`，请你寻找在这一有序列表里比目标字母大的最小字母。
+
+在比较时，字母是依序循环出现的。举个例子：
+
+- 如果目标字母 `target = 'z'` 并且字符列表为 `letters = ['a', 'b']`，则答案返回 `'a'`
+
+**示例：**
+
+```java
+输入:
+letters = ["c", "f", "j"]
+target = "a"
+输出: "c"
+
+输入:
+letters = ["c", "f", "j"]
+target = "c"
+输出: "f"
+
+输入:
+letters = ["c", "f", "j"]
+target = "d"
+输出: "f"
+
+输入:
+letters = ["c", "f", "j"]
+target = "g"
+输出: "j"
+
+输入:
+letters = ["c", "f", "j"]
+target = "j"
+输出: "c"
+
+输入:
+letters = ["c", "f", "j"]
+target = "k"
+输出: "c"
+```
+
+**提示：**
+
+1. `letters`长度范围在`[2, 10000]`区间内。
+2. `letters` 仅由小写字母组成，最少包含两个不同的字母。
+3. 目标字母`target` 是一个小写字母。
+
+**解法一**
+
+按照新模板写的，题解区很多人讨论`['z'，'a'，'b']`这样的case，其实我觉得没必要，纠结这没啥意义，可能还是题目描述有点问题，我们就直接当普通二分写就行了
+
+```java
+public char nextGreatestLetter(char[] letters, char target) {
+    int left=0,right=letters.length-1;
+    int res=0; //注意找不到的情况
+    while(left<=right){
+        int mid=(left+right)/2;
+        if(letters[mid]>target){
+            res=mid;
+            right=mid-1;
+        }else{
+            left=mid+1;
+        }
+    }
+    return letters[res];
+}
+```
+
 ## [34. 在排序数组中查找元素的第一个和最后一个位置](https://leetcode-cn.com/problems/find-first-and-last-position-of-element-in-sorted-array/)
 
 给定一个按照升序排列的整数数组 `nums`，和一个目标值 `target`。找出给定目标值在数组中的开始位置和结束位置。
@@ -1407,7 +1476,7 @@ public boolean check(int[] weights,int load,int D){
 }
 ```
 
-上面是用的一个[大佬](https://www.bilibili.com/video/BV1YT4y137G4)的模板，不是之前的模板，之前的模板我刚刚写了一发，又写错了。。。。
+上面是用的一个[大佬](https://www.bilibili.com/video/BV1YT4y137G4)的模板，不是之前的模板，之前的模板我刚刚写了一发，写错了。。。。
 
 ```java
 //之前的二分模板
@@ -1418,8 +1487,7 @@ public int shipWithinDays(int[] weights, int D) {
         sum+=w;
     }
     int left=Math.max(sum/D,max),right=sum;
-    int res=0;
-    while(left<right){ //这里一开始写成<=了，
+    while(left<right){ //这里一开始写成<=了....
         int mid=left+(right-left)/2;
         if(check(weights,mid,D)){
             right=mid;
@@ -1431,4 +1499,72 @@ public int shipWithinDays(int[] weights, int D) {
 }
 ```
 
-看来时候换更加优秀的模板了！！！zsc大佬的模板更加简单，而且不容易出错
+两种模板各有优点吧，这个大佬的模板相对更简单，但是res的初始值需要格外注意。。。
+
+## [875. 爱吃香蕉的珂珂](https://leetcode-cn.com/problems/koko-eating-bananas/)
+
+珂珂喜欢吃香蕉。这里有 `N` 堆香蕉，第 `i` 堆中有 `piles[i]` 根香蕉。警卫已经离开了，将在 `H` 小时后回来。
+
+珂珂可以决定她吃香蕉的速度 `K` （单位：根/小时）。每个小时，她将会选择一堆香蕉，从中吃掉 `K` 根。如果这堆香蕉少于 `K` 根，她将吃掉这堆的所有香蕉，然后这一小时内不会再吃更多的香蕉。  
+
+珂珂喜欢慢慢吃，但仍然想在警卫回来前吃掉所有的香蕉。
+
+返回她可以在 `H` 小时内吃掉所有香蕉的最小速度 `K`（`K` 为整数）。
+
+**示例 1：**
+
+```java
+输入: piles = [3,6,7,11], H = 8
+输出: 4
+```
+
+**示例 2：**
+
+```java
+输入: piles = [30,11,23,4,20], H = 5
+输出: 30
+```
+
+**示例 3：**
+
+```java
+输入: piles = [30,11,23,4,20], H = 6
+输出: 23
+```
+
+**提示：**
+
+- `1 <= piles.length <= 10^4`
+- `piles.length <= H <= 10^9`
+- `1 <= piles[i] <= 10^9`
+
+**解法一**
+
+一开始想用`sum/H`向上取整做左边界，结果直接爆掉了，case还是很给力啊
+
+```java
+//二分答案
+public int minEatingSpeed(int[] piles, int H) {
+    int max=0;
+    for(int p:piles) max=Math.max(max,p);
+    int left=1,right=max;
+    int res=right;
+    while(left<=right){
+        int mid=left+(right-left)/2;
+        if(check(piles,mid,H)){
+            res=mid;
+            right=mid-1;
+        }else{
+            left=mid+1;
+        }
+    }
+    return res;
+}
+
+public boolean check(int[] piles,int k,int H){
+    int count=0;
+    for(int p:piles) count+=(p-1)/k+1; //向上取整
+    return count<=H;
+}
+```
+

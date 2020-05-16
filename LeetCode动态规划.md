@@ -682,6 +682,146 @@ public double dfs(int N,int k,int x,int y){
 }
 ```
 
+## [935. 骑士拨号器](https://leetcode-cn.com/problems/knight-dialer/)
+
+国际象棋中的骑士可以按下图所示进行移动：
+
+![YsAXFS.png](https://s1.ax1x.com/2020/05/15/YsAXFS.png) .         ![YcP3o8.png](https://s1.ax1x.com/2020/05/16/YcP3o8.png)
+
+
+这一次，我们将 “骑士” 放在电话拨号盘的任意数字键（如上图所示）上，接下来，骑士将会跳 N-1 步。每一步必须是从一个数字键跳到另一个数字键。
+
+每当它落在一个键上（包括骑士的初始位置），都会拨出键所对应的数字，总共按下 `N` 位数字。
+
+你能用这种方式拨出多少个不同的号码？
+
+因为答案可能很大，**所以输出答案模 10^9 + 7**。
+
+**示例 1：**
+
+```java
+输入：1
+输出：10
+```
+
+**示例 2：**
+
+```java
+输入：2
+输出：20
+```
+
+**示例 3：**
+
+```java
+输入：3
+输出：46
+```
+
+**提示：**
+
+- `1 <= N <= 5000`
+
+**解法一**
+
+先上一个极其粗糙的解法，也是最开始的解法
+
+```java
+int[][] dir={{-2,-1},{-2,1},{-1,2},{1,2},{2,1},{2,-1},{1,-2},{-1,-2}};
+
+int mod=(int)1e9+7;
+
+Integer[][][] dp=null;
+
+public int knightDialer(int N) {
+    int[][] grid={{1,2,3},{4,5,6},{7,8,9},{-1,0,-1}};
+    int res=0;
+    dp=new Integer[4][3][N];
+    for(int i=0;i<grid.length;i++){
+        for(int j=0;j<grid[0].length;j++){
+            if(grid[i][j]!=-1){
+                res=(res+dfs(grid,i,j,N-1))%mod;
+            }
+        }
+    }
+    return res;
+}
+
+public int dfs(int[][] grid,int x,int y,int N){
+    if(N==0) return 1;
+    if(dp[x][y][N]!=null) return dp[x][y][N];
+    int res=0; //一开始赋值成1了。。从当前位置起跳，所以当前位置不应该有初始值
+    for(int i=0;i<dir.length;i++){
+        int nx=x+dir[i][0];
+        int ny=y+dir[i][1];
+        if(valid(grid,nx,ny)){
+            res=(res+dfs(grid,nx,ny,N-1))%mod;
+        }
+    }
+    return dp[x][y][N]=res;
+}
+
+public boolean valid(int[][] grid,int x,int y){
+    return x>=0 && y>=0 && x<grid.length && y<grid[0].length && grid[x][y]!=-1;
+}
+```
+
+**解法二**
+
+小巧精致的解法
+
+```java
+int mod=(int)1e9+7;
+
+Integer[][] dp=null;
+
+public int knightDialer(int N) {
+    //直接看图建立对应关系
+    int[][] next={{4,6},{6,8},{7,9},{4,8},{0,3,9},{},{0,1,7},{2,6},{1,3},{2,4}};
+    int res=0;
+    dp=new Integer[10][N];
+    for(int i=0;i<=9;i++){
+        res=(res+dfs(i,N-1,next))%mod;
+    }
+    return res;
+}
+
+public int dfs(int num,int N,int[][] next){
+    if(N==0) return 1;
+    if(dp[num][N]!=null) return dp[num][N];
+    int res=0; //注意别写成1了
+    for(int i=0;i<next[num].length;i++){
+        res=(res+dfs(next[num][i],N-1,next))%mod;
+    }
+    return dp[num][N]=res;
+}
+```
+
+**解法三**
+
+递推的方式
+
+```java
+//递推的方式
+public int knightDialer(int N) {
+    //next[i]: i下一步能跳到的位置
+    int[][] next={{4,6},{6,8},{7,9},{4,8},{0,3,9},{},{0,1,7},{2,6},{1,3},{2,4}};
+    int[][] dp=new int[N][10];
+    Arrays.fill(dp[0],1); //base dp[0]
+    int mod=(int)1e9+7;
+    int res=0;
+    for (int i=1;i<N;i++) {
+        for (int num=0;num<=9;num++) {
+            for (int j=0;j<next[num].length;j++) {
+                dp[i][num]=(dp[i][num]+dp[i-1][next[num][j]])%mod;   
+            }
+        }
+    }
+    for(int i=0;i<=9;i++) res=(res+dp[N-1][i])%mod;
+    return res;
+}
+```
+
 ## [303. 区域和检索 - 数组不可变](https://leetcode-cn.com/problems/range-sum-query-immutable/)
 
 给定一个整数数组  nums，求出数组从索引 i 到 j  (i ≤ j) 范围内元素的总和，包含 i,  j 两点。

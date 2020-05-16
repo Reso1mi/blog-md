@@ -1711,33 +1711,12 @@ public int balancedString(String s) {
 上面的解法是考虑`窗口内`的元素组成，窗口内至少应该有哪些元素，反过来想，我们窗口内的元素是多出来的元素，我们是把多的元素放到窗口中，那么窗口外的元素就肯定都是`小于等于N/4`的了，那么我们就可以利用这一点进行滑窗，统计符合条件的窗口的最小值，这样代码就会简洁很多
 
 ```java
-public int balancedString(String s) {
-    if(s==null || s.length()<=0) return -1;
-    int N=s.length();
-    int res=N,avg=N/4;
-    int[] freq=new int[26];
-    for(int i=0;i<s.length();i++){
-        freq[s.charAt(i)-'A']++;
-    }
-    int left=0,right=0;
-    while(right<s.length()){
-        //窗口右边界扩张，freq--
-        freq[s.charAt(right)-'A']--;
-        while(left<=right && freq['Q'-'A']<=avg && freq['W'-'A']<=avg && freq['E'-'A']<=avg && freq['R'-'A']<=avg){
-            res=Math.min(res,right-left+1);
-            //窗口左边界收缩，freq++
-            freq[s.charAt(left)-'A']++;
-            left++;
-        }
-        right++;
-    }
-    return left==right?0:res; //这里其实做了特判
-}
+//code删掉了，之前的代码有点问题，最后的返回值有些情况过不去，lc的case太弱了，让我过了
 ```
 
 **UPDATE: (2020.5.4)**
 
-按照先前的模板来分析下，这里要求的是最小的修改次数，很明显不能用`for-if`，所以采用`for-while`的结构，`for-while`最基本的结构就是外层枚举所有`right`，内层根据题目要求缩减`left`，但是这题left也需要控制边界，我这里用的是`left<=right` 但是实际上这样会有一类case结果不对，比如"QWER"这样的，返回的结果是1，我上面在最后做了特判，其实这里还可以修改下边界，改成`left<N`，这样就没问题了，这样left就可以超过right达到right+1，这样对”QWER"就能得到正确的结果，并且根据题目信息当`left=right+1`之后`left`就不会再增加了，while条件就无法满足了，但是有的题目`left`是不用设置限制的，基本上都是在达到right+1之后就不会继续增加了
+按照先前的模板来分析下，这里要求的是最小的修改次数，很明显不能用`for-if`，所以采用`for-while`的结构，`for-while`最基本的结构就是外层枚举所有`right`，内层根据题目要求缩减`left`，但是这题left也需要控制边界，我这里用的是`left<=right` 但是实际上这样会有一类case结果不对，比如"QWER"这样的，返回的结果是1，~~我上面在最后做了特判~~（上面的特判是错的，比如“QWEE”这样的就返回0），其实这里还可以修改下边界，改成`left<N`，这样就没问题了，这样left就可以超过right达到right+1，这样对”QWER"就能得到正确的结果，并且根据题目信息当`left=right+1`之后`left`就不会再增加了，while条件就无法满足了，但是有的题目`left`是不用设置限制的，基本上都是在达到right+1之后就不会继续增加了
 
 ```java
 class Solution {

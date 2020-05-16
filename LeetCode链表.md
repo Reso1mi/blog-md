@@ -9,6 +9,8 @@ date: 2019/2/27
 cover: http://static.imlgw.top///20190227/gPprrxbrdwAx.jpg?imageslim
 ---
 
+> 链表专题是最开始学算法的时候写的，很多代码都写得很烂，目前正在慢慢的重写，u1s1链表的题还是很考验细心的，稍不注意就连错了
+
 ##  2. 两数相加
 
 给出两个 **非空** 的链表用来表示两个非负的整数。其中，它们各自的位数是按照 **逆序** 的方式存储的，并且它们的每个节点只能存储 **一位** 数字。
@@ -328,7 +330,7 @@ func reverseBetween(head *ListNode, m int, n int) *ListNode {
     cur := mpre.Next
     //1 |2 3 4| 5
     for i := m; i < n; i++ {
-        //除非m=n=len不然next肯定不为空,但是已经被循环的条件过滤了
+        //除非m=n=len不然next肯定不为空,但是这种情况已经被循环的条件过滤了
         next := cur.Next
         cur.Next = next.Next
         next.Next = mpre.Next
@@ -2060,8 +2062,6 @@ public Node copyRandomList(Node head) {
 }
 ```
 
-
-
 ## 24. [两两交换链表中的节点](https://leetcode-cn.com/problems/swap-nodes-in-pairs/)
 给定一个链表，两两交换其中相邻的节点，并返回交换后的链表。
 
@@ -2232,7 +2232,55 @@ public ListNode reverse(ListNode head, int k,int remain) {
     return pre;
 }
 ```
+**解法三**
+
+这题递归明显是不太符合要求的，空间复杂度不是常数的，如果有要求还是要写下面的解法
+
+```go
+func reverseKGroup(head *ListNode, k int) *ListNode {
+    dummyNode := &ListNode{
+        Next: head,
+        Val:  -1,
+    }
+    pre := dummyNode
+    cur := head
+    //-1 | 1 2 3 4 5
+    for cur != nil {
+        for i := 0; i < k-1 && cur != nil; i++ {
+            cur = cur.Next
+        }
+        if cur == nil { //不足k个
+            break
+        }
+        next := cur.Next
+        cur.Next = nil 
+        start := pre.Next
+        pre.Next = reverse(start)
+        start.Next = next
+        //这里要注意pre=start
+        pre = start
+        cur = next
+    }
+    return dummyNode.Next
+}
+
+func reverse(head *ListNode) *ListNode {
+    var pre *ListNode
+    var cur = head
+    for cur != nil {
+        next := cur.Next
+        cur.Next = pre
+        pre = cur
+        cur = next
+    }
+    return pre
+}
+```
+
+> 做链表的题就是得细心啊，容易把自己绕进去，上面的解法就是看了题解才写出来的
+
 ## **817. 链表组件**
+
 给定一个链表（链表结点包含一个整型值）的头结点 head。
 同时给定列表 G，该列表是上述链表中整型值的一个子集。
 返回列表 G 中组件的个数，这里对组件的定义为：链表中一段最长连续结点的值（该值必须在列表 G 中）构成的集合。
