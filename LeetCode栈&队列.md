@@ -2733,6 +2733,122 @@ public boolean canFinish(int numCourses, int[][] prerequisites) {
     return numCourses==0;
 }
 ```
+## [210. 课程表 II](https://leetcode-cn.com/problems/course-schedule-ii/)
+
+现在你总共有 *n* 门课需要选，记为 `0` 到 `n-1`。
+
+在选修某些课程之前需要一些先修课程。 例如，想要学习课程 0 ，你需要先完成课程 1 ，我们用一个匹配来表示他们: `[0,1]`
+
+给定课程总量以及它们的先决条件，返回你为了学完所有课程所安排的学习顺序。
+
+可能会有多个正确的顺序，你只要返回一种就可以了。如果不可能完成所有课程，返回一个空数组。
+
+**示例 1:**
+
+```java
+输入: 2, [[1,0]] 
+输出: [0,1]
+解释: 总共有 2 门课程。要学习课程 1，你需要先完成课程 0。因此，正确的课程顺序为 [0,1] 。
+```
+
+**示例 2:**
+
+```java
+输入: 4, [[1,0],[2,0],[3,1],[3,2]]
+输出: [0,1,2,3] or [0,2,1,3]
+解释: 总共有 4 门课程。要学习课程 3，你应该先完成课程 1 和课程 2。并且课程 1 和课程 2 都应该排在课程 0 之后。
+     因此，一个正确的课程顺序是 [0,1,2,3] 。另一个正确的排序是 [0,2,1,3] 。
+```
+
+**说明:**
+
+1. 输入的先决条件是由**边缘列表**表示的图形，而不是邻接矩阵。详情请参见[图的表示法](http://blog.csdn.net/woaidapaopao/article/details/51732947)。
+2. 你可以假定输入的先决条件中没有重复的边。
+
+**提示:**
+
+1. 这个问题相当于查找一个循环是否存在于有向图中。如果存在循环，则不存在拓扑排序，因此不可能选取所有课程进行学习。
+2. [通过 DFS 进行拓扑排序](https://www.coursera.org/specializations/algorithms) - 一个关于Coursera的精彩视频教程（21分钟），介绍拓扑排序的基本概念。
+3. 拓扑排序也可以通过 [BFS](https://baike.baidu.com/item/%E5%AE%BD%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/5224802?fr=aladdin&fromid=2148012&fromtitle=%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2) 完成。
+
+**解法一**
+
+BFS做法，和上面一样
+
+```java
+//BFS拓扑排序
+public int[] findOrder(int numCourses, int[][] prerequisites) {
+    int[] indegree=new int[numCourses]; //入度数
+    List<List<Integer>> adjacency=new ArrayList<>();
+    for(int i=0;i<numCourses;i++){
+        adjacency.add(new ArrayList<>());
+    }
+    for(int[] pre:prerequisites){
+        indegree[pre[0]]++;
+        adjacency.get(pre[1]).add(pre[0]);
+    }
+    int k=0;
+    int[] res=new int[numCourses];
+    Queue<Integer> queue=new LinkedList<>();
+    for(int i=0;i<numCourses;i++){
+        if(indegree[i]==0){
+            queue.add(i);
+        }
+    }
+    while(!queue.isEmpty()){
+        int cur=queue.poll();
+        res[k++]=cur;
+        for(int c:adjacency.get(cur)){
+            indegree[c]--;
+            if(indegree[c]==0){
+                queue.add(c);
+            }
+        }
+    }
+    return k==numCourses?res:new int[0];
+}
+```
+
+**解法二**
+
+DFS的做法，比BFS更有意思一点，其实就是个不断判环的过程，图相关的还是不太熟悉啊
+
+```java
+//DFS的解法
+int k=0;
+
+public int[] findOrder(int numCourses, int[][] prerequisites) {
+    List<List<Integer>> adjacency=new ArrayList<>();
+    for(int i=0;i<numCourses;i++){
+        adjacency.add(new ArrayList<>());
+    }
+    int[] mark=new int[numCourses];
+    int[] res=new int[numCourses];
+    for(int[] pre:prerequisites){
+        adjacency.get(pre[0]).add(pre[1]); //注意这个区别
+    }
+    for (int i=0;i<numCourses;i++) {
+        if(dfs(adjacency,i,mark,res)) return new int[0];
+    }
+    return res;
+}
+
+public boolean dfs(List<List<Integer>> adj,int cur,int[] mark,int[] res){
+    if(mark[cur]==1) return true;  //正在访问
+    if(mark[cur]==2) return false; //节点已经访问完（之前已经学了）
+    mark[cur]=1;
+    for(int c:adj.get(cur)){
+        if(dfs(adj,c,mark,res)){
+            return true;
+        }
+    }
+    mark[cur]=2;
+    //cur的先决课程是没环的，所以可以学cur
+    res[k++]=cur; 
+    return false;
+}
+```
+
 ## _单调栈_
 
 ## [496. 下一个更大元素 I](https://leetcode-cn.com/problems/next-greater-element-i/)

@@ -4780,9 +4780,74 @@ public String dfs(TreeNode root){
 ```
 > 当时看到这题就着会不会又有case遗漏，比如不加分隔符什么的，结果看到github已经有人先手提交了
 
+## [5398. 统计二叉树中好节点的数目](https://leetcode-cn.com/problems/count-good-nodes-in-binary-tree/)
 
+给你一棵根为 `root` 的二叉树，请你返回二叉树中好节点的数目。
 
+「好节点」X 定义为：从根到该节点 X 所经过的节点中，没有任何节点的值大于 X 的值。
 
+**示例 1：**
+
+![YREc7j.png](https://s1.ax1x.com/2020/05/17/YREc7j.png)
+
+```java
+输入：root = [3,1,4,3,null,1,5]
+输出：4
+解释：图中蓝色节点为好节点。
+根节点 (3) 永远是个好节点。
+节点 4 -> (3,4) 是路径中的最大值。
+节点 5 -> (3,4,5) 是路径中的最大值。
+节点 3 -> (3,1,3) 是路径中的最大值。
+```
+
+**示例 2：**
+
+![YREukR.png](https://s1.ax1x.com/2020/05/17/YREukR.png)
+
+```java
+输入：root = [3,3,null,4,2]
+输出：3
+解释：节点 2 -> (3, 3, 2) 不是好节点，因为 "3" 比它大。
+```
+
+**示例 3：**
+
+```java
+输入：root = [1]
+输出：1
+解释：根节点是好节点。
+```
+
+**提示：**
+
+- 二叉树中节点数目范围是 `[1, 10^5]` 。
+- 每个节点权值的范围是 `[-10^4, 10^4]` 。
+
+**解法一**
+
+26th双周赛的t3，水题
+
+```java
+int count=0;
+
+public int goodNodes(TreeNode root) {
+    if(root==null) return 0;
+    dfs(root,root.val);
+    return count;
+}
+
+public void dfs(TreeNode root,int max){
+    if(root==null){
+        return;
+    }
+    if(max<=root.val){
+        count++;
+        max=root.val;
+    }
+    dfs(root.left,max);
+    dfs(root.right,max);
+}
+```
 
 ## _树形DP_
 

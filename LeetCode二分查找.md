@@ -1568,3 +1568,97 @@ public boolean check(int[] piles,int k,int H){
 }
 ```
 
+## [1292. 元素和小于等于阈值的正方形的最大边长](https://leetcode-cn.com/problems/maximum-side-length-of-a-square-with-sum-less-than-or-equal-to-threshold/) 
+
+给你一个大小为 `m x n` 的矩阵 `mat` 和一个整数阈值 `threshold`。
+
+请你返回元素总和小于或等于阈值的正方形区域的最大边长；如果没有这样的正方形区域，则返回 **0** 。
+ 
+
+**示例 1：**
+
+![Y2wPne.png](https://s1.ax1x.com/2020/05/17/Y2wPne.png)
+
+```java
+输入：mat = [[1,1,3,2,4,3,2],[1,1,3,2,4,3,2],[1,1,3,2,4,3,2]], threshold = 4
+输出：2
+解释：总和小于 4 的正方形的最大边长为 2，如图所示。
+```
+
+**示例 2：**
+
+```java
+输入：mat = [[2,2,2,2,2],[2,2,2,2,2],[2,2,2,2,2],[2,2,2,2,2],[2,2,2,2,2]], threshold = 1
+输出：0
+```
+
+**示例 3：**
+
+```java
+输入：mat = [[1,1,1,1],[1,0,0,0],[1,0,0,0],[1,0,0,0]], threshold = 6
+输出：3
+```
+
+**示例 4：**
+
+```java
+输入：mat = [[18,70],[61,1],[25,85],[14,40],[11,96],[97,96],[63,45]], threshold = 40184
+输出：2
+```
+
+**提示：**
+
+- `1 <= m, n <= 300`
+- `m == mat.length`
+- `n == mat[i].length`
+- `0 <= mat[i][j] <= 10000`
+- `0 <= threshold <= 10^5`
+
+**解法一**
+
+这个题是个好题啊，又学到新东西了：**二维前缀和**，首先看到这道题就意思到了这是个二分答案的题，直接二分边长就行了，左端点`1`，右端点`min(m,n)`，某个边长`x`满足的时候，大于`x`的都满足，某个`x`不满足的时候
+
+小于`x`的都不满足，所以关键就是`check`怎么写，如果直接暴力枚举所有矩形然后计算时间复杂度会很恐怖，这个时候就可以引入**二维前缀和**，我就不具体讲解了，看看[官方题解](https://leetcode-cn.com/problems/maximum-side-length-of-a-square-with-sum-less-than-or-equal-to-threshold/solution/yuan-su-he-xiao-yu-deng-yu-yu-zhi-de-zheng-fang-2/)就行了，写的挺好的
+
+```java
+public int maxSideLength(int[][] mat, int threshold) {
+    int m=mat.length;
+    int n=mat[0].length;
+    int left=1,right=Math.min(m,n);
+    //核心公式
+    //sum([x1,y1]->[x2,y2])
+    //= P[x2][y2]-P[x2][y1-1]-P[x1-1][y2]+P[x1-1][y1-1]
+    //==> mat[i][j]=P[i][j]-P[i-1][j]-P[j-1][i]+P[i-1][j-1]
+    int[][] dp=new int[m+1][n+1];
+    for (int i=1;i<=m;i++) {
+        for (int j=1;j<=n;j++) {
+            dp[i][j]=mat[i-1][j-1]+dp[i-1][j]+dp[i][j-1]-dp[i-1][j-1];
+        }
+    }
+    int res=0;
+    while(left<=right){
+        int mid=left+(right-left)/2;
+        if(check(mat,mid,threshold,dp)){
+            res=mid;
+            left=mid+1;
+        }else{
+            right=mid-1;
+        }
+    }
+    return res;
+}
+
+public boolean check(int[][] mat,int side,int threshold,int[][] dp){
+    //枚举所有的左端点
+    for (int i=1;i+side-1<=mat.length;i++) {
+        for (int j=1;j+side-1<=mat[0].length;j++) {
+            int ri=i+side-1,rj=j+side-1;
+            //System.out.println(ri+","+rj+" dp:"+ dp[ri][rj]);
+            if(dp[ri][rj]-dp[i-1][rj]-dp[ri][j-1]+dp[i-1][j-1]<=threshold){
+                return true;
+            }
+        }
+    }
+    return false;
+}
+```
