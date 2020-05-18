@@ -4620,84 +4620,7 @@ public int spread(String s,int i,int j){
     return res;
 }
 ```
-## [1312. 让字符串成为回文串的最少插入次数](https://leetcode-cn.com/problems/minimum-insertion-steps-to-make-a-string-palindrome/)
 
-给你一个字符串 s ，每一次操作你都可以在字符串的任意位置插入任意字符。
-
-请你返回让 s 成为回文串的 **最少操作次数** 。
-
-「回文串」是正读和反读都相同的字符串。
-
-**示例 1：**
-
-```java
-输入：s = "zzazz"
-输出：0
-解释：字符串 "zzazz" 已经是回文串了，所以不需要做任何插入操作。
-```
-
-**示例 2：**
-
-```java
-输入：s = "mbadm"
-输出：2
-解释：字符串可变为 "mbdadbm" 或者 "mdbabdm" 。
-```
-
-
-**示例 3：**
-
-```java
-输入：s = "leetcode"
-输出：5
-解释：插入 5 个字符后字符串变为 "leetcodocteel" 。
-```
-
-**示例 4：**
-
-```java
-输入：s = "g"
-输出：0
-```
-
-
-**示例 5：**
-
-```java
-输入：s = "no"
-输出：1
-```
-
-**提示：**
-
-- 1 <= s.length <= 500
-- s 中所有字符都是小写字母。 
-
-**解法一**
-
-170周赛的压轴题，其实和前面的最长回文是一样的。。。没啥好说的
-
-```java
-public int minInsertions(String s) {
-    if (s==null || s.length()<=0) {
-        return 0;
-    }
-    int n=s.length();
-    int[][] dp=new int[n][n];
-    for (int i=n-1;i>=0;i--) {
-        for (int j=i+1;j<n;j++) {
-            if (s.charAt(i) == s.charAt(j)) {
-                dp[i][j]=dp[i+1][j-1];   
-            }else{
-                //不相等就可以在中间插入一个字符 +1
-                dp[i][j]=1+Math.min(dp[i+1][j],dp[i][j-1]);
-            }
-        }
-    }
-    return dp[0][n-1];
-}
-```
-这题也可以用LCS的解法解，`n-lcs[n][n]`就是最少的插入次数 
 
 ## [32. 最长有效括号](https://leetcode-cn.com/problems/longest-valid-parentheses/)
 
@@ -5266,6 +5189,108 @@ public int longestPalindromeSubseq(String s) {
 }
 ```
 最长的回文序列其实就是求这个字符串和它翻转后的字符串的最长公共子序列！很妙的解法
+
+## [1312. 让字符串成为回文串的最少插入次数](https://leetcode-cn.com/problems/minimum-insertion-steps-to-make-a-string-palindrome/)
+
+给你一个字符串 s ，每一次操作你都可以在字符串的任意位置插入任意字符。
+
+请你返回让 s 成为回文串的 **最少操作次数** 。
+
+「回文串」是正读和反读都相同的字符串。
+
+**示例 1：**
+
+```java
+输入：s = "zzazz"
+输出：0
+解释：字符串 "zzazz" 已经是回文串了，所以不需要做任何插入操作。
+```
+
+**示例 2：**
+
+```java
+输入：s = "mbadm"
+输出：2
+解释：字符串可变为 "mbdadbm" 或者 "mdbabdm" 。
+```
+
+
+**示例 3：**
+
+```java
+输入：s = "leetcode"
+输出：5
+解释：插入 5 个字符后字符串变为 "leetcodocteel" 。
+```
+
+**示例 4：**
+
+```java
+输入：s = "g"
+输出：0
+```
+
+
+**示例 5：**
+
+```java
+输入：s = "no"
+输出：1
+```
+
+**提示：**
+
+- 1 <= s.length <= 500
+- s 中所有字符都是小写字母。 
+
+**解法一**
+
+170周赛的压轴题，其实和前面的[516. 最长回文子序列](#516-最长回文子序列)是一样的。。。没啥好说的
+
+```java
+public int minInsertions(String s) {
+    if (s==null || s.length()<=0) {
+        return 0;
+    }
+    int n=s.length();
+    int[][] dp=new int[n][n];
+    for (int i=n-1;i>=0;i--) {
+        for (int j=i+1;j<n;j++) {
+            if (s.charAt(i) == s.charAt(j)) {
+                dp[i][j]=dp[i+1][j-1];   
+            }else{
+                //不相等就可以在头部插入s[j]或者尾部插入s[i]
+                //头部插入s[j]则子区间就是dp[i][j-1]
+                //尾部插入s[i]则子区间就是dp[i+1][j]
+                dp[i][j]=1+Math.min(dp[i+1][j],dp[i][j-1]);
+            }
+        }
+    }
+    return dp[0][n-1];
+}
+```
+**解法二**
+
+UPDATE：2020.5.18，区间dp的写法
+
+```java
+public int minInsertions(String s) {
+    int[][] dp=new int[s.length()][s.length()];
+    for(int len=2;len<=s.length();len++){
+        for(int left=0;left+len-1<s.length();left++){
+            int right=left+len-1;
+            if(s.charAt(left)==s.charAt(right)){
+                dp[left][right]=dp[left+1][right-1];
+            }else{
+                dp[left][right]=Math.min(dp[left][right-1],dp[left+1][right])+1;
+            }
+        }
+    }
+    return dp[0][s.length()-1];
+}
+```
+
+这题也可以用LCS的解法解，`n-lcs[n][n]`就是最少的插入次数 
 
 ## [664. 奇怪的打印机](https://leetcode-cn.com/problems/strange-printer/)
 

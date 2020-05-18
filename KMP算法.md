@@ -266,3 +266,58 @@ public int[] getNext(String s){
 ```
 
 实在不行把这个记住就行了，反正我是记住了😂
+
+### [214. 最短回文串](https://leetcode-cn.com/problems/shortest-palindrome/)
+
+给定一个字符串 ***s***，你可以通过在字符串前面添加字符将其转换为回文串。找到并返回可以用这种方式转换的最短回文串。
+
+**示例 1:**
+
+```java
+输入: "aacecaaa"
+输出: "aaacecaaa"
+```
+
+**示例 2:**
+
+```java
+输入: "abcd"
+输出: "dcbabcd"
+```
+
+**解法一**
+
+这题很关键的一个点就是最短回文串其实就是原字符`s`，减去`s[0]`开头的最长回文串，剩下的部分再放到`s`前，这就是最短回文串
+
+所以问题就变成了如何求`s[0]`开头的最长回文串，朴素的思路可以使用中心扩散法，枚举所有的字符和间隙，或者使用"马拉车"，等高效算法，这里不多介绍，主要介绍kmp的做法
+
+我们把`s`串翻转变成`rs`，然后将两部分拼接起来变为`s+rs`，这个时候我们要求`s[0]`开头的最长回文子串，实际上就变成了求`s+rs`的最长公共前后缀
+
+![mark](http://static.imlgw.top/blog/20200518/CtFIYht31mIL.png?imageslim)
+
+这里还有一点需要注意，就是`s+rs`的中间应该加分隔符，这是为了避免公共前后缀过长，甚至比原字符`s`还要长，这肯定是不对的，就比如`aaaaaaa`这样的case，加了分割符之后最长的前后缀就不会超过`s`了，
+
+```java
+public String shortestPalindrome(String s) {
+    String rs=new StringBuilder(s).reverse().toString();
+    //#是为了避免前后缀过长超过原字符s的长度，比如aaaaaaa这种
+    String t=s+"#"+rs; 
+    int[] next=new int[t.length()+1];
+    next[0]=-1;
+    next[1]=0;
+    int left=0;
+    int i=2;
+    while(i<=t.length()){
+        if(t.charAt(i-1)==t.charAt(left)){
+            next[i++]=++left;
+        }else if(next[left]==-1){
+            next[i++]=0;
+        }else{
+            left=next[left];
+        }
+    }
+    //System.out.println(next[t.length()]);
+    return rs.substring(0,s.length()-next[t.length()])+s;
+}
+```
+
