@@ -3961,6 +3961,59 @@ public int longestPalindrome(String s) {
 }
 ```
 
+## [680. 验证回文字符串 Ⅱ](https://leetcode-cn.com/problems/valid-palindrome-ii/)
+
+给定一个非空字符串 `s`，**最多**删除一个字符。判断是否能成为回文字符串。
+
+**示例 1:**
+
+```java
+输入: "aba"
+输出: True
+```
+
+**示例 2:**
+
+```java
+输入: "abca"
+输出: True
+解释: 你可以删除c字符。
+```
+
+**注意:**
+
+1. 字符串只包含从 a-z 的小写字母。字符串的最大长度是50000。
+
+**解法一**
+
+模拟就行了
+
+```java
+public boolean validPalindrome(String s) {
+    if(s==null || s.length()<=0) return true;
+    int left=0,right=s.length()-1;
+    while(left<right){
+        if(s.charAt(left)==s.charAt(right)){
+            left++;right--;
+        }else{
+            return valid(s,left+1,right) || valid(s,left,right-1);
+        }
+    }
+    return true;
+}
+
+public boolean valid(String s,int left,int right){
+    while(left<=right){
+        if(s.charAt(left)==s.charAt(right)){
+            left++;right--;
+        }else{
+            return false;
+        }
+    }
+    return true;
+}
+```
+
 ## [1332. 删除回文子序列](https://leetcode-cn.com/problems/remove-palindromic-subsequences/)
 
 给你一个字符串 s，它仅由字母 'a' 和 'b' 组成。每一次删除操作都可以从 s 中删除一个回文 **子序列**。
@@ -5993,6 +6046,35 @@ public int[] countBits(int num) {
 ```java
 public boolean isPowerOfTwo(int n) {
     return n>0 && (n&(n-1))==0;
+}
+```
+
+## [458. 可怜的小猪](https://leetcode-cn.com/problems/poor-pigs/)
+
+有 1000 只水桶，其中有且只有一桶装的含有毒药，其余装的都是水。它们从外观看起来都一样。如果小猪喝了毒药，它会在 15 分钟内死去。
+
+问题来了，如果需要你在一小时内，弄清楚哪只水桶含有毒药，你最少需要多少只猪？
+
+回答这个问题，并为下列的进阶问题编写一个通用算法。
+
+**进阶:**
+
+假设有 `n` 只水桶，猪饮水中毒后会在 `m` 分钟内死亡，你需要多少猪（`x`）就能在 `p` 分钟内找出 “**有毒**” 水桶？这 `n` 只水桶里有且仅有一只有毒的桶。
+
+**提示：**
+
+1. 可以允许小猪同时饮用任意数量的桶中的水，并且该过程不需要时间。
+2. 小猪喝完水后，必须有 *m* 分钟的**冷却时间**。在这段时间里，只允许观察，而不允许继续饮水。
+3. 任何给定的桶都可以无限次采样（无限数量的猪）。
+
+**解法一**
+
+[参考题解区](https://leetcode-cn.com/problems/poor-pigs/solution/hua-jie-suan-fa-458-ke-lian-de-xiao-zhu-by-guanpen/) 我就不搬运了，简单来说就是看每个小猪能表示几进制的状态，比如题目中说的是15分钟死亡，一个小时时间，那么每只小猪可以吃4次药，可以检测出5瓶药，所以`x`只猪就能检测`state^x`个桶
+
+```java
+public int poorPigs(int buckets, int minutesToDie, int minutesToTest) {
+    int state=minutesToTest/minutesToDie+1;
+    return (int)Math.ceil(Math.log(buckets)/Math.log(state));
 }
 ```
 

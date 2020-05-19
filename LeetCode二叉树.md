@@ -4915,6 +4915,23 @@ public TreeNode trimBST(TreeNode root, int L, int R) {
 }
 ```
 
+## [965. 单值二叉树](https://leetcode-cn.com/problems/univalued-binary-tree/)
+
+题目就不copy了，二叉树只有一个值，水题
+
+**解法一**
+
+```java
+public boolean isUnivalTree(TreeNode root) {
+    return dfs(root,root.val);
+}
+
+public boolean dfs(TreeNode root,int val){
+    if(root==null) return true;
+    return root.val==val && dfs(root.left,val) && dfs(root.right,val);
+}
+```
+
 ## _树形DP_
 
 > 2020.5.10更新，在看了左神的书后，大概了解了树形DP，所谓的树形DP实际上就是把递推方程搬到了树结构上，按我的理解树形DP很大的特点就是最终的解可能存在于树上每个节点，像我下面的题有的暴力解用的就是双重递归，就是dfs遍历没个节点，然后再对每个节点递归求解，但是对根节点求解的时候，实际上其他的子节点都成了子问题，所以后面再对子节点求解的时候问题就重复了，所以就可以采用后序遍历，自底向上，先求左右节点的值再更新根节点，**下面的题其实我不知道到底是不是属于树形DP，可能太简单了，但是再我看来解法比较统一，很有套路所以整理到一起**，我查了下网上介绍的树形DP还是挺难的，后面有时间了解后再来记录
