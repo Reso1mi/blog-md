@@ -1504,3 +1504,66 @@ public int numberOfSubarrays(int[] nums, int k) {
 > 这题还有其他的数学解法，暂时不太想写，后面有时间再写吧，大致思路就是
 >
 > [2，2，1，1，2，2，2] res=3*4=12
+
+## [1371. 每个元音包含偶数次的最长子字符串](https://leetcode-cn.com/problems/find-the-longest-substring-containing-vowels-in-even-counts/)
+
+给你一个字符串 `s` ，请你返回满足以下条件的最长子字符串的长度：每个元音字母，即 'a'，'e'，'i'，'o'，'u' ，在子字符串中都恰好出现了偶数次。
+
+**示例 1：**
+
+```java
+输入：s = "eleetminicoworoep"
+输出：13
+解释：最长子字符串是 "leetminicowor" ，它包含 e，i，o 各 2 个，以及 0 个 a，u 。
+```
+
+**示例 2：**
+
+```java
+输入：s = "leetcodeisgreat"
+输出：5
+解释：最长子字符串是 "leetc" ，其中包含 2 个 e 。
+```
+
+**示例 3：**
+
+```java
+输入：s = "bcbcbc"
+输出：6
+解释：这个示例中，字符串 "bcbcbc" 本身就是最长的，因为所有的元音 a，e，i，o，u 都出现了 0 次。
+```
+
+**提示：**
+
+- `1 <= s.length <= 5 x 10^5`
+- `s` 只包含小写英文字母。
+
+**解法一**
+
+这题挺好的，反正我是想不出来这样的解法，一开始以为是滑动窗口，写了几行代码发现行不通，数据范围这么大，感觉不是很简单，然后就直接看答案了，涉及到**前缀和**以及**状态压缩**，前缀和维护元音字符出现的奇偶性，并压缩成一个整数，核心思想就是`奇数-奇数=偶数`，`偶数-偶数=偶数`，所以如果两个不同位置的状态相同，那么中间的部分出现次数一定是偶数，具体的不想多解释了看看 [官方题解](https://leetcode-cn.com/problems/find-the-longest-substring-containing-vowels-in-even-counts/solution/mei-ge-yuan-yin-bao-han-ou-shu-ci-de-zui-chang-z-2/) 就行了
+
+```java
+public int findTheLongestSubstring(String s) {
+    //a e i o u
+    //32种状态
+    int[] pre=new int[1<<5];
+    Arrays.fill(pre,-1);
+    pre[0]=0;
+    int res=0;
+    int state=0;
+    for (int i=0;i<s.length();i++) {
+        if(s.charAt(i)=='a') state^=16;
+        if(s.charAt(i)=='e') state^=8;
+        if(s.charAt(i)=='i') state^=4;
+        if(s.charAt(i)=='o') state^=2;
+        if(s.charAt(i)=='u') state^=1;
+        if(pre[state]!=-1){
+            res=Math.max(res,i+1-pre[state]);
+        }else{
+            pre[state]=i+1; //前i个字符的状态
+        }
+    }
+    return res;
+}
+```
+

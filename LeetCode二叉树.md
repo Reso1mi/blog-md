@@ -3017,6 +3017,74 @@ public Node connect(Node root) {
 }
 ```
 
+> 还有一个很直白的层序遍历的方法，这里就不写了
+
+## [117. 填充每个节点的下一个右侧节点指针 II](https://leetcode-cn.com/problems/populating-next-right-pointers-in-each-node-ii/) 
+
+给定一个二叉树
+
+```java
+struct Node {
+  int val;
+  Node *left;
+  Node *right;
+  Node *next;
+}
+```
+
+填充它的每个 next 指针，让这个指针指向其下一个右侧节点。如果找不到下一个右侧节点，则将 next 指针设置为 `NULL`。
+
+初始状态下，所有 next 指针都被设置为 `NULL`。
+
+**进阶：**
+
+- 你只能使用常量级额外空间。
+- 使用递归解题也符合要求，本题中递归程序占用的栈空间不算做额外的空间复杂度。
+
+**示例：**
+
+![Y7BwBd.png](https://s1.ax1x.com/2020/05/20/Y7BwBd.png)
+
+```java
+输入：root = [1,2,3,4,5,null,7]
+输出：[1,#,2,3,#,4,5,7,#]
+解释：给定二叉树如图 A 所示，你的函数应该填充它的每个 next 指针，以指向其下一个右侧节点，如图 B 所示。
+```
+
+**提示：**
+
+- 树中的节点数小于 `6000`
+- `-100 <= node.val <= 100`
+
+**解法一**
+
+题目要求的O(1)空间，参考了大佬的解法，模拟层序遍历，着实是很巧妙，代码简洁清晰，值得细细品味
+
+```java
+public Node connect(Node root) {
+    Node dummyNode=new Node(-1);
+    Node cur=root;
+    //cur在上层，dummyNode和tail在下层，tail负责连接下层所有子节点
+    while(cur!=null){
+        dummyNode.next=null; //重置
+        Node tail=dummyNode;
+        while(cur!=null){
+            if(cur.left!=null){
+                tail.next=cur.left;
+                tail=tail.next;
+            }
+            if(cur.right!=null){
+                tail.next=cur.right;
+                tail=tail.next;
+            }
+            cur=cur.next;
+        }
+        cur=dummyNode.next; //cur转换到下一层
+    }
+    return root;
+}
+```
+
 ## [450. 删除二叉搜索树中的节点](https://leetcode-cn.com/problems/delete-node-in-a-bst/)
 
 给定一个二叉搜索树的根节点 root 和一个值 key，删除二叉搜索树中的 key 对应的节点，并保证二叉搜索树的性质不变。返回二叉搜索树（有可能被更新）的根节点的引用。
