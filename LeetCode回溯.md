@@ -3276,3 +3276,107 @@ public boolean valid(final int[][] A,int x,int y){
 ```
 
 并查集的解法放在 [并查集专题](http://imlgw.top/2020/02/02/bing-cha-ji/) 中
+
+## [934. 最短的桥](https://leetcode-cn.com/problems/shortest-bridge/)
+
+在给定的二维二进制数组 `A` 中，存在两座岛。（岛是由四面相连的 `1` 形成的一个最大组。）
+
+现在，我们可以将 `0` 变为 `1`，以使两座岛连接起来，变成一座岛。
+
+返回必须翻转的 `0` 的最小数目。（可以保证答案至少是 1。）
+
+**示例 1：**
+
+```java
+输入：[[0,1],[1,0]]
+输出：1
+```
+
+**示例 2：**
+
+```java
+输入：[[0,1,0],[0,0,0],[0,0,1]]
+输出：2
+```
+
+**示例 3：**
+
+```java
+输入：[[1,1,1,1,1],[1,0,0,0,1],[1,0,1,0,1],[1,0,0,0,1],[1,1,1,1,1]]
+输出：1
+```
+
+**提示：**
+
+1. `1 <= A.length = A[0].length <= 100`
+2. `A[i][j] == 0` 或 `A[i][j] == 1`
+
+**解法一**
+
+这题还挺有意思的，dfs+bfs都要用，单纯的深搜和广搜很难搞，先dfs给一个岛做标记，然后多源bfs找距离最近的另一个岛
+
+```java
+int[] dir = {0, 1, 0, -1, 0};
+
+public int shortestBridge(int[][] A) {
+    boolean[][] mark = new boolean[A.length][A[0].length];
+    lable:
+    for (int i = 0; i < A.length; i++) {
+        for (int j = 0; j < A[0].length; j++) {
+            if (A[i][j] == 1) {
+                dfs(A, i, j, mark);
+                break lable;
+            }
+        }
+    }
+    Queue<Pair> queue = new LinkedList<>();
+    for (int i = 0; i < A.length; i++) {
+        for (int j = 0; j < A[0].length; j++) {
+            if (A[i][j] == 1 && mark[i][j]) {
+                queue.add(new Pair(i, j, 0));
+            }
+        }
+    }
+    while (!queue.isEmpty()) {
+        Pair pair = queue.poll();
+        for (int i = 0; i < 4; i++) {
+            int nx = pair.x + dir[i];
+            int ny = pair.y + dir[i + 1];
+            if (valid(A, nx, ny) && !mark[nx][ny]) {
+                if (A[nx][ny] == 1) {
+                    return pair.step;
+                }
+                mark[nx][ny] = true;
+                queue.add(new Pair(nx, ny, pair.step + 1));
+            }
+        }
+    }
+    return 1;
+}
+
+public void dfs(int[][] A, int x, int y, boolean[][] mark) {
+    mark[x][y] = true;
+    for (int i = 0; i < 4; i++) {
+        int nx = x + dir[i];
+        int ny = y + dir[i + 1];
+        if (valid(A, nx, ny) && A[nx][ny] == 1 && !mark[nx][ny]) {
+            dfs(A, nx, ny, mark);
+        }
+    }
+}
+
+public boolean valid(int[][] A, int x, int y) {
+    return x >= 0 && x < A.length && y >= 0 && y < A[0].length;
+}
+
+class Pair {
+    int x, y;
+    int step;
+    public Pair(int x, int y, int step) {
+        this.x = x;
+        this.y = y;
+        this.step = step;
+    }
+}
+```
+

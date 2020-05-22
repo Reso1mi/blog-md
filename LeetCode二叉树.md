@@ -2605,6 +2605,33 @@ public TreeNode buildTree(int[] preorder,int preleft,int preright,int[] inorder,
 
 当然这里值得注意的地方就是下标的变换，要十分注意，自己带入几个值试试
 
+**UPDATE(2020.5.22)**
+
+```go
+var m map[int]int
+
+func buildTree(preorder []int, inorder []int) *TreeNode {
+    n:=len(inorder)
+    //m:=make(map[int]int,n) 靠！这个bug看了半天
+    m=make(map[int]int,n)
+    for i,val:=range inorder{
+        m[val]=i
+    }
+    return build(preorder,0,n-1,inorder,0,n-1)
+}
+
+func build(pre []int,pl int,pr int,in []int,il int,ir int) *TreeNode{
+    if pl>pr || il>ir{
+        return nil
+    }
+    root:=&TreeNode{Val:pre[pl]}
+    idx:=m[pre[pl]]
+    root.Left=build(pre,pl+1,pl+idx-il,in,il,idx-1)
+    root.Right=build(pre,pl+idx-il+1,pr,in,idx+1,ir)
+    return root
+}
+```
+
 ## [106. 从中序与后序遍历序列构造二叉树](https://leetcode-cn.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/)
 
 根据一棵树的中序遍历与后序遍历构造二叉树。
@@ -5439,7 +5466,7 @@ public int helper(TreeNode root){
 
 **错误解法**
 
-其实写了一会儿就意识到和上面的[124.二叉树的最大路径和]()，[543.二叉树的最大路径和]()是一样的思路，但是自己还是没写好，递归函数的写着写着就写变了，脱离了最开始的定义
+其实写了一会儿就意识到和上面的[124.二叉树的最大路径和](#124-二叉树的最大路径和)，[543.二叉树的直径](#[543-二叉树的直径]())是一样的思路，但是自己还是没写好，递归函数的写着写着就写变了，脱离了最开始的定义
 
 ```java
 //错误解法，其实整体思路是对的，但是细节没处理好
@@ -5651,3 +5678,100 @@ public int[] tryRob(TreeNode root) {
 ~~不是我吹，就这样的题目，再遇见多少次我都写不出来这样的解（笑~~
 
 > 2020.5.10更新，在看了左神的书后，了解到这种其实就是树形DP，所谓的树形DP实际上就是把递推方程搬到了树结构上，按我的理解树形DP很大的特点就是最终的解可能存在于树上每个节点，所以没个节点都是个子问题
+
+## [1372. 二叉树中的最长交错路径](https://leetcode-cn.com/problems/longest-zigzag-path-in-a-binary-tree/)
+
+给你一棵以 `root` 为根的二叉树，二叉树中的交错路径定义如下：
+
+- 选择二叉树中 **任意** 节点和一个方向（左或者右）。
+- 如果前进方向为右，那么移动到当前节点的的右子节点，否则移动到它的左子节点。
+- 改变前进方向：左变右或者右变左。
+- 重复第二步和第三步，直到你在树中无法继续移动。
+
+交错路径的长度定义为：**访问过的节点数目 - 1**（单个节点的路径长度为 0 ）。
+
+请你返回给定树中最长 **交错路径** 的长度。
+
+**示例 1：**
+
+![YX1tJO.png](https://s1.ax1x.com/2020/05/22/YX1tJO.png)
+
+```java
+输入：root = [1,null,1,1,1,null,null,1,1,null,1,null,null,null,1,null,1]
+输出：3
+解释：蓝色节点为树中最长交错路径（右 -> 左 -> 右）。
+```
+
+**示例 2：**
+
+![YX1NWD.png](https://s1.ax1x.com/2020/05/22/YX1NWD.png)
+
+```java
+输入：root = [1,1,1,null,1,null,null,1,1,null,1]
+输出：4
+解释：蓝色节点为树中最长交错路径（左 -> 右 -> 左 -> 右）。
+```
+
+**示例 3：**
+
+```java
+输入：root = [1]
+输出：0
+```
+
+**提示：**
+
+- 每棵树最多有 `50000` 个节点。
+- 每个节点的值在 `[1, 100]` 之间。
+
+**解法一**
+
+某次周赛的T3，树形DP
+
+```java
+int max=0;
+
+public int longestZigZag(TreeNode root) {
+    dfs(root);
+    return max-1;
+}
+
+//当前节点左右交错路径的长度
+public int[] dfs(TreeNode root){
+    int[] res=new int[2];
+    if(root==null){
+        return res;
+    }
+    res[0]=dfs(root.left)[1]+1;
+    res[1]=dfs(root.right)[0]+1;
+    max=Math.max(max,Math.max(res[0],res[1]));
+    return res;
+}
+```
+
+**解法二**
+
+直接搜索的做法，其实这种做法没有上面树形dp好理解，dfs函数的定义会和父节点混合
+
+```java
+int res=0;
+
+public int longestZigZag(TreeNode root) {
+    dfs(root,false);//true false都无所谓
+    return res-1;
+}
+
+//当前节点和父节点形成的交错路径长度
+public int dfs(TreeNode root,boolean isRight){
+    if(root==null){
+        return 0;
+    }
+    int l=dfs(root.left,false);
+    int r=dfs(root.right,true);
+    res=Math.max(res,Math.max(l+1,r+1));
+    if(isRight){
+        return l+1;
+    }
+    return r+1;
+}
+```

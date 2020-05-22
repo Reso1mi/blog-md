@@ -1872,3 +1872,69 @@ public boolean check(int[] time,int T,int m){
     return day<=m;
 }
 ```
+
+## [410. 分割数组的最大值](https://leetcode-cn.com/problems/split-array-largest-sum/)
+
+给定一个非负整数数组和一个整数 *m*，你需要将这个数组分成 *m* 个非空的连续子数组。设计一个算法使得这 *m* 个子数组各自和的最大值最小。
+
+**注意:**
+数组长度 *n* 满足以下条件:
+
+- 1 ≤ *n* ≤ 1000
+- 1 ≤ *m* ≤ min(50, *n*)
+
+**示例:**
+
+```java
+输入:
+nums = [7,2,5,10,8]
+m = 2
+
+输出:
+18
+
+解释:
+一共有四种方法将nums分割为2个子数组。
+其中最好的方式是将其分为[7,2,5] 和 [10,8]，
+因为此时这两个子数组各自的和的最大值为18，在所有情况中最小。
+```
+
+**解法一**
+
+Hard题，但是感觉和前面的mid差不多，没啥好说的，个人感觉这题还没上面的[LCP 12. 小张刷题计划](#LCP 12-小张刷题计划) 难，不过有哥case挺恶心，算的sum会溢出，害我WA了一次，但是他结果返回的又是个int，这就很蠢
+
+```java
+//一样的套路
+public int splitArray(int[] nums, int m) {
+    long left=0,right=0;
+    for(int num:nums){
+        left=Math.max(left,num);
+        right+=num;
+    }
+    long res=0;
+    while(left<=right){
+        long mid=left+(right-left)/2;
+        if(check(nums,mid,m)){
+            res=mid;
+            right=mid-1;
+        }else{
+            left=mid+1;
+        }
+    }
+    return (int)res;
+}
+
+public boolean check(int[] nums,long limit,int m){
+    long sum=0;
+    int count=1;
+    for(int num:nums){
+        if(sum+num>limit){
+            sum=0;
+            count++;
+        }
+        sum+=num;
+    }
+    return count<=m;
+}
+```
+
