@@ -1289,7 +1289,7 @@ if (target[left]!=0) {
 }
 ```
 
-这样写就有可能cl还没有匹配上，这个时候直接--就错了，之前的模板中缩圈都是在match==count的前提下缩圈的，所以没问题，都是匹配的，其实也可以像之前的模板一样写，就像下面这样
+这样写就有可能window[left]还没有匹配上，这个时候直接减就错了，之前的模板中缩圈都是在match==count的前提下缩圈的，所以没问题，都是匹配的，其实也可以像之前的模板一样写，就像下面这样
 
 ```java
 public boolean checkInclusion(String s1, String s2) {

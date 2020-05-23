@@ -4388,6 +4388,59 @@ public int lcs(String text1, int a,String text2,int b) {
     }
 }
 ```
+## [AtCoder-LCS](https://atcoder.jp/contests/dp/tasks/dp_f)
+
+题目就不copy了，这里就是求出lcs具体的字符串，而不是求长度
+
+我这里是参考了leetcode上一个大佬的[文章](https://leetcode-cn.com/circle/article/CwZVuV/) 利用back数组，从后向前递推，但是实际上有点多余，直接根据dp数组也可以推回去，但是这样写比较通用，逻辑比较清楚。
+
+```java
+public static void main(String[] args) {
+    Scanner sc=new Scanner(System.in);
+    while(sc.hasNext()){
+        String A=sc.next();
+        String B=sc.next();
+        System.out.println(longestCommonSubsequence(A,B));
+    }
+}
+
+public static String longestCommonSubsequence(String A, String B) {
+    int lenA=A.length();
+    int lenB=B.length();
+    int[][] dp=new int[lenA+1][lenB+1];
+    int[][] back=new int[lenA+1][lenB+1];
+    for (int i=1;i<=lenA;i++) {
+        for (int j=1;j<=lenB;j++) {
+            if (A.charAt(i-1)==B.charAt(j-1)) {
+                dp[i][j]=dp[i-1][j-1]+1;
+                back[i][j]=1; //左上
+            }else if(dp[i-1][j]>dp[i][j-1]){
+                dp[i][j]=dp[i-1][j];
+                back[i][j]=2; //上
+            }else{
+                dp[i][j]=dp[i][j-1];
+                back[i][j]=0; //左
+            }
+        }
+    }
+    int i=lenA,j=lenB;
+    StringBuilder res=new StringBuilder();
+    while(i>0 && j>0){
+        if (back[i][j]==1) {
+            i--;j--;
+            res.append(A.charAt(i));
+        }else if(back[i][j]==2){
+            i--;
+        }else{
+            j--;
+        }
+    }
+    return res.reverse().toString();
+}
+```
+
+了解即可。
+
 ## [718. 最长重复子数组](https://leetcode-cn.com/problems/maximum-length-of-repeated-subarray/)
 
 给两个整数数组 `A` 和 `B` ，返回两个数组中公共的、长度最长的子数组的长度。
