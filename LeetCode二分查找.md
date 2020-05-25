@@ -1383,7 +1383,77 @@ k/2=3,分别在两数组中找第三个元素，也即是3，4明显3比较小�
 
 然后重复上面的过程，每次排除`k/2` 的元素，最后在`log(k)` 的时间复杂度下就能找到两个数组的mid，而这里`k=(m+n+1)/2` 所以是符合题目要求的，除此之外，我们还需要考虑奇数和偶数的情况，那我们就可以分别计算一下，我们求一下左中位数和右中位数，如果是奇数左中和右中就是同一个`(k)/2==(k+1)/2` ，偶数的话就是`(k)/2`和`(k+1)/2`分别就是左中和右中，然后我们直接/2就得到了解
 
+## [658. 找到 K 个最接近的元素](https://leetcode-cn.com/problems/find-k-closest-elements/)
+
+给定一个排序好的数组，两个整数 `k` 和 `x`，从数组中找到最靠近 `x`（两数之差最小）的 `k` 个数。返回的结果必须要是按升序排好的。如果有两个数与 `x` 的差值一样，优先选择数值较小的那个数。
+
+**示例 1:**
+
+```java
+输入: [1,2,3,4,5], k=4, x=3
+输出: [1,2,3,4]
+```
+
+**示例 2:**
+
+```java
+输入: [1,2,3,4,5], k=4, x=-1
+输出: [1,2,3,4]
+```
+
+**说明:**
+
+1. k 的值为正数，且总是小于给定排序数组的长度。
+2. 数组不为空，且长度不超过 104
+3. 数组里的每个元素与 x 的绝对值不超过 104
+
+**解法一**
+
+双指针，少点套路，多点真诚
+
+```java
+public List<Integer> findClosestElements(int[] arr, int k, int x) {
+    int left=0,right=arr.length-1;
+    int count=0;
+    while(left<right){
+        if(Math.abs(arr[left]-x)<=Math.abs(arr[right]-x)){
+            right--;
+        }else{
+            left++;
+        }
+        count++;
+        if(count==arr.length-k) break;
+    }
+    List<Integer> res=new ArrayList<>();
+    for(int i=left;i<=right;i++) res.add(arr[i]);
+    return res;
+}
+```
+
+**解法二**
+
+二分的解法，有点trick，不容易想到，参考[题解](https://leetcode-cn.com/problems/find-k-closest-elements/solution/pai-chu-fa-shuang-zhi-zhen-er-fen-fa-python-dai-ma/)
+
+```java
+public List<Integer> findClosestElements(int[] arr, int k, int x) {
+    //左边界的取值范围
+    int left=0,right=arr.length-k;
+    while(left<right){
+        int mid=left+(right-left)/2;
+        if(x-arr[mid]>arr[mid+k]-x){
+            left=mid+1;
+        }else{
+            right=mid;
+        }
+    }
+    List<Integer> res=new ArrayList<>();
+    for(int i=left;i<left+k;i++) res.add(arr[i]);
+    return res;   
+}
+```
+
 ## _二分答案_
+
 ## [1283. 使结果不超过阈值的最小除数](https://leetcode-cn.com/problems/find-the-smallest-divisor-given-a-threshold/)
 
 给你一个整数数组 `nums` 和一个正整数 `threshold`  ，你需要选择一个正整数作为除数，然后将数组里每个数都除以它，并对除法结果求和。

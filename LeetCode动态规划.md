@@ -1583,6 +1583,60 @@ private static int binarySearch(int[] nums, int len, int target) {
 
 （copy自从liweiwei大佬 [题解](https://leetcode-cn.com/problems/longest-increasing-subsequence/solution/dong-tai-gui-hua-er-fen-cha-zhao-tan-xin-suan-fa-p/)）
 
+## [673. 最长递增子序列的个数](https://leetcode-cn.com/problems/number-of-longest-increasing-subsequence/)
+
+给定一个未排序的整数数组，找到最长递增子序列的个数。
+
+**示例 1:**
+
+```java
+输入: [1,3,5,4,7]
+输出: 2
+解释: 有两个最长递增子序列，分别是 [1, 3, 4, 7] 和[1, 3, 5, 7]。
+```
+
+**示例 2:**
+
+```java
+输入: [2,2,2,2,2]
+输出: 5
+解释: 最长递增子序列的长度是1，并且存在5个子序列的长度为1，因此输出5。
+```
+
+**注意:** 给定的数组长度不超过 2000 并且结果一定是32位有符号整数。
+
+**解法一**
+
+一开始还没想到，属实菜鸡
+
+```java
+public int findNumberOfLIS(int[] nums) {
+    int n=nums.length;
+    //dp[i][0]结尾的最长递增子序列,dp[i][1]代表个数
+    int[][] dp=new int[n][2];
+    int max=0;
+    for(int i=0;i<n;i++){
+        dp[i][1]=1;
+        for(int j=0;j<i;j++){
+            if(nums[i]>nums[j]){
+                if(dp[j][0]+1==dp[i][0]){
+                    dp[i][1]+=dp[j][1];
+                }else if(dp[j][0]+1>dp[i][0]){
+                    dp[i][1]=dp[j][1];
+                    dp[i][0]=dp[j][0]+1;
+                }
+            }
+        }
+        max=Math.max(max,dp[i][0]);
+    }
+    int res=0;
+    for(int i=0;i<nums.length;i++) {
+        res+=dp[i][0]==max?dp[i][1]:0;   
+    }
+    return res;
+}
+```
+
 ## [354. 俄罗斯套娃信封问题](https://leetcode-cn.com/problems/russian-doll-envelopes/)
 
 给定一些标记了宽度和高度的信封，宽度和高度以整数对形式 `(w, h)` 出现。当另一个信封的宽度和高度都比这个信封大的时候，这个信封就可以放进另一个信封里，如同俄罗斯套娃一样。
