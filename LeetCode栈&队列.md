@@ -3445,7 +3445,7 @@ public int findUnsortedSubarray(int[] nums) {
 
 **解法三**
 
-单调栈解法，双指针的解法放在[数组专题](http://imlgw.top/2019/05/04/leetcode-shu-zu/)中，其实我感觉熟悉单调栈的话，单调栈的解法会比其他方法更好理解
+单调栈解法，双指针的解法放在[数组专题](http://imlgw.top/2019/05/04/leetcode-shu-zu/#42-%E6%8E%A5%E9%9B%A8%E6%B0%B4)中，其实我感觉熟悉单调栈的话，单调栈的解法会比其他方法更好理解
 
 ```java
 public static int trap6(int[] height) {

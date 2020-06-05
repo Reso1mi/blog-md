@@ -5088,6 +5088,85 @@ public int dfs(TreeNode root,int x,int n){
 }
 ```
 
+## [993. 二叉树的堂兄弟节点](https://leetcode-cn.com/problems/cousins-in-binary-tree/)
+
+在二叉树中，根节点位于深度 `0` 处，每个深度为 `k` 的节点的子节点位于深度 `k+1` 处。
+
+如果二叉树的两个节点深度相同，但**父节点不同**，则它们是一对*堂兄弟节点*。
+
+我们给出了具有唯一值的二叉树的根节点 `root`，以及树中两个不同节点的值 `x` 和 `y`。
+
+只有与值 `x` 和 `y` 对应的节点是堂兄弟节点时，才返回 `true`。否则，返回 `false`。
+
+**示例 1：**
+
+![tsO8yR.png](https://s1.ax1x.com/2020/06/05/tsO8yR.png)
+
+```java
+输入：root = [1,2,3,4], x = 4, y = 3
+输出：false
+```
+
+**示例 2：**
+
+![tsOYex.png](https://s1.ax1x.com/2020/06/05/tsOYex.png)
+
+```java
+输入：root = [1,2,3,null,4,null,5], x = 5, y = 4
+输出：true
+```
+
+**示例 3：**
+
+![tsOaFO.png](https://s1.ax1x.com/2020/06/05/tsOaFO.png)
+
+```java
+输入：root = [1,2,3,null,4], x = 2, y = 3
+输出：false
+```
+
+**提示：**
+
+1. 二叉树的节点数介于 `2` 到 `100` 之间。
+2. 每个节点的值都是唯一的、范围为 `1` 到 `100` 的整数。
+
+**解法一**
+
+二叉树水题（3天没刷新题了，再不刷几道实在是说不过其了，刷题还是要保持手感啊）
+
+```go
+func isCousins(root *TreeNode, x int, y int) bool {
+    var depX = -1
+    var pX *TreeNode
+    var depY = -1
+    var pY *TreeNode
+    var dfs func(root, parent *TreeNode, x, y int, depth int)
+    dfs = func(root, parent *TreeNode, x, y int, depth int) {
+        if root == nil { //按题目说的这里其实不需要
+            return
+        }
+        if root.Val == x {
+            depX = depth
+            pX = parent
+            //结束该子树的搜索，加快速度，下面即使有Y也肯定不是X的堂兄弟
+            return
+        }
+        if root.Val == y {
+            depY = depth
+            pY = parent
+            //同上
+            return
+        }
+        dfs(root.Left, root, x, y, depth+1)
+        dfs(root.Right, root, x, y, depth+1)
+    }
+    dfs(root, nil, x, y, 0)
+    return pX != pY && depX == depY
+}
+```
+
+有一个小的优化点还是挺有意思的，就是return的地方，一开始没考虑这么多，AC了之后感觉不对，是不是LC又少CASE了，结果仔细一想发现这里是个优化点😁
+
 ## _树形DP(大概)_
 
 > 2020.5.10更新，在看了左神的书后，大概了解了树形DP，所谓的树形DP实际上就是把递推方程搬到了树结构上，按我的理解树形DP很大的特点就是最终的解可能存在于树上每个节点，像我下面的题有的暴力解用的就是双重递归，就是dfs遍历没个节点，然后再对每个节点递归求解，但是对根节点求解的时候，实际上其他的子节点都成了子问题，所以后面再对子节点求解的时候问题就重复了，所以就可以采用后序遍历，自底向上，先求左右节点的值再更新根节点，**下面的题其实我不知道到底是不是属于树形DP，可能太简单了，但是再我看来解法比较统一，很有套路所以整理到一起**，我查了下网上介绍的树形DP还是挺难的，后面有时间了解后再来记录

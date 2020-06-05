@@ -494,6 +494,34 @@ public int lengthOfLongestSubstring(String s) {
     return res;
 }
 ```
+**最优解**
+
+```go
+func lengthOfLongestSubstring(s string) int {
+    if len(s)==0{
+        return 0
+    }
+    m:=make(map[rune]int)
+    start:=0
+    res:=0
+    for i,ch:=range s{
+        if idx,ok:=m[ch];ok && idx+1>start{
+            start=idx+1
+        }
+        m[ch]=i
+        res=Max(res,i-start+1)
+    }
+    return res
+}
+
+func Max(a,b int) int{
+    if a>b{
+        return a
+    }
+    return b
+}
+```
+
 ## [219. 存在重复元素 II](https://leetcode-cn.com/problems/contains-duplicate-ii/)
 
 给定一个整数数组和一个整数 *k*，判断数组中是否存在两个不同的索引 *i* 和 *j*，使得 **nums [i] = nums [j]**，并且 *i* 和 *j* 的差的绝对值最大(不超过)为 *k*。
