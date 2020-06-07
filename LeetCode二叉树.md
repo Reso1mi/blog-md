@@ -5640,7 +5640,7 @@ public int dfs(TreeNode root){
 }
 ```
 
-**解法二**
+**解法一**
 
 在看了题解后对上面错误解法的纠正
 
@@ -5683,7 +5683,7 @@ public int dfs(TreeNode root){
 >
 > 其实想想就知道不行，先判断其实相当于`前序遍历`，在访问节点第一次的时候如果不符合条件就直接返回了，这样根本无法遍历完所有的节点自然是不行，所以这种类型的一般都是`后序遍历`，待子节点都处理完之后再返回根节点做处理，和分治的思想很像
 
-**解法三**
+**解法二**
 
 另一种dfs的思路，代码更加简洁一点，但是稍微有一点不好想
 
@@ -5720,6 +5720,83 @@ public int dfs(TreeNode root,int parent){
 在函数中添加一个父节点的值，然后在遍历到一个节点的时候判断当前节点和父节点的关系就行了，如果和父节点不相等，那么直接返回0，相等就返回左右最大值+1（这个+1加的是当前节点），然后同样采用后序遍历，这个思路没有那么自然，不过也挺不错的
 
 > 还有一种暴力解法，这里就不贴了
+
+## [595. 二叉树最长连续序列（LintCode）](https://www.lintcode.com/problem/binary-tree-longest-consecutive-sequence/description?ordering=-updated_at) 
+
+**描述**
+
+给一棵二叉树，找到最长连续路径的长度。
+这条路径是指 任何的节点序列中的起始节点到树中的任一节点都必须遵循 父-子 联系。最长的连续路径必须是从父亲节点到孩子节点（`不能逆序`）。
+
+**样例1:**
+
+```java
+输入:
+{1,#,3,2,4,#,#,#,5}
+输出:3
+说明:
+这棵树如图所示
+   1
+    \
+     3
+    / \
+   2   4
+        \
+         5
+最长连续序列是3-4-5，所以返回3.
+```
+
+**样例2:**
+
+```java
+输入:
+{2,#,3,2,#,1,#}
+输出:2
+说明:
+这棵树如图所示：
+   2
+    \
+     3
+    / 
+   2    
+  / 
+ 1
+最长连续序列是2-3，而不是3-2-1，所以返回2.
+```
+
+**解法一**
+
+和上一题最长同值路径几乎一摸一样，这题leetCode也有，[但是是会员题](https://leetcode-cn.com/problems/binary-tree-longest-consecutive-sequence)，前几天每日一题出了这个（后来改了），然后我在lintcode找到了，应该是同一题，随手做一下
+
+```java
+public int longestConsecutive(TreeNode root) {
+    // write your code here
+    dfs(root);
+    return max;
+}
+
+int max=0;
+
+//以root开始的最长连续序列
+public int dfs(TreeNode root){
+    if(root == null){
+        return 0;
+    }
+    //保证至少是1
+    int leftMax = Math.max(1,dfs(root.left));
+    int rightMax = Math.max(1,dfs(root.right));
+    if(root.left!=null){
+        leftMax = root.val==root.left.val-1 ? leftMax+1:1;
+    }
+    if(root.right!=null){
+        rightMax = root.val==root.right.val-1 ? rightMax+1:1;
+    }
+    max=Math.max(max,Math.max(leftMax,rightMax));
+    return Math.max(leftMax,rightMax);
+}
+```
+
+其实一开始写了一个很复杂的，dfs的定义又和父节点耦合了，感觉和父节点耦合之后就很难搞，很容易搞晕，所以尽量不和父节点耦合，直接以当前节点定义
 
 ## [337. 打家劫舍 III](https://leetcode-cn.com/problems/house-robber-iii/)
 
@@ -5915,3 +5992,4 @@ public int dfs(TreeNode root,boolean isRight){
     return r+1;
 }
 ```
+
