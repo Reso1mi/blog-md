@@ -5952,3 +5952,62 @@ public boolean dfs(int max,int total,int state){
 }
 ```
 
+## _图论_
+
+暂时先放在这里，等后面学了dij，spfa那些后一起单独总结一下
+
+## [743. 网络延迟时间](https://leetcode-cn.com/problems/network-delay-time/)
+
+有 `N` 个网络节点，标记为 `1` 到 `N`。
+
+给定一个列表 `times`，表示信号经过**有向**边的传递时间。 `times[i] = (u, v, w)`，其中 `u` 是源节点，`v` 是目标节点， `w` 是一个信号从源节点传递到目标节点的时间。
+
+现在，我们从某个节点 `K` 发出一个信号。需要多久才能使所有节点都收到信号？如果不能使所有节点收到信号，返回 `-1`。
+
+**示例：**
+
+![tfoiPf.png](https://s1.ax1x.com/2020/06/08/tfoiPf.png)
+
+```java
+输入：times = [[2,1,1],[2,3,1],[3,4,1]], N = 4, K = 2
+输出：2
+```
+
+**注意:**
+
+1. `N` 的范围在 `[1, 100]` 之间。
+2. `K` 的范围在 `[1, N]` 之间。
+3. `times` 的长度在 `[1, 6000]` 之间。
+4. 所有的边 `times[i] = (u, v, w)` 都有 `1 <= u, v <= N` 且 `0 <= w <= 100`。
+
+**解法一**
+
+临时起意学了下Floyd，然后在lc上搜了一下找到了这一题，思路也很直接
+
+```java
+//Floyd
+public int networkDelayTime(int[][] times, int N, int K) {
+    int[][] dis=new int[N][N];
+    int INF = 0x3f3f3f3f;
+    for(int i=0;i<N;i++) Arrays.fill(dis[i],INF);
+    for(int i=0;i<N;i++) dis[i][i]=0;
+    for(int[] t:times) dis[t[0]-1][t[1]-1]=t[2];
+    for(int k=0;k<N;k++){
+        for(int i=0;i<N;i++){
+            for(int j=0;j<N;j++){
+                dis[i][j]=Math.min(dis[i][j],dis[i][k]+dis[k][j]);
+            }
+        }
+    }
+    int res=0;
+    K-=1; //从0开始！从1开始的都是邪教
+    for(int i=0;i<N;i++){
+        if(dis[K][i]==INF) return -1;
+        res=Math.max(dis[K][i],res);
+    }
+    return res;
+}
+```
+
+大概说一下，其实Floyd就是动态规划的思想，`dp[k][i][j]`代表从`i~j`允许经过前`k`个节点中转时的最短路径，那么其实很容易推导出，`dp[k][i][j]=min(dp[k-1][i][k]+dp[k-1][k][j],dp[k][i][j])`其实也就是尝试以每个点为中转点，看能否缩短两点之间的距离，和区间DP有点像，关于`k`为什么要放外面其实仔细想一下就知道了，我们需要保证在求`dp[k][i][j]`的时候需要保证`dp[k-1][i][j]`以及`dp[k-1][i][k]` 和`dp[k-1][k][j]`都是已经计算完毕的，想一想，如果k放在里面能保证么？很明显不行，可以类比上面的 [576. 出界的路径数](#576-出界的路径数)，一样的道理。然后我们再观察整个递推方程，发现`dp[k]`只依赖于`dp[k-1]`所以就可以直接滚动数组优化掉k维度的空间，也就是上面的解法
+

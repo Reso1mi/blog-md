@@ -9,8 +9,6 @@ date: 2019/8/11
 cover:  http://static.imlgw.top/blog/20190817/D1Ru1EJew7lf.jpg?imageslim
 ---
 
-
-
 本文在 [CyC大佬](https://cyc2018.github.io/CS-Notes/#/notes/Java%20%E8%99%9A%E6%8B%9F%E6%9C%BA?id=minor-gc-%e5%92%8c-full-gc) 的博客基础之上做了一些扩充改编（ 改编不是乱编，戏说不是胡说，今年下半年.......🐵
 
 ## Java内存区域
