@@ -1344,6 +1344,49 @@ public static int numDecodings2(String s) {
 
 类似于**00** 和**30** 这样的， 这样就代表这个字符串无法编码了 **dp[i]=0** 最后返回的就是0
 
+## [面试题46. 把数字翻译成字符串](https://leetcode-cn.com/problems/ba-shu-zi-fan-yi-cheng-zi-fu-chuan-lcof/)
+
+给定一个数字，我们按照如下规则把它翻译为字符串：0 翻译成 “a” ，1 翻译成 “b”，……，11 翻译成 “l”，……，25 翻译成 “z”。一个数字可能有多个翻译。请编程实现一个函数，用来计算一个数字有多少种不同的翻译方法。
+
+**示例 1:**
+
+```java
+输入: 12258
+输出: 5
+解释: 12258有5种不同的翻译，分别是"bccfi", "bwfi", "bczi", "mcfi"和"mzi"
+```
+
+**提示：**
+
+- `0 <= num < 231`
+
+**解法一**
+
+代码比较丑，逻辑还是比较清晰，其实这题算是上面 [91. 解码方法](#91-解码方法)的弱化没有了0的限制，0是合法的数字，这样就舒服多了，上面解码方法确实做的脑壳疼
+
+```java
+public int translateNum(int num) {
+    String s=String.valueOf(num);
+    int len=s.length();
+    if(len==0 || len==1) return 1;
+    int[] dp=new int[len];
+    //1 2 2 5 8
+    //1 2 3 5 5
+    dp[0]=1;
+    dp[1]=Integer.valueOf(s.substring(0,2))>25?1:2;
+    for(int i=2;i<len;i++){
+        int pre=Integer.valueOf(s.charAt(i-1))-48;
+        int cur=Integer.valueOf(s.charAt(i))-48;
+        if(pre!=0 && Integer.valueOf(pre*10+cur)<=25){
+            dp[i]=dp[i-1]+dp[i-2];
+        }else{
+            dp[i]=dp[i-1];
+        }
+    }
+    return dp[len-1];
+}
+```
+
 ## [5375. 恢复数组](https://leetcode-cn.com/problems/restore-the-array/)
 
 某个程序本来应该输出一个整数数组。但是这个程序忘记输出空格了以致输出了一个数字字符串，我们所知道的信息只有：数组中所有整数都在 [1, k] 之间，且数组中的数字都没有前导 0 。
@@ -1403,7 +1446,7 @@ public static int numDecodings2(String s) {
 
 **解法一**
 
-24th双周赛的T4，其实dp的状态转换还是像出来了，我想的是从左向右，但是细节没理清楚，瞄了一眼评论区，发现从右往左比较简单
+24th双周赛的T4，其实dp的状态转换还是想出来了，我想的是从左向右，但是细节没理清楚，瞄了一眼评论区，发现从右往左比较简单
 
 ```java
 public int numberOfArrays(String s, int k) {
@@ -1413,7 +1456,7 @@ public int numberOfArrays(String s, int k) {
     //dp[i]=dp[i-1]+dp[i-2]+...+dp[0];
     for (int i=1;i<=s.length();i++) {
         for (int j=i-1;j>=0 && i-j<=9;j--) {
-            if(s.charAt(j)!='0' && valid(s,j,i,k)){
+            if(s.charAt(j)!='0' && valid(s,j,i,k)){ //验证右边是否满足
                 dp[i]=(dp[i]+dp[j])%mod;
             }
         }
