@@ -4400,6 +4400,7 @@ public double new21Game(int N, int K, int W) {
         }
     }
     // i>K 从i-W ~ i区间选小于K的部分
+    //和剑指offer的骰子哪一题有点像
     //dp[i] = 1/W(dp[K-1]+dp[K-2]+...+dp[i-W]) or dp[i]=1/W(dp[i-W]+dp[i-W+1]+..+dp[K-1])
     //dp[i-1] = 1/W(dp[k-1]+dp[K-2]+...+dp[i-W-1]) or dp[i+1] = 1/W(dp[i-W+1]+dp[i-W+2]...+dp[K-1])
     //==> dp[i] = dp[i-1]-1/W*dp[i-W-1] or dp[i]=1/W*dp[i-W]+dp[i+1] 两个是等价的

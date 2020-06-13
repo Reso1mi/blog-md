@@ -1531,6 +1531,29 @@ public List<String> binaryTreePaths(TreeNode root) {
 ```
 这里和传统的BFS不太一样，是用的栈来遍历的
 
+**解法三**
+
+这种解法应该会比上面的解法复杂度低一点
+
+```go
+func binaryTreePaths(root *TreeNode) []string {
+    var res []string
+    dfs(root,"",&res)
+    return res
+}
+
+func dfs(root *TreeNode,path string,res *[]string){
+    if root==nil {return}
+    path+=strconv.Itoa(root.Val)
+    if root.Left==nil && root.Right==nil{
+        *res=append(*res,path)
+        return
+    }
+    dfs(root.Left,path+"->",res)
+    dfs(root.Right,path+"->",res)
+}
+```
+
 ## [113. 路径总和 II](https://leetcode-cn.com/problems/path-sum-ii/)
 
 给定一个二叉树和一个目标和，找到所有从根节点到叶子节点路径总和等于给定目标和的路径。
@@ -1668,6 +1691,60 @@ public void dfs(TreeNode root,int sum,List<Integer> lis){
         dfs(root.right,sum-root.val,lis);
     }
     lis.remove(lis.size()-1);
+}
+```
+
+## [894. 所有可能的满二叉树](https://leetcode-cn.com/problems/all-possible-full-binary-trees/)
+
+*满二叉树*是一类二叉树，其中每个结点恰好有 0 或 2 个子结点。
+
+返回包含 `N` 个结点的所有可能满二叉树的列表。 答案的每个元素都是一个可能树的根结点。
+
+答案中每个树的每个`结点`都**必须**有 `node.val=0`。
+
+你可以按任何顺序返回树的最终列表。
+
+![tXXu4A.png](https://s1.ax1x.com/2020/06/13/tXXu4A.png)
+
+**示例：**
+
+```java
+输入：7
+输出：[[0,0,0,null,null,0,0,null,null,0,0],[0,0,0,null,null,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,null,null,null,null,0,0],[0,0,0,0,0,null,null,0,0]]
+解释：
+```
+
+**提示：**
+
+- `1 <= N <= 20`
+
+**解法一**
+
+这题和上面两题很类似，可惜我并没有直接做出来，菜啊，看了一眼评论区看见了几个for循环立马就懂了，然后过了好几天实现了下，一开始root的位置放错了，改了一会儿
+
+```java
+public List<TreeNode> allPossibleFBT(int N) {
+    List<TreeNode> res=new ArrayList<>();
+    if(N%2==0) return res; //偶数提前返回，加快速度
+    if(N==1){
+        res.add(new TreeNode(0));
+        return res;  
+    }
+    N--; //减去根节点
+    for(int i=1;i<N;i+=2){ //将左右子树划分位两个奇数
+        List<TreeNode> lefts=allPossibleFBT(i);
+        List<TreeNode> rights=allPossibleFBT(N-i);
+        for(TreeNode le:lefts){
+            for(TreeNode ri:rights){
+                //一路从最外层移动到这里。。。。
+                TreeNode root=new TreeNode(0); 
+                root.left=le;
+                root.right=ri;
+                res.add(root);
+            }
+        }
+    }
+    return res;
 }
 ```
 
