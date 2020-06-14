@@ -5743,11 +5743,81 @@ public int minIncrementForUnique(int[] A) {
 }
 ```
 
-暴力的解法很好想，首先肯定要排序，然后遇到小于相等的时候就`move+1`，直到不相等，但是这里是可以优化的，一次次的加没有啥意义，可以直接一步到位直接从`A[i]`增加到`A[i-1]+1`
+暴力的解法很好想，首先肯定要排序，然后遇到小于等于前面的时候就`move+1`，直到不相等，但是这里是可以优化的，一次次的加没有啥意义，可以直接一步到位直接从`A[i]`增加到`A[i-1]+1`
 
 > 这题还有一些方法优化，首先是排序可以用桶排序，然后还可以用并查集（比较麻烦），或者也有数学分析找规律的方法
 
+## [面试题05. 替换空格](https://leetcode-cn.com/problems/ti-huan-kong-ge-lcof/)
+
+请实现一个函数，把字符串 `s` 中的每个空格替换成"%20"。
+
+**示例 1：**
+
+```java
+输入：s = "We are happy."
+输出："We%20are%20happy."
+```
+
+**限制：**
+
+```java
+0 <= s 的长度 <= 10000
+```
+
+**解法一**
+
+这题的标准做法
+
+```java
+public String replaceSpace(String s) {
+    char[] res=new char[s.length()*3];
+    int idx=0;
+    for(int i=0;i<s.length();i++){
+        if(s.charAt(i)==' '){
+            res[idx++]='%';
+            res[idx++]='2';
+            res[idx++]='0';
+        }else{
+            res[idx++]=s.charAt(i);
+        }
+    }
+    return new String(res,0,idx);
+}
+```
+
+**解法二**
+
+原题是要求O(1)空间的，这里虽然无法做到，但是可以模拟下
+
+```java
+//原题目的要求应该是在O(1)空间下,但是Java的String是不可变的
+//所以不可能O(1),我们需要改一下函数签名
+public String replaceSpace(/*StringBuilder*/ String ss) {
+    StringBuilder s=new StringBuilder(ss); //这里是为了验证
+    int oldLen=s.length();
+    for (int i=0;i<oldLen;i++) {
+        if(s.charAt(i)==' ') s.append("xx"); //扩充字符长度
+    }
+    int newLen=s.length();
+    //逆序,避免覆盖
+    int i=oldLen-1,j=newLen-1;
+    while(i>=0){
+        char c=s.charAt(i--);
+        if(c==' '){
+            s.setCharAt(j--,'0');
+            s.setCharAt(j--,'2');
+            s.setCharAt(j--,'%');
+        }else{
+            s.setCharAt(j--,c);
+        }
+    }
+    return s.toString();
+}
+```
+
 ##  _二进制_
+
+> 得找时间分开了，越来越卡了，Typora快顶不住了😂
 
 ## [136. 只出现一次的数字](https://leetcode-cn.com/problems/single-number/)
 

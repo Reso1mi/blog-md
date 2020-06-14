@@ -5244,6 +5244,118 @@ func isCousins(root *TreeNode, x int, y int) bool {
 
 有一个小的优化点还是挺有意思的，就是return的地方，一开始没考虑这么多，AC了之后感觉不对，是不是LC又少CASE了，结果仔细一想发现这里是个优化点😁
 
+## [440. 字典序的第K小数字](https://leetcode-cn.com/problems/k-th-smallest-in-lexicographical-order/)
+
+给定整数 `n` 和 `k`，找到 `1` 到 `n` 中字典序第 `k` 小的数字。
+
+注意：1 ≤ k ≤ n ≤ 1e9。
+
+**示例 :**
+
+```java
+输入:
+n: 13   k: 2
+
+输出:
+10
+
+解释:
+字典序的排列是 [1, 10, 11, 12, 13, 2, 3, 4, 5, 6, 7, 8, 9]，所以第二小的数字是 10。
+```
+**解法一**
+
+一开始看了评论区说了10叉树,然后我就顺着这个思路去想了,然后就直接去前序遍历了,然后就T了,这里看下数据范围就知道肯定是过不了的
+```java
+//TLE
+public int findKthNumber(int n, int k) {
+    for (int i=1;i<=9;i++) {
+        dfs(i,n,k);
+    }
+    return res;
+}
+
+int idx=0,res=-1;
+
+public void dfs(int cur,int n,int k){
+    if(res!=-1) return;
+    if(cur>n) return;
+    idx++;
+    if(k==idx){
+        res=cur;
+        return;
+    }
+    for (int i=0;i<=9;i++) {
+        dfs(cur*10+i,n,k);
+    }
+}
+```
+**解法二**
+
+直接遍历肯定是行不通,那么就只能想办法跳过一些节点,这里我们就可以通过计算每个节点的子节点的个数来判断第k个是不是在该节点下,而子节点的个数就可以用`Min(n+1,next*10)-cur`计算得到,`next`是和cur相邻的节点,`n`是最大值,画个图就懂了
+![mark](http://static.imlgw.top/blog/20200614/3WPecCGnzxQl.png?imageslim)
+```java
+//正解
+public int findKthNumber(int n, int k) {
+    long cur=1;
+    k--;
+    while(k>0){
+        long count=getCount(cur,n);
+        if(count<=k){ //不在该节点下,切换到相邻节点
+            cur++;
+            k-=count;
+        }else{//在该节点下,切换到子节点
+            cur*=10;
+            k--;
+        }
+    }
+    return cur;
+}
+
+//计算cur下有多少个节点
+public long getCount(long cur,int n){
+    long next=cur+1;
+    long count=0;
+    while(cur<=n){
+        //12-10=2,所以是n+1
+        count+=Math.min(n+1,next)-cur;
+        next*=10;
+        cur*=10;
+    }
+    return count;
+}
+```
+## [386. 字典序排数](https://leetcode-cn.com/problems/lexicographical-numbers/)
+给定一个整数 n, 返回从 1 到 n 的字典顺序。
+
+例如，
+
+给定 n =1 3，返回 [1,10,11,12,13,2,3,4,5,6,7,8,9] 。
+
+请尽可能的优化算法的时间复杂度和空间复杂度。 输入的数据 n 小于等于 5,000,000。
+
+**解法一**
+
+先做的上面那一题,再做这一题就简单多了,前面tle的方法就是这里的正解,十叉树的前序遍历
+```java
+List<Integer> res=new ArrayList<>();
+
+public List<Integer> lexicalOrder(int n) {
+    for(int i=1;i<=9;i++){
+        dfs(i,n);   
+    }
+    return res;
+}
+
+public void dfs(int cur,int n){
+    if(cur>n) return;
+    res.add(cur);
+    for(int i=0;i<=9;i++){
+        dfs(cur*10+i,n);   
+    }
+}
+```
+
+
 ## _树形DP(大概)_
 
 > 2020.5.10更新，在看了左神的书后，大概了解了树形DP，所谓的树形DP实际上就是把递推方程搬到了树结构上，按我的理解树形DP很大的特点就是最终的解可能存在于树上每个节点，像我下面的题有的暴力解用的就是双重递归，就是dfs遍历没个节点，然后再对每个节点递归求解，但是对根节点求解的时候，实际上其他的子节点都成了子问题，所以后面再对子节点求解的时候问题就重复了，所以就可以采用后序遍历，自底向上，先求左右节点的值再更新根节点，**下面的题其实我不知道到底是不是属于树形DP，可能太简单了，但是再我看来解法比较统一，很有套路所以整理到一起**，我查了下网上介绍的树形DP还是挺难的，后面有时间了解后再来记录
