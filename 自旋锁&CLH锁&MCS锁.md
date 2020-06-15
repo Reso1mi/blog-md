@@ -73,7 +73,7 @@ public class TicketLock {
 
 Ticket Lock 虽然解决了公平性的问题，但是多处理器系统上，每个进程/线程占用的处理器都在读写同一个变量serviceNum ，每次读写操作都必须在多个处理器缓存之间进行缓存同步，这会导致繁重的系统总线和内存的流量，大大降低系统整体的性能。
 
-### CLH锁
+## CLH锁
 
 CLH的发明人是：Craig，Landin and Hagersten，三个人的名字合称
 
@@ -121,7 +121,7 @@ NUMA(Non-Uniform Memory Access)非一致存储访问，将CPU分为CPU模块，�
 
 **CLH锁的缺点是在NUMA系统结构下性能很差，在这种系统结构下，每个线程有自己的内存，如果前趋结点的内存位置比较远，自旋判断前趋结点的locked域，性能将大打折扣，在SMP架构下能够保证内存一致性所以自旋判断较快**
 
-### MCS锁
+## MCS锁
 
 MCS Spinlock是一种基于显式链表（节点里面拥有next指针）的可扩展、高性能、公平的自旋锁，申请线程只在本地变量上自旋，由直接前驱负责通知其结束自旋（与CLH自旋锁不同的地方，不在轮询前驱的状态，而是由前驱主动通知），从而极大地减少了不必要的处理器缓存同步的次数，降低了总线和内存的开销。而MCS是在自己的结点的locked域上自旋等待。正因为如此，它解决了CLH在NUMA系统架构中获取locked域状态内存过远的问题。
 
@@ -185,10 +185,10 @@ public class MCSLock {
 }
 ```
 
-### 总结
+## 总结
 
 传统的`Spin lock` 和 `Ticket Lock`都在同一个共享变量上竞争（例如SimpleSpinLock中的owner、Ticket Lock中的serviceNum），这样对给CPU保证缓存一致性带来的压力比较大，每次读写都需要同步到所有的线程，而MCS和CLH最大的优化点在于把上述同一个点上的竞争分散到队列的每个节点中去了。
 
-### 参考
+## 参考
 
 [自旋锁、排队自旋锁、MCS锁、CLH锁](https://coderbee.net/index.php/concurrent/20131115/577)

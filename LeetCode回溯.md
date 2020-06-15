@@ -2113,7 +2113,7 @@ public boolean dfs(int[] nums,int index,int[] bucket,int sum){
 >
 > 首先`index==-1`说明所有元素都已经放入`bucket`中了，所以`sum(bucket)=sum(nums)`
 >
-> 再来看我们的if条件：约束桶内元素小于等于`sum/k`，也就是`bucket[i]<=sum/k` 借助上面的结论，转换一下就是 `bucket[i]<=sum(bucket)/k`也就是`bucket[i]<=avg(bucket)`很明显，只有在每个桶内元素都相等的时候才成立，故这里可以直接返回true
+> 再来看我们的if条件：约束桶内元素小于等于`sum/k`，也就是`bucket[i]<=sum(nums)/k` 借助上面的结论，转换一下就是 `bucket[i]<=sum(bucket)/k`也就是`bucket[i]<=avg(bucket)`很明显，只有在每个桶内元素都相等的时候才成立，故这里可以直接返回true
 
 **解法二**
 
