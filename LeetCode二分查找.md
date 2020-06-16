@@ -2007,4 +2007,143 @@ public boolean check(int[] nums,long limit,int m){
     return count<=m;
 }
 ```
+## [1482. 制作 m 束花所需的最少天数](https://leetcode-cn.com/problems/minimum-number-of-days-to-make-m-bouquets/)
 
+给你一个整数数组 `bloomDay`，以及两个整数 m 和 k 。
+
+现需要制作 `m` 束花。制作花束时，需要使用花园中 `相邻的 k` 朵花 。
+
+花园中有 n 朵花，第 i 朵花会在 bloomDay[i] 时盛开，恰好 可以用于 一束 花中。
+请你返回从花园中摘 m 束花需要等待的最少的天数。如果不能摘到 m 束花则返回 -1 。
+
+**示例 1：**
+
+```java
+输入：bloomDay = [1,10,3,10,2], m = 3, k = 1
+输出：3
+解释：让我们一起观察这三天的花开过程，x 表示花开，而 _ 表示花还未开。
+现在需要制作 3 束花，每束只需要 1 朵。
+1 天后：[x, _, _, _, _]   // 只能制作 1 束花
+2 天后：[x, _, _, _, x]   // 只能制作 2 束花
+3 天后：[x, _, x, _, x]   // 可以制作 3 束花，答案为 3
+```
+**示例 2：**
+```java
+输入：bloomDay = [1,10,3,10,2], m = 3, k = 2
+输出：-1
+解释：要制作 3 束花，每束需要 2 朵花，也就是一共需要 6 朵花。而花园中只有 5 朵花，无法满足制作要求，返回 -1 。
+```
+**示例 3：**
+```
+输入：bloomDay = [7,7,7,7,12,7,7], m = 2, k = 3
+输出：12
+解释：要制作 2 束花，每束需要 3 朵。
+花园在 7 天后和 12 天后的情况如下：
+7 天后：[x, x, x, x, _, x, x]
+可以用前 3 朵盛开的花制作第一束花。但不能使用后 3 朵盛开的花，因为它们不相邻。
+12 天后：[x, x, x, x, x, x, x]
+显然，我们可以用不同的方式制作两束花。
+```
+**示例 4：**
+```java
+输入：bloomDay = [1000000000,1000000000], m = 1, k = 1
+输出：1000000000
+解释：需要等 1000000000 天才能采到花来制作花束
+示例 5：
+
+输入：bloomDay = [1,10,2,9,3,8,4,7,5,6], m = 4, k = 2
+输出：9
+ ```
+**提示：**
+- bloomDay.length == n
+- 1 <= n <= 10^5
+- 1 <= bloomDay[i] <= 10^9
+- 1 <= m <= 10^6
+- 1 <= k <= n
+
+**解法一**
+
+193th周赛的T3，没参加，但是在群里听群友讨论了，是个二分，刚刚具体的看了题目，发现其实是很明显的二分答案，很可惜没参加这次比赛，感觉能A3道。。。
+```java
+public int minDays(int[] bloomDay, int m, int k) {
+    int n=bloomDay.length;
+    if(m*k>n) return -1; //花园的花不够
+    //直接写就完事了，这里数据范围只到1e9，log(1e9)很小的，只有30左右
+    int left=1,right=(int)1e9;
+    int res=right+1;
+    while(left<=right){
+        int mid=left+(right-left)/2;
+        if(check(bloomDay,m,k,mid)){
+            res=mid;
+            right=mid-1;
+        }else{
+            left=mid+1;
+        }
+    }
+    return res;
+}
+
+//check写的好丑...
+public boolean check(int[] bloomDay,int m,int k,int day){
+    int i=0;
+    int count=0;
+    while(i<bloomDay.length){
+        int temp=0;
+        while(i<bloomDay.length){
+            if(bloomDay[i]<=day){
+                temp++;
+                if(temp==k){
+                    count++;
+                    break;
+                }
+                i++;
+            }else{
+                break;
+            }
+        }
+        if(count>=m) return true;
+        i++;
+    }
+    return false;
+}
+```
+**解法二**
+
+看了评论区，然后自己思考了下，改进了`check`
+```java
+public int minDays(int[] bloomDay, int m, int k) {
+    int n=bloomDay.length;
+    if(m*k>n) return -1; //花园的花不够
+    //直接写就完事了，这里数据范围只到1e9，log(1e9)很小的，只有30左右
+    int left=1,right=(int)1e9; 
+    int res=right+1;
+    while(left<=right){
+        int mid=left+(right-left)/2;
+        if(check(bloomDay,m,k,mid)){
+            res=mid;
+            right=mid-1;
+        }else{
+            left=mid+1;
+        }
+    }
+    return res;
+}
+
+public boolean check(int[] bloomDay,int m,int k,int day){
+    int i=0;
+    int count=0;
+    int temp=0; //相邻的开花数量
+    for(int d:bloomDay){
+        if(d<=day){ //花开了(md，这个if写反两次)
+            temp++;
+        }else{
+            temp=0;
+        }
+        if(temp==k){
+            temp=0;
+            count++;
+        }
+    }
+    return count>=m;
+}
+```
