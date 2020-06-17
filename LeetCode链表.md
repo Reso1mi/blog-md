@@ -2114,8 +2114,8 @@ public ListNode swapPairs(ListNode head) {
 ```
 递归是真的简洁，我最开始写反转链表的递归就是这么写的😂
 
----
-## 25.K个一组翻转链表
+
+## [25.K个一组翻转链表](https://leetcode-cn.com/problems/reverse-nodes-in-k-group/)
 
 给出一个链表，每 k 个节点一组进行翻转，并返回翻转后的链表。
 
@@ -2276,7 +2276,7 @@ func reverse(head *ListNode) *ListNode {
     return pre
 }
 ```
-
+隔一段时间就会重新写一遍，写肯定写的出来，就是要想清楚，最好搞个case在上面，一边模拟一边写
 > 做链表的题就是得细心啊，容易把自己绕进去，上面的解法就是看了题解才写出来的
 
 ## **817. 链表组件**

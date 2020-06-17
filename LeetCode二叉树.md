@@ -4594,7 +4594,11 @@ public TreeNode node(String str){
 
 **解法二**
 
-前序遍历递归方式
+前序遍历递归方式，我们将序列化的结果存在一个`queue`中，然后从头开始取，因为是前序遍历，所以整体结构肯定是`【root,root.left,root.right】` 
+
+反序列化关键就是如何区分左右子树，仅仅依靠一个前序遍历是无法重建二叉树的，所以我们可以做一些小手段，在序列化节点为空的时候加入`null`字符，这样左右节点就会被连续的两个`[null,null]`分隔开，方便重建
+
+> eg.  示例一：  1,2,null,null,3,4,null,null,5,null,null
 
 ```java
 public TreeNode node(String str){
@@ -4631,6 +4635,124 @@ public TreeNode deserialize(Queue<String> queue){
     return root;
 }
 ```
+**解法三**
+
+补充一个go的写法，和解法二的思路是一样的
+```go
+type Codec struct {
+}
+
+func Constructor() Codec {
+    return Codec{}
+}
+
+// Serializes a tree to a single string.
+func (this *Codec) serialize(root *TreeNode) string {
+    if root == nil {
+        return "nil"
+    }
+    return strconv.Itoa(root.Val) + "," + this.serialize(root.Left) + "," + this.serialize(root.Right)
+}
+
+// Deserializes your encoded data to tree.
+func (this *Codec) deserialize(data string) *TreeNode {
+    queue := strings.Split(data, ",")
+    return this.des(&queue)
+}
+
+func (this *Codec) des(queue *[]string) *TreeNode {
+    if len(*queue) == 0 {
+        return nil
+    }
+    cur := (*queue)[0]
+    *queue = (*queue)[1:]
+    if cur == "nil" {
+        return nil
+    }
+    val, _ := strconv.Atoi(cur)
+    root := &TreeNode{Val: val}
+    root.Left = this.des(queue)
+    root.Right = this.des(queue)
+    return root
+}
+```
+## [449. 序列化和反序列化二叉搜索树](https://leetcode-cn.com/problems/serialize-and-deserialize-bst/)
+序列化是将数据结构或对象转换为一系列位的过程，以便它可以存储在文件或内存缓冲区中，或通过网络连接链路传输，以便稍后在同一个或另一个计算机环境中重建。
+
+设计一个算法来序列化和反序列化二叉搜索树。 对序列化/反序列化算法的工作方式没有限制。 您只需确保二叉搜索树可以序列化为字符串，并且可以将该字符串反序列化为最初的二叉搜索树。
+
+编码的字符串应尽可能紧凑。
+
+**注意：** 不要使用类成员/全局/静态变量来存储状态。 你的序列化和反序列化算法应该是无状态的。
+
+**解法一**
+
+题目说 `编码的字符串应尽可能紧凑`，所以直接把上面297的搬过来其实不太好，因为会有很多null字符，并且也没有用到题目二`bst`的条件，`bst`只需要知道一个前序或者后序就可以还原整棵树，题目就变成了根据`前序/后序`和`中序`还原二叉树
+
+`golang`新手，用`golang`写了一发，感觉写复杂了（官方解法中还有更加激进的压缩编码的方式，感觉有点偏了）
+
+```go
+type Codec struct {
+}
+
+func Constructor() Codec {
+    return Codec{}
+}
+
+// Serializes a tree to a single string.
+func (this *Codec) serialize(root *TreeNode) string {
+    if root == nil {
+        return ""
+    }
+    var queue []string
+    var dfs func(root *TreeNode)
+    dfs = func(root *TreeNode) {
+        if root == nil {
+            return
+        }
+        queue = append(queue, strconv.Itoa(root.Val))
+        dfs(root.Left)
+        dfs(root.Right)
+    }
+    dfs(root)
+    return strings.Join(queue, ",")
+}
+
+// Deserializes your encoded data to tree.
+func (this *Codec) deserialize(data string) *TreeNode {
+    if data == "" {
+        return nil
+    }
+    //fmt.Println(data)
+    queue := strings.Split(data, ",")
+    inOrder := make([]int, len(queue))
+    for i, v := range queue {
+        inOrder[i], _ = strconv.Atoi(v)
+    }
+    preOrder := make([]int, len(inOrder))
+    copy(preOrder, inOrder)
+    sort.Ints(inOrder)
+    var dfs func(preOrder, inOrder []int) *TreeNode
+    dfs = func(preOrder, inOrder []int) *TreeNode {
+        if len(inOrder) == 0 {
+            return nil
+        }
+        root := &TreeNode{Val: preOrder[0]}
+        rootIdx := 0
+        for i, v := range inOrder {
+            if v == preOrder[0] {
+                rootIdx = i
+                break
+            }
+        }
+        root.Left = dfs(preOrder[1:rootIdx+1], inOrder[:rootIdx])
+        root.Right = dfs(preOrder[rootIdx+1:], inOrder[rootIdx+1:])
+        return root
+    }
+    return dfs(preOrder, inOrder)
+}
+```
+
 
 ## [面试题33. 二叉搜索树的后序遍历序列](https://leetcode-cn.com/problems/er-cha-sou-suo-shu-de-hou-xu-bian-li-xu-lie-lcof/)
 
