@@ -3006,30 +3006,11 @@ public void flatten(TreeNode root) {
 
 ![3VE7QO.png](https://s2.ax1x.com/2020/02/19/3VE7QO.png)
 
-**示例 1:**
+我们希望将这个二叉搜索树转化为双向循环链表。链表中的每个节点都有一个前驱和后继指针。对于双向循环链表，第一个节点的前驱是最后一个节点，最后一个节点的后继是第一个节点。
 
-```java
-输入:
-    2
-   / \
-  1   3
-输出: true
-```
-
-
-**示例 2:**
-
-```java
-输入:
-    5
-   / \
-  1   4
-     / \
-    3   6
-输出: false
-解释: 输入为: [5,1,4,null,null,3,6]。
-     根节点的值为 5 ，但是其右子节点值为 4 。
-```
+下图展示了上面的二叉搜索树转化成的链表。“head” 表示指向链表中有最小元素的节点。
+![Nn3iZR.png](https://s1.ax1x.com/2020/06/18/Nn3iZR.png)
+特别地，我们希望可以就地完成转换操作。当转化完成以后，树中节点的左指针需要指向前驱，树中节点的右指针需要指向后继。还需要返回链表中的第一个节点的指针。
 
 **解法一**
 
@@ -5476,7 +5457,70 @@ public void dfs(int cur,int n){
     }
 }
 ```
+## [1028. 从先序遍历还原二叉树](https://leetcode-cn.com/problems/recover-a-tree-from-preorder-traversal/)
 
+我们从二叉树的根节点 root 开始进行深度优先搜索。
+
+在遍历中的每个节点处，我们输出 D 条短划线（其中 D 是该节点的深度），然后输出该节点的值。（如果节点的深度为 D，则其直接子节点的深度为 D + 1。根节点的深度为 0）。
+
+如果节点只有一个子节点，那么保证该子节点为左子节点。
+
+给出遍历输出 S，还原树并返回其根节点 root。
+
+**示例 1：**
+```java
+输入："1-2--3--4-5--6--7"
+输出：[1,2,5,3,4,6,7]
+```
+**示例 2：**
+```java
+输入："1-2--3---4-5--6---7"
+输出：[1,2,5,3,null,6,null,4,null,7]
+```
+**示例 3：**
+```java
+输入："1-401--349---90--88"
+输出：[1,401,null,349,88,90]
+```
+**提示：**
+原始树中的节点数介于 1 和 1000 之间。
+每个节点的值介于 1 和 10 ^ 9 之间。
+
+**解法一**
+
+抄答案，第一天看了几分钟，一开始想写递归，直接看了答案，第二天还是没有完整的写出来，其实这题迭代会好理解很多，递归的看了下，有点不好理解，很trick
+```java
+public TreeNode recoverFromPreorder(String S) {
+    //栈中存的是深度严格单调递增（步伐为1）的节点 0 1 2 3 4....
+    Deque<TreeNode> stack=new ArrayDeque(); 
+    int i=0;
+    while(i<S.length()){
+        int depth=0;
+        while(i<S.length() && S.charAt(i)=='-') {
+            depth++;
+            i++;
+        }
+        int val=0;
+        while(i<S.length() && S.charAt(i)>='0' && S.charAt(i)<='9'){
+            val=val*10+S.charAt(i)-48;
+            i++;
+        }
+        TreeNode node=new TreeNode(val);
+        if(depth==stack.size()){ //栈的节点数量就是当前的深度
+            if(!stack.isEmpty()) stack.peek().left=node;
+        }else{
+            while(depth!=stack.size()){
+                stack.pop();
+            }
+            //depth==0的只有一个根节点，是不会走这个分支的，所以这里肯定不为空
+            stack.peek().right=node;
+        }
+        stack.push(node);
+    }
+    while(stack.size()!=1) stack.pop();
+    return stack.pop();
+}
+```
 
 ## _树形DP(大概)_
 
