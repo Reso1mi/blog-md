@@ -882,6 +882,29 @@ public void subsets(int[] nums,int index,List<Integer> lis) {
 ```
 简单的回溯，注意收集结果的时机就行
 
+**Update: 2020.6.20**
+
+增加一个go的写法
+```golang
+func subsets(nums []int) [][]int {
+    var res [][]int
+    var lis []int
+    var dfs func(index int)
+    dfs = func(index int){
+        dest:=make([]int,len(lis))
+        copy(dest,lis)
+        res=append(res,dest)
+        for i:=index;i<len(nums);i++{
+            lis=append(lis,nums[i])
+            dfs(i+1)
+            lis=lis[:len(lis)-1]
+        }
+    }
+    dfs(0)
+    return res
+}
+```
+
 **解法二**
 
 BFS，类似于二叉树层次遍历，首先初始化一个空的list，后面每次迭代都将list中的所有元素都取出来加上当前元素，再重新加入到list中
@@ -952,6 +975,33 @@ public void subsets(int[] nums,int index,List<Integer> lis) {
         subsets(nums,i+1,lis);
         lis.remove(lis.size()-1);
     }
+}
+```
+
+**Update: 2020.6.20**
+
+用go重写了一遍，复习下
+```golang
+func subsetsWithDup(nums []int) [][]int {
+    sort.Ints(nums)
+    var res [][]int
+    var lis []int
+    var dfs func(index int)
+    dfs = func(index int){
+        dest:=make([]int,len(lis))
+        copy(dest,lis)
+        res=append(res,dest)
+        for i:=index;i<len(nums);i++{
+            if i>index && nums[i]==nums[i-1]{
+                continue
+            }
+            lis=append(lis,nums[i])
+            dfs(i+1)
+            lis=lis[:len(lis)-1]
+        }
+    }
+    dfs(0)
+    return res
 }
 ```
 
