@@ -5586,7 +5586,7 @@ func increasingBST(root *TreeNode) *TreeNode {
     return dummyNode.Right
 }
 ```
-
+> 这题和[面试题 17.12. BiNode](https://leetcode-cn.com/problems/binode-lcci/)解法是一摸一样的，但是这个sb题的描述我是真没看懂，结合评论区和case才知道到底要干啥，看评论区好像都整的挺明白的，一度以为我理解能力出了问题
 ## _树形DP(大概)_
 
 > 2020.5.10更新，在看了左神的书后，大概了解了树形DP，所谓的树形DP实际上就是把递推方程搬到了树结构上，按我的理解树形DP很大的特点就是最终的解可能存在于树上每个节点，像我下面的题有的暴力解用的就是双重递归，就是dfs遍历没个节点，然后再对每个节点递归求解，但是对根节点求解的时候，实际上其他的子节点都成了子问题，所以后面再对子节点求解的时候问题就重复了，所以就可以采用后序遍历，自底向上，先求左右节点的值再更新根节点，**下面的题其实我不知道到底是不是属于树形DP，可能太简单了，但是再我看来解法比较统一，很有套路所以整理到一起**，我查了下网上介绍的树形DP还是挺难的，后面有时间了解后再来记录
@@ -5980,6 +5980,34 @@ public int helper(TreeNode root){
 
 在递归函数中用全局变量记录最大值，最后返回的却是**单边**的最大值，也就是我上面写的dfs函数返回的值，可以说是相当巧妙了，除此外对递归的出口也进行了简化
 
+**Update: 2020.6.21**
+
+用go重写一下，最近很喜欢写这种闭包的结构，感觉比较简洁
+```golang
+func maxPathSum(root *TreeNode) int {
+    res:=-1<<31
+    var Max =func(a,b int) int {
+        if a>b{
+            return a   
+        }
+        return b
+    }
+    //以root开头最大单侧路径
+    var dfs func(root *TreeNode) int
+    dfs = func(root *TreeNode) int {
+        if root==nil{
+            return -1<<31 //返回的小于0就行
+        }
+        left:=Max(0,dfs(root.Left))
+        right:=Max(0,dfs(root.Right))
+        res=Max(res,left+right+root.Val)
+        return root.Val+Max(left,right)
+    }
+    dfs(root)
+    return res
+}
+```
+
 ## [687. 最长同值路径](https://leetcode-cn.com/problems/longest-univalue-path/)
 
 给定一个二叉树，找到最长的路径，这个路径中的每个节点具有相同值。 这条路径可以经过也可以不经过根节点。
@@ -6103,6 +6131,40 @@ public int dfs(TreeNode root){
 >
 > 其实想想就知道不行，先判断其实相当于`前序遍历`，在访问节点第一次的时候如果不符合条件就直接返回了，这样根本无法遍历完所有的节点自然是不行，所以这种类型的一般都是`后序遍历`，待子节点都处理完之后再返回根节点做处理，和分治的思想很像
 
+**Update: 2020.6.21**
+
+go重写一遍，换了个方式，统计节点个数最后减一
+```golang
+func longestUnivaluePath(root *TreeNode) int {
+    if root==nil{
+        return 0
+    }
+    var Max=func(a,b int)int{
+        if a>b{return a}
+        return b
+    }
+    var res=0
+    var dfs func(root *TreeNode)int
+    dfs = func (root *TreeNode)int{
+        if root==nil{
+            return 0
+        }
+        //root和左右子节点能形成的最长同值路径(至少是1)
+        left := 1+dfs(root.Left) 
+        right := 1+dfs(root.Right)
+        if root.Left==nil || root.Val!=root.Left.Val{
+            left=1
+        }
+        if root.Right==nil || root.Val!=root.Right.Val{
+            right=1
+        }
+        res=Max(res,left+right-1)
+        return Max(left,right)
+    }
+    dfs(root)
+    return res-1
+}
+```
 **解法二**
 
 另一种dfs的思路，代码更加简洁一点，但是稍微有一点不好想
@@ -6217,6 +6279,36 @@ public int dfs(TreeNode root){
 ```
 
 其实一开始写了一个很复杂的，dfs的定义又和父节点耦合了，感觉和父节点耦合之后就很难搞，很容易搞晕，所以尽量不和父节点耦合，直接以当前节点定义
+
+**Update: 2020.6.21**
+
+```golang
+func longestConsecutive (root *TreeNode) int {
+    var Max = func(a,b int)int{
+        if a>b{return a}
+        return b
+    }
+    var dfs func(root *TreeNode) int
+    var res=0
+    dfs = func(root *TreeNode)int{
+        if root ==nil {
+            return 0
+        }
+        left:= 1+dfs(root.Left)
+        right:= 1+dfs(root.Right)
+        if root.Left==nil ||root.Left.Val!=root.Val+1{
+            left=1
+        }
+        if root.Right==nil ||root.Right.Val!=root.Val+1{
+            right=1
+        }
+        res=Max(res,Max(left,right))
+        return Max(left,right)
+    }
+    dfs(root)
+    return res
+}
+```
 
 ## [337. 打家劫舍 III](https://leetcode-cn.com/problems/house-robber-iii/)
 
@@ -6383,6 +6475,31 @@ public int[] dfs(TreeNode root){
     res[1]=dfs(root.right)[0]+1;
     max=Math.max(max,Math.max(res[0],res[1]));
     return res;
+}
+```
+**Update: 2020.6.21**
+
+用go重写（回顾）下
+```golang
+func longestZigZag(root *TreeNode) int {
+    var Max = func(a,b int)int{
+        if a>b{return a}
+        return b
+    }
+    var dfs func(root *TreeNode)[]int
+    var res = 0
+    dfs = func(root *TreeNode)[]int{
+        if root==nil{
+            return []int{0,0}
+        }
+        //0：向左走最长交错 1：向右最长交错路径
+        left := dfs(root.Left)
+        right := dfs(root.Right)
+        res=Max(res,Max(left[1]+1,right[0]+1))
+        return []int{left[1]+1,right[0]+1}
+    }
+    dfs(root)
+    return res-1
 }
 ```
 
