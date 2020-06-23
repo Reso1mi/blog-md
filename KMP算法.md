@@ -122,8 +122,8 @@ public int[] getNext(String t){
         if(t.charAt(left)==t.charAt(right-1)){
             left++;
             next[right++]=left;
-        }else if(left<=0){
-            next[right++]=0;
+        }else if(next[left]==-1){ //无法匹配了
+            right++; //next[right]=0
         }else{
             left=next[left];
         }
@@ -199,7 +199,7 @@ public int[] getNext(String s){
     while(right<s.length()){
         if(s.charAt(left)==s.charAt(right-1)){
             next[right++]=++left;
-        }else if(left<=0){
+        }else if(next[left]==-1){
             next[right++]=0;
         }else{
             left=next[left];
@@ -241,7 +241,8 @@ public boolean repeatedSubstringPattern(String s) {
     if(s==null || s.length()<=1) return false;
     int[] next=getNext(s);
     int replen=s.length()-next[s.length()];
-    return s.length()%replen==0;
+    //循环结长度等于字符长度
+    return replen!=s.length() && s.length()%replen==0;
 }
 
 public int[] getNext(String s){
@@ -255,7 +256,7 @@ public int[] getNext(String s){
     while(right<=s.length()){
         if(s.charAt(left)==s.charAt(right-1)){
             next[right++]=++left;
-        }else if(left<=0){
+        }else if(next[left]==-1){
             next[right++]=0;
         }else{
             left=next[left];
@@ -265,7 +266,7 @@ public int[] getNext(String s){
 }
 ```
 
-实在不行把这个记住就行了，反正我是记住了😂
+实在不行把这个记住就行了，反正我是记住了😂（过几天就忘了
 
 ### [214. 最短回文串](https://leetcode-cn.com/problems/shortest-palindrome/)
 
@@ -321,3 +322,74 @@ public String shortestPalindrome(String s) {
 }
 ```
 
+### [1392. 最长快乐前缀](https://leetcode-cn.com/problems/longest-happy-prefix/)
+
+「快乐前缀」是在原字符串中既是 非空 前缀也是后缀（不包括原字符串自身）的字符串。
+
+给你一个字符串 s，请你返回它的**最长快乐前缀**。
+
+如果不存在满足题意的前缀，则返回一个空字符串。
+
+**示例 1：**
+
+```java
+输入：s = "level"
+输出："l"
+解释：不包括 s 自己，一共有 4 个前缀（"l", "le", "lev", "leve"）和 4 个后缀（"l", "el", "vel", "evel"）。最长的既是前缀也是后缀的字符串是 "l" 。
+
+```
+**示例 2：**
+
+```java
+输入：s = "ababab"
+输出："abab"
+解释："abab" 是最长的既是前缀也是后缀的字符串。题目允许前后缀在原字符串中重叠。
+```
+**示例 3：**
+
+```java
+输入：s = "leetcodeleet"
+输出："leet"
+```
+**示例 4：**
+
+```java
+输入：s = "a"
+输出：""
+```
+
+**提示：**
+- 1 <= s.length <= 10^5
+- s 只含有小写英文字母
+
+**解法一**
+
+最近某次周赛的T4，没参加，今天看见群里有人提到了，看了下发现是裸KMP...正好复习下，结果写出bug了。。。
+
+```golang
+func longestPrefix(s string) string {
+    if len(s) == 1 {
+        return ""
+    }
+    //裸KMP
+    next := make([]int, len(s)+1)
+    next[0] = -1
+    next[1] = 0
+    var left = 0
+    var i = 2
+    for i <= len(s) {
+        if s[i-1] == s[left] {
+            left++
+            next[i] = left
+            i++
+        } else if next[left] == -1 {
+            i++
+        } else {
+            left = next[left]
+        }
+    }
+    return s[0:next[len(s)]]
+}
+```
+确实也长时间没有复习kmp了，kmp的细节几乎都忘了，上面的都是凭借着一点理解和记忆写的
+> 检查了前面kmp的写法，稍微改进了一下，目前统一了写法
