@@ -2991,6 +2991,29 @@ public String addBinary(String a, String b) {
     return res.reverse().toString();
 }
 ```
+
+
+**解法二**
+
+上面的解法是完全的模拟解法，不够优雅
+```java
+public String addBinary(String a, String b) {
+    StringBuilder res=new StringBuilder(); 
+    int idxA=a.length()-1;
+    int idxB=b.length()-1;
+    int carry=0;
+    while(idxA >=0 || idxB >=0){
+        int sum=carry;
+        sum+=idxA>=0?a.charAt(idxA)-48:0;
+        sum+=idxB>=0?b.charAt(idxB)-48:0;
+        res.append(sum%2);
+        carry=sum/2;
+        idxA--;idxB--;
+    }
+    if(carry==1) res.append(1);
+    return res.reverse().toString();
+}
+```
 ## [415. 字符串相加](https://leetcode-cn.com/problems/add-strings/)
 
 给定两个字符串形式的非负整数 `num1` 和`num2` ，计算它们的和。
@@ -3024,28 +3047,6 @@ public String addStrings(String num1, String num2) {
         sb.append("1");
     }
     return sb.reverse().toString();
-}
-```
-
-**解法二**
-
-上面的解法是完全的模拟解法，不够优雅
-```java
-public String addBinary(String a, String b) {
-    StringBuilder res=new StringBuilder(); 
-    int idxA=a.length()-1;
-    int idxB=b.length()-1;
-    int carry=0;
-    while(idxA >=0 || idxB >=0){
-        int sum=carry;
-        sum+=idxA>=0?a.charAt(idxA)-48:0;
-        sum+=idxB>=0?b.charAt(idxB)-48:0;
-        res.append(sum%2);
-        carry=sum/2;
-        idxA--;idxB--;
-    }
-    if(carry==1) res.append(1);
-    return res.reverse().toString();
 }
 ```
 
