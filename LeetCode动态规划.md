@@ -5623,7 +5623,7 @@ public int strangePrinter(String s) {
 
 这个题其实困扰了我很长时间，之前看了好几次都放弃了，感觉有些找规律的数学解法太难想到了，所以这里直接采用**数位DP**，相对于其他的解法，这种解法会更加套路模板化
 ```java
-//dp[pos][sumOne]代表从高位枚举到pos位置，前面1出现的个数sumOne
+//dp[pos][sumOne]代表枚举到pos位置，前面1出现的个数为sumOne的时候，pos到最低位出现的数字1的个数
 int [][] dp=null;
 
 public int countDigitOne(int n) {
@@ -5639,7 +5639,7 @@ public int countDigitOne(int n) {
 }
 
 public int dfs(int[] num,int pos,int sumOne,boolean leadZero,boolean limit){
-    //枚举完所有的数位，直接返回sumOne
+    //枚举完所有的数位，直接返回sumOne(这个数有多少个1)
     if(pos==-1) return sumOne;
     //状态重叠，状态要完全一致
     if(!leadZero && !limit && dp[pos][sumOne]!=0) return dp[pos][sumOne];
@@ -5653,11 +5653,11 @@ public int dfs(int[] num,int pos,int sumOne,boolean leadZero,boolean limit){
 }
 ```
 
-优化下代码，前导0对状态存取没有影响，有**前导0**和**没有前导0**的`sumOne`肯定不一样
+优化下代码，前导0对状态存取没有影响，这里考虑的是数字的组成
 
 ```java
 //简化下代码，前导0其实没有影响
-//dp[pos][sumOne]代表从高位枚举到pos位置，前面1的个数sumOne
+//dp[pos][sumOne]代表从高位枚举到pos位置，前面1的个数sumOne时
 int [][] dp=null;
 
 public int countDigitOne(int n) {
@@ -5686,8 +5686,52 @@ public int dfs(int[] num,int pos,int sumOne,boolean limit){
     return res;
 }
 ```
+**Update: 2020.6.24**
 
-**数位DP**的概念和模板其实我也是下午在网上查的，然后找到了两个写的比较好的文章 [数位dp总结 之 从入门到模板](https://blog.csdn.net/wust_zzwh/article/details/52100392)，[数字组成的奥妙——数位dp](https://www.luogu.com.cn/blog/virus2017/shuweidp) 以后遇到类似的题又多了一种解法（数学的解法至今仍没学会🤣）只有这一题想搞懂**数位DP**还是不太够，这题还是比较简单的，还是要多做题，多总结才能慢慢体会，lc上好像数位dp好像并不多，过两天都做一下试试
+用go重写了下，同时发现之前对这个状态的理解是错的。
+
+```golang
+func countDigitOne(n int) int {
+    var nums []int
+    for n > 0 {
+        nums = append(nums, n%10)
+        n /= 10
+    }
+    dp := make([][]int, len(nums))
+    for i := 0; i < len(dp); i++ {
+        dp[i] = make([]int, len(nums))
+    }
+    return dfs(len(nums)-1, 0, true, nums, dp)
+}
+
+func dfs(pos int, cnt int, limit bool, nums []int, dp [][]int) int {
+    if pos == -1 {
+        return cnt
+    }
+    if !limit && dp[pos][cnt] != 0 {
+        return dp[pos][cnt]
+    }
+    var up = 9
+    if limit {
+        up = nums[pos]
+    }
+    var res = 0
+    for i := 0; i <= up; i++ {
+        if i == 1 {
+            res += dfs(pos-1, cnt+1, i == up && limit, nums, dp)
+        } else {
+            res += dfs(pos-1, cnt, i == up && limit, nums, dp)
+        }
+    }
+    if !limit {
+        dp[pos][cnt] = res
+    }
+    return res
+}
+```
+这里`cnt`指的其实是`[最高位 ~ pos位]`的1出现的个数，当pos为-1的时候其实就是到达了某一个具体的数字，比如`1231`这个时候就会返回`cnt=2`，与此同时，cnt也是状态的一部分，比如`n=1200 , pos=1 , cnt=1`表示枚举到了第1位出现了1个1，就说明高两位`1`出现了1次，也就是`10`或者`01`，这个时候当我们先求出了`01xx(0100 ~ 0199)`中的1的个数的时候，我们保存这个状态，当前我们下次再遇到这个状态的时候，也就是`10xx`的时候，我们就可以直接将前面`01xx`的dp值返回，因为`01xx`和`10xx`包含的1的数量肯定是一样的，无需重复计算
+
+> **数位DP**的概念和模板其实我也是下午在网上查的，然后找到了两个写的比较好的文章 [数位dp总结 之 从入门到模板](https://blog.csdn.net/wust_zzwh/article/details/52100392)，[数字组成的奥妙——数位dp](https://www.luogu.com.cn/blog/virus2017/shuweidp) 以后遇到类似的题又多了一种解法（数学的解法至今仍没学会🤣）只有这一题想搞懂**数位DP**还是不太够，这题还是比较简单的，还是要多做题，多总结才能慢慢体会，lc上好像数位dp好像并不多，过两天都做一下试试
 
 ## [1420. 生成数组](https://leetcode-cn.com/problems/build-array-where-you-can-find-the-maximum-exactly-k-comparisons/) 
 

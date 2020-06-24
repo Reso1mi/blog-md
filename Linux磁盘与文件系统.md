@@ -4,7 +4,8 @@ title:
 tags: 
   [Linux,操作系统,读书笔记]
 categories:
-	[Linux]
+  [Linux]
+date: 2020/6/20
 ---
 
 > 要点摘抄，全文摘抄自《鸟叔的Linux私房菜》，对小部分词语进行转换，对部分内容进行批注，方便以后查阅

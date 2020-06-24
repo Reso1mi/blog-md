@@ -465,7 +465,7 @@ public void permuteUnique2(int[] nums,List<Integer> lis,boolean[] visit){
 
 ### Bug警告
 
-这里 `!visit[i-1]`和 `visit[i-1]`对于这题来说并不影响正确性，但是你如果将生成的过程打印出来对比下就知道为啥了，具体的请看下面 [1079. 活字印刷](#1079. 活字印刷) 的解释
+这里 `!visit[i-1]`和 `visit[i-1]`对于这题来说并不影响正确性，但是你如果将生成的过程打印出来对比下就知道为啥了，具体的请看下面 [1079. 活字印刷](#1079-活字印刷) 的解释
 
 ## [1286. 字母组合迭代器](https://leetcode-cn.com/problems/iterator-for-combination/)
 
