@@ -1750,9 +1750,9 @@ public boolean check(int[] piles,int k,int H){
 
 **解法一**
 
-这个题是个好题啊，又学到新东西了：**二维前缀和**，首先看到这道题就意思到了这是个二分答案的题，直接二分边长就行了，左端点`1`，右端点`min(m,n)`，某个边长`x`满足的时候，大于`x`的都满足，某个`x`不满足的时候
+这个题是个好题啊，又学到新东西了：**二维前缀和**，首先看到这道题就意识到了这是个二分答案的题，直接二分边长就行了，左端点`1`，右端点`min(m,n)`，某个边长`x`满足的时候，大于`x`的都满足，某个`x`不满足的时候，小于`x`的都不满足，解空间具有单调性
 
-小于`x`的都不满足，所以关键就是`check`怎么写，如果直接暴力枚举所有矩形然后计算时间复杂度会很恐怖，这个时候就可以引入**二维前缀和**，我就不具体讲解了，看看[官方题解](https://leetcode-cn.com/problems/maximum-side-length-of-a-square-with-sum-less-than-or-equal-to-threshold/solution/yuan-su-he-xiao-yu-deng-yu-yu-zhi-de-zheng-fang-2/)就行了，写的挺好的
+所以关键问题就是`check`怎么写，如果直接暴力枚举所有矩形然后计算时间复杂度会很恐怖，这个时候就可以引入**二维前缀和**，我就不具体讲解了，看看[官方题解](https://leetcode-cn.com/problems/maximum-side-length-of-a-square-with-sum-less-than-or-equal-to-threshold/solution/yuan-su-he-xiao-yu-deng-yu-yu-zhi-de-zheng-fang-2/)就行了，写的挺好的
 
 ```java
 public int maxSideLength(int[][] mat, int threshold) {

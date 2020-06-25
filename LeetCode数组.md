@@ -1030,6 +1030,23 @@ public int firstMissingPositive(int[] nums) {
 
 其实也是桶排序的思想，不过这里是利用交换来定位每个元素，首相我们将原数组看作桶，题目要求的正整数，所以我们桶中存的应该是`【1，nums.length】`，也就是0位置应该存放的是1，1位置存放的应该是2....再归位后重新遍历数组，如果某个位置的`nums[i]!=i+1` 就说明这个是第一个缺失的正数，遍历完了之后没有找到，全部对应上了，那就说明我们缺少的第一个正数是`nums.length+1`
 
+**Update:2020.6.27**
+```golang
+func firstMissingPositive(nums []int) int {
+    for i:=0;i<len(nums);i++{
+        for nums[i]>0 && nums[i]<len(nums) && nums[i]!=i+1 && nums[nums[i]-1]!=nums[i]{
+            nums[nums[i]-1],nums[i]=nums[i],nums[nums[i]-1]
+        }
+    }
+    for i,n := range nums{
+        if n!=i+1{
+            return i+1
+        }
+    }
+    return len(nums)+1
+}
+```
+
 **解法二**
 
 不考虑空间复杂度利用桶排序的思想

@@ -393,3 +393,119 @@ func longestPrefix(s string) string {
 ```
 确实也长时间没有复习kmp了，kmp的细节几乎都忘了，上面的都是凭借着一点理解和记忆写的
 > 检查了前面kmp的写法，稍微改进了一下，目前统一了写法
+
+### [796.旋转字符串](https://leetcode-cn.com/problems/rotate-string/)
+
+给定两个字符串, `A` 和 `B`。
+
+`A` 的旋转操作就是将 `A` 最左边的字符移动到最右边。 例如, 若 `A = 'abcde'`，在移动一次之后结果就是`'bcdea'` 。如果在若干次旋转操作之后，`A` 能变成`B`，那么返回`True`。
+
+```java
+示例 1:
+输入: A = 'abcde', B = 'cdeab'
+输出: true
+```
+```java
+示例 2:
+输入: A = 'abcde', B = 'abced'
+输出: false
+```
+
+**注意：**
+
+*   `A` 和 `B` 长度不超过 `100`。
+
+**解法一**
+
+经典easy题当hard做，这个题数据量很小，直接暴力就行了，但是我们还是要追求更好的解法
+
+一开始是在一篇文章中看到了这个题，里面说了这个题是kmp，我看了下没想到什么好的思路，只想到了一个NlogN的做法，二分+kmp找旋转点，然后kmp判断旋转点后时候也存在于A字符中（类似二分答案）
+```golang
+//不够聪明的做法: 二分+KMP 时间复杂度O(NlogN)
+func rotateString(A string, B string) bool {
+    if len(A) != len(B) {
+        return false
+    }
+    if A == B {
+        return true
+    }
+    var left = 0
+    var right = len(B) - 1
+    var rotate = -1
+    //二分找旋转点
+    for left <= right {
+        mid := left + (right-left)/2
+        if kmp(A, B[:mid+1]) != -1 {
+            rotate = mid
+            left++
+        } else {
+            right--
+        }
+    }
+    if rotate == -1 {
+        return false
+    }
+    return kmp(A, B[rotate+1:]) != -1
+}
+
+func kmp(A string, t string) int {
+    var next = getNext(t)
+    var Ai = 0
+    var ti = 0
+    for Ai < len(A) && ti < len(t) {
+        if A[Ai] == t[ti] {
+            Ai++
+            ti++
+        } else if next[ti] == -1 {
+            Ai++
+        } else {
+            ti = next[ti]
+        }
+    }
+    if ti == len(t) {
+        return Ai - 1
+    }
+    return -1
+}
+
+func getNext(t string) []int {
+    if len(t) < 2 {
+        return []int{-1}
+    }
+    var next = make([]int, len(t))
+    var left = 0
+    next[0] = -1
+    next[1] = 0
+    var i = 2
+    for i < len(t) {
+        if t[left] == t[i-1] {
+            left++
+            next[i] = left
+            i++
+        } else if next[left] == -1 {
+            i++
+        } else {
+            left = next[left]
+        }
+    }
+    return next
+}
+```
+
+**解法二**
+
+看了评论区的大佬的做法，实际上`A+A`就包含了所有的旋转`A`的结果子串，`A+A`就相当于首位相连，所以我们可以直接在`A+A`中kmp找`B`就可以了，时间复杂度`O(N)`
+
+```golang
+//聪明的解法: A+A包含了所有可能的旋转情况，直接对A+A和B做kmp就行了
+//abcdeabcde
+func rotateString(A string, B string) bool {
+    if len(A) != len(B) {
+        return false
+    }
+    if A == B {
+        return true
+    }
+    return kmp(A+A, B) != -1
+}
+```

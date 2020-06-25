@@ -789,7 +789,7 @@ public ListNode removeNthFromEnd(ListNode head, int n) {
 
 ---
 ## **82. 删除排序链表中的重复元素Ⅱ**
-给定一个排序链表，删除所有含有重复数字的节点，只保留原始链表中 _没有重复出现 _的数字。
+给定一个排序链表，删除所有含有重复数字的节点，只保留原始链表中 _没有重复出现_的数字。
 
 **示例 1:**
 
@@ -908,6 +908,63 @@ public ListNode deleteDuplicates(ListNode head) {
     return head;
 }
 ```
+
+## [面试题 02.01\. 移除重复节点](https://leetcode-cn.com/problems/remove-duplicate-node-lcci/)
+
+编写代码，移除未排序链表中的重复节点。保留最开始出现的节点。
+
+**示例1:**
+
+```java
+ 输入：[1, 2, 3, 3, 2, 1]
+ 输出：[1, 2, 3]
+```
+
+**示例2:**
+
+```java
+ 输入：[1, 1, 1, 1, 2]
+ 输出：[1, 2]
+```
+
+**提示：**
+
+1.  链表长度在[0, 20000]范围内。
+2.  链表元素在[0, 20000]范围内。
+
+**进阶：**
+
+如果不得使用临时缓冲区，该怎么解决？
+
+**解法一**
+
+无序链表，和前面不太一样，开个20000的数组判断是否重复就行了
+```golang
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func removeDuplicateNodes(head *ListNode) *ListNode {
+    var set = make([]bool,20001)
+    var dummyNode = &ListNode{Next:head}
+    var pre = dummyNode
+    for head!=nil{
+        if !set[head.Val]{
+            set[head.Val]=true
+            pre=head
+        }else{
+            pre.Next=head.Next
+        }
+        head=head.Next
+    }
+    return dummyNode.Next
+}
+```
+> 这个进阶或许应该称之为退阶。。。进阶的应该只能暴力O(N^2)而且这个数据量肯定会T，排序的话并没有合适的排序方法
+
 ## **143. [重排链表](https://leetcode-cn.com/problems/reorder-list/)**
 
 给定一个单链表 _L_：L0→L1→…→Ln-1→Ln 
