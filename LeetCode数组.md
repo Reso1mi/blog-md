@@ -2613,6 +2613,50 @@ public class Main{
 }
 ```
 
+**Update: 2020.6.28**
+
+用go重写下，又写了半天。。。真的菜，主要是最后划分元素的时候，区间只有1也应该继续划分，也就是`left <= right`，上面的解法就没考虑这个，而是在循环退出后返回left，实际上并不是好方法。。。（后面还是会再写的，尽量缩短code时间）
+```golang
+//1 2 3 4 5 6
+func findKthLargest(nums []int, k int) int {
+    k = len(nums) - k //转换下
+    var left = 0
+    var right = len(nums)-1
+    for left <= right{ //第一个WA点，这里是最容易写错的
+        mid := partition(nums, left, right)
+        if mid[1] < k{
+            left = mid[1]+1 //WA点
+        }else if mid[0] > k{
+            right = mid[0]-1 //WA点
+        }else{
+            return nums[mid[0]]
+        }
+    }
+    return -1
+}
+
+func partition(nums []int, left int, right int) []int{
+    base := left
+    var less = left
+    var more = right+1 //WA点
+    var i = left
+    for i < more{ //WA点
+        if nums[i] < nums[base]{
+            less++
+            nums[less], nums[i] = nums[i], nums[less]
+            i++
+        }else if nums[i] > nums[base]{
+            more--
+            nums[more], nums[i] = nums[i], nums[more]
+        }else{
+            i++
+        }
+    }
+    nums[less], nums[base] = nums[base], nums[less]
+    return []int{less,more-1} //WA点，注意配合上面的二分
+}
+```
+
 **解法四**
 
 [BFPRT算法](https://zhuanlan.zhihu.com/p/31498036) 大佬们提出来的根据上面快排改进而来，其实面试把小根堆和快排的解法答出来应该就差不多了，这个解法还是有些不容易写出来

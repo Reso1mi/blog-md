@@ -709,29 +709,24 @@ public List<Integer> rightSideView(TreeNode root) {
 
 **解法二**
 
-dfs，其实就是一直向右走，走不动就向左走，这样遍历的轨迹就是沿着二叉树的右边缘向下的，我们只需要记录层数，然后当层数和res数量相等的时候记录结果就行了
+dfs，其实就是一直向右走，走不动就向左走，这样遍历的轨迹就是沿着二叉树的右边缘向下的，我们只需要记录层数，然后当层数和res数量相等的时候记录结果就行了（看见头条面试要求写logN空间的，应该就是这种解法了，但是下面的解法空间复杂度应该还是O(N)的，最坏情况下形成一链表就成N了，不过相比上面层次遍历永远是N的做法还是要好一点）
 
 ```go
-var res []int
-
 func rightSideView(root *TreeNode) []int {
-    res = []int{}
-    if root==nil{
-        return res
+    var dfs func(root *TreeNode, depth int)
+    var res = make([]int, 0)
+    dfs = func(root *TreeNode, depth int) {
+        if root == nil {
+            return
+        }
+        if depth > len(res) {
+            res = append(res, root.Val)
+        }
+        dfs(root.Right, depth+1)
+        dfs(root.Left, depth+1)
     }
-    dfs(root,0)
+    dfs(root, 1)
     return res
-}
-
-func dfs(root *TreeNode,depth int){
-    if root==nil {
-        return
-    }
-    if depth==len(res){
-        res=append(res,root.Val)
-    }
-    dfs(root.Right,depth+1)
-    dfs(root.Left,depth+1)
 }
 ```
 

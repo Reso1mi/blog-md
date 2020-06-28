@@ -1502,6 +1502,85 @@ public int longestOnes(int[] A, int K) {
 ```
 按照模板来写简直是信手拈来（其实也没有什么模板，就是规范了写法而已）
 
+## [5434. 删掉一个元素以后全为 1 的最长子数组](https://leetcode-cn.com/problems/longest-subarray-of-1s-after-deleting-one-element/)
+
+Difficulty: **中等**
+
+
+给你一个二进制数组 `nums` ，你需要从中删掉一个元素。
+
+请你在删掉元素的结果数组中，返回最长的且只包含 1 的非空子数组的长度。
+
+如果不存在这样的子数组，请返回 0 。
+
+**提示 1：**
+
+```java
+输入：nums = [1,1,0,1]
+输出：3
+解释：删掉位置 2 的数后，[1,1,1] 包含 3 个 1 。
+```
+
+**示例 2：**
+
+```java
+输入：nums = [0,1,1,1,0,1,1,0,1]
+输出：5
+解释：删掉位置 4 的数字后，[0,1,1,1,1,1,0,1] 的最长全 1 子数组为 [1,1,1,1,1] 。
+```
+
+**示例 3：**
+
+```
+输入：nums = [1,1,1]
+输出：2
+解释：你必须要删除一个元素。
+```
+
+**示例 4：**
+
+```java
+输入：nums = [1,1,0,0,1,1,1,0,1]
+输出：4
+```
+
+**示例 5：**
+
+```java
+输入：nums = [0,0,0]
+输出：0
+```
+
+**提示：**
+
+*   `1 <= nums.length <= 10^5`
+*   `nums[i]` 要么是 `0` 要么是 `1` 。
+
+**解法一**
+
+29th双周赛的t3，秒切，其实是上一题[1004. 最大连续1的个数 III](#1004-最大连续1的个数-iii)的弱化
+```java
+   public int longestSubarray(int[] nums) {
+       int res=0, sum=0;
+       int left=0;
+       for(int right=0;right<nums.length;right++){
+           sum+=(nums[right]&1);
+           //区间和小于right-left-1说明中间不止一个0需要缩减窗口
+           while(left<right && sum<= right-left-1){
+               if(nums[left] == 1){
+                   sum--;
+               }
+               left++;
+           }
+           //至少删除一个，所以不用+1
+           res = Math.max(res,right-left);
+       }
+       return res;
+   }
+```
+很可惜这次前3题15分钟就做完了，都是直接web上写的，本以为有机会AK，最后一题搞了半天最后交了一发还是没过，貌似很多人写了假算法，贪心莽过了（lc数据太弱了）
+![UTOOLS1593333299362.png](https://upload.cc/i1/2020/06/28/mhTiQ9.png)
+
 ## [424. 替换后的最长重复字符](https://leetcode-cn.com/problems/longest-repeating-character-replacement/)
 
 给你一个仅由大写英文字母组成的字符串，你可以将任意位置上的字符替换成另外的字符，总共可最多替换 k 次。在执行上述操作后，找到包含重复字母的最长子串的长度。
