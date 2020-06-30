@@ -3527,7 +3527,7 @@ public int minTaps(int n, int[] ranges) {
 
 **解法二**
 
-贪心算法，和[贪心专题](http://imlgw.top/2020/01/21/leetcode-tan-xin/)中的 [1024. 视频剪辑]()是一样的题目
+贪心算法，和[贪心专题](http://imlgw.top/2020/01/21/leetcode-tan-xin/)中的 [1024. 视频剪辑](http://imlgw.top/2020/01/21/leetcode-tan-xin/#1024-%E8%A7%86%E9%A2%91%E6%8B%BC%E6%8E%A5)是一样的题目
 
 有时间再来补吧
 
@@ -4420,6 +4420,84 @@ public double new21Game(int N, int K, int W) {
 ```
 
 下一次碰到就不一定会做了，理解的不是很透彻，不过对背包公式的推导倒是理解多了一点
+
+## [329\. 矩阵中的最长递增路径](https://leetcode-cn.com/problems/longest-increasing-path-in-a-matrix/)
+
+Difficulty: **困难**
+
+给定一个整数矩阵，找出最长递增路径的长度。
+
+对于每个单元格，你可以往上，下，左，右四个方向移动。 你不能在对角线方向上移动或移动到边界外（即不允许环绕）。
+
+**示例 1:**
+
+```go
+输入: nums = 
+[
+  [9,9,4],
+  [6,6,8],
+  [2,1,1]
+] 
+输出: 4 
+解释: 最长递增路径为 [1, 2, 6, 9]。
+```
+
+**示例 2:**
+
+```go
+输入: nums = 
+[
+  [3,4,5],
+  [3,2,6],
+  [2,2,1]
+] 
+输出: 4 
+解释: 最长递增路径是 [3, 4, 5, 6]。注意不允许在对角线方向上移动。
+```
+**解法一**
+
+记忆化递归，这题如果递推的话需要保证子问题都已经被计算过，所以需要进行排序预处理，确保大的先求出来，然后再进行转移，参考上面 [5331-跳跃游戏-V](#5331-跳跃游戏-V)
+```java
+int [][] dir ={{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
+
+Integer [][] cache = null;
+
+//记忆化递归，数组递推的方式状态转移方向不明确，需要排序
+public int longestIncreasingPath(int[][] matrix) {
+    if (matrix == null || matrix.length <=0){
+        return 0;
+    }
+    int m = matrix.length;
+    int n = matrix[0].length;
+    cache = new Integer[m][n];
+    int res = 0;
+    for(int i = 0; i < m; i++){
+        for(int j = 0; j < n; j++){
+            res = Math.max(res, dfs(matrix, i, j));
+        }
+    }
+    return res;
+}
+
+public int dfs(int[][] matrix, int x, int y){
+    if (cache[x][y] != null){
+        return cache[x][y];
+    }
+    int res = 1;
+    for (int i = 0; i < dir.length; i++){
+        int nx = x + dir[i][0];
+        int ny = y + dir[i][1];
+        if (valid(matrix, nx, ny) && matrix[nx][ny] > matrix[x][y]){
+            res = Math.max(res, dfs(matrix, nx, ny)+1);
+        }
+    }
+    return cache[x][y] = res;
+}
+
+public boolean valid(int[][] matrix, int x, int y){
+    return x >= 0 && x < matrix.length && y >= 0 && y < matrix[0].length; 
+}
+```
 
 ## _博弈型动态规划_
 

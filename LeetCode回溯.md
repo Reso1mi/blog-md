@@ -1697,86 +1697,6 @@ public boolean dfs(String S,int index,List<Integer> lis){
 }
 ```
 
-
-## [241. 为运算表达式设计优先级](https://leetcode-cn.com/problems/different-ways-to-add-parentheses/)
-
-给定一个含有数字和运算符的字符串，为表达式添加括号，改变其运算优先级以求出不同的结果。你需要给出所有可能的组合的结果。有效的运算符号包含 +, - 以及 * 。
-
-**示例 1:**
-
-```java
-输入: "2-1-1"
-输出: [0, 2]
-解释: 
-((2-1)-1) = 0 
-(2-(1-1)) = 2
-```
-
-**示例 2:**
-
-```java
-输入: "2*3-4*5"
-输出: [-34, -14, -10, -10, 10]
-解释: 
-(2*(3-(4*5))) = -34 
-((2*3)-(4*5)) = -14 
-((2*(3-4))*5) = -10 
-(2*((3-4)*5)) = -10 
-(((2*3)-4)*5) = 10
-```
-
-**解法一**
-
-这题咋说呢，应该不算是回溯，是在分治tag中找的一题，还是挺有意思的
-
-```java
-private Map<String,List<Integer>> map=new HashMap<>();
-
-//分治
-public List<Integer> diffWaysToCompute(String input) {
-    if (input==null || input.length()<=0) {
-        return new LinkedList<>();
-    }
-    return diffWaysToCompute(input,0,input.length()-1);
-}
-
-public List<Integer> diffWaysToCompute(String input,int left,int right) {
-    List<Integer> res=new LinkedList<>();
-    /*if (left==right) { //这一步可以去掉,最开始没考虑多位数的情况(考虑到了不知道怎么处理)
-            res.add(Integer.valueOf(input.charAt(left))-48);
-            return res;
-        }*/
-    String key=input.substring(left,right+1);
-    if (map.containsKey(key)) {
-        return map.get(key);
-    }
-    for (int i=left;i<=right;i++) { //大意了,这里一开始写成了input.length...
-        char c=input.charAt(i);
-        if (c<'0') {
-            List<Integer> leftCompute=diffWaysToCompute(input,left,i-1);
-            List<Integer> rightCompute=diffWaysToCompute(input,i+1,right);
-            for (int lc:leftCompute) {
-                for (int rc:rightCompute) {
-                    if (c=='+') 
-                        res.add(lc+rc);
-                    if (c=='-') 
-                        res.add(lc-rc);
-                    if (c=='*') 
-                        res.add(lc*rc);
-                }
-            }
-        }
-    }
-    if (res.isEmpty()) {
-        res.add(Integer.valueOf(key));
-    }
-    map.put(key,res);
-    return res;
-}
-```
-
-第一天看了这道题，没想到思路，然后瞄了一眼评论区，看到了关键点，找到运算符，然后左右分别递归，没看到细节，第二天回忆了下思路写出了解，其实这题可以参考[95. 不同的二叉搜索树 II](https://leetcode-cn.com/problems/unique-binary-search-trees-ii/) 我在我的 [二叉树专题](http://imlgw.top/2019/11/06/leetcode-er-cha-shu/) 中也加了这道题，两者解法极为相似
-
 ## [139. 单词拆分](https://leetcode-cn.com/problems/word-break/)
 
 给定一个非空字符串 s 和一个包含非空单词列表的字典 wordDict，判定 s 是否可以被空格拆分为一个或多个在字典中出现的单词。
@@ -3430,3 +3350,172 @@ class Pair {
 }
 ```
 
+## _分治_
+
+开个新坑，其实分治这个tag挺大的，很多题的做法都属于分治，而且涉及到分治的题目一般都还是有点难度的，不容易直接想出来
+
+## [241. 为运算表达式设计优先级](https://leetcode-cn.com/problems/different-ways-to-add-parentheses/)
+
+给定一个含有数字和运算符的字符串，为表达式添加括号，改变其运算优先级以求出不同的结果。你需要给出所有可能的组合的结果。有效的运算符号包含 +, - 以及 * 。
+
+**示例 1:**
+
+```java
+输入: "2-1-1"
+输出: [0, 2]
+解释: 
+((2-1)-1) = 0 
+(2-(1-1)) = 2
+```
+
+**示例 2:**
+
+```java
+输入: "2*3-4*5"
+输出: [-34, -14, -10, -10, 10]
+解释: 
+(2*(3-(4*5))) = -34 
+((2*3)-(4*5)) = -14 
+((2*(3-4))*5) = -10 
+(2*((3-4)*5)) = -10 
+(((2*3)-4)*5) = 10
+```
+
+**解法一**
+
+这题咋说呢，应该不算是回溯，是在分治tag中找的一题，还是挺有意思的
+
+```java
+private Map<String,List<Integer>> map=new HashMap<>();
+
+//分治
+public List<Integer> diffWaysToCompute(String input) {
+    if (input==null || input.length()<=0) {
+        return new LinkedList<>();
+    }
+    return diffWaysToCompute(input,0,input.length()-1);
+}
+
+public List<Integer> diffWaysToCompute(String input,int left,int right) {
+    List<Integer> res=new LinkedList<>();
+    /*if (left==right) { //这一步可以去掉,最开始没考虑多位数的情况(考虑到了不知道怎么处理)
+            res.add(Integer.valueOf(input.charAt(left))-48);
+            return res;
+        }*/
+    String key=input.substring(left,right+1);
+    if (map.containsKey(key)) {
+        return map.get(key);
+    }
+    for (int i=left;i<=right;i++) { //大意了,这里一开始写成了input.length...
+        char c=input.charAt(i);
+        if (c<'0') {
+            List<Integer> leftCompute=diffWaysToCompute(input,left,i-1);
+            List<Integer> rightCompute=diffWaysToCompute(input,i+1,right);
+            for (int lc:leftCompute) {
+                for (int rc:rightCompute) {
+                    if (c=='+') 
+                        res.add(lc+rc);
+                    if (c=='-') 
+                        res.add(lc-rc);
+                    if (c=='*') 
+                        res.add(lc*rc);
+                }
+            }
+        }
+    }
+    if (res.isEmpty()) {
+        res.add(Integer.valueOf(key));
+    }
+    map.put(key,res);
+    return res;
+}
+```
+
+第一天看了这道题，没想到思路，然后瞄了一眼评论区，看到了关键点，找到运算符，然后左右分别递归，没看到细节，第二天回忆了下思路写出了解，其实这题可以参考[95. 不同的二叉搜索树 II](https://leetcode-cn.com/problems/unique-binary-search-trees-ii/) 我在我的 [二叉树专题](http://imlgw.top/2019/11/06/leetcode-er-cha-shu/) 中也加了这道题，两者解法极为相似
+
+### [395\. 至少有K个重复字符的最长子串](https://leetcode-cn.com/problems/longest-substring-with-at-least-k-repeating-characters/)
+
+Difficulty: **中等**
+
+找到给定字符串（由小写字符组成）中的最长子串`T`， 要求 `T` 中的每一字符出现次数都不少于 `k` 。输出 `T`的长度。
+
+**示例 1:**
+
+```go
+输入:
+s = "aaabb", k = 3
+
+输出:
+3
+
+最长子串为 "aaa" ，其中 'a' 重复了 3 次。
+```
+
+**示例 2:**
+
+```go
+输入:
+s = "ababbc", k = 2
+
+输出:
+5
+
+最长子串为 "ababb" ，其中 'a' 重复了 2 次， 'b' 重复了 3 次。
+```
+
+**解法一**
+
+以出现次数最少的字符为中点分治，但是效率感人，380ms+
+```java
+public int longestSubstring(String s, int k) {
+    if (s == null || s.length() == 0){
+        return 0;
+    }
+    int[] count = new int[26];
+    for(int i = 0; i < s.length(); i++){
+        count[s.charAt(i)-'a']++;
+    }
+    int min = 0; //记录count最小的index
+    for(int i = 0;i < s.length(); i++){
+        min = count[s.charAt(i)-'a'] < count[s.charAt(min)-'a'] ? i : min;
+    }
+    if (count[s.charAt(min)-'a'] >= k) {
+        return s.length();
+    }
+    return Math.max(longestSubstring(s.substring(0,min),k),longestSubstring(s.substring(min+1),k));
+}
+```
+
+**解法二**
+
+参考了题解区大佬们的剪枝和优化方法，循环以每个小于k的字符为结尾，分割字符，多路分治，大大降低分治递归树的高度
+```java
+//1ms 多路分治，虽然过了，但是感觉还是有点不流畅
+//主要就是最后那个当以大于k的字符结尾的时候的额外处理，如果不wa一发不容易发现
+public int longestSubstring(String s, int k) {
+    if (s == null || s.length() == 0){
+        return 0;
+    }
+    int[] count = new int[26];
+    for(int i = 0; i < s.length(); i++){
+        count[s.charAt(i)-'a']++;
+    }
+    int res = 0;
+    int left = 0; //分治左端点
+    boolean flag = false;
+    for(int i = 0; i < s.length(); i++){
+        if(count[s.charAt(i)-'a'] < k){
+            flag = true;
+            if(i - left >= res){ //剪枝优化
+                res = Math.max(longestSubstring(s.substring(left,i),k),res);
+            }
+            left = i+1;
+        }
+    }
+    if(!flag) return s.length();
+    //上面分治的逻辑是以left到小于k的字母i进行分治，但是如果字符不是以小于k的字母结尾就无法计算
+    //eg: aabbb k=3
+    return Math.max(res,longestSubstring(s.substring(left),k));
+}
+```
+其实还要很多分治的方法，但是感觉都大同小异

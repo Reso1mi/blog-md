@@ -3679,8 +3679,9 @@ public int longestSubarray2(int[] nums, int limit) {
 **解法二**
 
 最优解，O(N)单调队列
-
 ```java
+//UPDATE: 2020/6/29 改成最近总结的for-while滑窗模板
+//上面的解法一的滑窗也写的不好，有时间改改
 public int longestSubarray(int[] nums, int limit) {
     if (nums==null || nums.length<=0) {
         return 0;
@@ -3700,16 +3701,13 @@ public int longestSubarray(int[] nums, int limit) {
             minQue.removeLast();
         }
         minQue.addLast(right);
-        max=maxQue.getFirst();
-        min=minQue.getFirst();
-        if(nums[max]-nums[min]<=limit) {
-            res=Math.max(res,right-left+1);
-        }else{
+        while(nums[maxQue.getFirst()]-nums[minQue.getFirst()]>limit) {
             //不符合要求，左边界左移，当左边界是最值的时候que弹出
-            if (left==max) maxQue.removeFirst();
-            if (left==min) minQue.removeFirst();
+            if (left==maxQue.getFirst()) maxQue.removeFirst();
+            if (left==minQue.getFirst()) minQue.removeFirst();
             left++;
         }
+        res=Math.max(res,right-left+1);
     }
     return res;
 }
