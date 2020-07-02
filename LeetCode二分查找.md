@@ -2147,3 +2147,116 @@ public boolean check(int[] bloomDay,int m,int k,int day){
     return count>=m;
 }
 ```
+
+## [378. 有序矩阵中第K小的元素](https://leetcode-cn.com/problems/kth-smallest-element-in-a-sorted-matrix/)
+
+Difficulty: **中等**
+
+
+给定一个 _`n x n` _矩阵，其中每行和每列元素均按升序排序，找到矩阵中第 `k` 小的元素。  
+请注意，它是排序后的第 `k` 小元素，而不是第 `k` 个不同的元素。
+
+**示例：**
+
+```go
+matrix = [
+   [ 1,  5,  9],
+   [10, 11, 13],
+   [12, 13, 15]
+],
+k = 8,
+
+返回 13。
+```
+
+**提示：**  
+你可以假设 k 的值永远是有效的，`1 ≤ k ≤ n<sup>2 </sup>`。
+
+（直接搬运我在lc题解区写的[题解](https://leetcode-cn.com/problems/kth-smallest-element-in-a-sorted-matrix/solution/java-xiao-gen-dui-er-fen-da-an-chang-shi-jie-shi-e/)）
+
+**解法一**
+
+小根堆，多路归并，没啥好说的
+```java []
+public int kthSmallest(int[][] matrix, int k) {
+    PriorityQueue<Pair> pq = new PriorityQueue<>((p1,p2)->matrix[p1.x][p1.y] - matrix[p2.x][p2.y]);
+    for(int i = 0;i < matrix.length; i++){
+        pq.add(new Pair(i, 0));  
+    } 
+    while(k > 1){
+        Pair pair = pq.poll();
+        if(pair.y + 1 < matrix[0].length){
+            pq.add(new Pair(pair.x, pair.y+1));   
+        }
+        k--;
+    }
+    return matrix[pq.peek().x][pq.peek().y];
+}
+
+class Pair{
+    int x, y;
+    public Pair(int x, int y){
+        this.x = x;
+        this.y = y;
+    }
+}
+```
+
+**解法二**
+
+二分答案，我们求的元素一定是在`matrix[0][0]~matrix[n-1][n-1]`之间，取中间某个元素`mid`，大于`mid`的都分布在右下角，小于`mid`的的分布在右上角，越往右上走，小于`mid`的元素就越少，大于`mid`的元素就越多，所以整体是具有单调性的，所以可以二分
+
+然后我认为很关键的一个地方就是二分的写法，我这里用的是 [zls的一个二分模板](https://www.bilibili.com/video/BV1YT4y137G4)，两个分支，一个是答案区间，一个是排除区间，在答案区间记录答案，现在问题就是：是用 `<=` 作为答案区间，还是用 `>=`做为答案区间？
+
+两种方法的区别就是区间收缩的方式不一样，前者是`left=mid+1`后者是`right=mid-1`，所以问题其实就变成了：当**小于等于mid的数量==k**的时候，二分的区间应该如何缩减？
+
+其实举个例子就懂了
+```go
+matrix = [
+   [ 1,  5,  9],
+   [10, 11, 13],
+   [12, 13, 15]
+],
+k = 2
+```
+k=2，对应结果应该是5，但是我们现在mid=8，这里8和5在矩阵中小于等于它们的数量是相同的，这个时候很明显应该缩短right去逼近5，所以我们应该选取`>=`作为答案区间并记录答案，并且缩短right逼近矩阵中真实存在的值
+
+>这里是一定是可以取到矩阵中的值的，二分最后会在大于等于区域不断缩减right直至不能再缩减，也就是缩减成为矩阵中的元素（再缩减就小于K了）
+```java []
+public int kthSmallest(int[][] matrix, int k) {
+    int n = matrix.length;
+    int left = matrix[0][0];
+    int right = matrix[n-1][n-1];
+    int res = left;
+    while(left <= right){
+        int mid = left + (right - left)/2;
+        //注意这个地方，很关键，核心就是这个等于号的位置，在小于等于mid的数量==k的时候二分的区间应该如何移动
+        //其实举个例子就懂了，假设k=2，对于结果应该是5，但是我们现在mid=8
+        //这里8和5在矩阵中小于等于它们的数量是相同的，这个时候很明显应该缩短right去逼近5
+        //所以我们应该在二分的大于等于区间记录答案，并且缩短right
+        if (check(matrix, mid) >= k){
+            res = mid;
+            right = mid - 1;
+        }else{
+            left = mid + 1;
+        }
+    }
+    return res;
+}
+
+//检查数组中小于等于mid的个数
+public int check(int[][] matrix, int mid){
+    int row = matrix.length-1, column = 0;
+    int count = 0;
+    int lastRow = 0; 
+    while(row >= 0){
+        while (column < matrix[0].length && matrix[row][column] <= mid){
+            column++;
+            lastRow++;
+        }
+        count += lastRow;
+        row--;
+    }
+    return count;
+}
+```
