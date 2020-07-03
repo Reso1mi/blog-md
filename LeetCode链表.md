@@ -2465,59 +2465,6 @@ public int numComponents3(ListNode head, int[] G) {
 }
 ```
 
----
-
-## **109. 有序链表转换二叉搜索树**
-
-给定一个单链表，其中的元素按升序排序，将其转换为高度平衡的二叉搜索树。
-
-本题中，一个高度平衡二叉树是指一个二叉树*每个节点* 的左右两个子树的高度差的绝对值不超过 1。
-
-**示例:**
-
-```sql
-给定的有序链表： [-10, -3, 0, 5, 9],
-
-一个可能的答案是：[0, -3, 9, -10, null, 5], 它可以表示下面这个高度平衡二叉搜索树：
-
-      0
-     / \
-   -3   9
-   /   /
- -10  5
-```
-
-**解法一**
-
-BST不太熟看了下评论写出来的
-
-```java
-public TreeNode sortedListToBST(ListNode head) {
-    return build(head,null);
-}
-
-public static TreeNode build(ListNode head,ListNode tail){
-    if(head==tail){
-        return null;
-    }
-    //快慢指针找中点
-    ListNode fast=head,slow=head;
-    while(fast!=tail&&fast.next!=tail){
-        //左闭右开
-        fast=fast.next.next;
-        slow=slow.next;
-    }
-    //slow为中点或中点后一个
-    //1 2 3 4
-    TreeNode root=new TreeNode(slow.val);
-    root.left=build(head,slow);
-    root.right=build(slow.next,tail);
-    return root;
-}
-```
-
----
-
 ## [1019. 链表中的下一个更大节点](https://leetcode-cn.com/problems/next-greater-node-in-linked-list/)
 
 给出一个以头节点 `head` 作为第一个节点的链表。链表中的节点分别编号为：`node_1, node_2, node_3, ...` 。

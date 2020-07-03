@@ -9,6 +9,10 @@ date: 2019/11/06
 cover: http://static.imlgw.top/blog/20191106/pcmvnEK8Hwg8.png?imageslim
 ---
 
+## _LeetCode 二叉树_
+
+> 善用**ctrl+f**
+
 ## [144. 二叉树的前序遍历](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)
 
 Given a binary tree, return the *preorder* traversal of its nodes' values.
@@ -2146,6 +2150,81 @@ public TreeNode sortedArrayToBST(int[] nums,int left,int right) {
 }
 ```
 这题最开始终止条件写错了，思路是对的，对递归运用的还是不够熟练，终止条件其实只需要想一下极端情况就可以了
+
+## [109. 有序链表转换二叉搜索树](https://leetcode-cn.com/problems/convert-sorted-list-to-binary-search-tree/)
+
+给定一个单链表，其中的元素按升序排序，将其转换为高度平衡的二叉搜索树。
+
+本题中，一个高度平衡二叉树是指一个二叉树*每个节点* 的左右两个子树的高度差的绝对值不超过 1。
+
+**示例:**
+
+```sql
+给定的有序链表： [-10, -3, 0, 5, 9],
+
+一个可能的答案是：[0, -3, 9, -10, null, 5], 它可以表示下面这个高度平衡二叉搜索树：
+
+      0
+     / \
+   -3   9
+   /   /
+ -10  5
+```
+
+**解法一**
+
+~~BST不太熟看了下评论写出来的~~
+
+好久之前写的题了，每日打卡题出了上面的题目，随便做一下这题，发现这题被记录在链表专题中了，移过来下，和上面的一样，只不过找中点的方式不一样（UPDATE: 2020.7.3）
+
+```java
+public TreeNode sortedListToBST(ListNode head) {
+    return build(head,null);
+}
+
+public static TreeNode build(ListNode head,ListNode tail){
+    if(head==tail){
+        return null;
+    }
+    //快慢指针找中点
+    ListNode fast=head,slow=head;
+    while(fast!=tail&&fast.next!=tail){
+        //左闭右开
+        fast=fast.next.next;
+        slow=slow.next;
+    }
+    //slow为中点或中点后一个
+    //1 2 3 4
+    TreeNode root=new TreeNode(slow.val);
+    root.left=build(head,slow);
+    root.right=build(slow.next,tail);
+    return root;
+}
+```
+**UPDATE: 2020.7.3**
+```golang
+func sortedListToBST(head *ListNode) *TreeNode {
+    if head == nil{
+        return nil
+    }
+    if head.Next == nil{
+        return &TreeNode{Val : head.Val}
+    }
+    var fast = head
+    var slow = head //slow为左中点
+    var pre  = head
+    for fast != nil && fast.Next !=nil{
+        fast = fast.Next.Next
+        pre = slow
+        slow = slow.Next
+    }
+    pre.Next = nil //斩断和slow的联系
+    root := &TreeNode{Val : slow.Val}
+    root.Left = sortedListToBST(head)
+    root.Right = sortedListToBST(slow.Next)
+    return root
+}
+```
 
 ## [230. 二叉搜索树中第K小的元素](https://leetcode-cn.com/problems/kth-smallest-element-in-a-bst/)
 
