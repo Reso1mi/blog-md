@@ -5040,7 +5040,39 @@ public int longestValidParentheses(String s) {
 }
 ```
 
-解释都在代码注释中，感觉没那么容易直接想到，毕竟hard题
+解释都在代码注释中，~~感觉没那么容易直接想到，毕竟hard题~~
+
+**Update: 2020.7.4**
+
+今天的打卡题，之前的做法只记得栈+dp的做法，dp的方法忘了，现场写了下纯dp的方法，发现其实纯dp的好像更简单啊，状态定义出来后，转移方程就呼之欲出了（是我变强了么🤣）
+
+```golang
+//和前面的写法不一样，感觉我的更好理解
+func longestValidParentheses(s string) int {
+    var dp = make([]int, len(s)) //以s[i]结尾的最长有效括号
+    //dp[0] = 0
+    var res = 0
+    for i := 1; i < len(s); i++{
+        if s[i] == ')' {
+            if i - dp[i-1] - 1 >= 0 && s[i - dp[i-1] - 1] == '('{
+                dp[i] = dp[i - 1] + 2
+                if(i - dp[i-1] - 2 >= 0){
+                    dp[i] += dp[i - dp[i-1] - 2]
+                }
+            }
+        }
+        res = Max(res, dp[i])
+    }
+    return res
+}
+
+func Max(a, b int) int{
+    if a > b{
+        return a
+    }
+    return b
+}
+```
 
 > 其实还有两种方法，一种利用纯利用栈的，还有一种很神奇的方法，没什么通用性，很难直接想出来，就不做记录了，纯栈的解法后面再来补充
 
@@ -5076,11 +5108,56 @@ public int longestValidParentheses(String s) {
 ```
 关键的地方就在于将**非法的右括号**入栈，作为一个分界点便于后面计算，初始的-1也很关键
 
+**解法四**
+
+UPDATE: 2020.7.4，把之前所谓的“神奇”的方法也记录下，其实也没啥神奇的，看一下就懂了，这种方法还是很优秀的，空间复杂度为`O(1)`
+```golang
+//实时统计左右括号的个数，当匹配的时候统计长度，记得左右都要扫一遍
+func longestValidParentheses(s string) int {
+    var left, right = 0, 0
+    var res = 0
+    for i := 0; i < len(s); i++ {
+        if s[i] == '(' {
+            left++
+        } else {
+            right++
+        }
+        if right > left {
+            right, left = 0, 0
+        }else if right == left {
+            res = Max(res, left*2)
+        }
+    }
+    right, left = 0, 0
+    for i := len(s) - 1; i >= 0; i-- {
+        if s[i] == '(' {
+            left++
+        } else {
+            right++
+        }
+        if right < left {
+            right, left = 0, 0
+        } else if right == left {
+            res = Max(res, left*2)
+        }
+    }
+    return res
+}
+
+func Max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
 ---
+
+## _区间DP_
 
 后面有时间会单独将这些题目分类整理成文章，目前暂时先这样
 
-## _区间DP_
 
 ## [312. 戳气球](https://leetcode-cn.com/problems/burst-balloons/)
 
