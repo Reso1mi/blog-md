@@ -3940,4 +3940,185 @@ public int sumSubarrayMins(int[] A) {
 > 在看了大佬的做法后发现上面的是可以化简的：`a*b+a+b+1=(a+1)*(b+1)`
 
 
+## [5454. 统计全 1 子矩形](https://leetcode-cn.com/problems/count-submatrices-with-all-ones/)
 
+Difficulty: **中等**
+
+
+给你一个只包含 0 和 1 的 `rows * columns` 矩阵 `mat` ，请你返回有多少个 **子矩形** 的元素全部都是 1 。
+
+**示例 1：**
+
+```
+输入：mat = [[1,0,1],
+            [1,1,0],
+            [1,1,0]]
+输出：13
+解释：
+有 6 个 1x1 的矩形。
+有 2 个 1x2 的矩形。
+有 3 个 2x1 的矩形。
+有 1 个 2x2 的矩形。
+有 1 个 3x1 的矩形。
+矩形数目总共 = 6 + 2 + 3 + 1 + 1 = 13 。
+```
+
+**示例 2：**
+
+```
+输入：mat = [[0,1,1,0],
+            [0,1,1,1],
+            [1,1,1,0]]
+输出：24
+解释：
+有 8 个 1x1 的子矩形。
+有 5 个 1x2 的子矩形。
+有 2 个 1x3 的子矩形。
+有 4 个 2x1 的子矩形。
+有 2 个 2x2 的子矩形。
+有 2 个 3x1 的子矩形。
+有 1 个 3x2 的子矩形。
+矩形数目总共 = 8 + 5 + 2 + 4 + 2 + 2 + 1 = 24 。
+```
+
+**示例 3：**
+
+```go
+输入：mat = [[1,1,1,1,1,1]]
+输出：21
+```
+
+**示例 4：**
+
+```go
+输入：mat = [[1,0,1],[0,1,0],[1,0,1]]
+输出：5
+```
+
+**提示：**
+
+*   `1 <= rows <= 150`
+*   `1 <= columns <= 150`
+*   `0 <= mat[i][j] <= 1`
+
+**解法一**
+
+196周赛T3，感觉还是挺难的，不过数据量比较小，只有150，所以暴力其实就可以
+
+```java
+//解法一: N3
+public int numSubmat(int[][] mat) {
+    int m = mat.length;
+    int n = mat[0].length;
+    //预处理mat[i][j]上边有多少个连续的1
+    int[][] upCnt= new int[m][n];
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            if(mat[i][j] == 1){
+                upCnt[i][j] = i==0 ? mat[i][j]&1 : upCnt[i-1][j]+1;
+            }
+        }
+    }
+    int res = 0;
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            if(mat[i][j] == 1){
+                int k = j;
+                int rowCnt = upCnt[i][j];
+                while(k>=0){
+                    rowCnt = Math.min(rowCnt, upCnt[i][k]);
+                    res += rowCnt;
+                    k--;
+                }
+            }
+        }
+    }
+    return res;
+}
+```
+
+**解法二**
+
+单调栈，参考了网上的题解，虽然自己搞懂了，但是想写题解的时候感觉有点不好描述啊，要写好多东西，有点抽象，但是思路还是非常好的，也是个很经典的题了
+```java
+public int numSubmat(int[][] mat) {
+    int m = mat.length;
+    int n = mat[0].length;
+    //预处理mat[i][j]上边有多少个连续的1
+    int[][] upCnt= new int[m][n];
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            if(mat[i][j] == 1){
+                upCnt[i][j] = i==0 ? mat[i][j]&1 : upCnt[i-1][j]+1;
+            }
+        }
+    }
+    //单调递增栈维护列的长度
+    Deque<Integer> stack = new ArrayDeque<>();
+    int res = 0;
+    for (int i = 0; i < m; i++) {
+        stack.clear();
+        int ijCnt = 0; //以i,j为右下角的矩形的cnt
+        for (int j = 0; j < n; j++) {
+            ijCnt += upCnt[i][j];
+            while(!stack.isEmpty() && upCnt[i][stack.peek()] > upCnt[i][j]){
+                int cur = stack.pop();
+                //栈中的索引是从0开始的，所以这里如果栈为空，left应该为-1
+                int left = stack.isEmpty() ? -1 : stack.peek();
+                //减去多的部分
+                ijCnt -= (cur-left) * (upCnt[i][cur] - upCnt[i][j]);
+            }
+            stack.push(j);
+            res += ijCnt;
+        }
+    }
+    return res;
+}
+```
+为了方便回顾，简单的画了个图
+![mark](http://static.imlgw.top/blog/20200705/BDIQmVW7vEuT.png?imageslim)
+> 这题好像是个很经典的题，我在网上搜索的的时候发现和[ICPC的一道题](https://blog.csdn.net/qq_40774175/article/details/82354072)一样
+
+**解法三**
+
+在刷了几遍评论区，看见了大佬们写的比较好解法，发现了一个比较容易理解的单调栈的思路
+
+（1）第一步预处理和上面是一样的，统计每个元素向上延申的最大值
+（2）然后我们同样使用单调递增栈维护这个高度，但是同时我们额外的维护另一个值：**以当前`mat[i][j]`为右下角所形成的矩形个数也存入单调栈** ，然后我们在每个元素进栈的时候统计个数，统计一共分为两部分：
+
+![mark](http://static.imlgw.top/blog/20200706/r5dCVtw7OrsU.png?imageslim)
+
+```java
+public int numSubmat(int[][] mat) {
+    int m = mat.length;
+    int n = mat[0].length;
+    //预处理mat[i][j]上边有多少个连续的1
+    int[][] upCnt= new int[m][n];
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            if(mat[i][j] == 1){
+                upCnt[i][j] = i==0 ? mat[i][j]&1 : upCnt[i-1][j]+1;
+            }
+        }
+    }
+    //单调递增栈维护列的长度
+    Deque<int[]> stack = new ArrayDeque<>();
+    int res = 0;
+    for(int i = 0;i < m; i++){
+        stack.clear();
+        for (int j = 0; j < n; j++) {
+            while(!stack.isEmpty() && upCnt[i][stack.peek()[0]] > upCnt[i][j]){
+                stack.pop();
+            }
+            int[] pair = stack.isEmpty() ? new int[]{-1,0} : stack.peek();
+            //以当前栈顶元素mat[i][pair[0]]为右下角能形成矩形个数
+            int cur = (j-pair[0]) * upCnt[i][j] + pair[1];
+            res += cur;
+            //将mat[i][j]的索引j和以其为右下角形成的矩阵个数cur也存入单调栈
+            stack.push(new int[]{j, cur});
+        }
+    }
+    return res;
+}
+```
+这个思路比上面要容易理解多了
