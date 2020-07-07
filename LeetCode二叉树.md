@@ -1967,6 +1967,39 @@ public int findPath(TreeNode node,int sum){
 ~~emmmm，这题分类是easy确实太迷了，嵌套的递归，看了解法确实看的懂，但是写是绝对写不出来的（眼睛：我懂了，脑子：你懂个锤子）除非能记住~~
 
 回头来看发现其实挺简单的，确实是easy题~ 但是这个解很明显不是最优解，这个里面会有很多的重复的计算，最优解是利用 前缀和+回溯的解法，有点小顶~
+
+**解法二**
+
+补上前缀和的做法，之前好像是看了答案，然后感觉很难，就没写？今天又重新做了下，先写了暴力解，然后就直接写出了前缀和的做法，感觉前缀和的思路还是挺优秀的，一开始忘了回溯，思考了下意识到这里记录的应该是一条分支之上而下的前缀和，所以在统计完某个节点后应该回溯
+```golang
+//前缀和的思路O(N)挺不错的
+func pathSum(root *TreeNode, sum int) int {
+    if root == nil {
+        return 0
+    }
+    var res = 0
+    //前缀和，记录一条自上而下的路径前缀和
+    var preSum = make(map[int]int)
+    preSum[0] = 1
+    dfs(root, 0, sum, preSum, &res)
+    return res
+}
+
+func dfs(root *TreeNode, sum int, target int, preSum map[int]int, res *int) {
+    if root == nil {
+        return
+    }
+    sum += root.Val
+    //preSum[sum]++，这里WA了一发，写在上面如果tatget为0就把当前节点算进去了
+    *res += preSum[sum-target]
+    preSum[sum]++
+    dfs(root.Left, sum, target, preSum, res)
+    dfs(root.Right, sum, target, preSum, res)
+    preSum[sum]--
+}
+
+```
+
 ## [235. 二叉搜索树的最近公共祖先](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-search-tree/)
 
 给定一个二叉搜索树, 找到该树中两个指定节点的最近公共祖先。
@@ -5661,6 +5694,121 @@ func increasingBST(root *TreeNode) *TreeNode {
 }
 ```
 > 这题和[面试题 17.12. BiNode](https://leetcode-cn.com/problems/binode-lcci/)解法是一摸一样的，但是这个sb题的描述我是真没看懂，结合评论区和case才知道到底要干啥，看评论区好像都整的挺明白的，一度以为我理解能力出了问题
+
+## [979. 在二叉树中分配硬币](https://leetcode-cn.com/problems/distribute-coins-in-binary-tree/)
+
+Difficulty: **中等**
+
+
+给定一个有 `N` 个结点的二叉树的根结点 `root`，树中的每个结点上都对应有 `node.val` 枚硬币，并且总共有 `N` 枚硬币。
+
+在一次移动中，我们可以选择两个相邻的结点，然后将一枚硬币从其中一个结点移动到另一个结点。(移动可以是从父结点到子结点，或者从子结点移动到父结点。)。
+
+返回使每个结点上只有一枚硬币所需的移动次数。
+
+**示例 1：**
+![UTOOLS1594052444483.png](https://upload.cc/i1/2020/07/07/w2G7JY.png)
+
+```go
+输入：[3,0,0]
+输出：2
+解释：从树的根结点开始，我们将一枚硬币移到它的左子结点上，一枚硬币移到它的右子结点上。
+```
+
+**示例 2：**
+
+![UTOOLS1594052495418.png](https://upload.cc/i1/2020/07/07/kPOvxa.png)
+
+```go
+输入：[0,3,0]
+输出：3
+解释：从根结点的左子结点开始，我们将两枚硬币移到根结点上 [移动两次]。然后，我们把一枚硬币从根结点移到右子结点上。
+```
+
+**示例 3：**
+
+![UTOOLS1594052508155.png](https://upload.cc/i1/2020/07/07/j4YpZS.png)
+
+```go
+输入：[1,0,2]
+输出：2
+```
+
+**示例 4：**
+
+![UTOOLS1594052519453.png](https://upload.cc/i1/2020/07/07/DYZ6cE.png)
+
+```go
+输入：[1,0,0,null,3]
+输出：4
+```
+
+**提示：**
+
+1.  `1<= N <= 100`
+2.  `0 <= node.val <= N`
+
+
+**解法一**
+
+一开始直接想出来的做法，后面看了其他人的解法发现还不太一样😂，不过我还是感觉我的方法更好理解
+```golang
+//闭包的写法
+func distributeCoins(root *TreeNode) int {
+    var res = 0
+    var Abs = func(a int) int {
+        if a < 0 {
+            return -a
+        }
+        return a
+    }
+    //dfs返回树的节点数量 和 金币数量
+    var dfs func(*TreeNode) (int, int)
+    dfs = func(root *TreeNode) (int, int) {
+        if root == nil {
+            return 0, 0
+        }
+        lCount, lCoins := dfs(root.Left)
+        //其实两者的差值就是需要经过该节点中转的次数
+        //统计出所有节点的中转次数就是整体的转移次数
+        res += Abs(lCount - lCoins)
+        rCount, rCoins := dfs(root.Right)
+        res += Abs(rCount - rCoins)
+        return 1 + lCount + rCount, root.Val + lCoins + rCoins
+    }
+    dfs(root)
+    return res
+}
+```
+
+**解法二**
+
+其他人的做法，dfs返回节点的盈亏值（节点数和金币数的差值），盈亏值绝对值之和就是总体的转移次数（所以两种解法其实是一样的，只是计算的时间不一样，我的是函数返回后计算盈亏，而下面的解法是返回前计算盈亏，感觉我的更好理解😂）
+```golang
+//另一种做法
+func distributeCoins(root *TreeNode) int {
+    var res = 0
+    var Abs = func(a int) int {
+        if a < 0 {
+            return -a
+        }
+        return a
+    }
+    var dfs func(*TreeNode) int
+    dfs = func(root *TreeNode) int {
+        if root == nil {
+            return 0
+        }
+        left := dfs(root.Left)
+        right := dfs(root.Right)
+        res += Abs(left) + Abs(right)
+        return root.Val + left + right - 1
+    }
+    dfs(root)
+    return res
+}
+```
+
 ## _树形DP(大概)_
 
 > 2020.5.10更新，在看了左神的书后，大概了解了树形DP，所谓的树形DP实际上就是把递推方程搬到了树结构上，按我的理解树形DP很大的特点就是最终的解可能存在于树上每个节点，像我下面的题有的暴力解用的就是双重递归，就是dfs遍历没个节点，然后再对每个节点递归求解，但是对根节点求解的时候，实际上其他的子节点都成了子问题，所以后面再对子节点求解的时候问题就重复了，所以就可以采用后序遍历，自底向上，先求左右节点的值再更新根节点，**下面的题其实我不知道到底是不是属于树形DP，可能太简单了，但是再我看来解法比较统一，很有套路所以整理到一起**，我查了下网上介绍的树形DP还是挺难的，后面有时间了解后再来记录

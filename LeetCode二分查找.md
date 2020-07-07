@@ -2260,3 +2260,63 @@ public int check(int[][] matrix, int mid){
     return count;
 }
 ```
+
+## [441. 排列硬币](https://leetcode-cn.com/problems/arranging-coins/)
+
+Difficulty: **简单**
+
+你总共有 _n _枚硬币，你需要将它们摆成一个阶梯形状，第 _k _行就必须正好有 _k _枚硬币。
+
+给定一个数字 _n_，找出可形成完整阶梯行的总行数。
+
+_n _是一个非负整数，并且在32位有符号整型的范围内。
+
+**示例 1:**
+
+```
+n = 5
+
+硬币可排列成以下几行:
+¤
+¤ ¤
+¤ ¤
+
+因为第三行不完整，所以返回2.
+```
+
+**示例 2:**
+
+```
+n = 8
+
+硬币可排列成以下几行:
+¤
+¤ ¤
+¤ ¤ ¤
+¤ ¤
+
+因为第四行不完整，所以返回3.
+```
+**解法一**
+
+因为是从二分的tag来的，所以知道是二分，然后看了题，确定了有二分答案性质，然后直接二分，可是没想到居然溢出了，看来还是有点大意了啊，时间复杂度O(logN)
+```java
+//二分答案
+public int arrangeCoins(int n) {
+    int left = 1;
+    int right = n;
+    int res = 0;
+    while(left <= right){
+        long mid = left + (right - left)/2;
+        long sum = (1 + mid) * mid / 2;
+        if(sum <= n){
+            res = (int)mid;
+            left = (int)mid + 1;
+        }else{
+            right = (int)mid - 1;
+        }
+    }
+    return res;
+}
+```
+这题当然也可以直接模拟，不过意义不大，这题还有数学的解法，根据求和公式直接算出根，然后利用sqrt函数，这样并不会比二分快多少，sqrt也是logN级别的，而且面试官应该也不希望你利用库函数（当然人如果能手写牛顿迭代法那肯定没问题）

@@ -445,6 +445,29 @@ public int uniquePathsWithObstacles(int[][] obstacleGrid) {
     return dp[obstacleGrid[0].length-1];
 }
 ```
+**UPDATE: 2020.7.6**
+
+想对简洁的做法
+```golang
+func uniquePathsWithObstacles(grid [][]int) int {
+    var m = len(grid)
+    var n = len(grid[0])
+    var dp = make([][]int, m+1)
+    for i := 0; i <= m; i++ {
+        dp[i] = make([]int, n+1)
+    }
+    dp[0][1] = 1 //初始值
+    for i := 1; i <= m; i++ {
+        for j := 1; j <= n; j++ {
+            if grid[i-1][j-1] != 1 {
+                dp[i][j] = dp[i-1][j] + dp[i][j-1]
+            }
+        }
+    }
+    return dp[m][n]
+}
+
+```
 ## [576. 出界的路径数](https://leetcode-cn.com/problems/out-of-boundary-paths/)
 
 给定一个 **m × n** 的网格和一个球。球的起始坐标为 **(i,j)** ，你可以将球移到**相邻**的单元格内，或者往上、下、左、右四个方向上移动使球穿过网格边界。但是，你**最多**可以移动 **N** 次。找出可以将球移出边界的路径数量。答案可能非常大，返回 结果 mod 109 + 7 的值。

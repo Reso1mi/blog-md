@@ -3433,7 +3433,7 @@ public List<Integer> diffWaysToCompute(String input,int left,int right) {
 
 第一天看了这道题，没想到思路，然后瞄了一眼评论区，看到了关键点，找到运算符，然后左右分别递归，没看到细节，第二天回忆了下思路写出了解，其实这题可以参考[95. 不同的二叉搜索树 II](https://leetcode-cn.com/problems/unique-binary-search-trees-ii/) 我在我的 [二叉树专题](http://imlgw.top/2019/11/06/leetcode-er-cha-shu/) 中也加了这道题，两者解法极为相似
 
-### [395\. 至少有K个重复字符的最长子串](https://leetcode-cn.com/problems/longest-substring-with-at-least-k-repeating-characters/)
+## [395. 至少有K个重复字符的最长子串](https://leetcode-cn.com/problems/longest-substring-with-at-least-k-repeating-characters/)
 
 Difficulty: **中等**
 
