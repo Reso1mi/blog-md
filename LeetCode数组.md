@@ -6199,3 +6199,154 @@ func setZeroes(matrix [][]int)  {
     }
 }
 ```
+
+## [面试题 16.11. 跳水板](https://leetcode-cn.com/problems/diving-board-lcci/)
+
+Difficulty: **简单**
+
+
+你正在使用一堆木板建造跳水板。有两种类型的木板，其中长度较短的木板长度为`shorter`，长度较长的木板长度为`longer`。你必须正好使用`k`块木板。编写一个方法，生成跳水板所有可能的长度。
+
+返回的长度需要从小到大排列。
+
+**示例：**
+
+```go
+输入：
+shorter = 1
+longer = 2
+k = 3
+输出： {3,4,5,6}
+```
+
+**提示：**
+
+*   0 < shorter <= longer
+*   0 <= k <= 100000
+
+**解法一**
+
+tag里面有递归，记忆化什么的。。。加上看见群友的讨论，又先入为主了，唉，写了半天的回溯，想着怎么去重，突然意识到直接一个循环就能解决了。。。菜啊
+```golang
+func divingBoard(shorter int, longer int, k int) []int {
+    if k == 0{
+        return []int{}
+    }
+    if shorter == longer{
+        return []int{ k * shorter}
+    }
+    var res []int
+    for i := 0; i <= k; i++{
+        res = append(res, i * longer + (k - i) * shorter)
+    }
+    return res
+}
+```
+
+## [NC82.苹果树](https://www.nowcoder.com/practice/145b8d917c1e44c0b2b2462433b3029d?tpId=110&&tqId=33503&rp=1&ru=/ta/job-code&qru=/ta/job-code/question-ranking)
+牛牛有一个苹果园。又到了一年一度的收获季，牛牛现在要去采摘苹果买给市场的摊贩们。
+牛牛的果园里面有n棵苹果树，第i棵苹果树上有a[i]个果子。
+牛牛为了保证果子的新鲜程度，每天都会去苹果树上采摘果子。
+牛牛特意安排一个计划表：
+
+计划m天去采摘果子。对于第i天，它会去所有果树上轮流采摘b[i]个果子。
+如果对于第i天，某棵果树上没有b[i]个果子，那么它只会把当前果树上的果子采摘完。
+
+牛牛想知道它每天能供应多少个苹果给市场的摊贩们。
+
+**输入**
+
+- 1 <= a[i] , b[i] <= 1e9
+- 1 <= len(a), len(b) <= 1e5
+
+**示例1**
+```go
+输入 : [10,20,10],[5,7,2]
+输出 : [15,17,2]
+说明 :
+苹果树上的果子变化[10,20,10]-->[5,15,5]-->[0,8,0]-->[0,6,0]
+```
+
+**解法一**
+
+在牛客看见是头条二面的一道题，找到了牛客对应的题目，尝试了下，首先写了楼主的 前缀和+二分的解法
+
+很可惜通过率0，报错的数据很大，一看就知道溢出了
+```java
+//前缀和+二分的做法（容易溢出，random稍微调大点就溢出了，过不了OJ）
+public static long[] solve2 (int[] a, int[] b) {
+    if(a==null || a.length==0){
+        return new long[0];
+    }
+    // write code here
+    Arrays.sort(a);
+    int d = b.length;
+    int al = a.length;
+    long sum = 0;
+    long[] preSum = new long[al];
+    preSum[0] = a[0];
+    for(int i = 1; i < al; i++){
+        preSum[i] = preSum[i-1] + a[i];
+    }
+    long[] res = new long[d];
+    int sb = 0;
+    for(int i = 0; i < d; i++){
+        sb += b[i];
+        int idx = search(a, sb);
+        if(idx == -1){
+            res[i] = sb * al - sum;
+        }else{
+            res[i] = preSum[idx] + sb * (al-idx-1) - sum;
+        }
+        sum += res[i];
+    }
+    return res;
+}
+
+//小于target的最后一个
+public static int search(int[] a, int target){
+    int left = 0;
+    int right = a.length-1;
+    int res = -1;
+    while(left <= right){
+        int mid = left + (right - left)/2;
+        if(a[mid] < target){
+            res = mid;
+            left = mid + 1;
+        }else{
+            right = mid - 1;
+        }
+    }
+    return res;
+}
+```
+**解法二**
+
+双指针的解法，还是很巧妙的，这题如果考虑去减掉每棵树的果子其实就走远了，那样时间复杂度肯定是O(N^2)的，其实我们完全不用每次都把果子的数量给减掉，首先我们对果树进行排序，这样方便进行区间的摘取，对整体分区变为 `无剩余 | 剩余不足 | 剩余足够`三个区间
+
+每次摘取都是将前n天的合并起来一起摘，然后看**剩余不足**和**剩余足够**分界线在哪里，剩余不足的部分就直接加起来，然后减去前`n-1`天在该果树上采摘的数量，得到就是剩下的当天可以采摘的数量，之后这部分**剩余不足**的就变成了**无剩余**
+
+最后，在分界线以后的部分就都是剩余足够的部分，直接乘法计算就行了（小心溢出）
+
+```java
+//正解 双指针，时间复杂度O(m+n)
+public static long[] solve (int[] a, int[] b) {
+    Arrays.sort(a);
+    int p = 0;
+    int sb = 0;
+    long[] res = new long[b.length];
+    for (int i = 0; i < b.length; i++) {
+        sb += b[i];
+        while(p < a.length && a[p] < sb){
+            //该果树果子不够了，拿取剩下所有的
+            res[i] += (a[p] - (sb - b[i]));
+            //下一颗果树
+            p++;
+        }
+        //后面的都够
+        res[i]+=(a.length - p) * (long)b[i];
+    }
+    return res;
+}
+```
+> 其实和解法一的思路类似，但是这种做法不考虑溢出且时间复杂度更低

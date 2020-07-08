@@ -1950,6 +1950,43 @@ public List<String> dfs(String s,HashSet<String> dict){
 
 其实我这里也是参考了评论区的解法，我上面的那种回溯的方式要改成记忆化有点不好搞，有两个变量，另外我感觉这种**回溯分割**的方式感觉更加的直观易懂 get
 
+**UPDATE: 2020.7.8**
+
+偶然看到这个题，重写了一下，直接记忆化
+```golang
+//记忆化递归
+func wordBreak(s string, wordDict []string) []string {
+    var set = make(map[string]bool)
+    var cache = make(map[string][]string)
+    for i := 0; i < len(wordDict); i++ {
+        set[wordDict[i]] = true
+    }
+    return dfs(s, set, cache)
+}
+
+func dfs(s string, set map[string]bool, cache map[string][]string) []string {
+    if _, ok := cache[s]; ok {
+        return cache[s]
+    }
+    var res []string
+    for i := 1; i <= len(s); i++ {
+        if set[s[:i]] {
+            if i == len(s) {
+                res = append(res, s[:i])
+            } else {
+                temp := dfs(s[i:], set, cache)
+                for _, w := range temp {
+                    res = append(res, s[:i]+" "+w)
+                }
+            }
+        }
+    }
+    cache[s] = res
+    return res
+}
+
+```
+
 ## [473. 火柴拼正方形](https://leetcode-cn.com/problems/matchsticks-to-square/)
 
 还记得童话《卖火柴的小女孩》吗？现在，你知道小女孩有多少根火柴，请找出一种能使用所有火柴拼成一个正方形的方法。不能折断火柴，可以把火柴连接起来，并且每根火柴都要用到。
