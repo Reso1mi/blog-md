@@ -161,7 +161,7 @@ public int RabinKarp(int len, int B, String S, long MOD){
 
 **解法三**
 
-下面的应该就没什么问题了，链地址法，时间复杂度会增大，耗时增加到了500ms+，但是确保了100%的正确率，这是值得的，这次把mod调小也不会出错了，总体来说，这几番折腾收获还是挺大的，好事还是要多磨啊
+下面的应该就没什么问题了，链地址法，时间复杂度会增大，耗时增加到了500ms+，但是确保了100%的正确率，这是值得的，这次把mod调小也不会出错了（但是可能会TLE，冲突变大了），总体来说，这几番折腾收获还是挺大的，好事还是要多磨啊
 ```java
 //再写一波检测冲突。。。
 //上面的写的有问题，检测不完全
@@ -314,3 +314,71 @@ public boolean RabinKarp(int[] A,int[] B, int L){
     return false;
 }
 ```
+
+## [面试题 17.13. 恢复空格](https://leetcode-cn.com/problems/re-space-lcci/)
+
+Difficulty: **中等**
+
+哦，不！你不小心把一个长篇文章中的空格、标点都删掉了，并且大写也弄成了小写。像句子`"I reset the computer. It still didn’t boot!"`已经变成了`"iresetthecomputeritstilldidntboot"`。在处理标点符号和大小写之前，你得先把它断成词语。当然了，你有一本厚厚的词典`dictionary`，不过，有些词没在词典里。假设文章用`sentence`表示，设计一个算法，把文章断开，要求未识别的字符最少，返回未识别的字符数。
+
+**注意:** 本题相对原题稍作改动，只需返回未识别的字符数
+
+**示例：**
+
+```go
+输入：
+dictionary = ["looked","just","like","her","brother"]
+sentence = "jesslookedjustliketimherbrother"
+输出： 7
+解释： 断句后为"jess looked just like tim her brother"，共7个未识别字符。
+```
+
+**提示：**
+
+*   `0 <= len(sentence) <= 1000`
+*   `dictionary`中总字符数不超过 150000。
+*   你可以认为`dictionary`和`sentence`中只包含小写字母。
+
+
+**解法一**
+
+动态规划和Trie的解法左转[动态规划](http://imlgw.top/2019/09/01/leetcode-dong-tai-gui-hua/)专题，这里记录下字符串Hash的做法，其实字符串Hash的做法相比字典树的做法会慢一点点，不过思路还是很值得学习的
+
+这里看官方题解又学到了一点东西，这里在计算hash的时候加了一个1，这样我猜测就是为了避免0的出现，使得后面的base失效，使得冲突的概率变大，比如`aba`和`ba`可能就会被判成一样的字符，我下面的做法没有做减`a`的操作，而是取了更大的BASE，这里就不写冲突检测了，可以直接莽过，上面的第一题确实太离谱了，不按照官方题解的数据来就过不了
+```java
+public int respace(String[] dictionary, String s) {
+    int BASE = 131;
+    long MOD = Integer.MAX_VALUE;
+    HashSet<Long> set = new HashSet<>();
+    for (String word : dictionary ) {
+        set.add(hash(word, BASE, MOD));
+    }
+    int n = s.length();
+    int[] dp = new int[n+1];
+    for (int i = 1; i <=n ; i++) {
+        dp[i] = dp[i-1] + 1;
+        long rollhash = 0;
+        for (int j = i; j >= 1; j--) {
+            rollhash = (rollhash * BASE + s.charAt(j-1)) % MOD;
+            if(set.contains(rollhash)){
+                //注意这里是dp[j-1]，对应s.charAt(j-1)的前一个字符
+                dp[i] = Math.min(dp[i], dp[j-1]);
+            }
+            if(dp[i] == 0){
+                break;
+            }
+        }
+    }
+    return dp[n];
+}
+
+//注意需要逆向hash，上面计算的时候是j--，是逆向的
+public long hash(String s, int BASE, long MOD){
+    long h = 0;
+    for (int i = s.length()-1; i >=0 ; i--) {
+        h = (h * BASE + s.charAt(i)) % MOD;
+    }
+    return h;
+}
+```
+> 这个解法也用到了Hash表，但是相比用Hash表存字符，存数字的时间复杂度会低很多，其实字符串Hash也就是为了避免在Hash表中存大量的字符，一来空间占用会非常大，二来对于字符串来说计算字符的`hashCode()`的时间复杂度也是O(N)不可忽略的，而数字长度固定，`hashCode()`直接返回值就行了

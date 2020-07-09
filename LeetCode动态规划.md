@@ -5175,6 +5175,182 @@ func Max(a, b int) int {
 }
 ```
 
+
+## [面试题 17.13. 恢复空格](https://leetcode-cn.com/problems/re-space-lcci/)
+
+Difficulty: **中等**
+
+哦，不！你不小心把一个长篇文章中的空格、标点都删掉了，并且大写也弄成了小写。像句子`"I reset the computer. It still didn’t boot!"`已经变成了`"iresetthecomputeritstilldidntboot"`。在处理标点符号和大小写之前，你得先把它断成词语。当然了，你有一本厚厚的词典`dictionary`，不过，有些词没在词典里。假设文章用`sentence`表示，设计一个算法，把文章断开，要求未识别的字符最少，返回未识别的字符数。
+
+**注意:** 本题相对原题稍作改动，只需返回未识别的字符数
+
+**示例：**
+
+```go
+输入：
+dictionary = ["looked","just","like","her","brother"]
+sentence = "jesslookedjustliketimherbrother"
+输出： 7
+解释： 断句后为"jess looked just like tim her brother"，共7个未识别字符。
+```
+
+**提示：**
+
+*   `0 <= len(sentence) <= 1000`
+*   `dictionary`中总字符数不超过 150000。
+*   你可以认为`dictionary`和`sentence`中只包含小写字母。
+
+
+
+**解法一**
+
+同样的解法，用Java写就是922ms，我觉得主要就是substring拖慢了速度，Java里面substring是O(N)的操作，而golang中取切片值仅仅只是修改几个切片的熟悉罢了，时间复杂度是O(1)的，所以会很快，时间复杂度可以近似的看作O(N^2)
+```golang
+//正向dp，60ms
+func respace(dictionary []string, sentence string) int {
+    var dict = make(map[string]bool)
+    for i := 0; i < len(dictionary); i++ {
+        dict[dictionary[i]] = true
+    }
+    var n = len(sentence)
+    //前i个字符的最少未识别字符
+    var dp = make([]int, n+1)
+    for i := 1; i <= n; i++ {
+        dp[i] = dp[i-1] + 1 //初始值
+        for j := 0; j < i; j++ {
+            if dict[sentence[j:i]] {
+                dp[i] = Min(dp[j], dp[i])
+            }
+        }
+    }
+    return dp[n]
+}
+
+func Min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+> 查询了网上的一些资料，发现Java的substring其实在1.7之前时间复杂度是O(1)的，后面为了避免内存泄漏就改成O(N)了 [参考](https://www.iteye.com/blog/lvdccyb-1947937)
+
+**解法二**
+
+记忆化递归，其实一开始就被题目的tag给迷惑了，我一看记忆化，就直接往记忆化的方向去写了，加上前天刚写了 单词拆分2的记忆化，唉，看来以后不能直接看tag了，一开始写了个贼垃圾的dfs，就是下面注释的部分，时间复杂度爆炸，两层for循环
+```golang
+//记忆化dfs tle了 可能思路有点问题
+//确实是思路出了问题，下面补充了正确的记忆化写法 248ms
+func respace(dictionary []string, sentence string) int {
+    var dict = make(map[string]bool)
+    for i := 0; i < len(dictionary); i++ {
+        dict[dictionary[i]] = true
+    }
+    var cache = make(map[string]int)
+    return dfs(sentence, dict, cache)
+}
+
+// func dfs(s string, dict map[string]bool, cache map[string]int) int {
+//     if _, ok := cache[s]; ok {
+//         return cache[s]
+//     }
+//     var res = len(s)
+//     for i := 0; i <= len(s); i++ {
+//         temp := len(s)
+//         for j := i + 1; j <= len(s); j++ {
+//             if dict[s[i:j]] {
+//                 temp = Min(temp, dfs(s[j:], dict, cache))
+//             }
+//         }
+//         res = Min(res, temp+i)
+//     }
+//     cache[s] = res
+//     return res
+// }
+
+func dfs(s string, dict map[string]bool, cache map[string]int) int {
+    if _, ok := cache[s]; ok {
+        return cache[s]
+    }
+    var res = len(s)
+    for i := 1; i <= len(s); i++ {
+        if dict[s[:i]] {
+            res = Min(res, dfs(s[i:], dict, cache))
+        }else{
+            res = Min(res, dfs(s[i:], dict, cache) + i)
+        }
+    }
+    cache[s] = res
+    return res
+}
+
+func Min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+**解法三**
+
+上面的解法从某种角度上来说都还是是属于暴力解法，即使是golang的O(N^2)的方法，哈希表的常数也是很大的，而且因为是存的字符串，所以字符串本身Hash的时间也是不能忽略的，因此我们可以引入**前缀树**，不了解相关知识的可以看我[之前的文章](http://imlgw.top/2019/12/17/zi-dian-shu/)
+
+这里我用golang也写了一版，但是提升不明显，所以用Java重写了一版，时间复杂度有了质的飞跃
+```java
+//Trie+dp 14ms,很强
+public int respace(String[] dictionary, String s) {
+    Node root = new Node();
+    for (String word : dictionary ) {
+        root.insert(word);
+    }
+    int n = s.length();
+    int[] dp = new int[n+1];
+    for (int i = 1; i <=n ; i++) {
+        dp[i] = dp[i-1] + 1;
+        Node cur = root;
+        for (int j = i-1; j >=0 ; j--) {
+            int c = s.charAt(j)-'a';
+            //很大的优化点，c不存在，那么以c为后缀的其他字符肯定也不会存在，直接break
+            if(cur.next[c] == null){
+                break;
+            }
+            if(cur.next[c].isWord){
+                dp[i] = Math.min(dp[i], dp[j]);
+            }
+            if(dp[i] == 0){
+                break;
+            }
+            cur = cur.next[c];
+        }
+    }
+    return dp[n];
+}
+
+//这里Trie不用写搜索，直接手动的搜索，这样可以做一些剪枝
+class Node{
+    Node[] next = new Node[26];
+    
+    boolean isWord;
+
+    //反向插入
+    public void insert(String s){
+        Node cur = this;
+        for (int i = s.length()-1; i >= 0; i--) {
+            int c = s.charAt(i)-'a';
+            if(cur.next[c] == null){
+                cur.next[c] = new Node();
+            }
+            cur = cur.next[c];
+        }
+        cur.isWord = true;
+    }
+}
+```
+**解法四**
+
+没错，这题解法很多，也都很值得学习，解法四其实就是之前学过的字符串哈希的方法，所以这个解法右转--->[Rabin-Karp算法](http://imlgw.top/2020/07/01/rabinkarp-suan-fa/)
+
 ---
 
 ## _区间DP_
