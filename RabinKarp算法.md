@@ -382,3 +382,131 @@ public long hash(String s, int BASE, long MOD){
 }
 ```
 > 这个解法也用到了Hash表，但是相比用Hash表存字符，存数字的时间复杂度会低很多，其实字符串Hash也就是为了避免在Hash表中存大量的字符，一来空间占用会非常大，二来对于字符串来说计算字符的`hashCode()`的时间复杂度也是O(N)不可忽略的，而数字长度固定，`hashCode()`直接返回值就行了
+
+## [1316. 不同的循环子字符串](https://leetcode-cn.com/problems/distinct-echo-substrings/)
+
+Difficulty: **困难**
+
+
+给你一个字符串 `text` ，请你返回满足下述条件的 **不同** 非空子字符串的数目：
+
+*   可以写成某个字符串与其自身相连接的形式（即，可以写为 `a + a`，其中 `a` 是某个字符串）。
+
+例如，`abcabc` 就是 `abc` 和它自身连接形成的。
+
+**示例 1：**
+
+```go
+输入：text = "abcabcabc"
+输出：3
+解释：3 个子字符串分别为 "abcabc"，"bcabca" 和 "cabcab" 。
+```
+
+**示例 2：**
+
+```go
+输入：text = "leetcodeleetcode"
+输出：2
+解释：2 个子字符串为 "ee" 和 "leetcodeleetcode" 。
+```
+
+**提示：**
+
+*   `1 <= text.length <= 2000`
+*   `text` 只包含小写英文字母。
+
+
+**解法一**
+
+哭了，看着KMP的tag进来的，结果发现KMP的不太会写，学习了题解的前缀和Hash的思路，还是有点收获
+```java
+int BASE = 131;
+
+long MOD = (long)1e9+7;
+
+public int distinctEchoSubstrings(String s) {
+    int n = s.length();
+    //前缀hash和(前i个元素的hash值)
+    long[] hashSum = new long[n+1];
+    //BASE的所有幂乘
+    long[] pow = new long[n+1];
+    pow[0] = 1;
+    hashSum[0] = 0;
+    for (int i = 1; i <= n; i++) {
+        hashSum[i] = (hashSum[i-1]*BASE + s.charAt(i-1)) % MOD;
+        pow[i] = (pow[i-1]*BASE) % MOD;
+    }
+    HashSet<Long> set = new HashSet<>();
+    //枚举所有偶数长度的子串
+    for (int len = 2; len <= n; len+=2) {
+        for (int i = 0 ; i+len-1 < n; i++) {
+            int j = i + len - 1; //右边界
+            int mid = i + (j-i)/2; //中点
+            //0,3
+            long hleft = getHash(hashSum, pow, s, i, mid);
+            long hright = getHash(hashSum, pow, s, mid+1, j);
+            if(hleft == hright && !set.contains(hleft)){
+                set.add(hleft);
+            }
+        }
+    }
+    return set.size();
+}
+
+// 求s[i,j]区间的哈希值: s[i]*B^j-i + s[i+1]*B^j-i-1 + ... + s[j]
+// 
+// hashSum[i] = s[0]*B^i-1 + s[1]*B^i-2 +...+ s[i-1]
+// hashSum[j+1] = s[0]*B^j + s[1]*B^j-1 +...+ s[j]
+// hashSum[i]*B^j-i+1 = s[0]*B^j + s[1]*B^j-1 +...+ s[i-1]*B^j-i+1
+// hash[i,j] = hashSum[j+1] - hashSum[i] * B^j-i+1
+//           = s[i]*B^j-i + s[i+1]*B^j-i-1 +...+s[j]
+public long getHash(long[] hashSum, long[] pow, String s, int i, int j){
+    //j-i+1是[i,j]区间的长度，包含i和j，而hashSum[k]是不包含k的
+    //所以这里需要转换下，j需要+1使得hashSum包含j
+    return (hashSum[j+1] - (hashSum[i] * pow[j-i+1]) % MOD + MOD) % MOD;
+}
+```
+
+**解法二**
+
+KMP的做法肯定就是参考KMP的[459. 重复的子字符串](http://imlgw.top/2020/05/13/kmp-suan-fa/#459-%E9%87%8D%E5%A4%8D%E7%9A%84%E5%AD%90%E5%AD%97%E7%AC%A6%E4%B8%B2)的做法，我看了外网的discuss，只看见了一个这样写的，而且看不太懂，我自己尝试了下，感觉好多地方都会有坑，主要就是去重很麻烦，代码如下
+
+下面为错误解法，无法通过OJ，懒得改了，感觉不是个很好的做法
+```java
+//KMP的做法
+public int distinctEchoSubstrings(String s) {
+    for (int i = 0; i < s.length(); i++) {
+        getNext(s.substring(i));
+    }
+    return set.size();
+}
+
+HashSet<String> set = new HashSet<>();
+
+public void getNext(String s){
+    if(s.length() < 2){
+        return;
+    }
+    int n = s.length();
+    int[] next = new int[n+1];
+    next[0] = -1;
+    next[1] = 0;
+    int left = 0, right = 2;
+    while(right <= n){
+        if(s.charAt(left) == s.charAt(right-1)){
+            left++;
+            next[right] = left;
+            int replen = right-next[right];
+            String rs = s.substring(0,replen);
+            if (right%2==0 && replen!=right && right%replen==0 && !set.contains(rs)) {
+                set.add(rs);
+            }
+            right++;
+        }else if(next[left] == -1){
+            right++;
+        }else{
+            left = next[left];
+        }
+    }
+}
+```
