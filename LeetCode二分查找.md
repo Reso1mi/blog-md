@@ -2320,3 +2320,142 @@ public int arrangeCoins(int n) {
 }
 ```
 这题当然也可以直接模拟，不过意义不大，这题还有数学的解法，根据求和公式直接算出根，然后利用sqrt函数，这样并不会比二分快多少，sqrt也是logN级别的，而且面试官应该也不希望你利用库函数（当然人如果能手写牛顿迭代法那肯定没问题）
+
+## [174. 地下城游戏](https://leetcode-cn.com/problems/dungeon-game/)
+
+Difficulty: **困难**
+
+
+一些恶魔抓住了公主（**P**）并将她关在了地下城的右下角。地下城是由 M x N 个房间组成的二维网格。我们英勇的骑士（**K**）最初被安置在左上角的房间里，他必须穿过地下城并通过对抗恶魔来拯救公主。
+
+骑士的初始健康点数为一个正整数。如果他的健康点数在某一时刻降至 0 或以下，他会立即死亡。
+
+有些房间由恶魔守卫，因此骑士在进入这些房间时会失去健康点数（若房间里的值为负整数，则表示骑士将损失健康点数）；其他房间要么是空的（房间里的值为 0），要么包含增加骑士健康点数的魔法球（若房间里的值为正整数，则表示骑士将增加健康点数）。
+
+为了尽快到达公主，骑士决定每次只向右或向下移动一步。
+
+**编写一个函数来计算确保骑士能够拯救到公主所需的最低初始健康点数。**
+
+例如，考虑到如下布局的地下城，如果骑士遵循最佳路径 `右 -> 右 -> 下 -> 下`，则骑士的初始健康点数至少为 **7**。
+
+<table class="dungeon" style="display: table;">
+
+<tbody style="display: table-row-group;">
+
+<tr style="display: table-row;">
+
+<td style="display: table-cell;">-2 (K)</td>
+
+<td style="display: table-cell;">-3</td>
+
+<td style="display: table-cell;">3</td>
+
+</tr>
+
+<tr style="display: table-row;">
+
+<td style="display: table-cell;">-5</td>
+
+<td style="display: table-cell;">-10</td>
+
+<td style="display: table-cell;">1</td>
+
+</tr>
+
+<tr style="display: table-row;">
+
+<td style="display: table-cell;">10</td>
+
+<td style="display: table-cell;">30</td>
+
+<td style="display: table-cell;">-5 (P)</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+**说明:**
+
+*   骑士的健康点数没有上限。
+
+*   任何房间都可能对骑士的健康点数造成威胁，也可能增加骑士的健康点数，包括骑士进入的左上角房间以及公主被监禁的右下角房间。
+
+
+**解法一**
+
+以后每日一题没写出来之前绝壁不看群了，看了一眼群，看见群友讨论了这题，说了二分和dp，然后我就直接向二分的方向去想了，如果独立的想的话，应该也是可以得出二分的解法的，毕竟题目的描述很明显就是二分答案，**最低的健康血量**，大于这个血量的肯定可以救出来，小于这个血量的肯定救不出来，所以check就是判断在某个血量下，能否拯救到公主（DP）
+
+时间复杂度O(N^2logN)（其实我认为也可以当作N^2毕竟上下界都确定了，logN也就30左右），这种解法也挺不错的，融合了二分和dp
+
+```java
+public int calculateMinimumHP(int[][] dungeon) {
+    int left = 0;
+    int right = Integer.MAX_VALUE;
+    int res = 0;
+    while(left <= right){
+        int mid = left + (right-left)/2;
+        if(check(dungeon, mid)){
+            res = mid;
+            right = mid - 1;
+        }else{
+            left = mid + 1;
+        }
+    }
+    return res;
+}
+
+public boolean check(int[][] dungeon, int live){
+    int m = dungeon.length;
+    int n = dungeon[0].length;
+    int INF = Integer.MIN_VALUE;
+    //live的血量从左上到dungeon[i][j]的剩余最多血量
+    int[][] dp = new int[m+1][n+1];
+    //地牢外围加上INF的围墙，简化逻辑
+    Arrays.fill(dp[0], INF);
+    dp[0][1] = live;
+    for(int i = 1; i <= m; i++){
+        dp[i][0] = INF;
+        for(int j = 1; j <= n; j++){
+            if(dp[i-1][j] <= 0 && dp[i][j-1] <=0 ){
+                dp[i][j] = INF; //无法到达这里
+            }else{
+                dp[i][j] = dungeon[i-1][j-1] + Math.max(dp[i][j-1], dp[i-1][j]);
+            }
+        }
+    }
+    return dp[m][n] > 0;
+}
+```
+当然这题也有纯dp的做法，很可惜，我压根没往上面想，我只想着二分dp，写完了AC之后就去看评论区了，结果发现大家都是直接dp的。。。然后还看到了一个关键词：逆向dp，然后赶紧关了评论区回来写了下面的dp解法
+
+**解法二**
+```java
+/*
+    -2  -3  3
+    -5 -10  1
+    10  30 -5 1
+            
+    7   5   2
+    6  11   5
+    1   1   6
+*/
+public int calculateMinimumHP(int[][] dungeon) {
+    int m = dungeon.length;
+    int n = dungeon[0].length;
+    int INF = Integer.MAX_VALUE;
+    //从dungeon[i-1][j-1]到右下角至少要多少血量
+    int[][] dp = new int[m+1][n+1];
+    Arrays.fill(dp[m], INF);//末行
+    dp[m][n-1] = 1; //初始血量
+    for (int i = m-1; i >= 0; i--) {
+        dp[i][n] = INF; //首列和尾列
+        for (int j = n-1; j >= 0; j--) {
+            dp[i][j] = Math.max(Math.min(dp[i+1][j], dp[i][j+1]) - dungeon[i][j], 1);
+        }
+    }
+    return dp[0][0];
+}
+```
+这题为啥不能正向dp呢，设`dp[i][j]`为从左上角到i,j所需要的最低血量? 其实这个很明显就是有问题的，没办法转移，`dp[i][j]`和`dp[i-1][j]`没有任何关系，都不一定是同一条路径

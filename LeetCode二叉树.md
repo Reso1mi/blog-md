@@ -2351,6 +2351,28 @@ public void kthSmall(TreeNode root, int k) {
     kthSmall(root.right,k);
 }
 ```
+如果是第K大就交换下遍历顺序就行了
+```golang
+func kthLargest(root *TreeNode, k int) int {
+    var res = root.Val
+    var count = 0
+    var dfs func(*TreeNode)
+    dfs = func(root *TreeNode){
+        if root == nil{
+            return
+        }
+        //先right
+        dfs(root.Right)
+        count++
+        if count == k{
+            res = root.Val
+        }
+        dfs(root.Left)
+    }
+    dfs(root)
+    return res
+}
+```
 **进阶**
 
 可以维护一个大根堆，就和最小栈一样，每次对BST操作的时候同步操作这个大根堆
