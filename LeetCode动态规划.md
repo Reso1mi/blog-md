@@ -1574,42 +1574,7 @@ public static int lengthOfLIS(int[] nums) {
 
 **如果前面的数越小，后面接上一个随机数，就会有更大的可能性构成一个更长的“上升子序列”。**
 
-而`tail[i]` 中存储长度为 `i + 1` 的最长递增子序列的最后一个元素，所以最后len就是整个数组的最长上升子序列，更多题解可以 参考[LeetCode题解](https://leetcode-cn.com/problems/longest-increasing-subsequence/solution/dong-tai-gui-hua-er-fen-cha-zhao-tan-xin-suan-fa-p/) 
-
-```java
-public static int lengthOfLIS(int[] nums) {
-    int[] tail = new int[nums.length];
-    int len = 0;
-    for (int num : nums) {
-        int index=binarySearch(tail,len,num); 
-        //最难理解的就是这一步，直接替换了原数组里面的对应的元素
-        //按照贪心的规则,将index位置的元素变小，或者添加到队尾
-        tail[index] = num;
-        if (index == len) {
-            len++;
-        }
-    }
-    return len;
-}
-
-//返回target可以插入的位置
-private static int binarySearch(int[] nums, int len, int target) {
-    int l=0,r=len-1;
-    while(l<=r){
-        int mid=l+(r-l)/2;
-        if(target<nums[mid]){
-            r=mid-1;
-        }else if(target>nums[mid]){
-            l=mid+1;
-        }else{
-            return mid;
-        }
-    }
-    return l;
-}
-```
-
-**解法二代码优化**
+定义`tail`数组，`tail[i]`中存储长度为 `i + 1` 的最长递增子序列的最后一个元素，所以我们要做的就是维护tail数组，使得各个长度的`tail[i]`的尽可能地小，这样后面能接的长度就越长，很明显tail是个单调递增的数组（反证）所以我们可以在遍历nums的时候在tail数组中二分寻找第一个大于nums[i]的元素，用nums[i]替换该位置的元素，这样就使得`tail[i]`是当前nums[i]之前，长度为i+1的递增序列最小的结尾元素，当我们遍历完所有的元素，tail数组的长度就是我们要求的最长递增子序列长度（注意tail不一定是合法的最长递增子序列，如果要求出子序列可以在长度增加的时候拷贝一份长度为`i-1`的数组，然后再操作）
 
 2020.3.20
 
@@ -1778,7 +1743,45 @@ public int binarySearch(int[] top,int target,int len){
 }
 ```
 
-第一步得排序很关键，如果只安装宽度排序，那么在宽度相同的时候，就有可能存在后面的把前面的装进去的情况，这明显是不符合题意得
+第一步的排序很关键，如果只按照宽度排好序之后，对高度求一次最长递增子序列就是我们的答案，但是有一个问题就是题目说了：宽度和高度都比当前信封大的时候才能装进去，如果有两个信封是`(1,3) (1,5)`那么前者是不能被后者装进去的，所以我们需要在这里做一下处理，在宽度相同的时候，让高度降序排列，这样在对高度求最递增子序列的时候就不会出现错误了
+
+**UPDATE: 2020.7.13**
+```golang
+func maxEnvelopes(env [][]int) int {
+    sort.Slice(env, func(i int, j int) bool {
+        if env[i][0] == env[j][0]{
+            return env[i][1] > env[j][1]
+        }
+        return env[i][0] < env[j][0]
+    })
+    var tail = make([]int, len(env))
+    var tlen = 0
+    for i := 0; i < len(env); i++{
+        idx := search(tail, env[i][1], tlen)
+        if idx == tlen{
+            tlen++
+        }
+        tail[idx] = env[i][1]
+    }
+    return tlen
+}
+
+func search(nums []int, target int, tlen int) int {
+    var left = 0
+    var right = tlen-1
+    var res = tlen
+    for left <= right{
+        mid := left+(right-left)/2
+        if nums[mid] >= target{
+            res = mid
+            right = mid - 1
+        }else{
+            left = mid + 1
+        }
+    }
+    return res
+}
+```
 
 ## [53. 最大子序和](https://leetcode-cn.com/problems/maximum-subarray/)
 

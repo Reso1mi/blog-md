@@ -652,7 +652,90 @@ public int eraseOverlapIntervals(int[][] intervals) {
     return intervals.length-res;
 }
 ```
-按照起点排序，在重叠的时候优先选择结尾小的哪一个，这样就可能得到更多的区间组合，关于这个算法的正确性我就不证明了
+按照起点排序，在重叠的时候优先选择结尾小的哪一个，这样就可能得到更多的区间组合
+
+## [452. 用最少数量的箭引爆气球](https://leetcode-cn.com/problems/minimum-number-of-arrows-to-burst-balloons/)
+
+Difficulty: **中等**
+
+
+在二维空间中有许多球形的气球。对于每个气球，提供的输入是水平方向上，气球直径的开始和结束坐标。由于它是水平的，所以y坐标并不重要，因此只要知道开始和结束的x坐标就足够了。开始坐标总是小于结束坐标。平面内最多存在10<sup>4</sup>个气球。
+
+一支弓箭可以沿着x轴从不同点完全垂直地射出。在坐标x处射出一支箭，若有一个气球的直径的开始和结束坐标为 x<sub style="display: inline;">start，</sub>x<sub style="display: inline;">end，</sub> 且满足  x<sub style="display: inline;">start</sub> ≤ x ≤ x<sub style="display: inline;">end，</sub>则该气球会被引爆<sub style="display: inline;">。</sub>可以射出的弓箭的数量没有限制。 弓箭一旦被射出之后，可以无限地前进。我们想找到使得所有气球全部被引爆，所需的弓箭的最小数量。
+
+**Example:**
+
+```go
+输入:
+[[10,16], [2,8], [1,6], [7,12]]
+
+输出:
+2
+
+解释:
+对于该样例，我们可以在x = 6（射爆[2,8],[1,6]两个气球）和 x = 11（射爆另外两个气球）。
+```
+
+**解法一**
+
+和前面几题一样，按照起点排序，发生重叠时记录小的Xend，实际上end的含义就是当前这一箭能射穿前面所有气球的最远距离，后面的气球如果大于这个距离就需要加一箭，否则就可以一并射穿
+```golang
+func findMinArrowShots(points [][]int) int {
+    if len(points) <= 0 {
+        return 0
+    }
+    sort.Slice(points, func(i int, j int) bool {
+        return points[i][0] < points[j][0]
+    })
+    var end = points[0][1]
+    var res = 1
+    for i := 1; i < len(points); i++ {
+        if points[i][0] > end {
+            res++
+            end = points[i][1]
+        }else{
+            end = Min(end, points[i][1])
+        }
+    }
+    return res
+}
+​
+func Min(a, b int) int {
+    if a > b {
+        return b
+    }
+    return a
+}
+```
+**解法二**
+
+按照终点排序
+```golang
+func findMinArrowShots(points [][]int) int {
+    if len(points) <= 0 {
+        return 0
+    }
+    sort.Slice(points, func(i int, j int) bool {
+        return points[i][1] < points[j][1]
+    })
+    var end = points[0][1]
+    var res = 1
+    for i := 1; i < len(points); i++ {
+        if points[i][0] > end {
+            res++
+            end = points[i][1]
+        }
+    }
+    return res
+}
+
+func Min(a, b int) int {
+    if a > b {
+        return b
+    }
+    return a
+}
+```
 
 ## [1024. 视频拼接](https://leetcode-cn.com/problems/video-stitching/)
 
