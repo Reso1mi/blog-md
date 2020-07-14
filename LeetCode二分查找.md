@@ -1150,6 +1150,55 @@ func binarySearchDown(mountainArr *MountainArray, target, left, right int) int {
 
 这两个二分是可以合并的，懒得合了（太懒了吧你也😅）
 
+**UPDATE: 2020.7.14**
+
+自定义函数传递，简化代码
+```golang
+func findInMountainArray(target int, mA *MountainArray) int {
+    var n = mA.length()
+    var left = 0
+    var right = n-1
+    var maxIdx = right
+    for left <= right{
+        mid := left + (right-left)/2
+        //左中，所以mid+1不会越界
+        if mA.get(mid) > mA.get(mid+1){
+            maxIdx = mid
+            right = mid - 1 
+        }else{
+            left = mid + 1
+        }
+    }
+    lr := search(mA, target, 0, maxIdx, func(i int, j int)bool{
+        return i <= j
+    })
+    if lr != -1{
+        return lr
+    }
+    return search(mA, target, maxIdx+1, n-1, func(i int, j int)bool{
+        return i >= j
+    })
+    
+}
+
+func search(mA *MountainArray, target int, left int, right int, less func(int, int)bool) int {
+    var res = left
+    for left <= right{
+        mid := left + (right-left)/2
+        if less(mA.get(mid), target){
+            res = mid
+            left = mid + 1
+        }else{
+            right = mid - 1
+        }
+    }
+    if mA.get(res) != target{
+        return -1
+    }
+    return res
+}
+```
+
 ## [162. 寻找峰值](https://leetcode-cn.com/problems/find-peak-element/)
 
 峰值元素是指其值大于左右相邻值的元素。

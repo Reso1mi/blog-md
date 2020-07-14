@@ -4930,9 +4930,34 @@ public boolean verify(int[] postorder,int left,int right){
 ```
 这题WA了3发，前两发是代码逻辑的问题，想简化代码，结果把自己带坑里面去了，最后一次是因为一个变量设置的问题，代码中已经注释
 
+**UPDATE: 2020.7.14**
+
+重写了下，这样写就不会有奇怪的WA点了，还是要多注意细节和边界
+```golang
+func verifyPostorder(post []int) bool {
+    return dfs(post, 0, len(post)-1)
+}
+
+func dfs(post[] int, left int, right int) bool {
+    if left>=right{
+        return true
+    }
+    var p = right-1
+    for p >= left && post[p] > post[right]{
+        p--
+    }
+    for i := p; i >= left; i--{
+        if post[i] > post[right]{
+            return false
+        }
+    }
+    return dfs(post, left, p) && dfs(post, p+1,right-1)
+}
+```
+
 **解法二**
 
-单调栈的解法，放在栈专题中
+单调栈的解法，放在[单调栈专题](http://imlgw.top/2019/10/01/leetcode-zhan-dui-lie/#%E9%9D%A2%E8%AF%95%E9%A2%9833-%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E7%9A%84%E5%90%8E%E5%BA%8F%E9%81%8D%E5%8E%86%E5%BA%8F%E5%88%97)中
 
 ## [654. 最大二叉树](https://leetcode-cn.com/problems/maximum-binary-tree/)
 
