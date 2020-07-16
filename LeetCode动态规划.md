@@ -1668,6 +1668,70 @@ public int findNumberOfLIS(int[] nums) {
 }
 ```
 
+
+## [1016. 使序列递增的最小交换次数（LintCode）](https://www.lintcode.com/problem/minimum-swaps-to-make-sequences-increasing/description)
+
+
+有两个具有相同非零长度的整数序列A和B。可以交换它们的一些元素A[i]和B[i]。 注意，两个可交换的元素在它们各自的序列中处于相同的索引位置。进行一些交换之后，A和B需要严格递增。 （当且仅当A[0] < A[1] < A[2] < ... < A[A.length - 1]时，序列严格递增。）
+
+给定A和B，返回使两个序列严格递增的最小交换次数。 保证给定的输入经过交换可以满足递增的条件。
+
+**注意**
+- A, B 是长度相同的数组, 它们的长度范围为 [1, 1000]。
+- A[i], B[i] 是在 [0, 2000]范围内的整数。
+
+**样例 1**
+```go
+输入: A = [1,3,5,4], B = [1,2,3,7]
+输出: 1
+解释: 交换A[3] and B[3]. 两个序列变为:
+  A = [1,3,5,7] 和 B = [1,2,3,4],
+  此时它们都是严格递增的。
+```
+**样例 2:**
+```go
+输入: A = [2,4,5,7,10], B = [1,3,4,5,9]
+输出: 0
+```
+
+**解法一**
+
+直接抄答案，很巧妙的双序列型dp，不看答案真想不出来
+```java
+public int minSwap(int[] A, int[] B) {
+    if (A == null || B == null || A.length <=0 || B.length <= 0){
+        return 0;
+    }
+    // Write your code here
+    int n = A.length;
+    int INF = 0x3f3f3f3f;
+    //dp[i][0]: A和B前i个字符都保持有序，并且不交换第i个元素的最小交换次数
+    //dp[i][1]: A和B前i个字符都保持有序，并且交换第i个元素的最小交换次数
+    int[][] dp = new int[n][2];
+    for(int i = 0; i < n; i++){
+        Arrays.fill(dp[i], INF);
+    }
+    dp[0][0] = 0; dp[0][1] = 1;
+    for(int i = 1; i < n; i++){
+        //很巧妙的分类讨论
+        if(A[i] > A[i-1] && B[i] > B[i-1]){
+            //前后都不交换
+            dp[i][0] = dp[i-1][0];
+            //前后都交换
+            dp[i][1] = dp[i-1][1]+1; 
+        }
+        if(A[i] > B[i-1] && B[i] > A[i-1]){
+            //当前不交换，交换前面的
+            dp[i][0] = Math.min(dp[i][0], dp[i-1][1]);
+            //当前交换，前面不交换
+            dp[i][1] = Math.min(dp[i][1], dp[i-1][0]+1);
+        }
+    }
+    int res = Math.min(dp[n-1][0],dp[n-1][1]);
+    return  res == INF ? 0 : res;
+}
+```
+
 ## [354. 俄罗斯套娃信封问题](https://leetcode-cn.com/problems/russian-doll-envelopes/)
 
 给定一些标记了宽度和高度的信封，宽度和高度以整数对形式 `(w, h)` 出现。当另一个信封的宽度和高度都比这个信封大的时候，这个信封就可以放进另一个信封里，如同俄罗斯套娃一样。
