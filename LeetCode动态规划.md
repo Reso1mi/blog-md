@@ -221,6 +221,104 @@ public int minPathSum(int[][] grid) {
 }
 ```
 
+**UPDATE: 2020.7.20**
+
+写下面的[path-sum-three-ways](#path-sum-three-ways)的时候看了这题之前的代码，发现写的不太好，一堆if-else，重写下
+```golang
+func minPathSum(grid [][]int) int {
+    var m = len(grid)
+    var n = len(grid[0])
+    var dp = make([][]int, m)
+    for i := 0; i < m; i++{
+        dp[i] = make([]int, n)
+    }
+    dp[0][0] = grid[0][0]
+    for i := 1; i < m; i++{
+        dp[i][0] = dp[i-1][0] + grid[i][0]
+    }
+    for j := 1; j < n; j++{
+        dp[0][j] = dp[0][j-1] + grid[0][j];
+    }
+    for i := 1; i < m; i++{
+        for j := 1; j < n; j++{
+            dp[i][j] = grid[i][j] + Min(dp[i-1][j], dp[i][j-1])
+        }
+    }
+    return dp[m-1][n-1]
+}
+
+func Min(a, b int) int{
+    if a > b{
+        return b
+    }
+    return a
+}
+```
+
+## [Path sum: three ways](https://projecteuler.net/problem=82)
+
+The minimal path sum in the 5 by 5 matrix below, by starting in any cell in the left column and finishing in any cell in the right column, and only moving up, down, and right, is indicated in red and bold; the sum is equal to 994.
+
+![UhOJw6.png](https://s1.ax1x.com/2020/07/20/UhOJw6.png)
+
+Find the minimal path sum from the left column to the right column in matrix.txt (right click and "Save Link/Target As..."), a 31K text file containing an 80 by 80 matrix.
+
+**解法一**
+
+来源 https://leetcode-cn.com/circle/discuss/BNvWBP/ 从这里看见qc大佬贴了出处，所以特地注册了这个网站试了下，这个网站还是挺有意思的，只验证答案，时间复杂度啥的都不管
+
+和上面的最小路径和很类似，但是这里起点和终点都不确定，而且有3个方向可以选择，所以这里我们可以遍历2次，`dp[i][j]`代表从第一列到当前`matrix[i][j]`的最小路径和，先统计单纯的向上或者向下的最小值，然后再统计相反的方向的值，总之要保证3个方向的值都是计算过的
+```java
+import java.util.*;
+import java.io.*;
+//https://projecteuler.net/problem=82  answer:260324
+public class PathSum_threeWays_projecteuler{
+    public static void main(String[] args) throws Exception{
+        BufferedReader reader = new BufferedReader(new FileReader("/usr/p082_matrix.txt"));
+        int index = 0;
+        int m = 80, n = 80;
+        int[][] matrix = new int[m][n];
+        while (index < 80) {
+            String[] line = reader.readLine().split(",");
+            for (int j = 0; j < 80; j++) {
+                matrix[index][j] = Integer.valueOf(line[j]);
+            }
+            index++;
+        }
+        int INF = 0x3f3f3f3f;
+        int[][] dp = new int[m][n];
+        for (int j = 0; j < m; j++) {
+            dp[j][0] = matrix[j][0];
+        }
+        for (int j = 1; j < m; j++) {
+            //只考虑向左和向下
+            for (int i = 0; i < m; i++) {
+                if (i==0){ //第一行，只能从左边转移
+                    dp[i][j] = matrix[i][j] + dp[i][j-1];
+                }else{ //从左边或者上边转移
+                    dp[i][j] = matrix[i][j] + Math.min(dp[i][j-1], dp[i-1][j]);
+                }
+            }
+            for (int i = m-1; i >= 0; i--) {
+                //三目写的太长看着挺不舒服...
+                //dp[i][j] = i==m-1?dp[i][j]:Math.min(dp[i][j], matrix[i][j]+dp[i+1][j]);
+                if (i<m-1) { //从下面转移和从上面转移的最小值
+                    dp[i][j] = Math.min(dp[i][j], matrix[i][j]+dp[i+1][j]);
+                }
+                //最后一行，只能从左边或者上面转移，也是就是第一个循环的值
+                //dp[i][j] = dp[i][j]
+            }
+        }
+        int res = INF;
+        for (int i = 0; i < m; i++) {
+            res = Math.min(res, dp[i][m-1]);
+        }
+        System.out.println(res);
+    }
+}
+```
+> 一开始写了个3目，改了半天的bug，发现是3目和前面的值混到一起了。。。
+
 ## [62. 不同路径](https://leetcode-cn.com/problems/unique-paths/)
 
 一个机器人位于一个 m x n 网格的左上角 （起始点在下图中标记为“Start” ）。
@@ -5554,6 +5652,52 @@ public int calculateMinimumHP(int[][] dungeon) {
 ```
 这题为啥不能正向dp呢，设`dp[i][j]`为从左上角到i,j所需要的最低血量? 其实这个很明显就是有问题的，没办法转移，`dp[i][j]`和`dp[i-1][j]`没有任何关系，都不一定是同一条路径
 
+## [97. 交错字符串](https://leetcode-cn.com/problems/interleaving-string/)
+
+Difficulty: **困难**
+
+
+给定三个字符串 s1, s2, s3, 验证 s3 是否是由 s1 和 s2 交错组成的。
+
+**示例 1:**
+
+```go
+输入: s1 = "aabcc", s2 = "dbbca", s3 = "aadbbcbcac"
+输出: true
+```
+
+**示例 2:**
+
+```go
+输入: s1 = "aabcc", s2 = "dbbca", s3 = "aadbbbaccc"
+输出: false
+```
+
+**解法一**
+![Ugzon0.png](https://s1.ax1x.com/2020/07/18/Ugzon0.png)
+```java
+public boolean isInterleave(String s1, String s2, String s3) {
+    int ns1 = s1.length(), ns2 = s2.length(), ns3 = s3.length();
+    if(ns1+ns2!=ns3) return false;
+    boolean[][] dp = new boolean[ns1+1][ns2+1];
+    for(int i = 1; i <= ns1 && s1.charAt(i-1)==s3.charAt(i-1); i++){
+        dp[i][0] = true;
+    }
+    for(int i = 1; i <= ns2 && s2.charAt(i-1)==s3.charAt(i-1); i++){
+        dp[0][i] = true;
+    }
+    dp[0][0] = true;
+    for(int i = 1; i <= ns1; i++){
+        for(int j = 1; j <= ns2; j++){
+            char sc = s3.charAt(i+j-1);
+            dp[i][j] = (sc == s1.charAt(i-1) && dp[i-1][j]) 
+                || sc == s2.charAt(j-1) && dp[i][j-1];
+        }
+    }
+    return dp[ns1][ns2];
+}
+```
+
 ---
 
 ## _区间DP_
@@ -5688,6 +5832,41 @@ public int maxCoins(int[] nums) {
     return dp[0][n-1];
 }
 ```
+
+**UPDATE:2020.7.19**
+打卡题，重新写一遍，稍微好一点的写法，上面一堆三目不太好
+
+```golang
+func maxCoins(nums []int) int {
+    if len(nums) <= 0{
+        return 0
+    }
+    nums = append(nums, 1)
+    nums = append([]int{1}, nums...)
+    var n = len(nums)
+    var dp = make([][]int, n)
+    for i := 0; i < n; i++{
+        dp[i] = make([]int, n)
+    }
+    for tlen := 1; tlen <= n-2; tlen++{ //枚举区间长度
+        for left := 1; left+tlen-1 < n-1; left++{ //枚举左端点
+            right := left+tlen-1 //右端点
+            for k := left; k <= right; k++{ //枚举分割点
+                dp[left][right] = Max(dp[left][right], dp[left][k-1]+dp[k+1][right]+nums[k]*nums[left-1]*nums[right+1])
+            }
+        }
+    }
+    return dp[1][n-2]
+}
+
+func Max(a, b int)int{
+    if a > b{
+        return a
+    }
+    return b
+}
+```
+
 
 ## [877. 石子游戏](https://leetcode-cn.com/problems/stone-game/)
 
@@ -6714,6 +6893,71 @@ func divisorGame(N int) bool {
 //最终我必定能先到2
 func divisorGame(N int) bool {
     return N%2 == 0
+}
+```
+
+## [1140. 石子游戏 II](https://leetcode-cn.com/problems/stone-game-ii/)
+
+Difficulty: **中等**
+
+
+亚历克斯和李继续他们的石子游戏。许多堆石子 **排成一行**，每堆都有正整数颗石子 `piles[i]`。游戏以谁手中的石子最多来决出胜负。
+
+亚历克斯和李轮流进行，亚历克斯先开始。最初，`M = 1`。
+
+在每个玩家的回合中，该玩家可以拿走剩下的 **前** `X` 堆的所有石子，其中 `1 <= X <= 2M`。然后，令 `M = max(M, X)`。
+
+游戏一直持续到所有石子都被拿走。
+
+假设亚历克斯和李都发挥出最佳水平，返回亚历克斯可以得到的最大数量的石头。
+
+**示例：**
+
+```
+输入：piles = [2,7,9,4,4]
+输出：10
+解释：
+如果亚历克斯在开始时拿走一堆石子，李拿走两堆，接着亚历克斯也拿走两堆。在这种情况下，亚历克斯可以拿到 2 + 4 + 4 = 10 颗石子。 
+如果亚历克斯在开始时拿走两堆石子，那么李就可以拿走剩下全部三堆石子。在这种情况下，亚历克斯可以拿到 2 + 7 = 9 颗石子。
+所以我们返回更大的 10。 
+```
+
+**提示：**
+
+*   `1 <= piles.length <= 100`
+*   `1 <= piles[i] <= 10 ^ 4`
+
+**解法一**
+
+瞎写的记忆化，懒得改dp了
+```java
+int n = 0;
+
+Integer[][] cache;
+
+public int stoneGameII(int[] piles) {
+    n = piles.length;
+    //这里用后缀和会简单一点，懒得改了
+    int[] preSum = new int[n+1];
+    cache = new Integer[n+1][n+1];
+    preSum[0] = 0;
+    for(int i = 1; i <=n; i++){
+        preSum[i] = preSum[i-1] + piles[i-1];
+    }
+    return dfs(preSum, 0, 1);
+}
+
+public int dfs(int[] preSum, int start, int M){
+    if(cache[start][M]!=null){
+        return cache[start][M];
+    }
+    int res = 0;
+    for(int len = 1; start + len - 1 < n && len <= 2*M; len++){
+        //start=0 len=2 (0,1)
+        int temp = preSum[n] - preSum[start] - dfs(preSum, start + len, Math.max(M, len));
+        res = Math.max(res, temp);
+    }
+    return cache[start][M] = res;
 }
 ```
 

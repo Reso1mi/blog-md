@@ -1500,6 +1500,66 @@ public List<Integer> findClosestElements(int[] arr, int k, int x) {
     return res;   
 }
 ```
+## [367. 有效的完全平方数](https://leetcode-cn.com/problems/valid-perfect-square/)
+
+Difficulty: **简单**
+
+
+给定一个正整数 _num_，编写一个函数，如果 _num_ 是一个完全平方数，则返回 True，否则返回 False。
+
+**说明：**不要使用任何内置的库函数，如  `sqrt`。
+
+**示例 1：**
+
+```go
+输入：16
+输出：True
+```
+
+**示例 2：**
+
+```go
+输入：14
+输出：False
+```
+
+**解法一**
+
+二分
+```golang
+func isPerfectSquare(num int) bool {
+    var left = 0
+    var right = num
+    var res = num + 1
+    for left <= right {
+        mid := left + (right-left)/2
+        if mid*mid >= num {
+            res = mid
+            right = mid - 1
+        } else {
+            left = mid + 1
+        }
+    }
+    return res*res == num
+}
+```
+
+**解法二**
+
+完全平方数的性质
+```golang
+//完全平方数性质 n^2 = 1 + 3 + 5 +...+2n+1 (前n个奇数的和)
+//所以只需要判断num能不能被奇数减成0就行了
+func isPerfectSquare(num int) bool {
+    var i = 1
+    for num > 0 {
+        num -= i
+        i += 2
+    }
+    return num == 0
+}
+```
+
 
 ## _二分答案_
 
