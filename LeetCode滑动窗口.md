@@ -1222,7 +1222,78 @@ public List<Integer> findAnagrams(String s, String p) {
     return res;
 }
 ```
-15ms，86%时间复杂度`O(M+N)`，但是这很明显并不是最优解，因为这题的窗口长度其实是可以固定的，滑动的可以更快，只用遍历一遍，等以后有时间再研究吧
+**UPDATE:2020.7.23**
+
+用模板重写了下
+```golang
+func findAnagrams(s string, p string) []int {
+    var target = make([]int, 128)
+    var window = make([]int, 128)
+    var match = 0
+    for _, sp := range p {
+        if target[sp] == 0 {
+            match++
+        }
+        target[sp]++
+    }
+    var left = 0
+    var count = 0
+    var res []int
+    for right := 0; right < len(s); right++ {
+        if target[s[right]] > 0 {
+            window[s[right]]++
+            if window[s[right]] == target[s[right]] {
+                count++
+            }
+        }
+        for count == match && left <= right {
+            if right-left+1 == len(p) {
+                res = append(res, left)
+            }
+            if window[s[left]] > 0 {
+                window[s[left]]--
+                if window[s[left]] < target[s[left]] {
+                    count--
+                }
+            }
+            left++
+        }
+    }
+    return res
+}
+```
+15ms，86%时间复杂度`O(M+N)`，其实是完全套的之前最小覆盖子串的模板，不如肯定不好写这么长
+
+**解法二**
+
+正常的做法，实际上上面的解法一直在避免直接比较target和window，但是实际上比较这两个数组的成本是很低的，两个数组长度固定，比较时间复杂度O(1)，具体情况具体分析，不过套模板几乎是通用的
+```golang
+func findAnagrams(s string, p string) []int {
+    var left = 0
+    //-'a'看起来太丑了，直接128
+    var target [128]int //注意用数组，可以直接比较
+    var window [128]int
+    for _, sp := range p {
+        target[sp]++
+    }
+    var res []int
+    for right := 0; right < len(s); right++ {
+        if target[s[right]] > 0 {
+            window[s[right]]++
+        }
+        for right-left+1 > len(p) {
+            if window[s[left]] > 0 {
+                window[s[left]]--
+            }
+            left++
+        }
+        if window == target {
+            res = append(res, left)
+        }
+    }
+    return res
+}
+```
 
 ## [567. 字符串的排列](https://leetcode-cn.com/problems/permutation-in-string/)
 

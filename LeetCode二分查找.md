@@ -307,6 +307,28 @@ public int findMin(int[] nums) {
 
 比如 `1 2 3 4 5` 和`2 3 4 5 1` 两个的中点都大于左边界，但是你无法确定此时应该如果缩短区间，除非做特判，但是那样就麻烦了
 
+**UPDATE: 2020.7.22**
+
+最小值的特点就是肯定是小于等于nums的最后一个元素，这里没有重复的元素，所以最小值肯定是小于最后一个元素的，除非最后一个就是最小的元素，这种情况我们设置为res的初始值，这样我重写后我感觉更好理解了，进阶版的只需要在这个的基础上稍加改动就行了
+```golang
+func findMin(nums []int) int {
+    var n = len(nums)
+    var left, right = 0, n - 1
+    var res = right
+    for left <= right {
+        mid := left + (right-left)/2
+        if nums[mid] < nums[n-1] {
+            res = mid
+            right = mid - 1
+        } else {
+            left = mid + 1
+        }
+    }
+    return nums[res]
+}
+
+```
+
 ## [154. 寻找旋转排序数组中的最小值 II](https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array-ii/) 
 
 假设按照升序排序的数组在预先未知的某个点上进行了旋转。
@@ -357,6 +379,39 @@ public int findMin(int[] nums) {
     return nums[left];
 }
 ```
+
+**解法二**
+
+(UPDATE: 2020.7.22)
+
+相比[寻找旋转排序数组中的最小值](#153-寻找旋转排序数组中的最小值)，仅仅只是加了一个尾部去重的操作，去重后就和上面的情况一样了，这样就比前面的解法更加清晰了，时间复杂度也还是一样的
+```golang
+//先对尾部去重，再二分会清晰很多
+func minArray(numbers []int) int {
+    var n = len(numbers)
+    var left = 0
+    var right = n - 1
+    //尾部去重
+    for right >= 1 && numbers[right] == numbers[right-1] {
+        right--
+    }
+    //兜底最小值就是最后一个元素
+    var res = right
+    for left <= right {
+        mid := left + (right-left)/2
+        //去重后min一定是小于numbers[n-1]的
+        if numbers[mid] < numbers[n-1] {
+            res = mid
+            right = mid - 1
+        } else {
+            left = mid + 1
+        }
+    }
+    return numbers[res]
+}
+
+```
+
 ## [33. 搜索旋转排序数组](https://leetcode-cn.com/problems/search-in-rotated-sorted-array/)
 
 假设按照升序排序的数组在预先未知的某个点上进行了旋转。
@@ -1560,6 +1615,140 @@ func isPerfectSquare(num int) bool {
 }
 ```
 
+## [475. 供暖器](https://leetcode-cn.com/problems/heaters/)
+
+Difficulty: **简单**
+
+
+冬季已经来临。 你的任务是设计一个有固定加热半径的供暖器向所有房屋供暖。
+
+现在，给出位于一条水平线上的房屋和供暖器的位置，找到可以覆盖所有房屋的最小加热半径。
+
+所以，你的输入将会是房屋和供暖器的位置。你将输出供暖器的最小加热半径。
+
+**说明:**
+
+1.  给出的房屋和供暖器的数目是非负数且不会超过 25000。
+2.  给出的房屋和供暖器的位置均是非负数且不会超过10^9。
+3.  只要房屋位于供暖器的半径内(包括在边缘上)，它就可以得到供暖。
+4.  所有供暖器都遵循你的半径标准，加热的半径也一样。
+
+**示例 1:**
+
+```golang
+输入: [1,2,3],[2]
+输出: 1
+解释: 仅在位置2上有一个供暖器。如果我们将加热半径设为1，那么所有房屋就都能得到供暖。
+```
+
+**示例 2:**
+
+```golang
+输入: [1,2,3,4],[1,4]
+输出: 1
+解释: 在位置1, 4上有两个供暖器。我们需要将加热半径设为1，这样所有房屋就都能得到供暖。
+```
+
+
+**解法一**
+
+这个题目感觉不是easy啊，一开始想劈叉了，以为是二分答案，写了半天后来WA在一个很大的case，一直以为是溢出了，改了半天的bug没改出来。。。后来自己按照case的规律构建了一个小的case，发现也WA了，然后才意识到是方法错了, (case: [4,9] [4,8])，这个case按照二分答案的思路就是错的，二分答案是思路就是验证该半径下能否覆盖整个区间，其实也是题目理解有点问题，题目的要求是**覆盖每个房子**，而**不是覆盖整个区间**，所以只需要找到每个房子最近的供暖器就行了，然后统计这些最小值得最大值就是我们需要的半径
+
+```golang
+func findRadius(houses []int, heaters []int) int {
+    //边界处理
+    heaters = append(heaters, math.MaxInt32)
+    heaters = append(heaters, math.MinInt32)
+    sort.Ints(heaters)
+    var Min = func (a, b int) int { if a < b {return a}; return b}
+    var Max = func (a, b int) int { if a < b {return b}; return a}
+    var res = 0
+    for _, h := range houses{
+        left := search(heaters, h)
+        res = Max(res, Min(h-heaters[left], heaters[left+1]-h))
+    }
+    return res
+}
+​
+//target左边最近的一个
+func search(heaters []int, target int) int {
+    var left, right = 0, len(heaters)-1
+    var res = left //左边没有供暖器
+    for left <= right {
+        mid := left + (right-left)/2
+        if heaters[mid] <= target{
+            res = mid
+            left = mid + 1
+        }else{
+            right = mid - 1
+        }
+    }
+    return res
+}
+```
+另一种写法，不额外处理边界，也是一开始的写法
+```golang
+func findRadius(houses []int, heaters []int) int {
+    sort.Ints(heaters)
+    var n = len(heaters)
+    var Min = func (a, b int) int { if a < b {return a}; return b}
+    var Max = func (a, b int) int { if a < b {return b}; return a}
+    var res = 0
+    for _, h := range houses{
+        left := search(heaters, h)
+        if left == -1{ //全部大于hourse,取最小的那个
+            res = Max(res, heaters[0]-h)
+        }else if left+1 < n{
+            res = Max(res, Min(h-heaters[left], heaters[left+1]-h))
+        }else{
+            res = Max(res, h-heaters[left])
+        }
+    }
+    return res
+}
+
+//target左边最近的一个
+func search(heaters []int, target int) int {
+    var left, right = 0, len(heaters)-1
+    var res = -1 //左边没有供暖器
+    for left <= right {
+        mid := left + (right-left)/2
+        if heaters[mid] <= target{
+            res = mid
+            left = mid + 1
+        }else{
+            right = mid - 1
+        }
+    }
+    return res
+}
+```
+时间复杂度细看的话应该是 `O(MlogM + MlogN)`（M，N分别代表houses和heaters的长度）
+
+**解法二**
+
+双指针，时间复杂度差别不大
+```golang
+func findRadius(houses []int, heaters []int) int {
+    heaters = append(heaters, math.MaxInt32)
+    heaters = append(heaters, math.MinInt32)
+    sort.Ints(heaters)
+    sort.Ints(houses)
+    var n = len(heaters)
+    var Min = func (a, b int) int { if a < b {return a}; return b}
+    var Max = func (a, b int) int { if a < b {return b}; return a}
+    var res = 0
+    var left = 0
+    for _, h := range houses {
+        for left < n && heaters[left] < h {
+            left++
+        }
+        res = Max(res, Min(heaters[left]-h, h-heaters[left-1]))
+    }
+    return res
+}
+```
+时间复杂度细看的话应该是 `O(NlogN + MlogM + N + M)`（M，N分别代表houses和heaters的长度），差别不大，不过很明显双指针的好写很多
 
 ## _二分答案_
 
