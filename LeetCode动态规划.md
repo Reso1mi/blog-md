@@ -3411,6 +3411,79 @@ public int countSquares(int[][] matrix) {
 
 一摸一样，理解一点就ok，**以`matrix[i][j]` 为右下角的最大正方形的边长，就是以这个点为右下角的正方形的数量！！！**
 
+## [1139. 最大的以 1 为边界的正方形](https://leetcode-cn.com/problems/largest-1-bordered-square/)
+
+Difficulty: **中等**
+
+
+给你一个由若干 `0` 和 `1` 组成的二维网格 `grid`，请你找出边界全部由 `1` 组成的最大 **正方形** 子网格，并返回该子网格中的元素数量。如果不存在，则返回 `0`。
+
+**示例 1：**
+
+```golang
+输入：grid = [[1,1,1],[1,0,1],[1,1,1]]
+输出：9
+```
+
+**示例 2：**
+
+```golang
+输入：grid = [[1,1,0,0]]
+输出：1
+```
+
+**提示：**
+
+*   `1 <= grid.length <= 100`
+*   `1 <= grid[0].length <= 100`
+*   `grid[i][j]` 为 `0` 或 `1`
+
+**解法一**
+
+这个题目还是挺有意思的，第一次看了以后没啥思路，看了题解对dp数组的的定义后就明白了，今天来实现下，WA了2次，都WA的有理有据，很舒服，做这种题就很舒服
+
+```java
+public int largest1BorderedSquare(int[][] grid) {
+    int m = grid.length;
+    int n = grid[0].length;
+    //dp[i][j][0]: i,j左边连续的1的个数
+    //dp[i][j][1]: i,j上边连续的1的个数
+    int[][][] dp = new int[m+1][n+1][2];
+    for (int i = 1; i <= m; i++) {
+        for (int j = 1; j <= n; j++) {
+            if (grid[i-1][j-1] == 1){
+                dp[i][j][0] = 1 + dp[i][j-1][0];
+                dp[i][j][1] = 1 + dp[i-1][j][1];
+            }
+        }
+    }
+    int res = 0;
+    for (int i = 1; i <= m; i++) {
+        for (int j = 1; j <= n; j++) {
+            //WA点2：最短的那条边不一定是边长，可以更短所以需要遍历所有小于最短边长的长度
+            //所以题目的数据范围是不会骗人的，给的100那么时间复杂度一定不是N2的
+            for (int side = Math.min(dp[i][j][0], dp[i][j][1]); side >= 1; side--){
+                //WA点1：大于等于
+                if (dp[i][j-side+1][1] >= side && dp[i-side+1][j][0] >= side){
+                    res = Math.max(res, side);
+                    break; //更短的就没必要考虑了
+                }
+            }
+        }
+    }
+    return res * res;
+}
+```
+其实这个题目的关键就在于状态的定义，如何去构造一个正方形，一图胜千言（PPT画图还是挺方便）
+![mark](http://static.imlgw.top/blog/20200724/scuRvpxXoSDR.png?imageslim)
+求以某个点为右下角的正方形，首先我们考虑这个点为右下角可能构成的最大正方形边长是多大
+
+很明显应该是该点左边和上边连续1个数的**最小值**，如上图的（6，5）点，最大的可能边长就应该是6，然后我们枚举所有的小于6大于1的边长`side`，验证`side`能否构成正方形
+
+验证`side`是否合法也很容易，如上图，我们只需要考虑（6，5）上边距离`side`的点的左边连续1的个数是否大于等于`side`，以及左边距离`side`的点的上边连续的1的个数是否大于等于`side`，如果都大于等于`side`那么该`side`就是合法的，我们统计这些合法的`side`的最大值就ok了
+
+> 在lc上水了一发[题解](https://leetcode-cn.com/problems/largest-1-bordered-square/solution/java-dong-tai-gui-hua-by-resolmi/)
+
 ## [44. 通配符匹配](https://leetcode-cn.com/problems/wildcard-matching/)
 
 给定一个字符串 (s) 和一个字符模式 (p) ，实现一个支持 '?' 和 '*' 的通配符匹配。
@@ -6630,6 +6703,94 @@ public int numOfArrays(int n, int m, int k) {
     return (int)(res%mod);
 }
 ```
+
+### [902\. 最大为 N 的数字组合](https://leetcode-cn.com/problems/numbers-at-most-n-given-digit-set/)
+
+Difficulty: **困难**
+
+
+我们有一组**排序的**数字 `D`，它是  `{'1','2','3','4','5','6','7','8','9'}` 的非空子集。（请注意，`'0'` 不包括在内。）
+
+现在，我们用这些数字进行组合写数字，想用多少次就用多少次。例如 `D = {'1','3','5'}`，我们可以写出像 `'13', '551', '1351315'` 这样的数字。
+
+返回可以用 `D` 中的数字写出的小于或等于 `N` 的正整数的数目。
+
+**示例 1：**
+
+```
+输入：D = ["1","3","5","7"], N = 100
+输出：20
+解释：
+可写出的 20 个数字是：
+1, 3, 5, 7, 11, 13, 15, 17, 31, 33, 35, 37, 51, 53, 55, 57, 71, 73, 75, 77.
+```
+
+**示例 2：**
+
+```
+输入：D = ["1","4","9"], N = 1000000000
+输出：29523
+解释：
+我们可以写 3 个一位数字，9 个两位数字，27 个三位数字，
+81 个四位数字，243 个五位数字，729 个六位数字，
+2187 个七位数字，6561 个八位数字和 19683 个九位数字。
+总共，可以使用D中的数字写出 29523 个整数。
+```
+
+**提示：**
+
+1.  `D` 是按排序顺序的数字 `'1'-'9'` 的子集。
+2.  `1 <= N <= 10^9`
+
+**解法一**
+
+lc上写的第3道数位DP，套模板，理解的还不够深刻，等以后做多了再单独开专题讲解
+```java
+boolean[] dict;
+
+int[] nums;
+
+Integer[] dp;
+
+public int atMostNGivenDigitSet(String[] D, int N) {
+    int pos = -1;
+    nums = new int[64];
+    while (N > 0) {
+        nums[++pos] = N % 10;
+        N /= 10;
+    }
+    dict = new boolean[10];
+    dp = new Integer[pos + 1];
+    for (int i = 0; i < D.length; i++) {
+        dict[Integer.valueOf(D[i])] = true;
+    }
+    return dfs(pos, true, true);
+}
+
+//从pos~0有多少个合法的数
+public int dfs(int pos, boolean leadZero, boolean limit) {
+    if (pos == -1) {
+        //枚举完所有的数位，没有前导0说明找到了一个合法的数
+        return leadZero ? 0 : 1;
+    }
+    if (!leadZero && !limit && (dp[pos] != null)) {
+        return dp[pos];
+    }
+    int res = 0;
+    int up = limit ? nums[pos] : 9;
+    for (int i = 0; i <= up; i++) {
+        //前面全是0 || 当前位在dict中
+        if ((leadZero && (i == 0)) || dict[i]) {
+            res += dfs(pos - 1, leadZero && (i == 0), limit && (i == up));
+        }
+    }
+    if (!leadZero && !limit) {
+        dp[pos] = res;
+    }
+    return res;
+}
+```
+
 ## _状压DP_
 
 ## [464. 我能赢吗](https://leetcode-cn.com/problems/can-i-win/)
