@@ -1406,6 +1406,163 @@ public boolean searchMatrix(int[][] matrix, int target) {
 }
 ```
 
+## [240. 搜索二维矩阵 II](https://leetcode-cn.com/problems/search-a-2d-matrix-ii/)
+
+编写一个高效的算法来搜索 m x n 矩阵 matrix 中的一个目标值 target。该矩阵具有以下特性：
+
+- 每行的元素从左到右升序排列。
+- 每列的元素从上到下升序排列。
+
+**示例:**
+现有矩阵 matrix 如下：
+
+```java
+[
+  [1,   4,  7, 11, 15],
+  [2,   5,  8, 12, 19],
+  [3,   6,  9, 16, 22],
+  [10, 13, 14, 17, 24],
+  [18, 21, 23, 26, 30]
+]
+```
+
+给定 target = `5`，返回 `true`。
+
+给定 target = `20`，返回 `false`。
+
+**解法一**
+
+看上一题 [240. 搜索二维矩阵](https://leetcode-cn.com/problems/search-a-2d-matrix/)  的评论区的时候看到了这种解法
+
+```java
+public boolean searchMatrix(int[][] matrix, int target) {
+    if(matrix==null || matrix.length<=0 || matrix[0].length<=0){
+        return false;
+    }
+    int m=matrix.length;
+    int n=matrix[0].length;
+    int  column=0,row=m-1;
+    while(column<n && row>=0){
+        //System.out.println(row+","+column);
+        if (matrix[row][column]==target) {
+            return true;
+        }
+        if (matrix[row][column] > target) {
+            row--;
+        }else{
+            column++;
+        }
+    }
+    return false;
+}
+```
+整个矩阵从左上到右下，其实就分为了两块，每个元素的左上一定小于当前元素，右下一定大于当前元素，这题也可以二分，就像下面的[1351. 统计有序矩阵中的负数](#1351-统计有序矩阵中的负数)一样，但是时间复杂度会高一些
+
+## [1351. 统计有序矩阵中的负数](https://leetcode-cn.com/problems/count-negative-numbers-in-a-sorted-matrix/)
+
+Difficulty: **简单**
+
+
+给你一个 `m * n` 的矩阵 `grid`，矩阵中的元素无论是按行还是按列，都以非递增顺序排列。 
+
+请你统计并返回 `grid` 中 **负数** 的数目。
+
+**示例 1：**
+
+```go
+输入：grid = [[4,3,2,-1],[3,2,1,-1],[1,1,-1,-2],[-1,-1,-2,-3]]
+输出：8
+解释：矩阵中共有 8 个负数。
+```
+
+**示例 2：**
+
+```go
+输入：grid = [[3,2],[1,0]]
+输出：0
+```
+
+**示例 3：**
+
+```go
+输入：grid = [[1,-1],[-1,-1]]
+输出：3
+```
+
+**示例 4：**
+
+```go
+输入：grid = [[-1]]
+输出：1
+```
+
+**提示：**
+
+*   `m == grid.length`
+*   `n == grid[i].length`
+*   `1 <= m, n <= 100`
+*   `-100 <= grid[i][j] <= 100`
+
+
+**解法一**
+
+没啥好说的，和上面的解法一样，从左下角向上搜索
+```golang
+func countNegatives(grid [][]int) int {
+    if len(grid) <= 0 {
+        return 0
+    }
+    var m, n = len(grid), len(grid[0])
+    var count = 0
+    var i, j = m-1, 0
+    for i >= 0 && j < n {
+        if grid[i][j] < 0 {
+            count += n - j
+            i--
+        }else{
+            j++
+        }
+    }
+    return count;
+}
+```
+
+**解法二**
+
+O(mlogn)解法
+
+```golang
+//O(mlogn) 只利用了行逆序的条件
+func countNegatives(grid [][]int) int {
+    if len(grid) <= 0 {
+        return 0
+    }
+    var count = 0
+    var m = len(grid)
+    var n = len(grid[0])
+    for i := 0; i < m; i++ {
+        count += (n - search(grid[i]))
+    }
+    return count
+}
+
+func search(nums []int) int {
+    var left = 0
+    var right = len(nums)-1
+    var res = right+1
+    for left <= right {
+        mid := left + (right-left)/2
+        if nums[mid] < 0 {
+            res = mid
+            right = mid - 1
+        }else{
+            left = mid + 1
+        }
+    }
+    return res
+}
+```
+
 ## [4. 寻找两个有序数组的中位数](https://leetcode-cn.com/problems/median-of-two-sorted-arrays/)
 
 给定两个大小为 m 和 n 的有序数组 `nums1` 和 `nums2`。

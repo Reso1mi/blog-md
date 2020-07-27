@@ -4334,57 +4334,7 @@ public int eraseOverlapIntervals(int[][] intervals) {
 ```
 按照起点排序，在重叠的时候优先选择结尾小的哪一个，这样就可能得到更多的区间组合，关于这个算法的正确性我就不证明了
 
-## [240. 搜索二维矩阵 II](https://leetcode-cn.com/problems/search-a-2d-matrix-ii/)
 
-编写一个高效的算法来搜索 m x n 矩阵 matrix 中的一个目标值 target。该矩阵具有以下特性：
-
-- 每行的元素从左到右升序排列。
-- 每列的元素从上到下升序排列。
-
-**示例:**
-现有矩阵 matrix 如下：
-
-```java
-[
-  [1,   4,  7, 11, 15],
-  [2,   5,  8, 12, 19],
-  [3,   6,  9, 16, 22],
-  [10, 13, 14, 17, 24],
-  [18, 21, 23, 26, 30]
-]
-```
-
-给定 target = `5`，返回 `true`。
-
-给定 target = `20`，返回 `false`。
-
-**解法一**
-
-看上一题 [240. 搜索二维矩阵](https://leetcode-cn.com/problems/search-a-2d-matrix/)  的评论区的时候看到了这种解法
-
-```java
-public boolean searchMatrix(int[][] matrix, int target) {
-    if(matrix==null || matrix.length<=0 || matrix[0].length<=0){
-        return false;
-    }
-    int m=matrix.length;
-    int n=matrix[0].length;
-    int  column=0,row=m-1;
-    while(column<n && row>=0){
-        //System.out.println(row+","+column);
-        if (matrix[row][column]==target) {
-            return true;
-        }
-        if (matrix[row][column] > target) {
-            row--;
-        }else{
-            column++;
-        }
-    }
-    return false;
-}
-```
-整个矩阵从左上到右下，其实就分为了两块，每个元素的左上一定小于当前元素，右下一定大于当前元素，所以很自然就可以写出类似的O(m+n)的解法，这题好像也可以二分，但是还是这种比较好理解
 
 ## [263. 丑数](https://leetcode-cn.com/problems/ugly-number/)
 
@@ -6093,6 +6043,66 @@ func trailingZeroes(n int) int {
     var count = 0
     for n > 0{
         n /= 5
+        count += n
+    }
+    return count
+}
+```
+
+## [793. 阶乘函数后K个零](https://leetcode-cn.com/problems/preimage-size-of-factorial-zeroes-function/)
+
+Difficulty: **困难**
+
+
+ `f(x)` 是 `x!` 末尾是0的数量。（回想一下 `x! = 1 * 2 * 3 * ... * x`，且`0! = 1`）
+
+例如， `f(3) = 0` ，因为3! = 6的末尾没有0；而 `f(11) = 2` ，因为11!= 39916800末端有2个0。给定 `K`，找出多少个非负整数`x` ，有 `f(x) = K` 的性质。
+
+```golang
+示例 1:
+输入:K = 0
+输出:5
+解释: 0!, 1!, 2!, 3!, and 4! 均符合 K = 0 的条件。
+
+示例 2:
+输入:K = 5
+输出:0
+解释:没有匹配到这样的 x!，符合K = 5 的条件。
+```
+
+**注意：**
+
+*   `K`是范围在 `[0, 10^9]` 的整数**。**
+
+**解法一**
+
+上一题的逆向，挺有意思的，可惜了，一开始没想出来，我知道答案肯定是0 or 5但是不知道咋验证了。。。明明上一题之前就做过了，真菜啊，看了评论区才恍然大悟
+```golang
+//ans: 0 or 5
+func preimageSizeFZF(K int) int {
+    //n/5 + n/25 + ... +  = K ==> n < 5*K
+    var left = 0 
+    var right = 5*K+1
+    for left <= right {
+        mid := left + (right-left)/2
+        var zero = trailingZeroes(mid)
+        if zero == K {
+            return 5
+        }
+        if zero > K {
+            right = mid - 1
+        }else{
+            left = mid + 1
+        }
+    }
+    return 0
+}
+​
+//172.阶乘后的0
+func trailingZeroes(n int) int {
+    var count = 0
+    for n > 0 {
+        n/=5
         count += n
     }
     return count
