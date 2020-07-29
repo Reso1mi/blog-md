@@ -5615,37 +5615,46 @@ public void dfs(int cur,int n,int k){
 
 直接遍历肯定是行不通,那么就只能想办法跳过一些节点,这里我们就可以通过计算每个节点的子节点的个数来判断第k个是不是在该节点下,而子节点的个数就可以用`Min(n+1,next*10)-cur`计算得到,`next`是和cur相邻的节点,`n`是最大值,画个图就懂了
 ![mark](http://static.imlgw.top/blog/20200614/3WPecCGnzxQl.png?imageslim)
-```java
+```golang
+//UPDATE: 2020.7.29 之前的代码细节有的不好理解，重写了一版
 //正解
-public int findKthNumber(int n, int k) {
-    long cur=1;
-    k--;
-    while(k>0){
-        long count=getCount(cur,n);
-        if(count<=k){ //不在该节点下,切换到相邻节点
-            cur++;
-            k-=count;
-        }else{//在该节点下,切换到子节点
-            cur*=10;
-            k--;
+func findKthNumber(n int, k int) int {
+    //k和count都是从1开始
+    var cur = 1
+    for k > 1 {
+        count := getChild(cur, n)
+        if count < k { //不在该节点下，切换成兄弟节点
+            cur++ 
+            k-=count
+        } else { //在该节点下，切换成子节点
+            cur *= 10
+            k--
         }
     }
-    return cur;
+    return cur
 }
 
-//计算cur下有多少个节点
-public long getCount(long cur,int n){
-    long next=cur+1;
-    long count=0;
-    while(cur<=n){
-        //12-10=2,所以是n+1
-        count+=Math.min(n+1,next)-cur;
-        next*=10;
-        cur*=10;
+//当前节点下有多少个子节点，也就是以cur开头的有多少个（包括cur）
+func getChild(cur int, n int) int {
+    var count = 0
+    var next = cur+1
+    for cur <= n {
+        count += Min(n+1, next) - cur
+        cur *= 10
+        next *= 10
     }
-    return count;
+    return count
+}
+
+func Min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
 }
 ```
+
+
 ## [386. 字典序排数](https://leetcode-cn.com/problems/lexicographical-numbers/)
 给定一个整数 n, 返回从 1 到 n 的字典顺序。
 
