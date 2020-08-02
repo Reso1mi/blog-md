@@ -3475,12 +3475,15 @@ public int largest1BorderedSquare(int[][] grid) {
 }
 ```
 其实这个题目的关键就在于状态的定义，如何去构造一个正方形，一图胜千言（PPT画图还是挺方便）
-![mark](http://static.imlgw.top/blog/20200724/scuRvpxXoSDR.png?imageslim)
+![mark](http://static.imlgw.top/blog/20200730/2NpjXbbGcEjQ.png?imageslim)
+（之前的图有点小问题，改了下）
+
 求以某个点为右下角的正方形，首先我们考虑这个点为右下角可能构成的最大正方形边长是多大
 
-很明显应该是该点左边和上边连续1个数的**最小值**，如上图的（6，5）点，最大的可能边长就应该是6，然后我们枚举所有的小于6大于1的边长`side`，验证`side`能否构成正方形
+很明显应该是该点左边和上边连续1个数的最小值，如上图的（6，5）点，最大的可能边长就应该是6，然后我们枚举所有的小于等于6大于等于1的边长side，验证side能否构成正方形
 
-验证`side`是否合法也很容易，如上图，我们只需要考虑（6，5）上边距离`side`的点的左边连续1的个数是否大于等于`side`，以及左边距离`side`的点的上边连续的1的个数是否大于等于`side`，如果都大于等于`side`那么该`side`就是合法的，我们统计这些合法的`side`的最大值就ok了
+验证side是否合法也很容易，如上图，我们只需要考虑（6，5）上边距离为side的点的左边连续1的个数是否大于等于side（`dp[i-side+1][j][0] >= side`），以及左边距离为side的点的上边连续的1的个数是否大于等于side（`dp[i][j-side+1][1] >= side`），如果都大于等于side那么该side就是合法的，我们统计这些合法的side的最大值就ok了
+
 
 > 在lc上水了一发[题解](https://leetcode-cn.com/problems/largest-1-bordered-square/solution/java-dong-tai-gui-hua-by-resolmi/)
 

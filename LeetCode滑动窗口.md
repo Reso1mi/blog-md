@@ -1134,6 +1134,128 @@ public String minWindow(String s, String t) {
     return Integer.MAX_VALUE==maxRight?"":s.substring(minLeft,maxRight+1);
 }
 ```
+
+## [632. 最小区间](https://leetcode-cn.com/problems/smallest-range-covering-elements-from-k-lists/)
+
+Difficulty: **困难**
+
+
+你有 `k` 个升序排列的整数数组。找到一个**最小**区间，使得 `k` 个列表中的每个列表至少有一个数包含在其中。
+
+我们定义如果 `b-a < d-c` 或者在 `b-a == d-c` 时 `a < c`，则区间 [a,b] 比 [c,d] 小。
+
+**示例 1:**
+
+```java
+输入:[[4,10,15,24,26], [0,9,12,20], [5,18,22,30]]
+输出: [20,24]
+解释: 
+列表 1：[4, 10, 15, 24, 26]，24 在区间 [20,24] 中。
+列表 2：[0, 9, 12, 20]，20 在区间 [20,24] 中。
+列表 3：[5, 18, 22, 30]，22 在区间 [20,24] 中。
+```
+
+**注意:**
+
+1.  给定的列表可能包含重复元素，所以在这里升序表示 >= 。
+2.  1 <= `k` <= 3500
+3.  -10<sup>5</sup> <= `元素的值` <= 10<sup>5</sup>
+4.  **对于使用Java的用户，请注意传入类型已修改为List<List<Integer>>。重置代码模板后可以看到这项改动。**
+
+
+**解法一**
+
+```golang
+func smallestRange(nums [][]int) []int {
+    var n = len(nums)
+    //列表中所有元素k,存在于那些数组中
+    var m = make(map[int][]int)
+    var Max = func (a, b int) int {if a > b {return a}; return b}
+    var Min = func (a, b int) int {if a < b {return a}; return b}
+    //记录最大最小值，然后在区间内滑窗，也可以直接将所有数组归并排一下，然后滑窗，比较麻烦，懒得写了
+    //所以下面的做法实际上是和循序无关的，没有用到有序这个条件
+    var maxV = math.MinInt32
+    var minV = math.MaxInt32
+    for i :=0; i < n; i++ {
+        for j := 0; j < len(nums[i]); j++ {
+            m[nums[i][j]] = append(m[nums[i][j]], i)
+            maxV = Max(maxV, nums[i][j])
+            minV = Min(minV, nums[i][j])
+        }
+    }
+    //同 76.最小覆盖子串，这题可能思维的转换比较重要
+    var count = 0
+    var freq = make([]int, n+1)
+    var res =[]int{minV, maxV}
+    var left = minV
+    for right := minV; right <= maxV; right++ {
+        if lis, ok := m[right]; ok {
+            for _, numIdx := range lis {
+                freq[numIdx]++
+                if freq[numIdx] == 1{
+                    count++
+                }
+            }
+        }
+        for count == n && left <= right {
+            if right-left < res[1]-res[0] {
+                res[0] = left
+                res[1] = right
+            }
+            if lis, ok := m[left]; ok{
+                for _, numIdx := range lis {
+                    freq[numIdx]--
+                    if freq[numIdx] < 1 {
+                        count--
+                    }
+                }
+            }
+            left++
+        }
+    }
+    return res
+}
+```
+**解法二**
+
+上面的解法并不是最好的解法，没有用到有序的条件，比较好的解法应该是小根堆（本来打算用Go撸一个的，写一半感觉太麻烦了，不过整体小根堆的逻辑实现是对的，就是没有泛型要改很多东西，不太方便）
+
+```java
+class Node {
+    int i, j;
+    public Node (int i, int j) {
+        this.i = i;
+        this.j = j;
+    }
+}
+
+//k组链表，平均m个元素，时间复杂度 O(kmlog(k))
+public int[] smallestRange(List<List<Integer>> nums) {
+    PriorityQueue<Node> pq = new PriorityQueue<>((a, b) -> nums.get(a.i).get(a.j)-nums.get(b.i).get(b.j));
+    int INF = (int) 1e5+1;
+    int max = Integer.MIN_VALUE;
+    for (int i = 0; i < nums.size(); i++) {
+        pq.add(new Node(i, 0));
+        max = Math.max(max, nums.get(i).get(0));
+    }
+    int [] res = {-INF, INF};
+    while (true) {
+        Node cur = pq.poll();
+        //应该把val也存进去的，懒得改了
+        if (max-nums.get(cur.i).get(cur.j) < res[1]-res[0]) {
+            res[0] = nums.get(cur.i).get(cur.j);
+            res[1] = max;
+        }
+        if (cur.j+1 >= nums.get(cur.i).size()) {
+            break;
+        }
+        pq.add(new Node(cur.i, cur.j+1));
+        max = Math.max(max, nums.get(cur.i).get(cur.j+1));
+    }
+    return res;
+}
+```
+
 ## [438. 找到字符串中所有字母异位词](https://leetcode-cn.com/problems/find-all-anagrams-in-a-string/)
 
 给定一个字符串 **s** 和一个非空字符串 **p**，找到 **s** 中所有是 **p** 的字母异位词的子串，返回这些子串的起始索引。
