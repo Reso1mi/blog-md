@@ -6360,3 +6360,44 @@ public static long[] solve (int[] a, int[] b) {
 }
 ```
 > 其实和解法一的思路类似，但是这种做法不考虑溢出且时间复杂度更低
+
+## [453. 最小移动次数使数组元素相等](https://leetcode-cn.com/problems/minimum-moves-to-equal-array-elements/)
+
+Difficulty: **简单**
+
+
+给定一个长度为 _n_ 的**非空**整数数组，找到让数组所有元素相等的最小移动次数。每次移动将会使 _n_ - 1 个元素增加 1。
+
+**示例:**
+
+```go
+输入:
+[1,2,3]
+
+输出:
+3
+
+解释:
+只需要3次移动（注意每次移动会增加两个元素的值）：
+
+[1,2,3]  =>  [2,3,3]  =>  [3,4,3]  =>  [4,4,4]
+```
+
+**解法一**
+
+n-1个元素+1，就相当于1个元素-1，思维的转换，题目就变得简单了
+```golang
+func minMoves(nums []int) int {
+    var min = math.MaxInt32
+    for i := 0; i < len(nums); i++ {
+        if nums[i] < min {
+            min = nums[i]
+        }
+    }
+    var res = 0
+    for i := 0; i < len(nums); i++ {
+        res += (nums[i]-min)
+    }
+    return res
+}
+```
