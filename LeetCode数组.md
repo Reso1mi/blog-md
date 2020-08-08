@@ -4039,6 +4039,71 @@ public String palindrome(String s,int i,int j){
 ```
 如果采用暴力法的话就是枚举所有子串，判断是不是回文串，最后求个最长的，时间复杂度`O(N^3)` ，但是我们可以利用回文的特征，利用中心扩散法，以`str`的**各个位置**作为中心，向两边扩散，最后求得最大值，注意得这里说的是**各个位置**，这个里面其实就包含了元素之间的间隙，其实整体思路还是挺简单的，但经过我们小小的转换思路，时间复杂度就降低到了`O(N^2)`，当然，这里还不是最优解，最优应该是[Manacher](https://oi-wiki.org/string/manacher/) （马拉车）算法，等后面有时间我再来研究这种算法
 
+## [336. 回文对](https://leetcode-cn.com/problems/palindrome-pairs/)
+
+Difficulty: **困难**
+
+
+给定一组 **互不相同** 的单词， 找出所有**不同**的索引对`(i, j)`，使得列表中的两个单词， `words[i] + words[j]` ，可拼接成回文串。
+
+**示例 1：**
+
+```go
+输入：["abcd","dcba","lls","s","sssll"]
+输出：[[0,1],[1,0],[3,2],[2,4]] 
+解释：可拼接成的回文串为 ["dcbaabcd","abcddcba","slls","llssssll"]
+```
+
+**示例 2：**
+
+```go
+输入：["bat","tab","cat"]
+输出：[[0,1],[1,0]] 
+解释：可拼接成的回文串为 ["battab","tabbat"]
+```
+
+**解法一**
+
+枚举单词的所有前缀or后缀，如果除了前缀or后缀剩余部分是回文串，并且在dict中存在前缀or后缀的翻转，那么这两个单词就能构成回文对
+```golang
+func palindromePairs(words []string) [][]int {
+    var dict = make(map[string]int)
+    for i := 0; i < len(words); i++ {
+        dict[reverse(words[i])] = i
+    }
+    var res [][]int
+    for i := 0; i < len(words); i++ {
+        for j := 0; j <= len(words[i]); j++ {
+            if idx, ok := dict[words[i][:j]]; ok && idx != i && isPalindrome(words[i][j:]) {
+                res = append(res, []int{i, idx})
+            }
+            //这里需要判断下j!=0，避免重复的判断，s[0:] == s[:len(s)]
+            if idx, ok := dict[words[i][j:]]; j != 0 && ok && idx != i && isPalindrome(words[i][:j]) {
+                res = append(res, []int{idx, i})
+            }
+        }
+    }
+    return res
+}
+
+func reverse(s string) string {
+    var bs = []byte(s)
+    for i, j := 0, len(bs)-1; i < j; i, j = i+1, j-1 {
+        bs[i], bs[j] = bs[j], bs[i]
+    }
+    return string(bs)
+}
+
+func isPalindrome(s string) bool {
+    for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
+        if s[i] != s[j] {
+            return false
+        }
+    }
+    return true
+}
+```
+属于比较暴力的解法，这题也可以使用马拉车&字典树，这里我就不多写了
 ## [409. 最长回文串](https://leetcode-cn.com/problems/longest-palindrome/)
 
 给定一个包含大写字母和小写字母的字符串，找到通过这些字母构造成的最长的回文串。

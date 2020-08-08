@@ -5929,6 +5929,91 @@ func distributeCoins(root *TreeNode) int {
 }
 ```
 
+## [99. 恢复二叉搜索树](https://leetcode-cn.com/problems/recover-binary-search-tree/)
+
+Difficulty: **困难**
+
+
+二叉搜索树中的两个节点被错误地交换。
+
+请在不改变其结构的情况下，恢复这棵树。
+
+**示例 1:**
+
+```go
+输入: [1,3,null,null,2]
+
+   1
+  /
+ 3
+  \
+   2
+
+输出: [3,1,null,null,2]
+
+   3
+  /
+ 1
+  \
+   2
+```
+
+**示例 2:**
+
+```go
+输入: [3,1,4,null,null,2]
+
+  3
+ / \
+1   4
+   /
+  2
+
+输出: [2,1,4,null,null,3]
+
+  2
+ / \
+1   4
+   /
+  3
+```
+
+**进阶:**
+
+*   使用 O(_n_) 空间复杂度的解法很容易实现。
+*   你能想出一个只使用常数空间的解决方案吗？
+
+
+**解法一**
+
+中序遍历，记录下位置不对的节点，最后交换他们的值就行了
+```golang
+func recoverTree(root *TreeNode) {
+    var node1 *TreeNode
+    var node2 *TreeNode
+    //这里犯了一个错误，一开始给pre赋值了一个root,导致节点记录错了
+    var pre *TreeNode
+    var dfs func(*TreeNode)
+    dfs = func(root *TreeNode) {
+        if root == nil {
+            return
+        }
+        dfs(root.Left)
+        if pre != nil && root.Val < pre.Val {
+            if node1 == nil {
+                node1 = pre
+            }
+            node2 = root
+        }
+        pre = root
+        dfs(root.Right)
+    }
+    dfs(root)
+    node1.Val, node2.Val = node2.Val, node1.Val
+}
+```
+这种解法严格来说空间复杂度并不是O(1)，递归会有系统栈的开销，空间复杂度应该是O(h)，h是树的高度，真正的O(1)的做法应该是Morris遍历，这种解法就称得上hard了
+
 ## _树形DP(大概)_
 
 > 2020.5.10更新，在看了左神的书后，大概了解了树形DP，所谓的树形DP实际上就是把递推方程搬到了树结构上，按我的理解树形DP很大的特点就是最终的解可能存在于树上每个节点，像我下面的题有的暴力解用的就是双重递归，就是dfs遍历没个节点，然后再对每个节点递归求解，但是对根节点求解的时候，实际上其他的子节点都成了子问题，所以后面再对子节点求解的时候问题就重复了，所以就可以采用后序遍历，自底向上，先求左右节点的值再更新根节点，**下面的题其实我不知道到底是不是属于树形DP，可能太简单了，但是再我看来解法比较统一，很有套路所以整理到一起**，我查了下网上介绍的树形DP还是挺难的，后面有时间了解后再来记录
