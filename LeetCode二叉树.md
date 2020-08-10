@@ -2146,6 +2146,70 @@ public boolean isValidBST(TreeNode root){
 ```
 这里其实可以不用list保存结果，~~用一个int保存上一次的节点值就行了~~ md重做的时候因为这个WA了好几次，如果用int的话需要加一个标志位用来初始化
 
+## [958. 二叉树的完全性检验](https://leetcode-cn.com/problems/check-completeness-of-a-binary-tree/)
+
+Difficulty: **中等**
+
+
+给定一个二叉树，确定它是否是一个_完全二叉树_。
+
+**中对完全二叉树的定义如下：**
+
+若设二叉树的深度为 h，除第 h 层外，其它各层 (1～h-1) 的结点数都达到最大个数，第 h 层所有的结点都连续集中在最左边，这就是完全二叉树。（注：第 h 层可能包含 1~ 2<sup>h</sup> 个节点。）
+
+**示例 1：**
+
+![](https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/15/complete-binary-tree-1.png)
+
+```go
+输入：[1,2,3,4,5,6]
+输出：true
+解释：最后一层前的每一层都是满的（即，结点值为 {1} 和 {2,3} 的两层），且最后一层中的所有结点（{4,5,6}）都尽可能地向左。
+```
+
+**示例 2：**
+
+**![](https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/15/complete-binary-tree-2.png)**
+
+```go
+输入：[1,2,3,4,5,null,7]
+输出：false
+解释：值为 7 的结点没有尽可能靠向左侧。
+```
+
+**提示：**
+
+1.  树中将会有 1 到 100 个结点。
+
+
+**解法一**
+
+一开始思路出现了问题，想着去按照节点个数去校验，然后对最后一层做特判，然后发现这种思路是死胡同，实际上判断是否是完全二叉树很简单，只要节点**中间**没有出现null就说明是完全二叉树
+```java
+public boolean isCompleteTree(TreeNode root) {
+    if (root == null) {
+        return true;
+    }
+    Queue<TreeNode> queue = new LinkedList<>();
+    queue.add(root);
+    TreeNode pre = root;
+    while(!queue.isEmpty()){
+        TreeNode cur = queue.poll();
+        //当前节点前面出现了null
+        if (pre==null && cur!=null){
+            return false;
+        }
+        if (cur!=null) {
+            //因为要判断null是否在中间，所以null节点也要存进去
+            queue.add(cur.left);
+            queue.add(cur.right);
+        }
+        pre = cur;
+    }
+    return true;
+}
+```
+
 ## [108. 将有序数组转换为二叉搜索树](https://leetcode-cn.com/problems/convert-sorted-array-to-binary-search-tree/)
 
 将一个按照升序排列的有序数组，转换为一棵**高度平衡二叉搜索树**

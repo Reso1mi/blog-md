@@ -111,6 +111,53 @@ public void restoreIpAddresses(String s,int index,String des,int count) {
     }
 }
 ```
+
+**UPDATE: 2020.8.9**
+
+今天的打卡题，用go重写了下，比之前写的好多了，不过一开始忘了处理0WA了一发，然后懒的对长度不合法的剪枝又T了一发。。。
+```golang
+func restoreIpAddresses(s string) []string {
+    var res []string
+    if len(s) < 4 || len(s) > 12 {
+        return res
+    }
+    var dfs func(s string, lis []string)
+    dfs = func(s string, lis []string) {
+        if s == "" {
+            if len(lis) == 4 {
+                res = append(res, strings.Join(lis, "."))
+            }
+            return
+        }
+        //s未遍历完就集齐了4块
+        if len(lis) >= 4 {
+            return
+        }
+        for i := 1; i <= 3; i++ {
+            if i <= len(s) && check(s[:i]) {
+                lis = append(lis, s[:i])
+                dfs(s[i:], lis)
+                lis = lis[:len(lis)-1]
+                //前导0的处理，读取0之后就不再向后扩展
+                if s[:i] == "0" {
+                    return
+                }
+            }
+        }
+    }
+    dfs(s, []string{})
+    return res
+}
+
+func check(s string) bool {
+    if ns, _ := strconv.Atoi(s); ns <= 255 {
+        return true
+    }
+    return false
+}
+
+```
+
 ## [131. 分割回文串](https://leetcode-cn.com/problems/palindrome-partitioning/)
 
 给定一个字符串 s，将 s 分割成一些子串，使每个子串都是回文串。

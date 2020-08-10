@@ -528,6 +528,56 @@ public int[][] merge(int[][] intervals) {
     return res.toArray(new int[0][0]);
 }
 ```
+## [763. 划分字母区间](https://leetcode-cn.com/problems/partition-labels/)
+
+Difficulty: **中等**
+
+
+字符串 `S` 由小写字母组成。我们要把这个字符串划分为尽可能多的片段，同一个字母只会出现在其中的一个片段。返回一个表示每个字符串片段的长度的列表。
+
+**示例 1：**
+
+```go
+输入：S = "ababcbacadefegdehijhklij"
+输出：[9,7,8]
+解释：
+划分结果为 "ababcbaca", "defegde", "hijhklij"。
+每个字母最多出现在一个片段中。
+像 "ababcbacadefegde", "hijhklij" 的划分是错误的，因为划分的片段数较少。
+```
+
+**提示：**
+
+*   `S`的长度在`[1, 500]`之间。
+*   `S`只包含小写字母 `'a'` 到 `'z'` 。
+
+
+**解法一**
+
+我一开始的想法就是先统计出所有26个字母出现的首位置和末位置，然后题目就变成了[合并区间](#56-合并区间)，但是其实不需要真正的合并，这里只需要求长度就行了
+```golang
+func partitionLabels(S string) []int {
+    var m = make(map[byte]int)
+    var Max = func(a, b int) int {if a>b{return a};return b}
+    for i := 0; i < len(S); i++ {
+        m[S[i]] = i
+    }
+    var start, end = 0, 0
+    var res []int
+    for i := 0; i < len(S); i++ {
+        //更新当前区间结尾最大值
+        end = Max(end, m[S[i]])
+        //走到当前区间结尾，当前区间结束
+        if i==end {
+            res = append(res, end-start+1)
+            start = i+1
+        }
+    }
+    return res
+}
+```
+代码意思很明确，多看看就明白了
+
 ## [435. 无重叠区间](https://leetcode-cn.com/problems/non-overlapping-intervals/)
 
 给定一个区间的集合，找到需要移除区间的最小数量，使剩余区间互不重叠。
@@ -570,6 +620,8 @@ public int[][] merge(int[][] intervals) {
 **解法一**
 
 动态规划，其实和最长递增子序列是一样的
+
+> 和[最长数对链](http://imlgw.top/2019/09/01/leetcode-dong-tai-gui-hua/#646-%E6%9C%80%E9%95%BF%E6%95%B0%E5%AF%B9%E9%93%BE)一摸一样
 
 ```java
 public int eraseOverlapIntervals(int[][] intervals) {
@@ -1154,6 +1206,7 @@ public int[] maxDepthAfterSplit(String seq) {
 public int maxEvents(int[][] events) {
     if(events==null || events.length<=0) return 0;
     Arrays.sort(events,(e1,e2)->e1[1]-e2[1]);
+    //当天有没有安排会议
     HashSet<Integer> set=new HashSet<>();
     int count=0;
     for(int i=0;i<events.length;i++){
@@ -1326,5 +1379,216 @@ public int lastStoneWeight(int[] stones) {
     return pq.poll();
 }
 ```
+## [920. 会议室(LintCode)](https://www.lintcode.com/problem/meeting-rooms/description)
 
-> 有时间再把这些利用堆的单独整理下，都放数组里面快放不下了
+给定一系列的会议时间间隔，包括起始和结束时间[[s1,e1]，[s2,e2]，…(si < ei)，确定一个人是否可以参加所有会议。
+- (0,8),(8,10)在8这这一时刻不冲突
+
+**样例1**
+
+```go
+输入: intervals = [(0,30),(5,10),(15,20)]
+输出: false
+解释:
+(0,30), (5,10) 和 (0,30),(15,20) 这两对会议会冲突
+```
+**样例2**
+```go
+输入: intervals = [(5,8),(9,15)]
+输出: true
+解释:
+这两个时间段不会冲突
+```
+
+**解法一**
+
+这个比较简单，排序后判断相邻的区间是否会覆盖就行了
+```golang
+import "sort"
+
+func canAttendMeetings (intervals []*Interval) bool {
+    // Write your code here
+    sort.Slice(intervals, func(i int, j int) bool {
+        return intervals[i].Start < intervals[j].Start
+    })
+    for i := 1; i < len(intervals); i++ {
+        if intervals[i].Start < intervals[i-1].End {
+            return false
+        }
+    }
+    return true
+}
+```
+
+## [919. 会议室 II(LintCode)](https://www.lintcode.com/problem/meeting-rooms-ii/description)
+
+给定一系列的会议时间间隔intervals，包括起始和结束时间[[s1,e1],[s2,e2],...] (si < ei)，找到所需的最小的会议室数量。
+
+**样例1**
+```go
+输入: intervals = [(0,30),(5,10),(15,20)]
+输出: 2
+解释:
+需要两个会议室
+会议室1:(0,30)
+会议室2:(5,10),(15,20)
+```
+
+**样例2**
+```go
+输入: intervals = [(2,7)]
+输出: 1
+解释:
+只需要1个会议室就够了
+```
+
+**解法一**
+
+扫描线的做法，感觉比较简单，也比较好理解（这应该属于最简单的扫描线吧，我看了其他的一些扫描线啥的都是acm里面的内容）
+![mark](http://static.imlgw.top/blog/20200810/nQveo3X6eKxI.png?imageslim)
+类似就是上图样子，求一个最大的有重合的区间数量，先将起点终点打散后排序，扫描的时候就按照排序后的节点来一个个扫描，然后根据节点的属性来判断是应该+1还是-1，如果是起点就+1，如果遇到终点就-1，整个过程就像是一条线从左往右扫描过去一样
+```golang
+/**
+ * Definition of Interval:
+ * type Interval struct {
+ *     Start, End int
+ * }
+ */
+
+/**
+ * @param intervals: an array of meeting time intervals
+ * @return: the minimum number of conference rooms required
+ */
+import "sort"
+
+type Pair struct{
+    time int
+    isEnd bool
+}
+
+func minMeetingRooms (intervals []*Interval) int {
+    var n = len(intervals)
+    var list []*Pair
+    var Max = func (a,b int) int {if a>b {return a};return b}
+    for i := 0; i < n; i++ {
+        list = append(list, &Pair{intervals[i].Start,false})
+        list = append(list, &Pair{intervals[i].End,true})
+    }
+    sort.Slice(list, func (i int, j int) bool {
+        return list[i].time < list[j].time
+    })
+    var res = 0
+    var count = 0
+    for _, p := range list {
+        if p.isEnd{
+            count--
+        }else{
+            count++
+        }
+        res = Max(count, res)
+    }
+    return res
+}
+```
+**解法二**
+
+排序+小根堆，按起点排序，然后遍历所有区间，如果某个区间的start大于堆顶的结束时间，说明这两个会议可以公用一个会议室，所以将堆顶弹出，然后将当前会议加入堆中，所以最后堆的大小就是会议室的数量
+```java
+//小根堆的思路
+public int minMeetingRooms(List<Interval> intervals) {
+    // Write your code here
+    Collections.sort(intervals,(i1,i2)->i1.start-i2.start);
+    PriorityQueue<Integer> pq = new PriorityQueue<>();
+    pq.add(intervals.get(0).end);
+    for (int i = 1; i < intervals.size(); i++) {
+        if (intervals.get(i).start > pq.peek()) {
+            pq.poll();
+        }
+        pq.add(intervals.get(i).end);
+    }
+    return pq.size();
+}
+```
+个人感觉这个思路还是没有上面扫描线简单好理解
+
+## [391. 数飞机(LintCode)](https://www.lintcode.com/problem/number-of-airplanes-in-the-sky/description)
+
+给出飞机的起飞和降落时间的列表，用序列 interval 表示. 请计算出天上同时最多有多少架飞机？
+
+**样例 1:**
+```go
+输入: [(1, 10), (2, 3), (5, 8), (4, 7)]
+输出: 3
+解释: 
+第一架飞机在1时刻起飞, 10时刻降落.
+第二架飞机在2时刻起飞, 3时刻降落.
+第三架飞机在5时刻起飞, 8时刻降落.
+第四架飞机在4时刻起飞, 7时刻降落.
+在5时刻到6时刻之间, 天空中有三架飞机.
+```
+**样例 2:**
+```go
+输入: [(1, 2), (2, 3), (3, 4)]
+输出: 1
+解释: 降落优先于起飞.
+```
+
+**解法一**
+
+和会议室一摸一样，代码稍微改动一点，排序规则需要遵循降落有限
+```golang
+/**
+ * Definition of Interval:
+ * type Interval struct {
+ *     Start, End int
+ * }
+ */
+
+/**
+ * @param airplanes: An interval array
+ * @return: Count of airplanes are in the sky.
+ */
+import "sort"
+
+type Pair struct {
+    time  int
+    isEnd bool
+}
+
+func countOfAirplanes(airplanes []*Interval) int {
+    var n = len(airplanes)
+    var list []*Pair
+    var Max = func(a, b int) int {
+        if a > b {
+            return a
+        }
+        return b
+    }
+    for i := 0; i < n; i++ {
+        list = append(list, &Pair{airplanes[i].Start, false})
+        list = append(list, &Pair{airplanes[i].End, true})
+    }
+    //[(1, 2), (2, 3), (3, 4)]
+    //随意排序： 1 2start 2end 3start 3end 4 这样最大值就是2，不对
+    //所以应该降落优先，将降落时间点的排在前面
+    sort.Slice(list, func(i int, j int) bool {
+        if list[i].time == list[j].time {
+            //将end放在前面
+            return list[i].isEnd
+        }
+        return list[i].time < list[j].time
+    })
+    var res = 0
+    var count = 0
+    for _, p := range list {
+        if p.isEnd {
+            count--
+        } else {
+            count++
+        }
+        res = Max(count, res)
+    }
+    return res
+}
+```
+当然同样可以使用堆，这里就不多写了

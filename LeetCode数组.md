@@ -6466,3 +6466,61 @@ func minMoves(nums []int) int {
     return res
 }
 ```
+
+## [696. 计数二进制子串](https://leetcode-cn.com/problems/count-binary-substrings/)
+
+Difficulty: **简单**
+
+
+给定一个字符串 `s`，计算具有相同数量0和1的非空(连续)子字符串的数量，并且这些子字符串中的所有0和所有1都是组合在一起的。
+
+重复出现的子串要计算它们出现的次数。
+
+**示例 1 :**
+
+```golang
+输入: "00110011"
+输出: 6
+解释: 有6个子串具有相同数量的连续1和0：“0011”，“01”，“1100”，“10”，“0011” 和 “01”。
+
+请注意，一些重复出现的子串要计算它们出现的次数。
+
+另外，“00110011”不是有效的子串，因为所有的0（和1）没有组合在一起。
+```
+
+**示例 2 :**
+
+```golang
+输入: "10101"
+输出: 4
+解释: 有4个子串：“10”，“01”，“10”，“01”，它们具有相同数量的连续1和0。
+```
+
+**注意：**
+
+*   `s.length` 在1到50,000之间。
+*   `s` 只包含“0”或“1”字符。
+
+**解法一**
+
+将字符转换为连续字符个数的排列，比如111100011000-->4323，然后我们将相邻两个数的最小值加入结果集就行了，3+2+2=7，下面的解法合并了两步操作
+```golang
+func countBinarySubstrings(s string) int {
+    var n = len(s)
+    var last, cur = 0, 0
+    var res = 0
+    var Min = func (a, b int) int {if a<b {return a};return b}
+    var p = 0
+    for p < n {
+        c := s[p]
+        for p < n && s[p] == c {
+            p++
+            cur++
+        }
+        res += Min(cur, last)
+        last = cur
+        cur = 0
+    }
+    return res
+}
+```
