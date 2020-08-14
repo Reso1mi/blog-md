@@ -291,7 +291,7 @@ public class PathSum_threeWays_projecteuler{
             dp[j][0] = matrix[j][0];
         }
         for (int j = 1; j < m; j++) {
-            //只考虑向左和向下
+            //首先只考虑向右走和向下走
             for (int i = 0; i < m; i++) {
                 if (i==0){ //第一行，只能从左边转移
                     dp[i][j] = matrix[i][j] + dp[i][j-1];
@@ -302,7 +302,7 @@ public class PathSum_threeWays_projecteuler{
             for (int i = m-1; i >= 0; i--) {
                 //三目写的太长看着挺不舒服...
                 //dp[i][j] = i==m-1?dp[i][j]:Math.min(dp[i][j], matrix[i][j]+dp[i+1][j]);
-                if (i<m-1) { //从下面转移和从上面转移的最小值
+                if (i<m-1) { //从下面转移和从上/左面转移的最小值
                     dp[i][j] = Math.min(dp[i][j], matrix[i][j]+dp[i+1][j]);
                 }
                 //最后一行，只能从左边或者上面转移，也是就是第一个循环的值
@@ -5773,6 +5773,67 @@ public boolean isInterleave(String s1, String s2, String s3) {
     return dp[ns1][ns2];
 }
 ```
+
+## [857. 最小的窗口子序列（LintCode）](https://www.lintcode.com/problem/minimum-window-subsequence/description)
+
+
+给定字符串S和T，在字符串S中找到最小(连续的)子字符串W（窗口），使得T是W的子序列。
+如果S中没有包含T中的所有字符的窗口，则返回空字符串""。如果有多个这样的最小长度窗口，则返回一个起点编号最小的。
+1. 输入中的所有字符串只包含小写字母。
+2. S的长度范围在[1, 20000]。
+3. T的长度范围在[1, 100]。
+
+**样例 1:**
+```go
+输入：S="jmeqksfrsdcmsiwvaovztaqenprpvnbstl"，T="u"
+输出：""
+解释： 无法匹配
+```
+**样例 2:**
+```go
+输入：S = "abcdebdde"， T = "bde"
+输出："bcde"
+解释："bcde"是答案，"deb"不是一个较小的窗口，因为窗口中的T元素必须按顺序发生。
+```
+**解法一**
+
+LeetCode上是会员题，所以在LintCode上写的，一开始以为是滑窗，想了半天，也只有暴力的思路，看了下讨论区，发现大家都是dp做的。。。
+
+```java
+public String minWindow(String S, String T) {
+    int m = S.length(), n = T.length();
+    //S前i个字符包含T前j个字符的最小窗口子序列起始位置
+    int[][] dp = new int[m+1][n+1];
+    for (int i = 0; i <= m; i++){
+        //虽然T串为空，但是注意这里不是0，因为需要最短，所以起点越靠后越短
+        //最后的长度就是通过 i-dp[i][j]来计算的
+        Arrays.fill(dp[i], -1);
+        dp[i][0] = i;
+    }
+    int start = -1, end = m;
+    for (int i = 1; i <= m; i++) {
+        //注意T的长度小于S的长度(不考虑也可以，只是会多遍历很多次)
+        for (int j = 1; j <= Math.min(n, i); j++){
+            if (S.charAt(i-1) == T.charAt(j-1)) {
+                dp[i][j] = dp[i-1][j-1];
+            }else{
+                //dbd
+                //  b   dbd和db包含b的最小窗口起始位置一样
+                dp[i][j] = dp[i-1][j];
+            }
+            
+        }
+        if (dp[i][n]!=-1 && i-dp[i][n] < end-start+1) {
+            start = dp[i][n];
+            end = i-1;
+        }
+    }
+    return start==-1 ? "" : S.substring(start,end+1);
+}
+```
+这题和滑动窗口专题中的 [最小覆盖子串](http://imlgw.top/2019/07/20/leetcode-hua-dong-chuang-kou/#76-%E6%9C%80%E5%B0%8F%E8%A6%86%E7%9B%96%E5%AD%90%E4%B8%B2)
+算是一道姊妹题，但是解法确完全不一样，当然这题也可以滑窗但是并不是很通用（主要是我没看懂）貌似会比dp要好
+>双序列型DP，后面有时间会把类似的题单独抽取出来
 
 ---
 

@@ -1134,6 +1134,7 @@ public String minWindow(String s, String t) {
     return Integer.MAX_VALUE==maxRight?"":s.substring(minLeft,maxRight+1);
 }
 ```
+> 刷题的时候发现有一道很类似的题，[最小窗口子序列](http://imlgw.top/2019/09/01/leetcode-dong-tai-gui-hua/#857-%E6%9C%80%E5%B0%8F%E7%9A%84%E7%AA%97%E5%8F%A3%E5%AD%90%E5%BA%8F%E5%88%97%EF%BC%88LintCode%EF%BC%89)唯一的区别就是这道题要求有序（子序列）
 
 ## [632. 最小区间](https://leetcode-cn.com/problems/smallest-range-covering-elements-from-k-lists/)
 

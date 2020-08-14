@@ -285,7 +285,7 @@ public int findMin(int[] nums) {
 **解法二**
 
 模板解法，还是模板写起来清晰舒服
-
+> 建议直接看UPDATE
 ```java
 public int findMin(int[] nums) {
     if (nums==null||nums.length<=0) {
@@ -314,7 +314,7 @@ public int findMin(int[] nums) {
 func findMin(nums []int) int {
     var n = len(nums)
     var left, right = 0, n - 1
-    var res = right
+    var res = right//对nums[n-1]就是最小值做兜底
     for left <= right {
         mid := left + (right-left)/2
         if nums[mid] < nums[n-1] {
@@ -326,7 +326,24 @@ func findMin(nums []int) int {
     }
     return nums[res]
 }
-
+```
+同理也可以和左边界比较，最小值一定是小于等于nums[0]的
+```golang
+func findMin(nums []int) int {
+    var n = len(nums)
+    var left, right = 0, n - 1
+    var res = left //对nums[0]就是最小值做兜底
+    for left <= right {
+        mid := left + (right-left)/2
+        if nums[mid] < nums[0] {
+            res = mid
+            right = mid - 1
+        } else {
+            left = mid + 1
+        }
+    }
+    return nums[res]
+}
 ```
 
 ## [154. 寻找旋转排序数组中的最小值 II](https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array-ii/) 
@@ -360,6 +377,7 @@ func findMin(nums []int) int {
 - 允许重复会影响算法的时间复杂度吗？会如何影响，为什么？  
 
 **解法一**
+> 建议直接参考解法2
 
 相比上一题有了重复的元素，在跳转的时候需要分清楚情况，在mid和中点相等的时候只排除右边界一个元素
 
@@ -2914,3 +2932,59 @@ public int calculateMinimumHP(int[][] dungeon) {
 }
 ```
 这题为啥不能正向dp呢，设`dp[i][j]`为从左上角到i,j所需要的最低血量? 其实这个很明显就是有问题的，没办法转移，`dp[i][j]`和`dp[i-1][j]`没有任何关系，都不一定是同一条路径
+
+## [848. 加油站之间的最小距离（LintCode）](https://www.lintcode.com/problem/minimize-max-distance-to-gas-station/description)
+
+在水平数轴上，我们有加油站：stations[0], stations[1], ..., stations[N-1], 这里N = stations.length。
+
+现在，我们再增加K个加油站，D表示相邻加油站之间的最大距离，这样D就变小了。
+
+返回所有可能值D中最小值。
+1. stations.length 为整数，范围 [10, 2000].
+2. stations[i] 为整数，范围 [0, 10^8].
+3. K 为整数，范围 [1, 10^6].
+4. 答案范围在10 ^ -6之内的有理数。
+   
+**样例 1:**
+```go
+输入：stations = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]，K = 9
+输出：0.50
+解释：相邻加油站的距离均为0.50
+```
+**样例 2:**
+```go
+输入：stations = [3,6,12,19,33,44,67,72,89,95]，K = 2
+输出：14.00
+解释：在距离86处建造加油站(fix: 还有58处)
+```
+
+**解法一**
+
+二分答案的性质很明显，但是这里和之前的不一样，这里是浮点数二分，和整数的不太一样，浮点数/2的时候都是实际的一分为2，不会有整除的问题，同时题目给出了eps=1e-6，只要left和right误差在这个范围内就是合法的，并不是要求left和right相等，这里还有一个问题，就是这里如果eps太小的话由于精度问题还是可能会tle，这个时候就可以采取固定循环次数的方式逼近，一般取100，200就够了
+```java
+public double minmaxGasDist(int[] stations, int k) {
+    // Write your code here
+    double left = 0;
+    double right = 1e8+1;
+    double res = right;
+    //for (int i = 0; i <= 100; i++){
+    while (right-left >= 1e-6){
+        double mid = left+(right-left)/2;
+        if (check(stations, k, mid)) {
+            res = mid;
+            right = mid;
+        }else{
+            left = mid;
+        }
+    }
+    return res;
+}
+
+public boolean check(int[] stations, int k, double D) {
+    int count = 0;
+    for (int i = 1; i < stations.length; i++) {
+        count += (stations[i]-stations[i-1]) / D;
+    }
+    return count <= k;        
+}
+```
