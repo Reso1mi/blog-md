@@ -958,96 +958,7 @@ public int missingNumber(int[] nums) {
 
 二分找那个索引不对的元素就ok了，按照模板写的，排除法，排除相等的，最后返回的索引`left`就是缺失的数字
 
-## [287. 寻找重复数](https://leetcode-cn.com/problems/find-the-duplicate-number/)
 
-给定一个包含 n + 1 个整数的数组 `nums`，其数字都在 1 到 n 之间（包括 1 和 n），可知至少存在一个重复的整数。假设只有一个重复的整数，找出这个重复的数。
-
-**示例 1:**
-
-```java
-输入: [1,3,4,2,2]
-输出: 2
-```
-
-
-**示例 2:**
-
-```java
-输入: [3,1,3,4,2]
-输出: 3
-```
-
-
-**说明：**
-
-- 不能更改原数组（假设数组是只读的）。
-- 只能使用额外的 O(1) 的空间。
-- 时间复杂度小于 O(n2) 。
-- 数组中只有一个重复的数字，但它可能不止重复出现一次 
-
-**解法一**
-
-这题还是挺有意思的，题目要求了数组nums是只读的，且不能使用额外的空间，且时间复杂度还要小于O(N^2)，否则的话其实可以排序，或者使用Hash表来做，这里我们使用二分来做
-
-```java
-//update: 2020.5.26 其实也属于二分答案
-public int findDuplicate(int[] nums){
-    int left=1,right=nums.length-1;
-    //这里实际上是对【1,2,3,4,...n-1】这个区间进行二分
-    //在过程中对mid检测每个数在nums数组中出现的次数
-    //1 3 4 2 2实际上是对【1,2,3,4】区间进行二分
-    while(left<right){
-        int mid=left+(right-left)/2+1;
-        //小于mid的数大于mid,排除mid
-        if(count(nums,mid)>=mid){ 
-            right=mid-1;
-        }else{
-            left=mid;
-        }
-    }
-    return left;
-}
-
-//n-1个整数 , 1~n有n个数     
-//1 2 2 3 4     1~4之间, 1 2 3 4
-public int count(int[] nums,int n){
-    int res=0;
-    for (int i=0;i<nums.length;i++) {
-        if (nums[i]<n) {
-            res++;          
-        }
-    }
-    return res;
-}
-```
-这样的解法还是很巧妙的，对nums数组的**取值范围**进行二分，二分的核心就是，nums数组中，小于取值范围中mid的元素应该小于等于mid
-
-举个例子：`[1 3 4 2 2]` 取值范围是`[1 2 3 4]` ，取中点2，正常情况下nums中小于等于2的元素，应该最多有2个，也就是`[1 2]`2个，但是这里在nums中，有3个`[1 2 2]` 大于2了，这就说明一定有重复的元素，而且一定是小于中点2的，也就是在左半边，下一步就应该舍弃右半边，在`[1,2]`中继续查找 
-
-这里按照我们之前的模板来写，先找排除mid的条件，**在nums中小于mid的元素的数量小于等于mid的时候，包括mid在内的右边界都会被排除，肯定都不是重复的元素** ，然后就按照模板写出二分就行了
-
-**解法二**
-
-快慢指针的做法，技巧性很强，一般人第一次做是很难想到这种做法的，其实和 [链表专题](http://imlgw.top/2019/02/27/leetcode-lian-biao-tag/#141-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8) 中的环形链表是一样的做法，然后按照那个思路走就行了，不清楚原理可以看看上面环形链表的解法
-
-```java
-public int findDuplicate(int[] nums){
-    int slow=0,fast=0;
-    boolean isMeet=false;
-    while(true){
-        fast=isMeet?nums[fast]:nums[nums[fast]];
-        slow=nums[slow];
-        if (fast==slow) {
-            if (isMeet) {
-                return slow;
-            }
-            fast=0;
-            isMeet=true;
-        }
-    }
-}
-```
-这种解法的关键是将数组值看作索引然后再数组像链表一样移动，比如 `[1,2,3,4,5,6,7,8,9,5]`用值作为索引连接起来就是`1 2 3 4 [5 6 7 8 9] [5 6 7 8 9] ....` ，时间复杂度`O(N)` 技巧性比较强，如果面试管不追问的话其实答出上面的二分就ok了
 
 ## [852. 山脉数组的峰顶索引](https://leetcode-cn.com/problems/peak-index-in-a-mountain-array/)
 
@@ -1990,6 +1901,97 @@ public int smallestDivisor(int[] nums, int threshold) {
 ```
 其实只要明确一点这题就很容易想到二分，解空间为：`[1，max(nums[i])]` 我们只需要在这个区间之内做二分搜索就ok了，再然后就是向上取整的一个小技巧
 
+## [287. 寻找重复数](https://leetcode-cn.com/problems/find-the-duplicate-number/)
+
+给定一个包含 n + 1 个整数的数组 `nums`，其数字都在 1 到 n 之间（包括 1 和 n），可知至少存在一个重复的整数。假设只有一个重复的整数，找出这个重复的数。
+
+**示例 1:**
+
+```java
+输入: [1,3,4,2,2]
+输出: 2
+```
+
+
+**示例 2:**
+
+```java
+输入: [3,1,3,4,2]
+输出: 3
+```
+
+
+**说明：**
+
+- 不能更改原数组（假设数组是只读的）。
+- 只能使用额外的 O(1) 的空间。
+- 时间复杂度小于 O(n2) 。
+- 数组中只有一个重复的数字，但它可能不止重复出现一次 
+
+**解法一**
+
+这题还是挺有意思的，题目要求了数组nums是只读的，且不能使用额外的空间，且时间复杂度还要小于O(N^2)，否则的话其实可以排序，或者使用Hash表来做，这里我们使用二分来做
+
+```java
+//update: 2020.5.26 其实也属于二分答案
+public int findDuplicate(int[] nums){
+    int left=1,right=nums.length-1;
+    //这里实际上是对【1,2,3,4,...n-1】这个区间进行二分
+    //在过程中对mid检测每个数在nums数组中出现的次数
+    //1 3 4 2 2实际上是对【1,2,3,4】区间进行二分
+    while(left<right){
+        int mid=left+(right-left)/2+1;
+        //小于mid的数大于mid,排除mid
+        if(count(nums,mid)>=mid){ 
+            right=mid-1;
+        }else{
+            left=mid;
+        }
+    }
+    return left;
+}
+
+//n-1个整数 , 1~n有n个数     
+//1 2 2 3 4     1~4之间, 1 2 3 4
+public int count(int[] nums,int n){
+    int res=0;
+    for (int i=0;i<nums.length;i++) {
+        if (nums[i]<n) {
+            res++;          
+        }
+    }
+    return res;
+}
+```
+这样的解法还是很巧妙的，对nums数组的**取值范围**进行二分，二分的核心就是，nums数组中，小于取值范围中mid的元素应该小于等于mid
+
+举个例子：`[1 3 4 2 2]` 取值范围是`[1 2 3 4]` ，取中点2，正常情况下nums中小于等于2的元素，应该最多有2个，也就是`[1 2]`2个，但是这里在nums中，有3个`[1 2 2]` 大于2了，这就说明一定有重复的元素，而且一定是小于中点2的，也就是在左半边，下一步就应该舍弃右半边，在`[1,2]`中继续查找 
+
+这里按照我们之前的模板来写，先找排除mid的条件，**在nums中小于mid的元素的数量小于等于mid的时候，包括mid在内的右边界都会被排除，肯定都不是重复的元素** ，然后就按照模板写出二分就行了
+
+**解法二**
+
+快慢指针的做法，技巧性很强，一般人第一次做是很难想到这种做法的，其实和 [链表专题](http://imlgw.top/2019/02/27/leetcode-lian-biao-tag/#141-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8) 中的环形链表是一样的做法，然后按照那个思路走就行了，不清楚原理可以看看上面环形链表的解法
+
+```java
+public int findDuplicate(int[] nums){
+    int slow=0,fast=0;
+    boolean isMeet=false;
+    while(true){
+        fast=isMeet?nums[fast]:nums[nums[fast]];
+        slow=nums[slow];
+        if (fast==slow) {
+            if (isMeet) {
+                return slow;
+            }
+            fast=0;
+            isMeet=true;
+        }
+    }
+}
+```
+这种解法的关键是将数组值看作索引然后再数组像链表一样移动，比如 `[1,2,3,4,5,6,7,8,9,5]`用值作为索引连接起来就是`1 2 3 4 [5 6 7 8 9] [5 6 7 8 9] ....` ，时间复杂度`O(N)` 技巧性比较强，如果面试管不追问的话其实答出上面的二分就ok了
+
 ## [1011. 在 D 天内送达包裹的能力](https://leetcode-cn.com/problems/capacity-to-ship-packages-within-d-days/)
 
 传送带上的包裹必须在 D 天内从一个港口运送到另一个港口。
@@ -2650,7 +2652,7 @@ k = 8,
 **解法一**
 
 小根堆，多路归并，没啥好说的
-```java []
+```java
 public int kthSmallest(int[][] matrix, int k) {
     PriorityQueue<Pair> pq = new PriorityQueue<>((p1,p2)->matrix[p1.x][p1.y] - matrix[p2.x][p2.y]);
     for(int i = 0;i < matrix.length; i++){
@@ -2695,7 +2697,7 @@ k = 2
 k=2，对应结果应该是5，但是我们现在mid=8，这里8和5在矩阵中小于等于它们的数量是相同的，这个时候很明显应该缩短right去逼近5，所以我们应该选取`>=`作为答案区间并记录答案，并且缩短right逼近矩阵中真实存在的值
 
 >这里是一定是可以取到矩阵中的值的，二分最后会在大于等于区域不断缩减right直至不能再缩减，也就是缩减成为矩阵中的元素（再缩减就小于K了）
-```java []
+```java
 public int kthSmallest(int[][] matrix, int k) {
     int n = matrix.length;
     int left = matrix[0][0];
@@ -2988,3 +2990,80 @@ public boolean check(int[] stations, int k, double D) {
     return count <= k;        
 }
 ```
+
+## [5489. 两球之间的磁力](https://leetcode-cn.com/problems/magnetic-force-between-two-balls/)
+
+Difficulty: **中等**
+
+
+在代号为 C-137 的地球上，Rick 发现如果他将两个球放在他新发明的篮子里，它们之间会形成特殊形式的磁力。Rick 有 `n` 个空的篮子，第 `i` 个篮子的位置在 `position[i]` ，Morty 想把 `m` 个球放到这些篮子里，使得任意两球间 **最小磁力** 最大。
+
+已知两个球如果分别位于 `x` 和 `y` ，那么它们之间的磁力为 `|x - y|` 。
+
+给你一个整数数组 `position` 和一个整数 `m` ，请你返回最大化的最小磁力。
+
+**示例 1：**
+
+![mark](http://static.imlgw.top/blog/20200816/1KmEXzfFOozs.png?imageslim)
+```go
+输入：position = [1,2,3,4,7], m = 3
+输出：3
+解释：将 3 个球分别放入位于 1，4 和 7 的三个篮子，两球间的磁力分别为 [3, 3, 6]。最小磁力为 3 。我们没办法让最小磁力大于 3 。
+```
+
+**示例 2：**
+
+```go
+输入：position = [5,4,3,2,1,1000000000], m = 2
+输出：999999999
+解释：我们使用位于 1 和 1000000000 的篮子时最小磁力最大。
+```
+
+**提示：**
+
+*   `n == position.length`
+*   `2 <= n <= 10^5`
+*   `1 <= position[i] <= 10^9`
+*   所有 `position` 中的整数 **互不相同** 。
+*   `2 <= m <= position.length`
+
+
+**解法一**
+
+202周赛T3，没参赛（实在是没时间打）赛后独立的写出来了，很明显是二分答案，不过这里有一点小不同
+```java
+public int maxDistance(int[] position, int m) {
+    Arrays.sort(position);
+    int left = 1;
+    int right = (int)1e9+1;
+    int res = 1;
+    while (left <= right) {
+        int mid = left + (right-left)/2;
+        if (check(position, m, mid)) {
+            res = mid;
+            left = mid + 1; 
+        }else{
+            right = mid - 1;
+        }
+    }
+    return res;
+}
+//1  1000 2000 3000 m=3
+//验证在距离至少为force的情况下能否放下所有的球，然后增大force逼近答案
+//所以check验证成功的不一定是合法的答案，但是最终一定会到达real ans
+//类似【378. 有序矩阵中第K小的元素】这道题
+public boolean check(int[] position, int m, int force) {
+    int last = position[0];
+    m--;
+    for (int i = 1; i < position.length; i++) {
+        if (position[i]-last < force) {
+            continue;
+        }
+        last = position[i];
+        m--;
+        if (m==0) return true;
+    }
+    return false;
+}
+```
+check类似[378. 有序矩阵中第K小的元素](#378-有序矩阵中第k小的元素)这道题，都是逼近答案，而不是验证答案，其实一开始我的check不是这样写的，写的很丑，这里看了别人的写法发现continue有时候还是挺好用的
