@@ -6479,6 +6479,116 @@ public int strangePrinter(String s) {
 >
 > ps:  这几天做了不少有点难度的DP题，发现确实自己对边界的处理，递推公式的理解有了一点提升，加油💪
 
+## [1547. 切棍子的最小成本](https://leetcode-cn.com/problems/minimum-cost-to-cut-a-stick/)
+
+Difficulty: **困难**
+
+
+有一根长度为 `n` 个单位的木棍，棍上从 `0` 到 `n` 标记了若干位置。例如，长度为 **6** 的棍子可以标记如下：
+
+![UTOOLS1597929649437.png](https://upload.cc/i1/2020/08/20/5m7x61.png)
+
+给你一个整数数组 `cuts` ，其中 `cuts[i]` 表示你需要将棍子切开的位置。
+
+你可以按顺序完成切割，也可以根据需要更改切割的顺序。
+
+每次切割的成本都是当前要切割的棍子的长度，切棍子的总成本是历次切割成本的总和。对棍子进行切割将会把一根木棍分成两根较小的木棍（这两根木棍的长度和就是切割前木棍的长度）。请参阅第一个示例以获得更直观的解释。
+
+返回切棍子的 **最小总成本** 。
+
+**示例 1：**
+
+![UTOOLS1597929677739.png](https://upload.cc/i1/2020/08/20/QGugd1.png)
+
+```go
+输入：n = 7, cuts = [1,3,4,5]
+输出：16
+解释：按 [1, 3, 4, 5] 的顺序切割的情况如下所示：
+
+第一次切割长度为 7 的棍子，成本为 7 。第二次切割长度为 6 的棍子（即第一次切割得到的第二根棍子），第三次切割为长度 4 的棍子，最后切割长度为 3 的棍子。总成本为 7 + 6 + 4 + 3 = 20 。
+而将切割顺序重新排列为 [3, 5, 1, 4] 后，总成本 = 16（如示例图中 7 + 4 + 3 + 2 = 16）。
+```
+
+**示例 2：**
+
+```go
+输入：n = 9, cuts = [5,6,1,4,2]
+输出：22
+解释：如果按给定的顺序切割，则总成本为 25 。总成本 <= 25 的切割顺序很多，例如，[4，6，5，2，1] 的总成本 = 22，是所有可能方案中成本最小的。
+```
+
+**提示：**
+
+*   `2 <= n <= 10^6`
+*   `1 <= cuts.length <= min(n - 1, 100)`
+*   `1 <= cuts[i] <= n - 1`
+*   `cuts` 数组中的所有整数都 **互不相同**
+
+**解法一**
+
+201th周赛的t4，感觉还是挺简单的，今天补的时候花了10分钟搞清楚思路，一遍看视频一边写，最后不出意外的的T了~😂一开始没想清楚细节，想到了以区间开始和结尾做dp，然后就直接开了个n*n的数组，虽然是对的，但是在初始化的时候就t了，这里实际上只需要开一个len(cuts)^2的空间就行了
+```golang
+func minCost(n int, cut []int) int {
+    sort.Ints(cut)
+    //在前后加上0和n
+    cut = append(cut, n)
+    cut = append([]int{0}, cut...)
+    var Min = func(a,b int) int {if a<b {return a};return b}
+    var m = len(cut)
+    //dp[i][j]切割i,j的成本
+    var dp = make([][]int, m)
+    for i := 0; i < m; i++ {
+        dp[i] = make([]int, m)
+        if i < m-1 {
+            dp[i][i+1] = 0   
+        }
+    }
+    for tlen := 2; tlen <= m; tlen++ {
+        for left := 0; left+tlen < m; left++ {
+            right := left+tlen //注意这里不加1
+            dp[left][right] = math.MaxInt32
+            for k := left+1; k < right; k++ {
+                dp[left][right] = Min(dp[left][right], dp[left][k]+dp[k][right]+cut[right]-cut[left])
+            }
+        }
+    }
+    return dp[0][m-1]
+}
+```
+一开始tle的**错误**代码
+```golang
+func minCost(n int, cut []int) int {
+    sort.Ints(cut)
+    //0,1,3,4,5,6
+    cut = append(cut, n)
+    cut = append([]int{0}, cut...)
+    var Min = func(a,b int) int {if a<b {return a};return b}
+    var m = len(cut)
+    var dp = make([][]int, n+1)
+    for i := 0; i <= n; i++ {
+        dp[i] = make([]int, n+1) //这里就t了
+        // for j := 0; j <= n; j++ {
+        //     dp[i][j] = math.MaxInt32
+        // }
+    }
+    for i := 0; i < m-1; i++ {
+        for j := i+1; j < m; j++ {
+            dp[cut[i]][cut[j]] = 0x3f3f3f3f
+        }
+        dp[cut[i]][cut[i+1]] = 0
+    }
+    for tlen := 2; tlen <= m; tlen++ {
+        for left := 0; left+tlen-1 < m; left++ {
+            right := left+tlen-1
+            for k := left+1; k < right; k++ {
+                dp[cut[left]][cut[right]] = Min(dp[cut[left]][cut[right]], dp[cut[left]][cut[k]] + dp[cut[k]][cut[right]] + cut[right]-cut[left])
+            }
+        }
+    }
+    return dp[0][n]
+}
+```
+
 ## _数位DP_
 
 ## [233. 数字 1 的个数](https://leetcode-cn.com/problems/number-of-digit-one/)
