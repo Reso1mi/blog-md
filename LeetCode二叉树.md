@@ -1079,6 +1079,61 @@ public boolean isSameTree(TreeNode p, TreeNode q) {
 }
 ```
 
+## [951. 翻转等价二叉树](https://leetcode-cn.com/problems/flip-equivalent-binary-trees/)
+
+Difficulty: **中等**
+
+
+我们可以为二叉树 T 定义一个翻转操作，如下所示：选择任意节点，然后交换它的左子树和右子树。
+
+只要经过一定次数的翻转操作后，能使 X 等于 Y，我们就称二叉树 X _翻转等价_于二叉树 Y。
+
+编写一个判断两个二叉树是否是_翻转等价_的函数。这些树由根节点 `root1` 和 `root2` 给出。
+
+**示例：**
+
+```go
+输入：root1 = [1,2,3,4,5,6,null,null,null,7,8], root2 = [1,3,2,null,6,4,5,null,null,null,null,8,7]
+输出：true
+解释：我们翻转值为 1，3 以及 5 的三个节点。
+
+```
+
+**提示：**
+
+1.  每棵树最多有 `100` 个节点。
+2.  每棵树中的每个值都是唯一的、在 `[0, 99]` 范围内的整数。
+
+
+**解法一**
+
+交错的比较就行了
+```golang
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func flipEquiv(root1 *TreeNode, root2 *TreeNode) bool {
+    if root1 == nil && root2 == nil {
+        return true
+    }
+    if root1 == nil || root2 == nil {
+        return false
+    }
+    if root1.Val != root2.Val {
+        return false
+    }
+    return (flipEquiv(root1.Left, root2.Left) && 
+            flipEquiv(root1.Right, root2.Right)) || 
+           (flipEquiv(root1.Left, root2.Right) &&
+            flipEquiv(root1.Right, root2.Left))
+}
+```
+
 ## [572. 另一个树的子树](https://leetcode-cn.com/problems/subtree-of-another-tree/)
 
 给定两个非空二叉树 s 和 t，检验 s 中是否包含和 t 具有相同结构和节点值的子树。s 的一个子树包括 s 的一个节点和这个节点的所有子孙。s 也可以看做它自身的一棵子树。
