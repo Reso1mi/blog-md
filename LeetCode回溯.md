@@ -2223,6 +2223,90 @@ func findSubsequences(nums []int) [][]int {
 }
 ```
 
+## [679. 24 点游戏](https://leetcode-cn.com/problems/24-game/)
+
+Difficulty: **困难**
+
+
+你有 4 张写有 1 到 9 数字的牌。你需要判断是否能通过 `*`，`/`，`+`，`-`，`(`，`)` 的运算得到 24。
+
+**示例 1:**
+
+```go
+输入: [4, 1, 8, 7]
+输出: True
+解释: (8-4) * (7-1) = 24
+```
+
+**示例 2:**
+
+```go
+输入: [1, 2, 1, 2]
+输出: False
+```
+
+**注意:**
+
+1.  除法运算符 `/` 表示实数除法，而不是整数除法。例如 4 / (1 - 2/3) = 12 。
+2.  每个运算符对两个数进行运算。特别是我们不能用 `-` 作为一元运算符。例如，`[1, 1, 1, 1]` 作为输入时，表达式 `-1 - 1 - 1 - 1` 是不允许的。
+3.  你不能将数字连接在一起。例如，输入为 `[1, 2, 1, 2]` 时，不能写成 12 + 12 。
+
+**解法一**
+
+代码有点长，不过思路还是很清楚，一共4个数字，从里面任意选2个，然后做各种运算后和剩下的数字构成新的数组，然后重复该过程直到数组只剩下一个然后判断值是否是24（注意精度）
+```golang
+func judgePoint24(nums []int) bool {
+    var eps float32 = 1e-5
+    var Abs = func(a float32) float32 {
+        if a < 0 {
+            return -a
+        }
+        return a
+    }
+    //计数+-*/
+    var compute = func(a, b float32) []float32 {
+        return []float32{a + b, a * b, a - b, a / b}
+    }
+    var dfs func([]float32) bool
+    dfs = func(nums []float32) bool {
+        if len(nums) == 0 {
+            return false
+        }
+        if len(nums) == 1 {
+            return Abs(nums[0]-24) < eps
+        }
+        var n = len(nums)
+        //从nums中选取2个数
+        for i := 0; i < n; i++ {
+            for j := 0; j < n; j++ {
+                if i == j {
+                    continue
+                }
+                //收集剩下的数字
+                var rest []float32
+                for k := 0; k < n; k++ {
+                    if k != i && k != j {
+                        rest = append(rest, nums[k])
+                    }
+                }
+                //尝试做各种运算
+                for _, v := range compute(nums[i], nums[j]) {
+                    if dfs(append(rest, v)) {
+                        return true
+                    }
+                }
+            }
+        }
+        return false
+    }
+    var temp = make([]float32, len(nums))
+    for i := 0; i < len(nums); i++ {
+        temp[i] = float32(nums[i])
+    }
+    return dfs(temp)
+}
+```
+
 ## _二维平面上的回溯_
 
 ## [79. 单词搜索](https://leetcode-cn.com/problems/word-search/)
