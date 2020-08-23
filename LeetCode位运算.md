@@ -496,3 +496,52 @@ func reverseBits(num uint32) uint32 {
 }
 ```
 > golang和java的位运算优先级居然不一样，一开始写的go，该成java的时候发现不对，调试了下才发现😂，所以任何时候能加括号的尽量加括号，即使你知道不加也可以，最好还是要加上括号！！！
+
+## [201. 数字范围按位与](https://leetcode-cn.com/problems/bitwise-and-of-numbers-range/)
+
+Difficulty: **中等**
+
+
+给定范围 [m, n]，其中 0 <= m <= n <= 2147483647，返回此范围内所有数字的按位与（包含 m, n 两端点）。
+
+**示例 1: **
+
+```golang
+输入: [5,7]
+输出: 4
+```
+
+**示例 2:**
+
+```golang
+输入: [0,1]
+输出: 0
+```
+
+**解法一**
+最长公共前缀
+```golang
+//最长公共前缀
+//1011 011 m
+//1011 100
+//1011 101
+//1011 110 n
+func rangeBitwiseAnd(m int, n int) int {
+    var tlen = 0
+    for m != n {
+        m >>= 1
+        n >>= 1
+        tlen++
+    }
+    return m << tlen
+}
+```
+**解法二**
+```golang
+func rangeBitwiseAnd(m int, n int) int {
+    for n > m {
+        n &= (n-1)
+    }
+    return n
+}
+```
