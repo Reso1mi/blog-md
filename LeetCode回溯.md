@@ -3659,6 +3659,104 @@ func floodFill(image [][]int, sr int, sc int, newColor int) [][]int {
 }
 ```
 
+## [1559. 二维网格图中探测环](https://leetcode-cn.com/problems/detect-cycles-in-2d-grid/)
+
+Difficulty: **困难**
+
+
+给你一个二维字符网格数组 `grid` ，大小为 `m x n` ，你需要检查 `grid` 中是否存在 **相同值** 形成的环。
+
+一个环是一条开始和结束于同一个格子的长度 **大于等于 4** 的路径。对于一个给定的格子，你可以移动到它上、下、左、右四个方向相邻的格子之一，可以移动的前提是这两个格子有 **相同的值 **。
+
+同时，你也不能回到上一次移动时所在的格子。比方说，环  `(1, 1) -> (1, 2) -> (1, 1)` 是不合法的，因为从 `(1, 2)` 移动到 `(1, 1)` 回到了上一次移动时的格子。
+
+如果 `grid` 中有相同值形成的环，请你返回 `true` ，否则返回 `false` 。
+
+**示例 1：**
+
+![UTOOLS1598326504565.png](https://upload.cc/i1/2020/08/25/uMFVjJ.png)
+
+```golang
+输入：grid = [["a","a","a","a"],["a","b","b","a"],["a","b","b","a"],["a","a","a","a"]]
+输出：true
+解释：如下图所示，有 2 个用不同颜色标出来的环：
+```
+![UTOOLS1598326521462.png](https://upload.cc/i1/2020/08/25/gf365S.png)
+
+**示例 2：**
+
+![UTOOLS1598326558226.png](https://upload.cc/i1/2020/08/25/5TvF1j.png)
+
+```golang
+输入：grid = [["c","c","c","a"],["c","d","c","c"],["c","c","e","c"],["f","c","c","c"]]
+输出：true
+解释：如下图所示，只有高亮所示的一个合法环：
+```
+![UTOOLS1598326570563.png](https://upload.cc/i1/2020/08/25/s7Q6VO.png)
+
+**示例 3：**
+
+![UTOOLS1598326586586.png](https://upload.cc/i1/2020/08/25/0zQroh.png)
+
+```golang
+输入：grid = [["a","b","b"],["b","z","b"],["b","b","a"]]
+输出：false
+```
+
+**提示：**
+
+*   `m == grid.length`
+*   `n == grid[i].length`
+*   `1 <= m <= 500`
+*   `1 <= n <= 500`
+*   `grid` 只包含小写英文字母。
+
+
+**解法一**
+
+33双周赛的T4，总体不是很难，dfs或者并查集都可以
+```golang
+func containsCycle(grid [][]byte) bool {
+    var m, n = len(grid), len(grid[0])
+    var dir = [4][2]int{{0,1},{1,0},{-1,0},{0,-1}}
+    var visit = make([][]bool, m)
+    for i := 0; i < m; i++ {
+        visit[i] = make([]bool, n)
+    }
+    var valid = func(x, y int) bool { return x >= 0 && x < m && y >= 0 && y < n}
+    var dfs func (int, int, int, int)
+    var res = false
+    dfs = func(preX int, preY int, x int, y int) {
+        if visit[x][y] || res{
+            res = true
+            return
+        }
+        visit[x][y] = true
+        for i := 0; i < len(dir); i++ {
+            nx := x + dir[i][0]
+            ny := y + dir[i][1]
+            //不走回头路
+            if nx == preX && ny == preY {
+                continue
+            }
+            if valid(nx, ny) && grid[nx][ny] == grid[x][y] {
+                dfs(x, y, nx, ny)
+            }
+        }
+    }
+    for i := 0; i < m; i++ {
+        for j := 0; j < n; j++ {
+            if !visit[i][j] {
+                dfs(i,j,i,j)
+            }
+        }
+    }
+    return res
+}
+```
+**解法二**
+
+并查集的解法，留着以后再来写
 
 ## _分治_
 
