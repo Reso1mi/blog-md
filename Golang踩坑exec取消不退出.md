@@ -1,6 +1,6 @@
 ---
 title: 
- Golang踩坑：exec执行任务取消后不退出
+ Golang踩坑：exec取消后不退出
 tags: 
   [开源项目,Golang]
 categories:
@@ -171,7 +171,7 @@ created by os/exec.(*Cmd).Start
 os/exec.(*Cmd).writerDescriptor.func1(0x0, 0x0)
         /usr/lib/golang/src/os/exec/exec.go:311 +0x63
 ```
-![UTOOLS1598032678130.png](https://upload.cc/i1/2020/08/22/ls251C.png)
+![mark](http://static.imlgw.top/blog/20200826/Boqz6oWej6HA.png?imageslim)
 可以看到这里就是具体协程执行的任务，这里有一个IO操作，可想而知程序就是阻塞在了这里，再往下分析就是内部epoll的代码了，就不往下了，我们分析下这段代码的意义，首先创建了管道`Pipe`，然后在协程中将读端`pr`的数据copy到`w`中，很明显这里就是`goroutine`通过pipe读取子进程的输出，但是由于某些原因`Pipe`阻塞了，无法从读端获取数据
 
 我们用`lsof -p`看一下该进程打开的资源
