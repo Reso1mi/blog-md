@@ -2446,7 +2446,7 @@ m = 2
 
 **解法一**
 
-Hard题，但是感觉和前面的mid差不多，没啥好说的，个人感觉这题还没上面的[LCP 12. 小张刷题计划](#LCP 12-小张刷题计划) 难，不过有哥case挺恶心，算的sum会溢出，害我WA了一次，但是他结果返回的又是个int，这就很蠢
+Hard题，但是感觉和前面的mid差不多，没啥好说的，个人感觉这题还没上面的[LCP12.小张刷题计划](#lcp-12-小张刷题计划) 难，不过有个case挺恶心，算的sum会溢出，害我WA了一次，但是他结果返回的又是个int，这就很蠢
 
 ```java
 //一样的套路
@@ -2469,6 +2469,7 @@ public int splitArray(int[] nums, int m) {
     return (int)res;
 }
 
+//分为m组能否保证每组都小于等于mid（如果可以说明还可以更小）
 public boolean check(int[] nums,long limit,int m){
     long sum=0;
     int count=1;
@@ -2480,6 +2481,70 @@ public boolean check(int[] nums,long limit,int m){
         sum+=num;
     }
     return count<=m;
+}
+```
+
+## [NC82.分组](https://www.nowcoder.com/practice/829419bde0e946b6b4fe813ed3972db8)
+
+题目描述
+牛牛有一个n个数字的序列a1，a2，a3...an现在牛牛想把这个序列分成k段连续段，牛牛想知道分出来的k个连续段的段内数字和的最小值最大可以是多少？
+
+**示例1**
+```go
+输入 : 4,2,[1,2,1,5]
+输出 : 4
+说明:
+有3种分法
+[1],[2,1,5]，数字和分别为1，8，最小值为1
+[1,2][1,5]，数字和分别为3，6，最小值为3
+[1,2,1],[5]数字和分别为4，5，最小值为4
+则最小值的最大值为4
+```
+**备注:**
+- 1 <= k <= n <= 1e5
+- 0 <= ai <= 1e4
+
+第一个参数整数n代表序列数字个数，
+第二个参数整数k代表分出的段数，
+第三个参数vector a 包含n个元素代表n个数字
+
+**解法一**
+
+我是真的菜啊，上面一题会写这题就不会写了，果然我这种菜鸡刷题就是背题，变一下就不会了。。。其实和上面的正好是反过来的，上面是要最大值最小，这里是要最小值最大，所以check的思路也是相反的，上面是验证：分为k组能否保证每组都小于等于mid。所以这题很显然就应该是：分为k组能否保证每组都大于等于mid（这里验证也是逐渐逼近答案）
+```java
+//最小值最大
+public int solve (int n, int k, int[] a) {
+    int left = 0;
+    int right = 0;
+    for (int i = 0; i < a.length; i++) {
+        left = Math.min(left, a[i]);
+        right += a[i];
+    }
+    int res = 0;
+    while (left <= right) {
+        int mid = left + (right-left)/2;
+        if (check(mid, a, k)) {
+            res = mid;
+            left = mid + 1;
+        }else {
+            right = mid - 1;
+        }
+    }
+    return res;
+}
+
+//分为k组能否保证每组都大于等于mid（如果可以说明还可以更大）
+public boolean check(int mid, int[] a, int k) {
+    int sum = 0;
+    int count = 0;
+    for (int i = 0; i < a.length; i++) {
+        sum += a[i];
+        if (sum >= mid) {
+            sum = 0;
+            count++;
+        }
+    }
+    return count >= k;
 }
 ```
 ## [1482. 制作 m 束花所需的最少天数](https://leetcode-cn.com/problems/minimum-number-of-days-to-make-m-bouquets/)
