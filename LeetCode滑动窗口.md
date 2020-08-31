@@ -2833,3 +2833,55 @@ func totalFruit(tree []int) int {
     return res
 }
 ```
+## [NC562.牛牛的魔法卡](https://www.nowcoder.com/practice/9b6fe52a68904c77aa81502f57ceac86)
+
+牛牛从小就有收集魔法卡的习惯，他最大的愿望就是能够集齐 k 种不同种类的魔法卡，现在有 n 张魔法卡，这 n 张魔法卡存在于一维坐标点上，
+每张魔法卡可能属于某一种类。牛牛如果想收集魔法卡就需要从当前坐标点跳跃到另外一个魔法卡所在的坐标点，花费的代价是两个跳跃坐标点之间的距离差。
+牛牛可以从任意的坐标点出发，牛牛想知道他集齐 k 种魔法卡所花费的最小代价是多少，如果集不齐 k 种魔法卡，输出-1。
+第一行输入两个整数 n,k, 分别表示魔法卡的个数和种类个数。
+接下来有n行，每行两个数x，y 分别表示属于哪一种魔法卡和魔法卡所在的坐标
+
+**示例1**
+```go
+输入: 7,3,[[0,1],[0,2],[1,5],[1,1],[0,7],[2,8],[1,3]]
+输出: 3
+说明: 
+样例一：牛牛从坐标点5出发，经过7、8两个点就收集了3张不同种类的魔法卡，达成成就。所需代价 （7-5）+（8-7） = 3
+```
+**备注:**
+- 1<=n<=10^6
+- 1<=k<=50 0<=x<k
+- 0 <= y <= 1e9
+
+**解法一**
+
+tag是二分，但是想了一会儿感觉好像没啥好的二分的思路，二分答案貌似可行，不过这题滑窗的思路更简单，类似[76-最小覆盖子串](#76-最小覆盖子串)滑就完事儿了
+```java
+public int solve (int n, int k, int[][] card) {
+    // write code here
+    Arrays.sort(card, (c1,c2)->c1[1]-c2[1]);
+    int INF = Integer.MAX_VALUE;
+    int left = 0;
+    int count = 0;
+    int[] freq = new int[k+1];
+    int res = INF;
+    for (int right = 0; right < n; right++) {
+        if (freq[card[right][0]] == 0) {
+            count++;
+        }
+        freq[card[right][0]]++;
+        while(left<=right && count == k){
+            res = Math.min(res, card[right][1] - card[left][1]);
+            freq[card[left][0]]--;
+            if (freq[card[left][0]]==0) {
+                count--;
+            }
+            left++;
+        }
+    }
+    if (res == INF) {
+        return -1;
+    }
+    return res;
+}
+```

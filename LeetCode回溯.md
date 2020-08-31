@@ -3758,6 +3758,134 @@ func containsCycle(grid [][]byte) bool {
 
 并查集的解法，留着以后再来写
 
+## [332. 重新安排行程](https://leetcode-cn.com/problems/reconstruct-itinerary/)
+
+Difficulty: **中等**
+
+
+给定一个机票的字符串二维数组 `[from, to]`，子数组中的两个成员分别表示飞机出发和降落的机场地点，对该行程进行重新规划排序。所有这些机票都属于一个从 JFK（肯尼迪国际机场）出发的先生，所以该行程必须从 JFK 开始。
+
+**提示：**
+
+1.  如果存在多种有效的行程，请你按字符自然排序返回最小的行程组合。例如，行程 ["JFK", "LGA"] 与 ["JFK", "LGB"] 相比就更小，排序更靠前
+2.  所有的机场都用三个大写字母表示（机场代码）。
+3.  假定所有机票至少存在一种合理的行程。
+4.  所有的机票必须都用一次 且 只能用一次。
+
+**示例 1：**
+
+```go
+输入：[["MUC", "LHR"], ["JFK", "MUC"], ["SFO", "SJC"], ["LHR", "SFO"]]
+输出：["JFK", "MUC", "LHR", "SFO", "SJC"]
+```
+
+**示例 2：**
+
+```go
+输入：[["JFK","SFO"],["JFK","ATL"],["SFO","ATL"],["ATL","JFK"],["ATL","SFO"]]
+输出：["JFK","ATL","JFK","SFO","ATL","SFO"]
+解释：另一种有效的行程是 ["JFK","SFO","ATL","JFK","ATL","SFO"]。但是它自然排序更大更靠后。
+```
+
+**解法一**
+
+欧拉回路，一笔画，后序遍历，先尝试完所有的子节点最后在添加当前节点，确保死胡同会被首先加入，这样res中就保持了答案的逆序
+```golang
+//欧拉回路，一笔画问题
+func findItinerary(tickets [][]string) []string {
+    var adj = make(map[string][]string)
+    for _, tick := range tickets {
+        adj[tick[0]] = append(adj[tick[0]], tick[1])
+    }
+    for _, toList := range adj {
+        sort.Strings(toList)
+    }
+    var res []string
+    var dfs func (cur string) 
+    dfs = func (cur string) {
+        for len(adj[cur]) != 0 {
+            //删除节点，避免重复访问
+            to := adj[cur][0]
+            adj[cur] = adj[cur][1:]
+            dfs(to)
+        }
+        //后序遍历，最后将路径添加进去，保证死胡同会首先加入
+        res = append(res, cur)
+    }
+    dfs("JFK")
+    //翻转下
+    for i, j := 0, len(res)-1; i < j; i, j = i+1, j-1 {
+        res[i], res[j] = res[j], res[i]
+    }
+    return res
+}
+```
+
+## [841. 钥匙和房间](https://leetcode-cn.com/problems/keys-and-rooms/)
+
+Difficulty: **中等**
+
+
+有 `N` 个房间，开始时你位于 `0` 号房间。每个房间有不同的号码：`0，1，2，...，N-1`，并且房间里可能有一些钥匙能使你进入下一个房间。
+
+在形式上，对于每个房间 `i` 都有一个钥匙列表 `rooms[i]`，每个钥匙 `rooms[i][j]` 由 `[0,1，...，N-1]` 中的一个整数表示，其中 `N = rooms.length`。 钥匙 `rooms[i][j] = v` 可以打开编号为 `v` 的房间。
+
+最初，除 `0` 号房间外的其余所有房间都被锁住。
+
+你可以自由地在房间之间来回走动。
+
+如果能进入每个房间返回 `true`，否则返回 `false`。
+
+**示例 1：**
+
+```go
+输入: [[1],[2],[3],[]]
+输出: true
+解释:  
+我们从 0 号房间开始，拿到钥匙 1。
+之后我们去 1 号房间，拿到钥匙 2。
+然后我们去 2 号房间，拿到钥匙 3。
+最后我们去了 3 号房间。
+由于我们能够进入每个房间，我们返回 true。
+```
+
+**示例 2：**
+
+```go
+输入：[[1,3],[3,0,1],[2],[0]]
+输出：false
+解释：我们不能进入 2 号房间。
+```
+
+**提示：**
+
+1.  `1 <= rooms.length <= 1000`
+2.  `0 <= rooms[i].length <= 1000`
+3.  所有房间中的钥匙数量总计不超过 `3000`。
+
+**解法一**
+
+没啥好说的
+```golang
+func canVisitAllRooms(rooms [][]int) bool {
+    var n = len(rooms)
+    var visit = make([]bool, n)
+    var dfs func(int)
+    var count = 0
+    dfs = func(idx int) {
+        visit[idx] = true
+        count++
+        for i := 0; i < len(rooms[idx]); i++ {
+            if !visit[rooms[idx][i]] {
+                dfs(rooms[idx][i])   
+            }
+        }
+    }
+    dfs(0)
+    return count == n
+}
+```
+
 ## _分治_
 
 开个新坑，其实分治这个tag挺大的，很多题的做法都属于分治，而且涉及到分治的题目一般都还是有点难度的，不容易直接想出来
