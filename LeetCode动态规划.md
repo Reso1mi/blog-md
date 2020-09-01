@@ -6078,6 +6078,69 @@ func findCheapestPrice(n int, flights [][]int, src int, dst int, K int) int {
 }
 ```
 > 这题也可以`Dijkstra`但是我不会
+
+## [NC557.好多牛牛](https://www.nowcoder.com/practice/edced5e80f3e46efa9c965e7f634c58c)
+
+给出一个字符串S，牛牛想知道这个字符串有多少个子序列等于"niuniu"子序列可以通过在原串上删除任意个字符(包括0个字符和全部字符)得到。为了防止答案过大，答案对1e9+7取模
+
+**示例1**
+```go
+输入: "niuniniu"
+输出: 3
+说明:
+删除第4，5个字符可以得到"niuniu"
+删除第5，6个字符可以得到"niuniu"
+删除第6，7个字符可以得到"niuniu"
+```
+**备注:**
+10 <= len(s) <= 1e5
+
+**解法一**
+
+菜啊，没想出来，真的菜
+```java
+public int solve1 (String s) {
+    // write code here 
+    String p = "niuniu";
+    int n = s.length();
+    int MOD = (int)1e9+7;
+    //dp[i][j]代表s[0,j]中有多少个p[0,j]
+    long[][] dp = new long[7][n+1];
+    Arrays.fill(dp[0], 1);
+    for (int i = 1; i <= 6; i++){
+        for (int j = 1; j <= n; j++){
+            if (s.charAt(j-1) == p.charAt(i-1)) {
+                dp[i][j] = (dp[i-1][j] + dp[i][j-1]) % MOD;
+            } else {
+                dp[i][j] = dp[i][j-1];
+            }
+        }
+    }
+    return (int)dp[6][n];
+}
+```
+**解法二**
+
+降维，这里踩了个小坑，我直接将上面的二维降维，然后Arrays.fill(dp,1)然后WA了，其实就是初始化出了问题，这样初始化是不对的，由于上面的写法问题，导致不方便初始话，更好的做法应该将内外循环交换然后以s字符为基准进行dp
+```java
+public int solve3 (String s) {
+    String p = "niuniu";
+    int n = s.length();
+    int m = p.length();
+    int MOD = (int)1e9+7;
+    //dp[j]代表s[0,i]中有多少个p[0,i]
+    long[] dp = new long[m+1];
+    dp[0] = 1;
+    for (int i = 1; i <= n; i++){
+        for (int j = 1; j <= m; j++){
+            if (s.charAt(i-1) == p.charAt(j-1)) {
+                dp[j] = (dp[j] + dp[j-1]) % MOD;
+            }
+        }
+    }
+    return (int)dp[m];
+}
+```
 ## _区间DP_
 
 后面有时间会单独将这些题目分类整理成文章，目前暂时先这样
@@ -7742,6 +7805,104 @@ func winnerSquareGame(n int) bool {
 }
 ```
 
+## [486. 预测赢家](https://leetcode-cn.com/problems/predict-the-winner/)
+
+Difficulty: **中等**
+
+
+给定一个表示分数的非负整数数组。 玩家 1 从数组任意一端拿取一个分数，随后玩家 2 继续从剩余数组任意一端拿取分数，然后玩家 1 拿，…… 。每次一个玩家只能拿取一个分数，分数被拿取之后不再可取。直到没有剩余分数可取时游戏结束。最终获得分数总和最多的玩家获胜。
+
+给定一个表示分数的数组，预测玩家1是否会成为赢家。你可以假设每个玩家的玩法都会使他的分数最大化。
+
+**示例 1：**
+
+```go
+输入：[1, 5, 2]
+输出：False
+解释：一开始，玩家1可以从1和2中进行选择。
+如果他选择 2（或者 1 ），那么玩家 2 可以从 1（或者 2 ）和 5 中进行选择。如果玩家 2 选择了 5 ，那么玩家 1 则只剩下 1（或者 2 ）可选。
+所以，玩家 1 的最终分数为 1 + 2 = 3，而玩家 2 为 5 。
+因此，玩家 1 永远不会成为赢家，返回 False 。
+```
+
+**示例 2：**
+
+```go
+输入：[1, 5, 233, 7]
+输出：True
+解释：玩家 1 一开始选择 1 。然后玩家 2 必须从 5 和 7 中进行选择。无论玩家 2 选择了哪个，玩家 1 都可以选择 233 。
+     最终，玩家 1（234 分）比玩家 2（12 分）获得更多的分数，所以返回 True，表示玩家 1 可以成为赢家。
+```
+
+**提示：**
+
+*   1 <= 给定的数组长度 <= 20.
+*   数组里所有分数都为非负数且不会大于 10000000 。
+*   如果最终两个玩家的分数相等，那么玩家 1 仍为赢家。
+
+
+**解法一**
+
+记忆化，这种博弈的题目记忆化写起来会比较自然
+```golang
+func PredictTheWinner(nums []int) bool {
+    var Max = func(a, b int) int {if a > b {return a};return b}
+    var n = len(nums)
+    var preSum = make([]int, n+1)
+    for i := 1; i <= n; i++ {
+        preSum[i] = preSum[i-1] + nums[i-1]
+    }
+    //记忆化
+    var dp = make([][]int, n)
+    for i := 0; i < n; i++ {
+        dp[i] = make([]int, n)
+        for j := 0; j < n; j++ {
+            dp[i][j] = -1
+        }
+    }
+    var dfs func(i int, j int) int
+    dfs = func(i int, j int) int {
+        if dp[i][j] != -1 {
+            return dp[i][j]
+        }
+        if i == j {
+            return nums[i]
+        }
+        //区间和
+        sum := preSum[j+1] - preSum[i]
+        dp[i][j] = Max(sum-dfs(i+1, j), sum-dfs(i, j-1))
+        return dp[i][j]
+    }
+    A := dfs(0, n-1)
+    return A >= preSum[n]-A
+}
+```
+**解法二**
+
+区间DP的写法当然也可以，思路一样
+```golang
+func PredictTheWinner(nums []int) bool {
+    var n = len(nums)
+    var dp = make([][]int, n)
+    var Max = func(a,b int) int {if a>b {return a};return b}
+    for i := 0; i < n; i++ {
+        dp[i] = make([]int, n)
+        dp[i][i] = nums[i]
+    }
+    var preSum = make([]int, n+1)
+    for i := 1; i <= n; i++ {
+        preSum[i] = preSum[i-1] + nums[i-1]
+    }
+    for tlen := 2; tlen <= n; tlen++ {
+        for left := 0; left+tlen-1 < n; left++ {
+            right := left+tlen-1
+            sum := preSum[right+1]-preSum[left]
+            dp[left][right] = Max(sum-dp[left][right-1], sum-dp[left+1][right])
+        }
+    }
+    return dp[0][n-1] >= preSum[n]-dp[0][n-1]
+}
+```
 
 ## _图论_
 
