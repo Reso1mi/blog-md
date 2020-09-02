@@ -1503,6 +1503,42 @@ public boolean validateStackSequences(int[] pushed, int[] popped) {
 ```
 每进一个元素就判断栈顶和出栈顺序的头是否相等，然后出栈，最后看栈中是否为空就ok
 
+## [NC560.打字](https://www.nowcoder.com/practice/7819ebf1369044e5bee2f9848d9c6c72)
+
+牛妹在练习打字，现在按照时间顺序给出牛妹按下的键（以字符串形式给出,'<'代表回退backspace，其余字符均是牛妹打的字符，字符只包含小写字母与'<'），牛妹想知道最后在屏幕上显示的文本内容是什么。
+在文本内容为空的时候也可以按回退backspace（在这种情况下没有任何效果）。
+**示例1**
+```go
+输入: "acv<"
+输出: "ac"
+说明:
+牛妹在打完"acv"之后按了回退，所以最后是"ac"
+```
+**解法一**
+
+也可以直接数组模拟
+```java
+public String Typing (String s) {
+    // write code here
+    Deque<Integer> stack = new ArrayDeque<>();
+    for (int i = 0; i < s.length(); i++) {
+        if (s.charAt(i) == '<') {
+            if (stack.isEmpty()) {
+                continue;
+            }
+            stack.pop();
+        }else{
+            stack.push(i);
+        }
+    }
+    StringBuilder sb = new StringBuilder();
+    while(!stack.isEmpty()){
+        sb.append(s.charAt(stack.pop()));
+    }
+    return sb.reverse().toString();
+}
+```
+
 ## _BFS广搜_
 
 ## [279. 完全平方数](https://leetcode-cn.com/problems/perfect-squares/)
@@ -2914,6 +2950,91 @@ public boolean dfs(List<List<Integer>> adj,int cur,int[] mark,int[] res){
     //cur的先决课程是没环的，所以可以学cur
     res[k++]=cur; 
     return false;
+}
+```
+
+## [365. 水壶问题](https://leetcode-cn.com/problems/water-and-jug-problem/)
+
+Difficulty: **中等**
+
+
+有两个容量分别为 _x_升 和 _y_升 的水壶以及无限多的水。请判断能否通过使用这两个水壶，从而可以得到恰好 _z_升 的水？
+
+如果可以，最后请用以上水壶中的一或两个来盛放取得的 _z升 _水。
+
+你允许：
+
+*   装满任意一个水壶
+*   清空任意一个水壶
+*   从一个水壶向另外一个水壶倒水，直到装满或者倒空
+
+**示例 1:** (From the famous )
+
+```go
+输入: x = 3, y = 5, z = 4
+输出: True
+```
+
+**示例 2:**
+
+```go
+输入: x = 2, y = 6, z = 5
+输出: False
+```
+
+
+**解法一**
+
+暴力BFS的解法
+```java
+public boolean canMeasureWater(int x, int y, int z) {
+    Queue<int[]> queue = new LinkedList<>();
+    int capX = x;
+    int capY = y;
+    queue.add(new int[]{x, y});
+    while(!queue.isEmpty()) {
+        int[] cur = queue.poll();
+        int cx = cur[0];
+        int cy = cur[1];
+        if (cx==z || cy==z || cx+cy==z) {
+            return true;
+        }
+        //清空x
+        addQueue(0, cy, queue);
+        //清空y
+        addQueue(cx, 0, queue);
+        //装满x
+        addQueue(capX, cy, queue);
+        //装满y
+        addQueue(cx, capY, queue);
+        //x-->y
+        addQueue(Math.max(0, cx-capY+cy), Math.min(capY, cy+cx), queue);
+        //y-->x
+        addQueue(Math.min(capX, cy+cx), Math.max(0, cy-capY+cx), queue);
+    }
+    return false;
+}
+
+public void addQueue(int x, int y, Queue<int[]> queue){
+    long hashCode = x * (long)1e9+7 + y;
+    if (!visit.contains(hashCode)) {
+        queue.add(new int[]{x, y});
+        visit.add(hashCode);
+    }
+}
+```
+**解法二**
+数学解法，涉及到一些数学定理（贝祖定理），我也不是很懂（就是搞懂过两天也忘了）
+```java
+public boolean canMeasureWater(int x, int y, int z) {
+    if(x+y<z) return false;
+    if(x==0 || y==0) return z==0 || x+y==z;
+    return z%gcd(x,y)==0;
+}
+
+public int gcd(int a,int b){
+    if(b==0) return a;
+    return gcd(b,a%b);
 }
 ```
 
