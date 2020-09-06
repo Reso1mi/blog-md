@@ -6133,6 +6133,56 @@ func recoverTree(root *TreeNode) {
 ```
 这种解法严格来说空间复杂度并不是O(1)，递归会有系统栈的开销，空间复杂度应该是O(h)，h是树的高度，真正的O(1)的做法应该是Morris遍历，这种解法就称得上hard了
 
+## [1302. 层数最深叶子节点的和](https://leetcode-cn.com/problems/deepest-leaves-sum/)
+
+Difficulty: **中等**
+
+
+给你一棵二叉树，请你返回层数最深的叶子节点的和。
+
+**示例：**
+
+![wmC0aT.png](https://s1.ax1x.com/2020/09/06/wmC0aT.png)
+
+```
+输入：root = [1,2,3,4,5,null,6,7,null,null,null,null,8]
+输出：15
+```
+
+**提示：**
+
+*   树中节点数目在 `1` 到 `10^4` 之间。
+*   每个节点的值在 `1` 到 `100` 之间。
+
+
+**解法一**
+
+BFS没啥好说的，DFS的挺有意思
+```golang
+func deepestLeavesSum(root *TreeNode) int {
+    var dfs func(*TreeNode, int)
+    var maxDep = 0
+    var sum = 0
+    dfs = func(root *TreeNode, dep int) {
+        if root == nil {
+            return
+        }
+        if maxDep == dep {
+            sum += root.Val
+        }
+        if dep > maxDep {
+            sum = root.Val
+            maxDep = dep
+        }
+        dfs(root.Left, dep+1)
+        dfs(root.Right, dep+1)
+        
+    }
+    dfs(root, 0)
+    return sum
+}
+```
+
 ## _树形DP(大概)_
 
 > 2020.5.10更新，在看了左神的书后，大概了解了树形DP，所谓的树形DP实际上就是把递推方程搬到了树结构上，按我的理解树形DP很大的特点就是最终的解可能存在于树上每个节点，像我下面的题有的暴力解用的就是双重递归，就是dfs遍历没个节点，然后再对每个节点递归求解，但是对根节点求解的时候，实际上其他的子节点都成了子问题，所以后面再对子节点求解的时候问题就重复了，所以就可以采用后序遍历，自底向上，先求左右节点的值再更新根节点，**下面的题其实我不知道到底是不是属于树形DP，可能太简单了，但是再我看来解法比较统一，很有套路所以整理到一起**，我查了下网上介绍的树形DP还是挺难的，后面有时间了解后再来记录

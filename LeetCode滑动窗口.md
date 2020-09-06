@@ -2885,3 +2885,160 @@ public int solve (int n, int k, int[][] card) {
     return res;
 }
 ```
+## [1870. 全零子串的数量（LintCode）](https://www.lintcode.com/problem/number-of-substrings-with-all-zeroes/description)
+
+给出一个只包含0或1的字符串str,请返回这个字符串中全为0的子字符串的个数 1<=|str|<=30000
+
+**例1:**
+```go
+输入:"00010011"
+输出:9
+解释:
+"0"子字符串有5个,
+"00"子字符串有3个,
+"000"子字符串有1个。
+所以返回9
+```
+**例2:**
+```go
+输入:"010010"
+输出:5
+```
+**解法一**
+
+直接滑就行了，统计所有0区间的长度，注意组合数的计算就行了
+```java
+// 1 1 1 1 1 (5+4+3+2+1) = n(n-1)/2 + n or n(n+1)/2
+public int stringCount(String str) {
+    // Write your code here.
+    int left = 0, right = 0;
+    int res = 0;
+    while (right < str.length()) {
+        while(right < str.length() && str.charAt(right) == '0'){
+            right++;
+        }
+        // (0  0  0) 1 1
+        //  l  n     r
+        int n = right-left;
+        //C(n+1,2)/2
+        res += n*(n+1)/2;
+        right++;
+        left = right;
+    }
+    return res;
+}
+```
+
+## [1529. 绝对差不超过限制的三元子数组（LintCode](https://www.lintcode.com/problem/triplet-subarray-with-absolute-diff-less-than-or-equal-to-limit/description)）
+
+给定一个递增的整数数组nums，和一个表示限制的整数limit，请你返回满足条件的三元子数组的个数，使得该子数组中的任意两个元素之间的绝对差小于或者等于limit。
+
+如果不存在满足条件的子数组，则返回 0 。
+
+**数据范围：** 1 ≤ len(nums) ≤ 1e4，1 ≤ limit ≤ 1e6，0 ≤ nums[i] ≤ 1e6
+由于答案可能很大，请返回它对99997867取余后的结果。
+
+**样例 1:**
+```go
+输入：[1, 2, 3, 4], 3
+输出：4
+解释：可选方案有(1, 2, 3), (1, 2, 4), (1, 3, 4), (2, 3, 4)。因此，满足条件的三元组有4个。
+```
+
+**样例 2:**
+```go
+输入：[1, 10, 20, 30, 50], 19
+输出：1
+解释：唯一可行的三元组是(1, 10, 20)，所以答案为1。
+```
+**挑战**
+你可以只用O(n)的时间复杂度解决这个问题吗？
+
+**解法一**
+
+我一开始看见是Hard想的挺复杂的，什么单调栈都搞出来了，但是仔细看题会发现题目给的数组是有序的，所以直接滑窗然后统计就行了，这里需要注意计算的方式，避免算重
+```java
+//LintCode上居然是Hard，感觉不是很难
+public int tripletSubarray(int[] nums, int limit) {
+    // write your code here
+    int n = nums.length;
+    int left = 0, right = 0;
+    int res = 0;
+    while (left <= right) {
+        //找到最远的合法right
+        while (right < n && nums[right]-nums[left] <= limit) {
+            right++;
+        }
+        //  1  (2 3 4)  5
+        //left   len  right
+        int len = right-left-1;
+        left++;
+        if (len < 2) continue;
+        //C(len,2) 求以left开头，包含left的所有3元组，这样不会重复
+        res += len*(len-1)/2;
+    }
+    return res;
+}
+```
+> 感觉自己静下心来想的话很多题目还是可以自己做出来的，但是就是想的可能有点慢，特别是竞赛中，规定了时间后一慌就更慢了。。看来还是练少了
+
+## [1375. 至少K个不同字符的子串（LintCode）](https://www.lintcode.com/problem/substring-with-at-least-k-distinct-characters/description)
+
+给定一个仅包含小写字母的字符串 S.
+
+返回 S 中至少包含 k 个不同字符的子串的数量.
+
+- 10 ≤ length(S) ≤ 1,000,000
+- 1 ≤ k ≤ 26
+
+**样例 1:**
+```go
+输入: S = "abcabcabca", k = 4
+输出: 0
+解释: 字符串中一共就只有 3 个不同的字符.
+```
+**样例 2:**
+```go
+输入: S = "abcabcabcabc", k = 3
+输出: 55
+解释: 任意长度不小于 3 的子串都含有 a, b, c 这三个字符.
+    比如,长度为 3 的子串共有 10 个, "abc", "bca", "cab" ... "abc"
+    长度为 4 的子串共有 9 个, "abca", "bcab", "cabc" ... "cabc"
+    ...
+    长度为 12 的子串有 1 个, 就是 S 本身.
+    所以答案是 1 + 2 + ... + 10 = 55.
+```
+
+**解法一**
+
+经典滑窗，非常套路，想好怎么统计就行了
+```java
+public long kDistinctCharacters(String s, int k) {
+    int n = s.length();
+    int left = 0;
+    int[] freq = new int[128];
+    int count = 0;
+    long res = 0;
+    for (int right = 0; right < n; right++) {
+        char cr = s.charAt(right);
+        if (freq[cr] == 0) {
+            count++;
+        }
+        freq[cr]++;
+        while (count >= k && left <= right) {
+            // abc | abcabcabc
+            // l r(2)          n(12)
+            //统计以s[left,right]开头的所有子串
+            //10+9+8+7+...+1
+            res += n-right;
+            char cl = s.charAt(left);
+            freq[cl]--;
+            if (freq[cl] <= 0) {
+                count--;
+            }
+            left++;
+        }
+    }
+    return res;
+}
+```
