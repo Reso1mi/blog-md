@@ -2816,37 +2816,27 @@ static class ComparatorMap implements Comparator<HashMap.Entry<Integer,Integer>>
 小根堆的做法
 
 ```java
-public static List<Integer> topKFrequent(int[] nums, int k) {
-    if(nums==null||nums.length<=0){
-        return null;
+//UPDATE：2020.9.7之前的解法太丑陋了
+public int[] topKFrequent(int[] nums, int k) {
+    HashMap<Integer,Integer> freq = new HashMap<>();
+    for (int i = 0; i < nums.length; i++) {
+        freq.put(nums[i], freq.getOrDefault(nums[i], 0)+1);
     }
-    HashMap<Integer,Integer> fre=new HashMap<>();
-    for (int i=0;i<nums.length;i++) {
-        //fre.get(i) nums[i]出现的频次
-        fre.put(nums[i],fre.getOrDefault(nums[i],0)+1);
-    }
-    //1:3,2:3,3:1
-    //其实可以这样写，但是对比了一下lambda大概要60ms，而直接构造比较器只要20ms
-    //PriorityQueue<HashMap.Entry<Integer,Integer>> pq=new PriorityQueue<>((o1,o2)->o1.getValue()-o2.getValue());
-    PriorityQueue<HashMap.Entry<Integer,Integer>> pq=new PriorityQueue(new ComparatorMap());
-    for (HashMap.Entry ent:fre.entrySet()) {
-        pq.add(ent);
-        if(pq.size()>k){
+    //int[0]: count int[1]: val 
+    PriorityQueue<int[]> pq = new PriorityQueue<>((a, b)->a[0]-b[0]);
+    //freq.forEach();
+    for (int key : freq.keySet()) {
+        pq.offer(new int[]{freq.get(key), key});
+        if (pq.size() > k) {
             pq.poll();
         }
     }
-    ArrayList<Integer> res=new ArrayList<>();
+    int[] res = new int[k];
+    int i = 0;
     while (!pq.isEmpty()) {
-        res.add(pq.poll().getKey());
+        res[i++] = pq.poll()[1];
     }
     return res;
-}
-
-static class ComparatorMap implements Comparator<HashMap.Entry<Integer,Integer>>{
-    @Override
-    public int compare(Map.Entry<Integer, Integer> o1, Map.Entry<Integer, Integer> o2) {
-        return o1.getValue()-o2.getValue();
-    }
 }
 ```
 
@@ -2891,6 +2881,64 @@ public static List<Integer> topKFrequent(int[] nums, int k) {
 ```
 
 桶排序的思路，时间复杂度`O(N)`，空间复杂度也是`O(N)`，在leetcode提交三种方法的差距不大，可能是数据量太少了
+
+**解法四** (UPDATE:2020.9.7)
+
+基于快选的做法，时间复杂度O(N)，之前一直懒得写，今天补一下
+```golang
+type Node struct {
+    Val   int
+    Count int
+}
+
+func topKFrequent(nums []int, k int) []int {
+    var n = len(nums)
+    var freq = make(map[int]int)
+    for i := 0; i < n; i++ {
+        freq[nums[i]]++
+    }
+    var nodes []*Node
+    for val, count := range freq {
+        nodes = append(nodes, &Node{val, count})
+    }
+    //7 0 1 2 9 10
+    var res []int
+    var left, right = 0, len(nodes) - 1
+    for left <= right {
+        mid := partition(nodes, left, right)
+        if mid == k-1 {
+            for i := 0; i <= mid; i++ {
+                res = append(res, nodes[i].Val)
+            }
+            return res
+        }
+        if mid > k-1 {
+            right = mid - 1
+        } else {
+            left = mid + 1
+        }
+    }
+    return res
+}
+
+func partition(nums []*Node, i int, j int) int {
+    //7 9 10 0 1 2
+    //随机下会好一点
+    var base = i
+    for i < j {
+        for i < j && nums[j].Count <= nums[base].Count {
+            j--
+        }
+        for i < j && nums[i].Count >= nums[base].Count {
+            i++
+        }
+        nums[i], nums[j] = nums[j], nums[i]
+    }
+    nums[i], nums[base] = nums[base], nums[i]
+    return i
+}
+```
+
 
 ## [295. 数据流的中位数](https://leetcode-cn.com/problems/find-median-from-data-stream/)
 

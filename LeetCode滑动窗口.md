@@ -496,6 +496,7 @@ public int lengthOfLongestSubstring(String s) {
 ```
 **最优解**
 
+map记录元素最后出现的位置，当重复的时候更新起点，只用遍历一遍
 ```go
 func lengthOfLongestSubstring(s string) int {
     if len(s)==0{
@@ -3038,6 +3039,55 @@ public long kDistinctCharacters(String s, int k) {
             }
             left++;
         }
+    }
+    return res;
+}
+```
+
+## [386. 最多有k个不同字符的最长子字符串(LintCode)](https://www.lintcode.com/problem/longest-substring-with-at-most-k-distinct-characters/description)
+
+给定字符串S，找到最多有k个不同字符的最长子串T。
+
+**样例 1:**
+```go
+输入: S = "eceba" 并且 k = 3
+输出: 4
+解释: T = "eceb"
+```
+**样例 2:**
+```go
+输入: S = "WORLD" 并且 k = 4
+输出: 4
+解释: T = "WORL" 或 "ORLD"
+```
+**挑战**： O(n) 时间复杂度
+
+**解法一**
+
+无脑滑窗就行了，太套路了
+```java
+public int lengthOfLongestSubstringKDistinct(String s, int k) {
+    // write your code here
+    int n = s.length();
+    int left = 0;
+    int res = 0;
+    int[] freq = new int[128];
+    int count = 0;
+    for (int right = 0; right < n; right++) {
+        char cr = s.charAt(right);
+        if (freq[cr] == 0) {
+            count++;
+        }
+        freq[cr]++;
+        while (left <= right && count > k) {
+            char cl = s.charAt(left);
+            freq[cl]--;
+            if (freq[cl] <= 0) {
+                count--;
+            }
+            left++;
+        }
+        res = Math.max(res, right-left+1);
     }
     return res;
 }
