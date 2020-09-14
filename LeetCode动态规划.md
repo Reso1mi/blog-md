@@ -7963,3 +7963,166 @@ public int networkDelayTime(int[][] times, int N, int K) {
 
 大概说一下，其实Floyd就是动态规划的思想，`dp[k][i][j]`代表从`i~j`允许经过前`k`个节点中转时的最短路径，那么其实很容易推导出，`dp[k][i][j]=min(dp[k-1][i][k]+dp[k-1][k][j],dp[k][i][j])`其实也就是尝试以每个点为中转点，看能否缩短两点之间的距离，和区间DP有点像，关于`k`为什么要放外面其实仔细想一下就知道了，我们需要保证在求`dp[k][i][j]`的时候需要保证`dp[k-1][i][j]`以及`dp[k-1][i][k]` 和`dp[k-1][k][j]`都是已经计算完毕的，想一想，如果k放在里面能保证么？很明显不行，可以类比上面的 [576. 出界的路径数](#576-出界的路径数)，一样的道理。然后我们再观察整个递推方程，发现`dp[k]`只依赖于`dp[k-1]`所以就可以直接滚动数组优化掉k维度的空间，也就是上面的解法
 
+## [1584. 连接所有点的最小费用](https://leetcode-cn.com/problems/min-cost-to-connect-all-points/)
+
+Difficulty: **中等**
+
+
+给你一个`points` 数组，表示 2D 平面上的一些点，其中 points[i] = [x<sub style="display: inline;">i</sub>, y<sub style="display: inline;">i</sub>] 。
+
+连接点 [x<sub style="display: inline;">i</sub>, y<sub style="display: inline;">i</sub>] 和点 [x<sub style="display: inline;">j</sub>, y<sub style="display: inline;">j</sub>]` 的费用为它们之间的 **曼哈顿距离** ：x<sub style="display: inline;">i</sub> - x<sub style="display: inline;">j</sub>| + |y<sub style="display: inline;">i</sub> - y<sub style="display: inline;">j</sub>| ，其中 |val| 表示 val 的绝对值。
+
+请你返回将所有点连接的最小总费用。只有任意两点之间 **有且仅有** 一条简单路径时，才认为所有点都已连接。
+
+**示例 1：**
+![wDmhAf.png](https://s1.ax1x.com/2020/09/14/wDmhAf.png)
+
+```
+输入：points = [[0,0],[2,2],[3,10],[5,2],[7,0]]
+输出：20
+解释：
+
+我们可以按照上图所示连接所有点得到最小总费用，总费用为 20 。
+注意到任意两个点之间只有唯一一条路径互相到达。
+```
+
+**示例 2：**
+
+```
+输入：points = [[3,12],[-2,5],[-4,1]]
+输出：18
+```
+
+**示例 3：**
+
+```
+输入：points = [[0,0],[1,1],[1,0],[-1,1]]
+输出：4
+```
+
+**示例 4：**
+
+```
+输入：points = [[-1000000,-1000000],[1000000,1000000]]
+输出：4000000
+```
+
+**示例 5：**
+
+```
+输入：points = [[0,0]]
+输出：0
+```
+
+**提示：**
+
+*   1 <= points.length <= 1000
+*   -10<sup>6</sup> <= x<sub style="display: inline;">i</sub>, y<sub style="display: inline;">i</sub> <= 10<sup>6</sup>
+*   所有点 (x<sub style="display: inline;">i</sub>, y<sub style="display: inline;">i</sub>) 两两不同。
+
+
+**解法一**
+
+Prim O(V^2)最小生成树，206th周赛t3，裸的mst，但是彩笔的我并不会，事后补了一波 [OI Wiki](https://oi-wiki.org/graph/mst/#prim)，（这个是原始的暴力Prim，应对这个题够了）
+```java
+public int minCostConnectPoints(int[][] points) {
+    int INF = 0x3f3f3f3f;
+    int n = points.length;
+    int[] dis = new int[n];
+    Arrays.fill(dis, INF);
+    dis[0] = 0;
+    boolean[] vis = new boolean[n];
+    int res = 0;
+    for (int i = 0; i < n; i++) {
+        int minCost = INF;
+        int k = -1; //最小的新节点
+        for (int j = 0; j < n; j++) {
+            if (vis[j]) continue;
+            if (k == -1 || dis[j] < minCost) {
+                minCost = dis[j];
+                k = j;
+            }
+        }
+        vis[k] = true;
+        res += minCost;
+        for (int j = 0; j < n; j++) {
+            //更新所有mst点集外的点的dis
+            if (vis[j]) continue;
+            int mhd = Math.abs(points[k][0]-points[j][0])+Math.abs(points[k][1]-points[j][1]);
+            dis[j] = Math.min(dis[j], mhd);
+        }
+    }
+    return res;
+}
+```
+这个题明显是稠密图，用邻接矩阵表示的，Prim用邻接矩阵时机复杂度就是O(V^2)，V为点数
+> 数据结构中对于稀疏图的定义为：有很少条边或弧（边的条数|E|远小于|V|²）的图称为稀疏图（sparse graph），反之边的条数|E|接近|V|²，称为稠密图（dense graph）。
+
+**解法二**
+
+Kruskal + 并查集，比较适合稀疏图，这里时机复杂度是O(ElogE)，E为边数
+```java
+//Kruskal+UnionFind
+int[] parent;
+int[] rank;
+//路径压缩
+public int find(int a){
+    if (parent[a] == a) {
+        return a;
+    }
+    return parent[a] = find(parent[a]);
+}
+
+public boolean union(int a, int b) {
+    int pa = find(a);
+    int pb = find(b);
+    if (pa == pb) {
+        return false;
+    }
+    //随便合并 553ms
+    //parent[pa] = pb;
+    //按秩合并 564ms 似乎没有什么变化。。。
+    if (rank[pa] > rank[pb]) {
+        parent[pb] = pa;
+    }else if (rank[pb] > rank[pa]) {
+        parent[pa] = pb;
+    }else{
+        parent[pa] = pb;
+        rank[pb]++;
+    }
+    return true;
+}
+
+public int minCostConnectPoints(int[][] points) {
+    int n = points.length;
+    parent = new int[n];
+    rank = new int[n];
+    //n-1 + n-2 + n-3 +...+ 1 = (n-1) + (n-1)*(n-2)/2 = n(n-1)/2
+    //5 : 4+3+2+1 = 4*
+    //0,1: 端点，2: 边权值
+    int[][] edge = new int[n*(n-1)/2][3];
+    int idx = 0;
+    for (int i = 0; i < n; i++) {
+        for (int j = i+1; j < n; j++) {
+            int dis = Math.abs(points[i][0]-points[j][0])+Math.abs(points[i][1]-points[j][1]);
+            edge[idx++] = new int[]{i, j, dis};
+        }
+        parent[i] = i;
+        rank[i] = 1;
+    }
+    //按照边的权值排序
+    Arrays.sort(edge, (e1, e2)->e1[2]-e2[2]);
+    int res = 0;
+    int count = 0;
+    for (int i = 0; i < edge.length; i++) {
+        if (union(edge[i][0], edge[i][1])) {
+            res += edge[i][2];
+            count++;
+        }
+        if (count == n-1) {
+            break;
+        }
+    }
+    return res;
+}
+```

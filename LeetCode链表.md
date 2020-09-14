@@ -1535,7 +1535,7 @@ public static Boolean hasCycle(ListNode head) {
 ```
 ---
 
-## 141. 环形链表Ⅱ
+## [141. 环形链表Ⅱ](https://leetcode-cn.com/problems/linked-list-cycle-ii/)
 
 给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 `null`。
 
@@ -1543,31 +1543,27 @@ public static Boolean hasCycle(ListNode head) {
 
 **说明：** 不允许修改给定的链表。 ps:上题的基础上返回入环的第一个节点
 
-```java
-public static ListNode detectCycle(ListNode head) {
-    if(head==null||head.next==null){
-        return null;
-    }
-    ListNode fast=head;
-    ListNode slow=head;
-    Boolean isMeet=false;
-    //快指针没有到尽头
-    while(fast!=null&&fast.next!=null){
-        fast=isMeet?fast.next:fast.next.next;
-        slow=slow.next;
-        if(fast==slow){
-            if(!isMeet){
-                //第一次相遇
-                //我这种写法开始没考虑到这种情况,入环节点就是头节点就不能继续走了
-                if(fast==head) return;
-                fast=head;
-                isMeet=true;
-            } else{
-                return fast;
+```golang
+//UPDATE：2020.9.7 实行重写所有链表题的计划
+// A-->B-->C-->D   B为入环点，D为相遇点，相遇时slow = AD, fast = AD+DB+BD
+// fast = 2*slow ==> AD = DB + BD ==> AB+BD = DB+BD ==> AB = DB
+func detectCycle(head *ListNode) *ListNode {
+    var fast, slow = head, head
+    for fast!=nil && fast.Next!=nil {
+        fast = fast.Next.Next
+        slow = slow.Next
+        if fast == nil { //无环
+            return nil
+        }
+        if fast == slow { //有环，next一定不为null
+            for head!=fast {
+                head = head.Next
+                fast = fast.Next
             }
+            return head
         }
     }
-    return null;
+    return nil
 }
 ```
 > 这种解法还是挺有意思的`快慢指针`，快指针一次走两步慢指针一次走一步在环上相遇的时候快指针回到头节点步数调整为1，再>次相遇的>时候（这里有可能重合，当头节点就是入环节点的时候）就是入环节点。

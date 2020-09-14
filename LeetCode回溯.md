@@ -856,27 +856,54 @@ public void combinationSum2(int[] candidates, int target,int index,List<Integer>
 
 感觉比上面两题还简单一点，可以直接剪枝
 
-```java
-private List<List<Integer>> res=new ArrayList<>();
-
-public List<List<Integer>> combinationSum3(int k, int n) {
-    combinationSum3(k,n,1,0,new ArrayList());
-    return res;
+```golang
+//UPDATE: 2020.9.11
+func combinationSum3(k int, n int) [][]int {
+    var res [][]int
+    var dfs func(idx int, sum int, lis []int)
+    dfs = func(idx int, sum int, lis []int) {
+        if len(lis) > k {
+            return
+        }
+        if sum == n && len(lis) == k {
+            dest := make([]int, len(lis))
+            copy(dest, lis)
+            res = append(res, dest)
+            return
+        }
+        for i := idx; i <= 9; i++ {
+            if sum + i > n {
+                return
+            }
+            dfs(i+1, sum+i, append(lis, i))
+        }
+    }
+    dfs(1, 0, []int{})
+    return res
 }
+```
 
-//n=9 1 2 6, 1 3 5, 2 3 4
-public void combinationSum3(int k, int n,int index,int count,List<Integer> lis) {
-    if (count==k && n==0) {
-        res.add(new ArrayList(lis));
-        return;
+**解法二（UPDATE：2020.9.11）**
+
+学了下二进制枚举子集的方法，很简洁
+```golang
+func combinationSum3(k int, n int) [][]int {
+    var res [][]int
+    for i := 0; i < (1<<9); i++ {
+        var sum, cnt = 0, 0
+        var lis []int
+        for j := 0; j < 9; j++ {
+            if i & (1<<j) != 0 {
+                sum += j+1
+                cnt++
+                lis = append(lis, j+1)
+            }
+        }
+        if sum == n && cnt == k {
+            res = append(res, lis)   
+        }
     }
-    for (int i=index;i<=9;i++) {
-        //有序的,可以直接return
-        if (n-i<0) return;
-        lis.add(i);
-        combinationSum3(k,n-i,i+1,count+1,lis);
-        lis.remove(lis.size()-1);
-    }
+    return res
 }
 ```
 
@@ -972,6 +999,25 @@ public List<List<Integer>> subsets(int[] nums) {
         }
     }
     return queue;
+}
+```
+**解法三（UPDATE: 2020.9.11）**
+
+二进制枚举子集
+```golang
+func subsets(nums []int) [][]int {
+    var n = len(nums)
+    var res [][]int
+    for i := 0; i < (1<<n); i++ {
+        var lis []int
+        for j := 0; j < n; j++ {
+            if i & (1<<j) != 0 {
+                lis = append(lis, nums[j])
+            }
+        }
+        res = append(res, lis)
+    }
+    return res
 }
 ```
 ## [90. 子集 II](https://leetcode-cn.com/problems/subsets-ii/)
