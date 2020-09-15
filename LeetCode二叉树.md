@@ -7126,3 +7126,102 @@ public int dfs(TreeNode root,boolean isRight){
 }
 ```
 
+## _树状数组（BIT）_
+
+暂时先放在这里，等以后累计多了再单独开辟专题
+
+## [315. 计算右侧小于当前元素的个数](https://leetcode-cn.com/problems/count-of-smaller-numbers-after-self/)
+
+Difficulty: **困难**
+
+给定一个整数数组 _nums_，按要求返回一个新数组 _counts_。数组 _counts_ 有该性质： `counts[i]` 的值是  `nums[i]` 右侧小于 `nums[i]` 的元素的数量。
+
+**示例：**
+
+```java
+输入：nums = [5,2,6,1]
+输出：[2,1,1,0] 
+解释：
+5 的右侧有 2 个更小的元素 (2 和 1)
+2 的右侧仅有 1 个更小的元素 (1)
+6 的右侧有 1 个更小的元素 (1)
+1 的右侧有 0 个更小的元素
+```
+
+**提示：**
+
+*   `0 <= nums.length <= 10^5`
+*   `-10^4 <= nums[i] <= 10^4`
+
+**解法一**
+
+这题有[更好的做法](http://imlgw.top/2019/05/04/leetcode-shu-zu/#315-%E8%AE%A1%E7%AE%97%E5%8F%B3%E4%BE%A7%E5%B0%8F%E4%BA%8E%E5%BD%93%E5%89%8D%E5%85%83%E7%B4%A0%E7%9A%84%E4%B8%AA%E6%95%B0)，直接归并就行了，这里主要是为了学习BIT
+
+暴力的做法: 其实就是桶排序的思想，我们从右向左扫数组，扫描一个就在对应的桶+1，同时计算该位置左边的前缀和，就是右边比当前元素小的值，也就是我们需要的结果，但是问题是这个`bit`数组是一直在变化的，扫描一个元素就会在bit数组对应的位置上+1，每次变化后都需要O(N)来重新计算后缀和，这样整体的复杂度就是O(N^2)，数据量1e5，过不了OJ
+
+所以我们可以用线段树来维护区间和，但是线段树代码量比较大，常数也比较大，所以这里学一下新科技：**[树状数组](https://blog.csdn.net/Yaokai_AssultMaster/article/details/79492190)**，区间查询，单点修改时间复杂度都是logN，且代码简单。
+
+同时还有一个问题，这里我们直接按照值来定位是不合适的，数据范围比较大，直接按照元素值来定位会造成很大空间的浪费，并且题目也不允许开这么大的空间，所以还需要离散化，因为我们只关系元素之间的大小关系，所以我们转换成每个元素说对应的rank就行了
+
+```java
+int[] tree;
+
+int n = 0;
+
+public int lowbit(int i) {
+    return i & -i;
+}
+
+//update索引i位置
+public void update(int i, int delta) {
+    while (i <= n) {
+        tree[i] += delta;
+        i += lowbit(i);
+    }
+}
+
+public int query(int i) {
+    int sum = 0;
+    //从1开始
+    while (i > 0) {
+        sum += tree[i];
+        i -= lowbit(i);
+    }
+    return sum;
+}
+
+/*
+暴力的做法: 其实就是桶排序的思想，我们从右向左扫数组，扫描一个就在对应的桶+1，
+同时计算该位置左边的前缀和，就是右边比当前元素小的值，也就是我们需要的结果，
+但是问题是这个`bit`数组是一直在变化的，扫描一个元素就会在bit数组对应的位置上+1，
+每次变化后都需要O(N)来重新计算后缀和，这样整体的复杂度就是O(N^2)，数据量1e5，过不了OJ
+
+所以我们可以用线段树来维护区间和，但是线段树代码量比较大，常数也比较大
+所以这里学一下新科技：**树状数组**，区间查询，单点修改时间复杂度都是logN，且代码简单。
+同时还有一个问题，这里我们直接按照值来定位是不合适的，数据范围比较大，
+直接按照元素值来定位会造成很大空间的浪费，并且题目也不允许开这么大的空间
+所以还需要离散化，因为我们只关系元素之间的大小关系，所以我们转换成每个元素说对应的rank就行了
+*/
+public List<Integer> countSmaller(int[] nums) {
+    n = nums.length;
+    tree = new int[n+1];
+    List<Integer> res = new LinkedList<>();
+    int[] rank = new int[n];
+    //temp[0]: index temp[1]: val
+    int[][] temp = new int[n][2];
+    for (int i = 0; i < n; i++) {
+        temp[i] = new int[]{i, nums[i]};
+    }
+    //离散化
+    Arrays.sort(temp, (t1, t2) -> t1[1]-t2[1]);
+    for (int i = 0; i < n; i++) {
+        rank[temp[i][0]] = i+1;
+    }
+    for (int i = n-1; i >= 0; i--) {
+        //O(NlogN)构建BIT(可以优化成O(N))
+        update(rank[i], 1);
+        res.add(0, query(rank[i]-1));
+    }
+    return res;
+}
+```

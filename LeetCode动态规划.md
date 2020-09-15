@@ -8023,11 +8023,16 @@ Difficulty: **中等**
 
 **解法一**
 
-Prim O(V^2)最小生成树，206th周赛t3，裸的mst，但是彩笔的我并不会，事后补了一波 [OI Wiki](https://oi-wiki.org/graph/mst/#prim)，（这个是原始的暴力Prim，应对这个题够了）
+Prim O(V^2)最小生成树，206th周赛t3，裸的mst，但是彩笔的我并不会，事后补了一波 [OI Wiki](https://oi-wiki.org/graph/mst/#prim)，（这个是原始的暴力Prim，应对这个题够了）  
 ```java
+//Prim O(V^2) 任取一个节作为起点，dis[i]记录mst点集到点i的最短距离
+//每次取出mst点集外dis[i]最小的点，也就是离mst点集最近的点，并标记为mst节点
+//然后利用该点更新其他的mst点集外的点的dis距离，直到将所有的点都加进去，适合稠密图（边数远大于点数）
+//可以使用一些数据结构来优化时间复杂度，暂时不深究
 public int minCostConnectPoints(int[][] points) {
     int INF = 0x3f3f3f3f;
     int n = points.length;
+    //dis表示mst点集到该点的最小距离
     int[] dis = new int[n];
     Arrays.fill(dis, INF);
     dis[0] = 0;
@@ -8037,8 +8042,7 @@ public int minCostConnectPoints(int[][] points) {
         int minCost = INF;
         int k = -1; //最小的新节点
         for (int j = 0; j < n; j++) {
-            if (vis[j]) continue;
-            if (k == -1 || dis[j] < minCost) {
+            if (!vis[j] && dis[j] < minCost) {
                 minCost = dis[j];
                 k = j;
             }
@@ -8063,6 +8067,8 @@ public int minCostConnectPoints(int[][] points) {
 Kruskal + 并查集，比较适合稀疏图，这里时机复杂度是O(ElogE)，E为边数
 ```java
 //Kruskal+UnionFind
+//以边为中心，首先构造出所有的边，然后排序，从最短的边开始，合并该边的两个端点，这里需要用到并查集
+//合并n-1次后就得到mst（n为节点数），适合稀疏图
 int[] parent;
 int[] rank;
 //路径压缩
