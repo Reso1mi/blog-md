@@ -3294,6 +3294,131 @@ public static int maxProduct(int[] nums) {
 
  然后我们直接求这三种情况的最大值就ok了，不用考虑那些分支，我上面的第一种解法其实就是考虑了所有分支，结果才写出了那样的dp， `min[i]` 的过程和上面一样，就不赘述
 
+
+## [1567. 乘积为正数的最长子数组长度](https://leetcode-cn.com/problems/maximum-length-of-subarray-with-positive-product/)
+
+Difficulty: **中等**
+
+给你一个整数数组 `nums` ，请你求出乘积为正数的最长子数组的长度。
+
+一个数组的子数组是由原数组中零个或者更多个连续数字组成的数组。
+
+请你返回乘积为正数的最长子数组长度。
+
+**示例  1：**
+
+```go
+输入：nums = [1,-2,-3,4]
+输出：4
+解释：数组本身乘积就是正数，值为 24 。
+```
+
+**示例 2：**
+
+```go
+输入：nums = [0,1,-2,-3,-4]
+输出：3
+解释：最长乘积为正数的子数组为 [1,-2,-3] ，乘积为 6 。
+注意，我们不能把 0 也包括到子数组中，因为这样乘积为 0 ，不是正数。
+```
+
+**示例 3：**
+
+```go
+输入：nums = [-1,-2,-3,0,1]
+输出：2
+解释：乘积为正数的最长子数组是 [-1,-2] 或者 [-2,-3] 。
+```
+
+**示例 4：**
+
+```go
+输入：nums = [-1,2]
+输出：1
+```
+
+**示例 5：**
+
+```go
+输入：nums = [1,2,3,5,-6,4,0,10]
+输出：4
+```
+
+**提示：**
+
+*   `1 <= nums.length <= 10^5`
+*   `-10^9 <= nums[i] <= 10^9`
+
+**解法一**
+
+一开始想歪了，和上面一样写了个贼蠢的dp，好在后面还是自己想出来了
+```golang
+func getMaxLen(nums []int) int {
+    var n = len(nums)
+    //dp[i][0]: 
+    var dp = make([][2]int, n+1)
+    var res = 0
+    for i := 1; i <= n; i++ {
+        if nums[i-1] > 0 {
+            dp[i][0] = dp[i-1][0] + 1
+            if dp[i-1][1] != 0 {
+                dp[i][1] = dp[i-1][1] + 1   
+            }
+        } else if nums[i-1] < 0 {
+            if dp[i-1][1] != 0 {
+                dp[i][0] = dp[i-1][1] + 1   
+            }
+            dp[i][1] = dp[i-1][0] + 1
+        }
+        if dp[i][0] > res {
+            res = dp[i][0]
+        }
+    }
+    return res
+}
+```
+
+**解法二**
+
+贼蠢的DP，面向case编程
+```golang
+//垃圾DP，面向case编程，没有case一辈子改不出来（居然还被我改对了）
+//100+ms 时间复杂度O(N^2)，lc的case没能卡掉，但是应该是可以构造出一组特殊case卡掉的，懒得想了
+func getMaxLen(nums []int) int {
+    var n = len(nums)
+    var dp = make([]int, n+1)
+    if nums[0] > 0 {
+        dp[0] = 1
+    }
+    var res = dp[0]
+    for i := 1; i < n; i++ {
+        if nums[i] > 0 {
+            dp[i] = dp[i-1] + 1
+        } else if nums[i] < 0 {
+            if i-dp[i-1]-1 >= 0 && nums[i-dp[i-1]-1] < 0 {
+                dp[i] = dp[i-1] + 2
+                if i-dp[i-1]-2 >= 0 {
+                    dp[i] += dp[i-dp[i-1]-2]
+                }   
+            } else {
+                //从i-dp[i-1]开始找负数，然后从这个负数截断
+                var cnt = 0
+                for k := i-dp[i-1]; k < i; k++ {
+                    if nums[k] < 0 {
+                        dp[i] = dp[i-1]-cnt
+                        break
+                    }
+                    cnt++
+                }
+            }
+        }
+        if dp[i] > res {
+            res = dp[i]
+        }
+    }
+    return res
+}
+```
 ## [221. 最大正方形](https://leetcode-cn.com/problems/maximal-square/)
 
 在一个由 0 和 1 组成的二维矩阵内，找到只包含 1 的最大正方形，并返回其面积。
