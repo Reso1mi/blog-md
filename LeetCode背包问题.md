@@ -973,6 +973,43 @@ public int lastStoneWeightII(int[] stones) {
 
 **解法一**
 
+之前只用Java写了个记忆化的，补一下纯dp的
+```golang
+//之前只用Java写了个记忆化的，补一下纯dp的
+func findMaxForm(strs []string, m int, n int) int {
+    var sn = len(strs)
+    var dp = make([][]int, m+1)
+    var Max = func(a, b int) int {if a>b {return a};return b}
+    for i := 0; i <= m; i++ {
+        dp[i] = make([]int, n+1)
+    }
+    for i := 0; i < sn; i++ {
+        zero, one := count(strs[i])
+        for j := m; j >= zero; j-- {
+            for k := n; k >= one; k-- {
+                dp[j][k] = Max(dp[j][k], dp[j-zero][k-one]+1)
+            }
+        }
+    }
+    return dp[m][n]
+}
+
+func count(str string) (int, int) {
+    var one, zero = 0, 0
+    for i := 0; i < len(str); i++ {
+        if str[i] == '0' {
+            zero++
+        }
+        if str[i] == '1' {
+            one++
+        }
+    }
+    return zero, one
+}
+```
+
+**解法二**
+
 其实这是一个多重背包问题，一个物品有多个权值
 
 ```java
@@ -1119,3 +1156,188 @@ public int getScore(int[] les,String word,int[] score){
 }
 ```
 
+## [HUD4501.小明系列故事——买年货（HUDOJ）](http://acm.hdu.edu.cn/showproblem.php?pid=4501)
+
+**Problem Description**
+
+春节将至，小明要去超市购置年货，于是小明去了自己经常去的都尚超市。
+
+刚到超市，小明就发现超市门口聚集一堆人。用白云女士的话说就是：“那家伙，那场面，真是人山人海，锣鼓喧天，鞭炮齐呤，红旗招展。那可真是相当的壮观啊！”。好奇的小明走过去，奋力挤过人群，发现超市门口贴了一张通知，内容如下
+
+值此新春佳节来临之际，为了回馈广大顾客的支持和厚爱，特举行春节大酬宾、优惠大放送活动。凡是都尚会员都可用会员积分兑换商品，凡是都尚会员都可**免费拿k件商品**，凡是购物顾客均有好礼相送。满100元送bla bla bla bla，满200元送bla bla bla bla bla...blablabla....
+
+还没看完通知，小明就高兴的要死，因为他就是都尚的会员啊。迫不及待的小明在超市逛了一圈发现超市里有**n件他想要的商品**。小明顺便对这n件商品打了分，表示商品的实际价值。小明发现身上带了**v1的人民币**，会员卡里面有**v2的积分**。他想知道他最多能买多大价值的商品。
+
+由于小明想要的商品实在太多了，他算了半天头都疼了也没算出来，所以请你这位聪明的程序员来帮帮他吧。
+ 
+
+**Input**
+```go
+输入包含多组测试用例。
+每组数据的第一行是四个整数n，v1，v2，k；
+然后是n行，每行三个整数a，b，val，分别表示每个商品的价钱，兑换所需积分，实际价值。
+[Technical Specification]
+1 <= n <= 100
+0 <= v1, v2 <= 100
+0 <= k <= 5
+0 <= a, b, val <= 100
+
+Ps. 只要钱或者积分满足购买一件商品的要求，那么就可以买下这件商品。
+```
+
+**Output**
+```go
+对于每组数据，输出能买的最大价值。
+详细信息见Sample。
+```
+**Sample Input**
+
+```go
+5 1 6 1
+4 3 3
+0 3 2
+2 3 3
+3 3 2
+1 0 2
+4 2 5 0
+0 1 0
+4 4 1
+3 3 4
+3 4 4
+```
+
+**Sample Output**
+
+```go
+12
+4
+```
+Source
+2013腾讯编程马拉松初赛第〇场（3月20日）
+
+**解法一**
+
+三维费用的背包，但是和前面的[474.一和零](#474-一和零)还有点不一样，三个维度的费用是无关的，而1和0中1的个数和0的个数是相关的
+> 代码使用了Petr的输入模板，自己改进了下，增加了输入结束判断，所以看起来特别长
+```java
+import java.util.*;
+import java.io.*;// petr的输入模板
+import java.math.*; // 不是大数题可以不要这个
+
+public class Solve_HDOJ_4501 {
+
+    public static PrintWriter out = new PrintWriter(new OutputStreamWriter(System.out));
+
+    public static void main(String[] args) throws Exception{
+        InputReader in = new InputReader(System.in);
+        //InputReader in = new InputReader(new FileInputStream("./input.txt"));
+        while(!in.EOF()) {
+            int n = in.nextInt();
+            int v1 = in.nextInt();
+            int v2 = in.nextInt();
+            int k = in.nextInt();
+            int[][] cost = new int[n][3];
+            for (int i = 0; i < n; i++) {
+                cost[i][0] = in.nextInt();
+                cost[i][1] = in.nextInt();
+                cost[i][2] = in.nextInt();
+            }
+            solve(n, v1, v2, k, cost);
+        }
+        //别忘了flush
+        out.flush();
+        out.close();
+    }
+
+    //因为数据量不大，就直接Scanner了
+    public static void solve(int n, int v1, int v2, int k, int[][] cost) {
+        int[][][] dp = new int[k+1][v1+1][v2+1];
+        for (int i = 0; i < n; i++) {
+            for (int j = k; j >= 0; j--) {
+                for (int u = v1; u >= 0; u--) {
+                    for (int w = v2; w >= 0; w--) {
+                        //这里不能直接u>=cost[i][0] w >= cost[i][1]，因为积分和钱和免费拿是分开的，没有关联的
+                        //即使我不能免费拿，但是我能用积分拿，即使不能用积分拿，我可以用钱买
+                        //dp[j][u][w] = Math.max(dp[j][u][w], dp[j-1][u-cost[i][0]][w-cost[i][1]] + cost[i][2]);
+                        int ans = 0;
+                        if (j >= 1) { //免费拿
+                            ans = Math.max(ans, dp[j-1][u][w] + cost[i][2]);
+                        }
+                        if (u >= cost[i][0]) { //钱
+                            ans = Math.max(ans, dp[j][u-cost[i][0]][w] + cost[i][2]);
+                        }
+                        if (w >= cost[i][1]) { //积分
+                            ans = Math.max(ans, dp[j][u][w-cost[i][1]] + cost[i][2]);
+                        }
+                        dp[j][u][w] = Math.max(ans, dp[j][u][w]);
+                    }
+                }
+            }
+        }
+        out.println(dp[k][v1][v2]);
+    }
+}
+
+
+class InputReader {
+
+    public BufferedReader reader;
+    
+    public StringTokenizer tokenizer;
+
+    public InputReader(InputStream stream) {
+        //char[32768]
+        reader = new BufferedReader(new InputStreamReader(stream), 32768);
+        tokenizer = null;
+    }
+
+    //默认以" "作为分隔符，读一个
+    public String next() {
+        while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+            try {
+                tokenizer = new StringTokenizer(reader.readLine());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return tokenizer.nextToken();
+    }
+
+    //有的题目不给有多少组测试用例，只能一直读，读到结尾，需要自己判断结束
+    //该函数也会读取一行，并初始化tokenizer，后序直接nextInt..等就可以读到该行
+    public boolean EOF() {
+        String str = null;
+        try {
+            str = reader.readLine();
+            if (str == null) {
+                return true;
+            }
+            //创建tokenizer
+            tokenizer = new StringTokenizer(str);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return false;
+    }
+
+    int nextInt(){
+        return Integer.parseInt(next());
+    }
+    
+    long nextLong(){
+        return Long.parseLong(next());
+    }
+    
+    double nextDouble(){
+        return Double.parseDouble(next());
+    }
+    
+    BigInteger nextBigInteger(){
+        return new BigInteger(next());
+    }
+
+    BigDecimal nextBigDecimal(){
+        return new BigDecimal(next());
+    }
+}
+```
