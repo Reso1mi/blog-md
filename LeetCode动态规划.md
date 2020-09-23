@@ -3351,7 +3351,7 @@ Difficulty: **中等**
 
 **解法一**
 
-一开始想歪了，和上面一样写了个贼蠢的dp，好在后面还是自己想出来了
+一开始想歪了，和上面一题最开始一样写了个贼蠢的dp，好在后面还是自己想出来了，下面的是后面想出来的简单解法
 ```golang
 func getMaxLen(nums []int) int {
     var n = len(nums)
@@ -3419,6 +3419,108 @@ func getMaxLen(nums []int) int {
     return res
 }
 ```
+## [1594. 矩阵的最大非负积](https://leetcode-cn.com/problems/maximum-non-negative-product-in-a-matrix/)
+
+Difficulty: **中等**
+
+
+给你一个大小为 `rows x cols` 的矩阵 `grid` 。最初，你位于左上角 `(0, 0)` ，每一步，你可以在矩阵中 **向右** 或 **向下** 移动。
+
+在从左上角 `(0, 0)` 开始到右下角 `(rows - 1, cols - 1)` 结束的所有路径中，找出具有 **最大非负积** 的路径。路径的积是沿路径访问的单元格中所有整数的乘积。
+
+返回 **最大非负积** 对**`10<sup>9</sup> + 7`** **取余** 的结果。如果最大积为负数，则返回`-1` 。
+
+**注意，**取余是在得到最大积之后执行的。
+
+**示例 1：**
+
+```go
+输入：grid = [[-1,-2,-3],
+             [-2,-3,-3],
+             [-3,-3,-2]]
+输出：-1
+解释：从 (0, 0) 到 (2, 2) 的路径中无法得到非负积，所以返回 -1
+```
+
+**示例 2：**
+
+```go
+输入：grid = [[1,-2,1],
+             [1,-2,1],
+             [3,-4,1]]
+输出：8
+解释：最大非负积对应的路径已经用粗体标出 (1 * 1 * -2 * -4 * 1 = 8)
+```
+
+**示例 3：**
+
+```go
+输入：grid = [[1, 3],
+             [0,-4]]
+输出：0
+解释：最大非负积对应的路径已经用粗体标出 (1 * 0 * -4 = 0)
+```
+
+**示例 4：**
+
+```go
+输入：grid = [[ 1, 4,4,0],
+             [-2, 0,0,1],
+             [ 1,-1,1,1]]
+输出：2
+解释：最大非负积对应的路径已经用粗体标出 (1 * -2 * 1 * -1 * 1 * 1 = 2)
+```
+
+**提示：**
+
+*   `1 <= rows, cols <= 15`
+*   `-4 <= grid[i][j] <= 4`
+
+
+
+
+**解法一**
+
+和上面两题一样，非常套路的DP，但是我一开始想把初始化给省掉，调了半天发现不太好搞。。。外围的dp取值会影响内部的取值，所以还是老老实实手动初始化，老是想偷懒有时候可能会适得其反（好未来笔试）
+```golang
+func maxProductPath(grid [][]int) int {
+    var m, n = len(grid), len(grid[0])
+    var MOD = int(1e9+7)
+    var dp = make([][][2]int, m)
+    var Max = func(a, b int) int {if a < b {return b}; return a}
+    var Min = func(a, b int) int {if a > b {return b}; return a}
+    for i := 0; i < m; i++ {
+        dp[i] = make([][2]int, n)
+    }
+    dp[0][0][1] = grid[0][0]
+    dp[0][0][0] = grid[0][0]
+    for i := 1; i < m; i++ {
+        dp[i][0][0] = grid[i][0] * dp[i-1][0][0]
+        dp[i][0][1] = dp[i][0][0]
+    }
+    for j := 1; j < n; j++ {
+        dp[0][j][0] = grid[0][j] * dp[0][j-1][0]
+        dp[0][j][1] = dp[0][j][0]
+    }
+    for i := 1; i < m; i++ {
+        for j := 1; j < n; j++ {
+            if grid[i][j] > 0 {
+                dp[i][j][0] =  grid[i][j] * Max(dp[i][j-1][0], dp[i-1][j][0])
+                dp[i][j][1] =  grid[i][j] * Min(dp[i][j-1][1], dp[i-1][j][1])
+            }else if grid[i][j] < 0 {
+                dp[i][j][0] =  grid[i][j] * Min(dp[i][j-1][1], dp[i-1][j][1])
+                dp[i][j][1] =  grid[i][j] * Max(dp[i][j-1][0], dp[i-1][j][0])
+            }
+        }
+    }
+    if dp[m-1][n-1][0] < 0 {
+        return -1
+    }
+    return dp[m-1][n-1][0] % MOD
+}
+```
+
+
 ## [221. 最大正方形](https://leetcode-cn.com/problems/maximal-square/)
 
 在一个由 0 和 1 组成的二维矩阵内，找到只包含 1 的最大正方形，并返回其面积。

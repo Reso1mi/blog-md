@@ -6650,7 +6650,7 @@ func maxPathSum(root *TreeNode) int {
 
 **错误解法**
 
-其实写了一会儿就意识到和上面的[124.二叉树的最大路径和](#124-二叉树的最大路径和)，[543.二叉树的直径](#[543-二叉树的直径]())是一样的思路，但是自己还是没写好，递归函数的写着写着就写变了，脱离了最开始的定义
+其实写了一会儿就意识到和上面的[124.二叉树的最大路径和](#124-二叉树的最大路径和)，[543.二叉树的直径](#543-二叉树的直径)是一样的思路，但是自己还是没写好，递归函数的写着写着就写变了，脱离了最开始的定义
 
 ```java
 //错误解法，其实整体思路是对的，但是细节没处理好
@@ -7123,6 +7123,79 @@ public int dfs(TreeNode root,boolean isRight){
         return l+1;
     }
     return r+1;
+}
+```
+
+## [968. 监控二叉树](https://leetcode-cn.com/problems/binary-tree-cameras/)
+
+Difficulty: **困难**
+
+
+给定一个二叉树，我们在树的节点上安装摄像头。
+
+节点上的每个摄影头都可以监视**其父对象、自身及其直接子对象。**
+
+计算监控树的所有节点所需的最小摄像头数量。
+
+**示例 1：**
+
+![wjBgQ1.png](https://s1.ax1x.com/2020/09/23/wjBgQ1.png)
+
+```golang
+输入：[0,0,null,0,0]
+输出：1
+解释：如图所示，一台摄像头足以监控所有节点。
+```
+
+**示例 2：**
+
+![wjBfeK.png](https://s1.ax1x.com/2020/09/23/wjBfeK.png)
+
+```golang
+输入：[0,0,null,0,null,0,null,null,0]
+输出：2
+解释：需要至少两个摄像头来监视树的所有节点。 上图显示了摄像头放置的有效位置之一。
+```
+
+**提示：**
+
+1.  给定树的节点数的范围是 `[1, 1000]`。
+2.  每个节点的值都是 0。
+
+
+**解法一**
+
+树形DP
+```golang
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+//0: 覆盖整棵树，root必须设置监控
+//1: 覆盖整棵树，无论root是否设置监控
+//2: 覆盖两颗子树，无论root是否被覆盖
+func minCameraCover(root *TreeNode) int {
+    var Min = func(a, b int) int {if a < b {return a}; return b}
+    var INF = 0x3f3f3f3f
+    var dfs func(root *TreeNode) [3]int 
+    dfs = func (root *TreeNode) [3]int {
+        var res [3]int
+        if root == nil {
+            return [3]int{INF, 0, 0}
+        }
+        left := dfs(root.Left)
+        right := dfs(root.Right)
+        res[0] = left[2] + right[2] + 1
+        res[1] = Min(res[0], Min(left[0]+right[1], left[1]+right[0]))
+        res[2] = Min(res[0], left[1] + right[1])
+        return res
+    }
+    r := dfs(root)
+    return r[1]
 }
 ```
 

@@ -8,7 +8,7 @@ categories:
 ---
 
 ## 背景
-在做项目的过程中利用os/exec包执行一些shell脚本，调试过程中发现我取消了context后go进程仍然阻塞不退出
+在做[Scheduler项目](https://github.com/imlgw/scheduler)的过程中利用os/exec包执行一些shell脚本，调试过程中发现我取消了context后go进程仍然阻塞不退出
 ## 分析
 > go version go1.13.6 linux/amd64
 
