@@ -6326,30 +6326,63 @@ func findCheapestPrice(n int, flights [][]int, src int, dst int, K int) int {
 
 菜啊，没想出来，真的菜
 ```java
+//UPDATE: 2020.9.27，之前的解法过了OJ，但是其实是有问题的
+//二维DP（不方便优化成一维的）
 public int solve1 (String s) {
     // write code here 
     String p = "niuniu";
+    int m = p.length();
     int n = s.length();
     int MOD = (int)1e9+7;
     //dp[i][j]代表s[0,j]中有多少个p[0,j]
     long[][] dp = new long[7][n+1];
     Arrays.fill(dp[0], 1);
-    for (int i = 1; i <= 6; i++){
+    for (int i = 1; i <= m; i++){
         for (int j = 1; j <= n; j++){
             if (s.charAt(j-1) == p.charAt(i-1)) {
-                dp[i][j] = (dp[i-1][j] + dp[i][j-1]) % MOD;
+                //dp[i][j] = (dp[i-1][j] + dp[i][j-1]) % MOD;
+                //上面的是错的，之所以正确是因为题目的niuniu没有连续的相同字符
+                //考虑如下case:  p = "aa" , s = "abaa" wa = 6, ac = 3
+                dp[i][j] = (dp[i-1][j-1] + dp[i][j-1]) % MOD;
             } else {
                 dp[i][j] = dp[i][j-1];
             }
         }
     }
-    return (int)dp[6][n];
+    return (int)dp[m][n];
+}
+```
+实际上这个解法最好把内外循环交换下，这样更好降维
+```java
+//二维DP，交换内外循环
+public int solve2 (String s) {
+    // write code here 
+    String p = "niuniu";
+    int n = s.length();
+    int m = p.length();
+    int MOD = (int)1e9+7;
+    //dp[i][j]代表s[0,i]中有多少个p[0,j]
+    long[][] dp = new long[n+1][m+1];
+    dp[0][0] = 1;
+    for (int i = 1; i <= n; i++){
+        dp[i][0] = 1;
+        for (int j = 1; j <= m; j++){
+            if (s.charAt(i-1) == p.charAt(j-1)) {
+                dp[i][j] = (dp[i-1][j-1] + dp[i-1][j]) % MOD;
+            } else {
+                dp[i][j] = dp[i-1][j];
+            }
+        }
+    }
+    return (int)dp[n][m];
 }
 ```
 **解法二**
 
-降维，这里踩了个小坑，我直接将上面的二维降维，然后Arrays.fill(dp,1)然后WA了，其实就是初始化出了问题，这样初始化是不对的，由于上面的写法问题，导致不方便初始话，更好的做法应该将内外循环交换然后以s字符为基准进行dp
+按照上面交换内外循环后的解法再降维
 ```java
+//UPDATE: 2020.9.27，之前的解法过了OJ，但是其实是有问题的
+//按上面的来降维舒服多了
 public int solve3 (String s) {
     String p = "niuniu";
     int n = s.length();
@@ -6359,7 +6392,9 @@ public int solve3 (String s) {
     long[] dp = new long[m+1];
     dp[0] = 1;
     for (int i = 1; i <= n; i++){
-        for (int j = 1; j <= m; j++){
+        //for (int j = 1; j <= m; j++){
+        //内层应该反过来递推，保证dp[j]和dp[j-1]是上一次的
+        for (int j = m; j >= 1; j--){
             if (s.charAt(i-1) == p.charAt(j-1)) {
                 dp[j] = (dp[j] + dp[j-1]) % MOD;
             }
@@ -6443,6 +6478,8 @@ func minFlipsMonoIncr(S string) int {
 ```
 
 **解法二**
+
+寻找分割点，使得分割点左边的1和右边的0相加的和最少
 
 ```golang
 //Trick，寻找分割点，使得分割点左边的1和右边的0相加的和最少
