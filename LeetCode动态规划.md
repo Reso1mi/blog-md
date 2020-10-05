@@ -6504,9 +6504,58 @@ func minFlipsMonoIncr(S string) int {
     return res
 }
 ```
+
+## [LCP 19. 秋叶收藏集](https://leetcode-cn.com/problems/UlBDOe/)
+
+小扣出去秋游，途中收集了一些红叶和黄叶，他利用这些叶子初步整理了一份秋叶收藏集 leaves， 字符串 leaves 仅包含小写字符 r 和 y， 其中字符 r 表示一片红叶，字符 y 表示一片黄叶。
+出于美观整齐的考虑，小扣想要将收藏集中树叶的排列调整成「红、黄、红」三部分。每部分树叶数量可以不相等，但均需大于等于 1。每次调整操作，小扣可以将一片红叶替换成黄叶或者将一片黄叶替换成红叶。请问小扣最少需要多少次调整操作才能将秋叶收藏集调整完毕。
+
+**示例 1：**
+```go
+输入：leaves = "rrryyyrryyyrr"
+输出：2
+解释：调整两次，将中间的两片红叶替换成黄叶，得到 "rrryyyyyyyyrr"
+```
+**示例 2：**
+```go
+输入：leaves = "ryr"
+输出：0
+解释：已符合要求，不需要额外操作
+提示：
+3 <= leaves.length <= 10^5
+leaves 中只包含字符 'r' 和字符 'y'
+```
+
+**解法一**
+
+和上一题[926. 将字符串翻转到单调递增](#926-将字符串翻转到单调递增)一样，不过很明显这里有三个状态，一个是前面的r结尾，一个是中间的y结尾，一个是末尾的r结尾，最后求出以最后的r结尾的最短次数就ok了
+```java
+public int minimumOperations(String s) {
+    int n = s.length();
+    int[][] dp = new int[n+1][3];
+    //0，1，2分别代表 前面的r 中间的y 结尾的r
+    dp[0][0] = s.charAt(0) == 'r' ? 0 : 1;
+    dp[0][1] = dp[0][2] = dp[1][2] = 0x3f3f3f3f;
+    //简单的递推
+    for (int i = 1; i < n; i++) {
+        if (s.charAt(i) == 'r') {
+            dp[i][0] = dp[i-1][0];
+            dp[i][1] = Math.min(dp[i-1][1]+1, dp[i-1][0]+1);
+            dp[i][2] = Math.min(dp[i-1][2], dp[i-1][1]);
+        } else {
+            dp[i][0] = dp[i-1][0]+1;
+            dp[i][1] = Math.min(dp[i-1][0], dp[i-1][1]);
+            dp[i][2] = Math.min(dp[i-1][2]+1, dp[i-1][1]+1);
+        }
+    }
+    return dp[n-1][2];
+}
+```
+> 空间还可以优化，代码也还可以更简洁，不过我懒得改了
 ## _区间DP_
 
 后面有时间会单独将这些题目分类整理成文章，目前暂时先这样
+
 
 
 ## [312. 戳气球](https://leetcode-cn.com/problems/burst-balloons/)

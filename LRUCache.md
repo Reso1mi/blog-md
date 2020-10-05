@@ -246,3 +246,166 @@ public class LRUCache {
 像这样写，就不用考虑那么多边界，写那么多的if和else，预先开辟两个节点的作为哨兵节点，这样代码就显得清晰简洁，也不容易出问题
 
 [参考](https://zhuanlan.zhihu.com/p/34133067)
+
+## UPDATE
+随便重写了下
+
+```java
+class LRUCache {
+    
+    HashMap<Integer, Node> map = null;
+        
+    int capacity = 0;
+    
+    Node head = null;
+    
+    Node tail = null;
+    
+    public LRUCache(int capacity) {
+        this.capacity = capacity;
+        map = new HashMap<>();
+        head = new Node(-1, -1);
+        tail = new Node(-1, -1);
+        head.next = tail;
+        tail.prev = head;
+    }
+    
+    public int get(int key) {
+        Node node = map.get(key);
+        if (node == null) {
+            return -1;
+        }
+        removeNode(node);
+        insert2head(node);
+        return node.val;
+    }
+    
+    public void put(int key, int value) {
+        Node node = map.get(key);
+        if (node == null) {
+            node = new Node(key, value);
+            insert2head(node);
+            map.put(key, node);
+        } else {
+            removeNode(node);
+            node.val = value;
+            insert2head(node);
+        }
+        if (map.size() > capacity) {
+            map.remove(tail.prev.key);
+            removeNode(tail.prev);
+        }
+    }
+    
+    public void insert2head(Node node) {
+        node.next = head.next;
+        node.prev = head;
+        head.next.prev = node;
+        head.next = node;
+    }
+    
+    //移除Node节点
+    public void removeNode(Node node) {
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+        node.next = null;
+        node.prev = null;
+    }
+    
+    class Node {
+        Node prev, next;
+        int key, val;
+        public Node (int key, int val) {
+            this.key = key;
+            this.val = val;
+        }
+    }
+}
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache obj = new LRUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.put(key,value);
+ */
+```
+
+Golang
+
+```golang
+type LRUCache struct {
+    capacity int
+    cache map[int]*Node
+    head *Node
+    tail *Node
+}
+
+type Node struct {
+    prev *Node
+    next *Node
+    key int
+    val int
+}
+
+
+func Constructor(capacity int) LRUCache {
+    head := &Node{key : -1, val : -1}
+    tail := &Node{key : -1, val : -1}
+    head.next = tail
+    tail.next = head
+    return LRUCache{
+        capacity : capacity,
+        cache : make(map[int]*Node),
+        head : head,
+        tail : tail,
+    }
+}
+
+
+func (this *LRUCache) Get(key int) int {
+    if v, ok := this.cache[key]; ok {
+        this.removeNode(v)
+        this.insert2Head(v)
+        return v.val
+    }
+    return -1
+}
+
+
+func (this *LRUCache) Put(key int, value int)  {
+    if v, ok := this.cache[key]; ok {
+        this.removeNode(v)
+        v.val = value
+        this.insert2Head(v)
+    } else {
+        newNode := &Node{key : key, val : value}
+        this.cache[key] = newNode
+        this.insert2Head(newNode)
+    }
+    if len(this.cache) > this.capacity {
+        delete(this.cache, this.tail.prev.key)
+        this.removeNode(this.tail.prev)
+    }
+}
+
+func (this *LRUCache) removeNode (node *Node) {
+    node.next.prev = node.prev
+    node.prev.next = node.next
+    node.prev = nil
+    node.next = nil
+}
+
+func (this *LRUCache) insert2Head (node *Node) {
+    node.prev = this.head
+    node.next = this.head.next
+    this.head.next.prev = node
+    this.head.next = node
+}
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * obj := Constructor(capacity);
+ * param_1 := obj.Get(key);
+ * obj.Put(key,value);
+ */
+```
