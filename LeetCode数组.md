@@ -6572,3 +6572,101 @@ func countBinarySubstrings(s string) int {
     return res
 }
 ```
+
+## [844. 比较含退格的字符串](https://leetcode-cn.com/problems/backspace-string-compare/)
+
+Difficulty: **简单**
+
+给定 <code>S</code> 和 <code>T</code> 两个字符串，当它们分别被输入到空白的文本编辑器后，判断二者是否相等，并返回结果。 <code>#</code> 代表退格字符。</p>
+
+<p>
+
+给定 `S` 和 `T` 两个字符串，当它们分别被输入到空白的文本编辑器后，判断二者是否相等，并返回结果。 `#` 代表退格字符。
+
+**注意**：如果对空文本输入退格字符，文本继续为空。
+
+**示例 1：**
+
+```go
+输入：S = "ab#c", T = "ad#c"
+输出：true
+解释：S 和 T 都会变成 “ac”。
+```
+
+**示例 2：**
+
+```go
+输入：S = "ab##", T = "c#d#"
+输出：true
+解释：S 和 T 都会变成 “”。
+```
+
+**示例 3：**
+
+```go
+输入：S = "a##c", T = "#a#c"
+输出：true
+解释：S 和 T 都会变成 “c”。
+```
+
+**示例 4：**
+
+```go
+输入：S = "a#c", T = "b"
+输出：false
+解释：S 会变成 “c”，但 T 仍然是 “b”。
+```
+
+**提示：**
+
+1.  `1 <= S.length <= 200`
+2.  `1 <= T.length <= 200`
+3.  `S` 和 `T` 只含有小写字母以及字符 `'#'`。
+
+**进阶：**
+
+*   你可以用 `O(N)` 的时间复杂度和 `O(1)` 的空间复杂度解决该问题吗？
+
+
+
+**解法一**
+
+O（N）空间的就不写了，随便搞搞就行了，关键是O(1)空间的解法，这里核心就是双指针从后想前扫描，然后注意边界就ok了
+```java
+public boolean backspaceCompare(String S, String T) {
+    int i = S.length()-1;
+    int j = T.length()-1;
+    while (i >= 0 || j >= 0) {
+        i = back(S, i);
+        j = back(T, j);
+        //都匹配完了
+        if (i < 0 && j < 0) {
+            return true;
+        }
+        //只有一个匹配完了，两个对位字符不匹配
+        if (i < 0 || j < 0 || S.charAt(i) != T.charAt(j)) {
+            return false;
+        }
+        i--; j--;
+    }
+    //都匹配完了
+    return i < 0 && j < 0;
+}
+
+public int back(String s, int i) {
+    if (i < 0 || s.charAt(i) != '#') {
+        return i;
+    }
+    int cnt = 0;
+    while (i >= 0) {
+        if (s.charAt(i) == '#') {
+            cnt++;
+        } else {
+            if (cnt==0) break;
+            cnt--;
+        }
+        i--;
+    }
+    return i;
+}
+```

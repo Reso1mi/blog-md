@@ -1675,3 +1675,99 @@ public long IncreasingArray (int[] array) {
 2. `i`后面是部分是单调递减的 3 3(i)  2  1，那么同样，和后面的一起增加是最优选择，单独选择某一个区间都会导致整体的落差变大，使得后面没增加的部分需要增加的次数增加
 3. `i`后面先递增后递减 3 1(i)  2  1 同上 相当于 递增+递减 看做两部分，（1 2）同增，那么（2，1）也应该随之同增
 4. `i`后面先递减后递增 5 4(i) 3 5  递减+递增 也分成两部分
+
+## [738. 单调递增的数字](https://leetcode-cn.com/problems/monotone-increasing-digits/)
+
+Difficulty: **中等**
+
+给定一个非负整数&amp;nbsp;<code>N</code>，找出小于或等于&amp;nbsp;<code>N</code>&amp;nbsp;的最大的整数，同时这个整数需要满足其各个位数上的数字是单调递增。</p>
+
+<p>（当且仅当每个相邻位数上的数字&amp;nbsp;<code>x</code>&amp;nbsp;和&amp;nbsp;<code>y</code>&amp;nbsp;满足&amp;nbsp;<code>x &amp;lt;= y</code>&amp;nbsp;时，我们称这个整数是单调递增的。）</p>
+
+<p>
+
+给定一个非负整数 `N`，找出小于或等于 `N` 的最大的整数，同时这个整数需要满足其各个位数上的数字是单调递增。
+
+（当且仅当每个相邻位数上的数字 `x` 和 `y` 满足 `x <= y` 时，我们称这个整数是单调递增的。）
+
+**示例 1:**
+
+```go
+输入: N = 10
+输出: 9
+```
+
+**示例 2:**
+
+```go
+输入: N = 1234
+输出: 1234
+```
+
+**示例 3:**
+
+```go
+输入: N = 332
+输出: 299
+```
+
+**说明:** `N` 是在 `[0, 10^9]` 范围内的一个整数。
+
+<strong>示例 1:</strong></p>
+
+```go
+输入: N = 10
+输出: 9
+```
+
+<p><strong>示例 2:</strong></p>
+
+```go
+输入: N = 1234
+输出: 1234
+```
+
+<p><strong>示例 3:</strong></p>
+
+```go
+输入: N = 332
+输出: 299
+```
+
+<p><strong>说明:</strong> N是在<code>[0, 10^9]</code>范围内的一个整数。</p>
+
+**解法一**
+
+这题写了好几版，总感觉很简单，但是总是有case能把我卡住，最终的思路就是，**逆向遍历**这个数，如果某个数小于前面（左边）的数，那么将前面的数减一，然后记录下当前的下标，最终这个下标后面的数都要变成9
+```golang
+//322 -> 299
+//243 -> 239
+//3524 -> 499
+//332 -> 299
+//235854 235799
+func monotoneIncreasingDigits(N int) int {
+    var nums []int
+    //123
+    for N > 0 {
+        nums = append(nums, N%10)
+        N /= 10
+    }
+    var res = 0
+    var idx = -1
+    //213
+    for i := 0; i < len(nums)-1; i++ {
+        if nums[i] < nums[i+1] {
+            idx = i
+            nums[i+1]--
+        }
+    }
+    for i := len(nums) - 1; i >= 0; i-- {
+        if i <= idx {
+            res = res*10 + 9
+        } else {
+            res = res*10 + nums[i]
+        }
+    }
+    return res
+}
+```
