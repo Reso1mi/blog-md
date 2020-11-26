@@ -444,48 +444,273 @@ class Main {
 ```
 
 **解法一**
+
+Dilworth定理，双DP解法
+```java
+//300 250 275 252 200 138 245 := 5,2
+//最多击落多少就不多说了
+//最少需要的系统数量实际上就是最长上升子序列的个数，这里涉及到Dilworth定理
+public static int[] solve(int[] w, int N){
+    int[] down = new int[N];
+    int[] up = new int[N];
+    int max = 0, count = 1;
+    for (int i = 0; i < N; i++) {
+        up[i] = down[i] = 1;
+        for (int j = 0; j < i; j++) {
+            if (w[j] >= w[i]) {
+                down[i] = Math.max(down[j]+1, down[i]);
+            } else {
+                up[i] = Math.max(up[j]+1, up[i]);
+            }
+        }
+        max = Math.max(max, down[i]);
+        count = Math.max(count, up[i]);
+    }
+    return new int[]{max, count};
+}
+```
+
+最多击落多少就不多说了，~~最少需要的系统数其实就是最长上升子序列，因为这个子序列是**必不可能在同一套系统中被击落**，当遇到这个子序列中的元素的时候，就需要增加一套系统，所以最少就是这个子序列的长度~~
+
+最少需要的系统数量（最少的覆盖整个序列的不上升序列个数）就是最长的上升子序列长度，涉及到Dilworth定理（[导弹拦截问题与Dilworth定理](https://www.cnblogs.com/flipped/p/5009943.html)），感兴趣可以去了解下，定理的定义为：_对于任意有限偏序集，其最大反链中元素的数目必等于最小链划分中链的数目_ 
+
+本题中，最少需要的导弹系统数量就是**最小链划分中链的数量**，其最大反链就是**最长上升子序列长度**，所以直接求最长上升子序列的长度就ok了
+
+**解法二**
+
+双贪心解法。
+
+①求LIS的贪心做法，`tail[j]`表示长度为`j`的下降序列，每个`w[i]`作为结尾的时候优先选择大于`w[i]`的最小的`tail[j]`（也就是从左到右最第一个大于w[i]的），然后接在它后面，这样让长度为j的下降序列结尾变小，后面可以接上更多的元素，使得序列可以更长，并且这样不会影响之前已有的序列关系，最终tail的长度就是最长上升子序列的长度
+
+②求最少的覆盖全序列的下降子序列个数，`tail[j]`表示目前为止第`j`个系统的最大结尾元素，每个`w[i]`被遍历到的时候都是作为某一个系统的结尾，那么此时就会面临选择，这个时候我们就可以贪心的将其放置到**大于`w[i]`的最小的tail后面**，这样避免浪费其他较大的结尾（结尾越大，后面可以接的导弹越多），选择消耗一个最小的结尾，可能有点抽象，举个例子就明白了
+![](https://i.loli.net/2020/11/23/VY6nU9oFuaB3GkO.png)
+
+这里1就面临两个选择，要么接在2后面，要么接在4后面，很明显这里应该接在2后面，如果接在3后面那么后面的3就只能新建一个系统，会增加系统数量
+
+具体的证明可以采用微调法，证明贪心解是小于等于最优解的，这里不再展开
+```java
+//9 8 7 9 8 7 9 8 7 55 66 99 88 77 88 963 365 4561
+//双贪心写法
+public static int[] solve2(int[] w, int N){
+    int[] res = new int[2];
+    //长度为i的最长下降子序列的最小结尾
+    int[] tail = new int[N];
+    int len = 0;
+    //最长下降子序列（不严格）
+    for (int i = 0; i < w.length; i++) {
+        //找tail中第一个小于w[i]的替换掉，这样后面可以接更多的数
+        //可以二分优化下，这里就不写了
+        int idx;
+        for (idx = 0; idx < len; idx++) {
+            if (tail[idx] < w[i]) {
+                break;
+            }
+        }
+        tail[idx] = w[i];
+        len += (idx == len) ? 1 : 0;
+    }
+    res[0] = len;
+    tail = new int[N];
+    len = 0;
+    //最少覆盖全序列的下降子序列个数
+    for (int i = 0; i < w.length; i++) {
+        //找tail中第一个大于等于w[i]的替换掉
+        //可以二分优化下，这里就不写了
+        int idx;
+        for (idx = 0; idx < len; idx++) {
+            if (tail[idx] >= w[i]) {
+                break;
+            }
+        }
+        tail[idx] = w[i];
+        len += (idx == len) ? 1 : 0;
+    }
+    res[1] = len;
+    return res;
+}
+```
+
+## [187. 导弹防御系统](https://www.acwing.com/problem/content/189/)
+
+为了对抗附近恶意国家的威胁，R国更新了他们的导弹防御系统。
+
+一套防御系统的导弹拦截高度要么一直 严格单调 上升要么一直 严格单调 下降。
+
+例如，一套系统先后拦截了高度为3和高度为4的两发导弹，那么接下来该系统就只能拦截高度大于4的导弹。
+
+给定即将袭来的一系列导弹的高度，请你求出至少需要多少套防御系统，就可以将它们全部击落。
+
+**输入格式**
+
+输入包含多组测试用例。
+
+对于每个测试用例，第一行包含整数n，表示来袭导弹数量。
+
+第二行包含n个不同的整数，表示每个导弹的高度。
+
+当输入测试用例n=0时，表示输入终止，且该用例无需处理。
+
+**输出格式**
+
+对于每个测试用例，输出一个占据一行的整数，表示所需的防御系统数量。
+
+**数据范围**： 1≤n≤50
+
+**输入样例：**
+```java
+5
+3 5 2 4 1
+0 
+```
+**输出样例：**
+
+```java
+2
+样例解释
+对于给出样例，最少需要两套防御系统。
+
+一套击落高度为3,4的导弹，另一套击落高度为5,2,1的导弹。
+```
+
+**解法一**
+
+搜索 + 贪心剪枝，搜索的复杂度是O(N*2^N)，每个位置有两种选择，每次选择都需要遍历up或者down，虽然时间复杂度很高，但是整体的结果比较小，所以很多情况都被剪掉了，整体速度还不错
 ```java
 import java.util.*;
 import java.io.*;
+//1. 考虑每个点是在上升序列中还是下降序列中
+//2. 考虑是否需要新建一个单独的序列
 class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        List<Integer> lis = new ArrayList<>();
         while (sc.hasNext()) {
-            lis.add(sc.nextInt());
+            int N = sc.nextInt();
+            if (N == 0) return;
+            int[] w = new int[N];
+            up = new int[N];
+            down = new int[N];
+            res = Integer.MAX_VALUE;
+            for (int i = 0; i < N; i++) {
+                w[i] = sc.nextInt();
+            }
+            dfs(w, 0, 0, 0);
+            System.out.println(res);
         }
-        int[] w = new int[lis.size()];
-        for (int i = 0; i < lis.size(); i++) {
-            w[i] = lis.get(i);
-        }
-        int[] res = solve(w, lis.size());
-        System.out.println(res[0]);
-        System.out.println(res[1]);
     }
 
-    //300 250 275 252 200 138 245 := 5,2
-    //最多击落多少就不多说了
-    //最少需要的系统数其实就是最长上升子序列，因为这个子序列是必不可能在同一套系统中被击落
-    //当遇到这个子序列中的元素的时候，就需要增加一套系统，所以最少就是这个子序列的长度
-    public static int[] solve(int[] w, int N){
-        int[] down = new int[N];
-        int[] up = new int[N];
-        int max = 0, count = 1;
-        for (int i = 0; i < N; i++) {
-            up[i] = down[i] = 1;
-            for (int j = 0; j < i; j++) {
-                if (w[j] >= w[i]) {
-                    down[i] = Math.max(down[j]+1, down[i]);
-                } else {
-                    up[i] = Math.max(up[j]+1, up[i]);
-                }
-            }
-            max = Math.max(max, down[i]);
-            count = Math.max(count, up[i]);
+    static int[] up = null;
+    static int[] down = null;
+    static int res;
+
+    public static void dfs(int[] w, int c, int ul, int dl) {
+        //关键的剪枝
+        if (ul+dl >= res) return;
+        if (c == w.length) {
+            res = Math.min(ul+dl, res);
+            return;
         }
-        return new int[]{max, count};
+        //将c放在上升序列中
+        boolean flag = false;
+        for (int i = 0; i < ul; i++) {
+            if (up[i] > w[c]) {
+                flag = true;
+                int temp = up[i];
+                up[i] = w[c];
+                dfs(w, c+1, ul, dl);
+                up[i] = temp;
+                break;
+            }
+        }
+        if (!flag) {
+            up[ul] = w[c];
+            dfs(w, c+1, ul+1, dl);
+            up[ul] = 0;
+        }
+        flag = false;
+        for (int i = 0; i < dl; i++) {
+            if (down[i] < w[c]) {
+                flag = true;
+                int temp = down[i];
+                down[i] = w[c];
+                dfs(w, c+1, ul, dl);
+                down[i] = temp;
+                break;
+            }
+        }
+        if (!flag) {
+            down[dl] = w[c];
+            dfs(w, c+1, ul, dl+1);
+            down[dl] = 0;
+        }
     }
 }
 ```
 
-最多击落多少就不多说了，最少需要的系统数其实就是最长上升子序列，因为这个子序列是**必不可能在同一套系统中被击落**，当遇到这个子序列中的元素的时候，就需要增加一套系统，所以最少就是这个子序列的长度
+**解法二**
+
+迭代加深搜索，代码简化，在解比较小的时候可以使用这种搜索方式找最小值，结合了DFS和BFS的优点
+
+```java
+public static void main(String[] args) {
+    Scanner sc = new Scanner(System.in);
+    while (sc.hasNext()) {
+        int N = sc.nextInt();
+        if (N == 0) return;
+        int[] w = new int[N];
+        up = new int[N];
+        down = new int[N];
+        res = Integer.MAX_VALUE;
+        for (int i = 0; i < N; i++) {
+            w[i] = sc.nextInt();
+        }
+        //dfs(w, 0, 0, 0);
+        int depth = 0;
+        while (!dfs(w, depth, 0, 0, 0)) {
+            depth++;
+        }
+        System.out.println(depth);
+    }
+}
+
+static int[] up = null;
+static int[] down = null;
+//迭代加深，BFS版的DFS
+public static boolean dfs(int[] w, int depth, int c, int ul, int dl) {
+    if (ul+dl > depth) return false;
+    if (c == w.length) {
+        return true;
+    }
+    //将c放在上升序列中，那么我们应该找到小于w[i]的最大的tail
+    int i = 0;
+    for (i = 0; i < ul; i++) {
+        if (up[i] < w[c]) break;
+    }
+    int temp = up[i];
+    up[i] = w[c];
+    if (i == ul) {
+        if (dfs(w, depth, c+1, ul+1, dl)) {
+            return true;      
+        }
+    } else if (dfs(w, depth, c+1, ul, dl)) {
+        return true;
+    }
+    up[i] = temp;
+    //将c放在下降序列中，那么我们应该找到大于w[i]的最小的tail
+    for (i = 0; i < dl; i++) {
+        if (down[i] > w[c]) break;
+    }
+    temp = down[i];
+    down[i] = w[c];
+    if (i == dl) {
+        if (dfs(w, depth, c+1, ul, dl+1)) {
+            return true;
+        }
+    } else {
+        if (dfs(w, depth, c+1, ul, dl)) {
+            return true;
+        }
+    }
+    down[i] = temp;
+    return false;
+}
+```
