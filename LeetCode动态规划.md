@@ -7,6 +7,7 @@ categories:
 	[算法]
 cover: http://static.imlgw.top/blog/20190903/6oWNO41xhu1B.jpg?imageslim
 date: 2019/9/1
+sticky: 2
 ---
 
 ## [70. 爬楼梯](https://leetcode-cn.com/problems/climbing-stairs/)

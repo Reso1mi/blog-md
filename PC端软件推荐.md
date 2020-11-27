@@ -5,6 +5,7 @@ tags:
   [软件推荐]
 categories:
    [杂项]
+sticky: 3
 ---
 
 # 贾老板专属链接
