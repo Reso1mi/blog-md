@@ -10,7 +10,7 @@ date: 2020/11/14
 
 > 现在打算写一些短点的文章了，LeetCode系列不会再append了，如果写lc题会单独开一篇文章，然后写题解
 
-## _最长上升子序列模型_
+## 最长上升子序列模型
 
 [300. 最长上升子序列](http://imlgw.top/2019/09/01/leetcode-dong-tai-gui-hua/#300-%E6%9C%80%E9%95%BF%E4%B8%8A%E5%8D%87%E5%AD%90%E5%BA%8F%E5%88%97)
 
@@ -75,7 +75,7 @@ LIS有N^2的DP解法，也有NlogN的贪心的解法，具体用那种取决于�
 9
 ```
 
-**解法一**
+### 解法一
 
 常规N^2动态规划的方式 & NlogN贪心解法（NlogN的解法回忆了一会儿才推出来，如果数据范围不是很大还是N^2的dp好写）
 ```java
@@ -184,7 +184,7 @@ class Main {
 4
 ```
 
-**解法一**
+### 解法一
 
 LIS转换了一下而已，求每个点从**左到右** 和 从**右到左**的最长上升子序列最大和就ok了
 ```java
@@ -270,7 +270,7 @@ Palmia国有一条横贯东西的大河，河有笔直的南北两岸，岸上�
 4
 ```
 
-**解法一**
+### 解法一
 
 和之前的[354. 俄罗斯套娃信封问题](http://imlgw.top/2019/09/01/leetcode-dong-tai-gui-hua/#354-%E4%BF%84%E7%BD%97%E6%96%AF%E5%A5%97%E5%A8%83%E4%BF%A1%E5%B0%81%E9%97%AE%E9%A2%98)一样，还简单一点，坐标都是唯一的，不需要考虑坐标重合的问题，具体可以去看看俄罗斯套娃的这个题
 
@@ -378,7 +378,7 @@ class Main {
 18
 ```
 
-**解法一**
+### 解法一
 
 没啥好说的，比较简单
 ```java
@@ -443,7 +443,7 @@ class Main {
 2
 ```
 
-**解法一**
+### 解法一
 
 Dilworth定理，双DP解法
 ```java
@@ -476,7 +476,7 @@ public static int[] solve(int[] w, int N){
 
 本题中，最少需要的导弹系统数量就是**最小链划分中链的数量**，其最大反链就是**最长上升子序列长度**，所以直接求最长上升子序列的长度就ok了
 
-**解法二**
+### 解法二
 
 双贪心解法。
 
@@ -572,7 +572,7 @@ public static int[] solve2(int[] w, int N){
 一套击落高度为3,4的导弹，另一套击落高度为5,2,1的导弹。
 ```
 
-**解法一**
+### 解法一
 
 搜索 + 贪心剪枝，搜索的复杂度是O(N*2^N)，每个位置有两种选择，每次选择都需要遍历up或者down，虽然时间复杂度很高，但是整体的结果比较小，所以很多情况都被剪掉了，整体速度还不错
 ```java
@@ -646,7 +646,7 @@ class Main {
 }
 ```
 
-**解法二**
+### 解法二
 
 迭代加深搜索，代码简化，在解比较小的时候可以使用这种搜索方式找最小值，结合了DFS和BFS的优点
 
@@ -712,5 +712,121 @@ public static boolean dfs(int[] w, int depth, int c, int ul, int dl) {
     }
     down[i] = temp;
     return false;
+}
+```
+
+## [272. 最长公共上升子序列](https://www.acwing.com/problem/content/description/274/)
+
+熊大妈的奶牛在小沐沐的熏陶下开始研究信息题目。
+
+小沐沐先让奶牛研究了最长上升子序列，再让他们研究了最长公共子序列，现在又让他们研究最长公共上升子序列了。
+
+小沐沐说，对于两个数列A和B，如果它们都包含一段位置不一定连续的数，且数值是严格递增的，那么称这一段数是两个数列的公共上升子序列，而所有的公共上升子序列中最长的就是最长公共上升子序列了。
+
+奶牛半懂不懂，小沐沐要你来告诉奶牛什么是最长公共上升子序列。
+
+不过，只要告诉奶牛它的长度就可以了。
+
+数列A和B的长度均不超过3000。
+
+**输入格式**
+
+第一行包含一个整数N，表示数列A，B的长度。
+
+第二行包含N个整数，表示数列A。
+
+第三行包含N个整数，表示数列B。
+
+**输出格式**
+
+输出一个整数，表示最长公共上升子序列的长度。
+
+**数据范围**
+
+1≤N≤3000, 序列中的数字均不超过2^31−1
+
+**输入样例：**
+```go
+4
+2 2 1 3
+2 1 2 3
+```
+**输出样例：**
+```go
+2
+```
+
+### 解法一
+
+朴素的解法应该自己想出来的，可惜，没想出来，看了解答才理解，这里`dp[i][j]` 是指**A序列的前i个字符和B的前j个字符组成的，以`B[j]`结尾的最长公共上升子序列长度**，实际上是lcs个lis的完美结合，因为状态定义指定了`B[j]`是一定要包含的，所以相比LCS的四种情况，这里只有两种情况，包含或者不包含`A[i]`
+- 不包含A[i]那么状态就是`dp[i-1][j]`; 
+- 如果要包含A[i]，那么`A[i]`必须等于`B[j]`，否则就没有考虑的意义，然后我们按照LIS的方法去找一个最大值就ok了
+
+时间复杂度N^3，这里按道理是会被卡掉的，但是并没有...
+
+```java
+import java.util.*;
+import java.io.*;
+class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int N = sc.nextInt();
+        int[] A = new int[N];
+        int[] B = new int[N];
+        for (int i = 0; i < N; i++) {
+            A[i] = sc.nextInt();
+        }
+        for (int i = 0; i < N; i++) {
+            B[i] = sc.nextInt();
+        }
+        System.out.println(solve(A, B, N));
+    }
+
+    public static int solve(int[] A, int[] B, int N){
+        //A前i个字符和B前j个字符并且以B[j]结尾的最长LCIS
+        int[][] dp = new int[N+1][N+1];
+        int res = 0;
+        for (int i = 1; i <= N; i++) {
+            for (int j = 1; j <= N; j++) {
+                dp[i][j] = dp[i-1][j];
+                if (A[i-1] == B[j-1]) {
+                    dp[i][j] = Math.max(dp[i][j], 1);
+                    for (int k = 1; k < j; k++) {
+                        if (B[j-1] > B[k-1]) {
+                            dp[i][j] = Math.max(dp[i][k]+1, dp[i][j]);
+                        }
+                    }
+                }
+                res = Math.max(res, dp[i][j]);
+            }
+        }
+        return res;
+    }
+}
+```
+
+### 解法二
+对上面的解法做了等价变形，首先上面解法内循环是找`[1,j-1]`区间内`B[k]<B[j]`的最大值，同时此时的`B[j]==A[i]`，所以我们可以进行一波等价变形，动态的计算这个最大值，从而优化掉一层循环，还是很巧妙的
+
+```java
+//代码等价变形，时间复杂度N^2
+public static int solveOpt(int[] A, int[] B, int N){
+    //A前i个字符和B前j个字符并且以B[j]结尾的最长LCIS
+    int[][] dp = new int[N+1][N+1];
+    int res = 0;
+    for (int i = 1; i <= N; i++) {
+        int maxv = 1;
+        for (int j = 1; j <= N; j++) {
+            dp[i][j] = dp[i-1][j];
+            if (A[i-1] == B[j-1]) {
+                dp[i][j] = Math.max(dp[i][j], maxv);
+            }
+            if (B[j-1] < A[i-1]) {
+                maxv = Math.max(maxv, dp[i][j]+1);
+            }
+            res = Math.max(res, dp[i][j]);
+        }
+    }
+    return res;
 }
 ```
