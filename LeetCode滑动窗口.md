@@ -1162,7 +1162,6 @@ Difficulty: **困难**
 1.  给定的列表可能包含重复元素，所以在这里升序表示 >= 。
 2.  1 <= `k` <= 3500
 3.  -10<sup>5</sup> <= `元素的值` <= 10<sup>5</sup>
-4.  **对于使用Java的用户，请注意传入类型已修改为List<List<Integer>>。重置代码模板后可以看到这项改动。**
 
 
 **解法一**
@@ -1221,7 +1220,8 @@ func smallestRange(nums [][]int) []int {
 **解法二**
 
 上面的解法并不是最好的解法，没有用到有序的条件，比较好的解法应该是小根堆（本来打算用Go撸一个的，写一半感觉太麻烦了，不过整体小根堆的逻辑实现是对的，就是没有泛型要改很多东西，不太方便）
-
+![](https://i.loli.net/2020/11/30/Q5KsxNi3MquZtWE.png)
+维护两个最值，一个是找到一个能覆盖当前所有列表的最小的右端点（max），一个是当前列表最小的那个元素（最左的端点），然后不断缩减左端点求最小区间
 ```java
 class Node {
     int i, j;
@@ -3091,4 +3091,120 @@ public int lengthOfLongestSubstringKDistinct(String s, int k) {
     }
     return res;
 }
+```
+## [1675. 数组的最小偏移量](https://leetcode-cn.com/problems/minimize-deviation-in-array/)
+
+Difficulty: **困难**
+
+
+给你一个由 `n` 个正整数组成的数组 `nums` 。
+
+你可以对数组的任意元素执行任意次数的两类操作：
+
+*   如果元素是偶数 ，除以 `2`
+    *   例如，如果数组是 `[1,2,3,4]` ，那么你可以对最后一个元素执行此操作，使其变成 `[1,2,3,2]`
+*   如果元素是奇数 ，乘上 `2`
+    *   例如，如果数组是 `[1,2,3,4]` ，那么你可以对第一个元素执行此操作，使其变成 `[2,2,3,4]`
+
+数组的 **偏移量** 是数组中任意两个元素之间的 **最大差值** 。
+
+返回数组在执行某些操作之后可以拥有的 **最小偏移量** 。
+
+**示例 1：**
+
+```c
+输入：nums = [1,2,3,4]
+输出：1
+解释：你可以将数组转换为 [1,2,3,2]，然后转换成 [2,2,3,2]，偏移量是 3 - 2 = 1
+```
+
+**示例 2：**
+
+```c
+输入：nums = [4,1,5,20,3]
+输出：3
+解释：两次操作后，你可以将数组转换为 [4,2,5,5,3]，偏移量是 5 - 2 = 3
+```
+
+**示例 3：**
+
+```c
+输入：nums = [2,10,8]
+输出：3
+```
+
+**提示：**
+
+*   n == nums.length
+*   2 <= n <= 10<sup><span style="display: inline;">5</span></sup>
+*   1 <= nums[i] <= 10<sup>9</sup>
+
+**解法一**
+
+和上面[632-最小区间](#632-最小区间)一样，将数据变成和最小区间一样的形式，然后直接套用
+```java
+public int minimumDeviation(int[] nums) {
+    PriorityQueue<int[]> pq = new PriorityQueue<>((a, b)->a[2]-b[2]);
+    List<List<Integer>> lis = new ArrayList<>();
+    int max = 0;
+    for (int i = 0; i < nums.length; i++) {
+        ArrayList<Integer> tmp = new ArrayList<>();
+        if (nums[i] % 2 == 1) {
+            pq.add(new int[]{i, 0, nums[i]});
+            max = Math.max(max, nums[i]);
+            tmp.add(nums[i]);
+            tmp.add(nums[i] * 2);
+        } else {
+            tmp.add(nums[i]);
+            while (nums[i] % 2 == 0) {
+                tmp.add(nums[i]/2);
+                nums[i]/=2;
+            }
+            pq.add(new int[]{i, 0, nums[i]});
+            max = Math.max(max, nums[i]);
+            Collections.reverse(tmp);
+        }
+        lis.add(tmp);
+    }
+    int res = Integer.MAX_VALUE;
+    while (true) {
+        int[] min = pq.poll();
+        res = Math.min(res, max-min[2]);
+        if (min[1]+1 >= lis.get(min[0]).size()) {
+            break;
+        }
+        int next = lis.get(min[0]).get(min[1]+1);
+        pq.add(new int[]{min[0], min[1]+1, next});
+        max = Math.max(max, next);
+    }
+    return res;
+}
+```
+
+**解法二**
+
+```java
+    public int minimumDeviation2(int[] nums) {
+        int INF = 0x3f3f3f3f;
+        PriorityQueue<Integer> pq = new PriorityQueue<>((a, b)->b-a);
+        int min = INF;
+        for (int i = 0; i < nums.length; i++) {
+            if ((nums[i] & 1) == 1) {
+                nums[i] <<= 1;
+            }
+            min = Math.min(min, nums[i]);
+            pq.add(nums[i]);
+        }
+        int res = INF;
+        while (true) {
+            int max = pq.poll();
+            res = Math.min(res, max-min);
+            if ((max&1)==1) {
+                break;
+            }
+            pq.add(max/2);
+            min = Math.min(min, max/2);
+        }
+        return res;
+    }
 ```
