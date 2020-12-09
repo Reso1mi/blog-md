@@ -33,6 +33,8 @@ sticky: 1
   - [复现](#复现-1)
   - [解决方案](#解决方案-1)
 - [TODO](#todo)
+
+
 ## 简介
 
 本项目是模仿[groupcache](https://github.com/golang/groupcache)实现的一个分布式缓存库，其可以作为单独服务部署，亦可以作为一个`lib`来用，使用一致性Hash进行节点的选取和数据的分片，节点之间采用http协议进行通信，使用[Protobuf](https://github.com/protocolbuffers/protobuf)序列化数据进行传输，提高传输效率，节点之间支持热点数据互备，减少网络开销，同时还实现了并发访问控制机制，防止缓存击穿，相比于原项目，对热点互备的功能进行了增强
