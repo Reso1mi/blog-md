@@ -1987,33 +1987,47 @@ public static List<Integer> spiralOrder2(int[][] matrix) {
 ```
 
 **解法一**
-
+> UPDATE(2020.12.17)：更新了通用的解法，对应[AcWing756.蛇形矩阵](https://www.acwing.com/problem/content/description/758/)，美化了下代码
 ```java
-public int[][] generateMatrix(int n) {
-    int[][] res=new int[n][n];
-    int left=0,right=n-1;
-    int val=1;
-    while(left<=right){
-        int a=left,b=left;
-        int c=right,d=right;
-        if (left==right) {
-            res[left][right]=val;
+import java.io.*;
+import java.util.*;
+
+class Main {
+
+    public static void main(String... args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int m = sc.nextInt();
+        int v = 1;
+        int[][] res = new int[n][m];
+        int la = 0, lb = 0;
+        int ra = n-1, rb = m-1;
+        while (la <= ra && lb <= rb) {
+            int tla = la, tlb = lb;
+            int tra = ra, trb = rb;
+            if (la == ra) {
+                while (tlb <= rb) res[la][tlb++] = v++;
+                break;
+            }
+            if (lb == rb) {
+                while (tla <= ra) res[tla++][rb] = v++;
+                break;
+            }
+            while (tlb < rb) res[la][tlb++] = v++;
+            while (tla < ra) res[tla++][rb] = v++;
+            while (trb > lb) res[ra][trb--] = v++;
+            while (tra > la) res[tra--][lb] = v++;
+            la++; lb++;
+            ra--; rb--;
         }
-        while(b<right){
-            res[left][b++]=val++;
+        
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                System.out.print(res[i][j] + " ");
+            }
+            System.out.println();
         }
-        while(a<right){
-            res[a++][right]=val++;
-        }
-        while(d>left){
-            res[right][d--]=val++;
-        }
-        while(c>left){
-            res[c--][left]=val++;
-        }
-        left++;right--;
-    }
-    return  res;
+    } 
 }
 ```
 
