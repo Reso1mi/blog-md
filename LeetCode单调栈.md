@@ -1005,10 +1005,10 @@ public int sumSubarrayMins(int[] A) {
         while(!stack.isEmpty() && A[stack.peek()]>A[i]){
             int cur=stack.pop();
             int left=stack.isEmpty()?-1:stack.peek();
-            //右边小于cur的个数： i-cur-1
-            //左边小于cur的个数： cur-(left+1)
+            //右边大于cur的个数(i之前)： i-cur-1      
+            //左边大于cur的个数(left之后)： cur-(left+1) 
             //res=(res+A[cur]*((i-cur-1)*(cur-left-1)+i-1-left))%mod;
-            //(a+1)*(b+1)=ab+a+b+1 化简
+            //(a+1)*(b+1)=ab+a+b+1
             res=(res+A[cur]*(i-cur)*(cur-left))%mod;
         }
         stack.push(i);

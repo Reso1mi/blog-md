@@ -41,7 +41,7 @@ categories:
 垃圾清理软件，清注册表贼舒服操作比较简单，拒绝辣鸡软件残留（也是绿软）。推荐指数⭐⭐⭐⭐
 > 我这个是破解版，打开后会提示你更新，x掉就行
 
-下载地址 [click](https://wws.lanzous.com/izIteiiv79i)
+下载地址 [click](https://wws.lanzous.com/i9Zrejswysb)
 
 ### Dism++
 
