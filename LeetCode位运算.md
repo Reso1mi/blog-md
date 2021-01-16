@@ -555,6 +555,7 @@ Difficulty: **简单**
 
 返回布尔值列表 `answer`，只有当 `N_i` 可以被 `5` 整除时，答案 `answer[i]` 为 `true`，否则为 `false`。
 
+
 **示例 1：**
 
 ```c
