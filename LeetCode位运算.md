@@ -5,13 +5,12 @@ tags:
   [LeetCode,位运算]
 categories:
   [算法]
+date: 2020/07/03
 ---
 
 > 从[数组专题](http://imlgw.top/2019/05/04/leetcode-shu-zu/)抽离出来的，时间就不做矫正了，我也不知道啥时候开始做的
 
 ##  _LeetCode二进制_
-
-~~得找时间分开了，越来越卡了，Typora快顶不住了😂（Typora已卸载，vscode真香）~~
 
 ## [136. 只出现一次的数字](https://leetcode-cn.com/problems/single-number/)
 
@@ -596,7 +595,9 @@ Difficulty: **简单**
 **解法一**
 
 一开始没考虑溢出的问题，用的是py所以也没报错，看了评论区才意识到会有溢出的问题，不过这里也很好处理，因为我们每次都只需要知道这个值模5的值就行了，所以我们只需要保留当前值模5的余数就行了
-$$(a*b+c)\%p=((\underline{a\%p}*b\%p)+(c\%p))\%p$$
+$$
+(a * b+c) \bmod \ p=((\underbrace{(a \bmod \ p)} * (b \bmod \ p))+(c \bmod p))\bmod p
+$$
 这里的$a$就是上次计算的结果，根据取模运算的性质，我们只需要保存上次计算的结果模5后的值就行了，这样就能避免溢出的问题
 ```python
 ​class Solution:
