@@ -1,0 +1,139 @@
+---
+title: 
+    LeetCode1799.N次操作后的最大分数和
+tags: 
+  [LeetCode]
+categories:
+	[算法]
+---
+
+## [1799\. N 次操作后的最大分数和](https://leetcode-cn.com/problems/maximize-score-after-n-operations/)
+
+Difficulty: **困难**
+
+
+给你 `nums` ，它是一个大小为 `2 * n` 的正整数数组。你必须对这个数组执行 `n` 次操作。
+
+在第 `i` 次操作时（操作编号从 **1** 开始），你需要：
+
+*   选择两个元素 `x` 和 `y` 。
+*   获得分数 `i * gcd(x, y)` 。
+*   将 `x` 和 `y` 从 `nums` 中删除。
+
+请你返回 `n` 次操作后你能获得的分数和最大为多少。
+
+函数 `gcd(x, y)` 是 `x` 和 `y` 的最大公约数。
+
+**示例 1：**
+
+```c
+输入：nums = [1,2]
+输出：1
+解释：最优操作是：
+(1 * gcd(1, 2)) = 1
+```
+
+**示例 2：**
+
+```c
+输入：nums = [3,4,6,8]
+输出：11
+解释：最优操作是：
+(1 * gcd(3, 6)) + (2 * gcd(4, 8)) = 3 + 8 = 11
+```
+
+**示例 3：**
+
+```c
+输入：nums = [1,2,3,4,5,6]
+输出：14
+解释：最优操作是：
+(1 * gcd(1, 5)) + (2 * gcd(2, 4)) + (3 * gcd(3, 6)) = 1 + 4 + 9 = 14
+```
+
+**提示：**
+
+- $1 <= n <= 7$
+- $\text{nums.length} == 2 \ast n$
+- $1 <= nums[i] <= 10^6$
+
+### 解法一
+48th双周赛t4，比较简单，看数据范围就知道是状压DP，一开始写了个二维的状态$dp[i][mask]$，包含了当前操作的次数$i$，以及选取状态$mask$，结果t了。忘记考虑$\gcd$的复杂度了，后面对$\gcd$做了预处理优化勉强过了，但是依然比较慢
+
+重新思考了递推状态，发现当前操作次数这个状态其实是没有必要的，这个状态可以通过$mask$的二进制$1$的位数推断出来，所以状态变为$dp[mask]$，代表经过$\text{bitOne}(mask)$次操作，选取的元素掩码为$mask$时的最大得分
+- 入口：$dp[0] = 0$
+- 转移：$dp[mask] = \max(dp[mask],\frac{\text{bitOne}(mask)}{2} \ast dp[mask\oplus(1<<j)\oplus(1<<k)])$，枚举所有偶数个$1$的状态，然后枚举所有数对$j,k$，确保$mask$包含$j,k$，然后递推取最大值
+- 出口：$dp[1<<m-1]$，时间复杂度$O(2^m*m^2)$，$m$为数组长度
+
+代码实现如下：
+```java
+import java.util.*;
+
+class Solution {
+
+    public int maxScore(int[] nums) {
+        int len = nums.length;
+        int n = len/2;
+        int[] dp = new int[2<<len];
+        int[][] cache = new int[len][len];
+        for (int i = 0; i < len; i++) {
+            for (int j = i+1; j < len; j++) {
+                cache[i][j] = gcd(nums[i], nums[j]);
+            }
+        }
+        for (int s = 0; s < (1<<len); s++) {
+            int cnt = countBit(s);
+            // 选取个数一定是偶数
+            if ((cnt&1)==1) continue;
+            for (int j = 0; j < len; j++) {
+                //s必须选取j, k
+                if (((s>>>j)&1)==0) continue;
+                for (int k = j+1; k < len; k++) {
+                    if (((s>>>k)&1)==0) continue;
+                    dp[s] = Math.max(dp[s], (countBit(s)/2)*cache[j][k] + dp[s^(1<<j)^(1<<k)]);
+                }
+            }
+        }
+        return dp[(1<<len)-1];
+    }
+
+    public int countBit(int a) {
+        int cnt = 0;
+        while (a != 0) {
+            a = a&(a-1);
+            cnt++;
+        }
+        return cnt;
+    }
+
+    public int gcd(int a, int b){
+        if(b==0) return a;
+        return gcd(b, a%b);
+    }
+}
+```
+
+### 解法二
+题解区看到的另一种写法，直接枚举$mask$的子集，思路挺好，但是时间复杂度略高，$O(2^{2n} \ast 2^k)$，$k$是掩码中$1$的个数，最多可能是$2*n$
+```java
+public int maxScore2(int[] nums) {
+    int len = nums.length;
+    int n = len/2;
+    int[] dp = new int[2<<len];
+    for (int i = 0; i < len; i++) {
+        for (int j = i+1; j < len; j++) {
+            dp[(1<<i)|(1<<j)] = gcd(nums[i], nums[j]);
+        }
+    }
+    //2^len
+    for (int s = 0; s < (1<<len); s++) {
+        //2^k k是s中1的个数
+        for (int i = s; i != 0; i=(i-1)&s) {
+            if (countBit(s)-countBit(i)==2) {
+                dp[s] = Math.max(dp[s], countBit(s)/2*dp[s^i]);
+            }
+        }
+    }
+    return dp[(1<<len)-1];
+}
+```
