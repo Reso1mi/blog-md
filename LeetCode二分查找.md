@@ -403,31 +403,24 @@ public int findMin(int[] nums) {
 (UPDATE: 2020.7.22)
 
 相比[寻找旋转排序数组中的最小值](#153-寻找旋转排序数组中的最小值)，仅仅只是加了一个尾部去重的操作，去重后就和上面的情况一样了，这样就比前面的解法更加清晰了，时间复杂度也还是一样的
-```golang
-//先对尾部去重，再二分会清晰很多
-func minArray(numbers []int) int {
-    var n = len(numbers)
-    var left = 0
-    var right = n - 1
-    //尾部去重
-    for right >= 1 && numbers[right] == numbers[right-1] {
-        right--
-    }
-    //兜底最小值就是最后一个元素
-    var res = right
-    for left <= right {
-        mid := left + (right-left)/2
-        //去重后min一定是小于numbers[n-1]的
-        if numbers[mid] < numbers[n-1] {
-            res = mid
-            right = mid - 1
-        } else {
-            left = mid + 1
-        }
-    }
-    return numbers[res]
-}
-
+```python
+# update: 2020/4/8
+class Solution:
+    def findMin(self, nums: List[int]) -> int:
+        left, right = 0, len(nums)-1
+        res = 0
+        while right >= 0 and nums[right] == nums[0]:
+            right -= 1
+        nr = right
+        while left <= right:
+            mid = left + (right - left)//2
+            # 和nr比，不能和0比，可能会有0 1 2这样的
+            if nums[mid] > nums[nr]:
+                left = mid + 1
+            else:
+                res = mid
+                right = mid - 1
+        return nums[res]
 ```
 
 ## [33. 搜索旋转排序数组](https://leetcode-cn.com/problems/search-in-rotated-sorted-array/)
@@ -579,7 +572,7 @@ public static int binarySearch(int []nums,int target,int lo,int hi){
 }
 ```
 
-这个应该比上一个慢一点，最好情况下是_**O(logN)**_直接将**target**划分到有序的那一边，如果没划分到有序的那一边就会花费时间去二分尝试切割数组，时间复杂度应该是`logN+log(N/2)+log(N/4)+...log(N/N)` 最后整体复杂度应该是`O(logN*logN)` ，虽然比 `logN` 好很多，但是并不是我们想要的算法
+这个应该比上一个慢一点，最好情况下是`O(logN)`直接将**target**划分到有序的那一边，如果没划分到有序的那一边就会花费时间去二分尝试切割数组，时间复杂度应该是`logN+log(N/2)+log(N/4)+...log(N/N)` 最后整体复杂度应该是`O(logN*logN)` ，虽然比 `logN` 好很多，但是并不是我们想要的算法
 
 **解法三**
 
@@ -676,6 +669,28 @@ func search(nums []int, target int) bool {
 ```
 
 看着别人的题解写都WA了5，6次。。。。这个其实就不能按照上一题的思路来了，因为有重复的，不好判断mid和target是不是在同一边
+
+**解法二**
+
+（update：2020/4/8）和上面的搜索最小值一样，如果只是中间重复没有任何影响，但是如果是头尾重复，那么问题就大了，我们就没办法通过头或者尾的值，判断target和mid所在的区间，所以我们可以开始先对头尾去重，这样就可以方便判断target和mid所在区间，比如1 0 1 1 1就可以变成1 0，然后再进行二分就很简单了
+```python
+class Solution:
+    def search(self, nums: List[int], target: int) -> bool:
+        left, right = 0, len(nums)-1
+        res = 0
+        # 尾部去重，方便确定target和mid所在区间
+        while right >= 0 and nums[right] == nums[0]:
+            right -= 1
+        while left <= right:
+            mid = left + (right-left)//2
+            v = nums[mid] if (nums[mid] < nums[0]) == (target < nums[0]) else float("inf") if nums[mid] < nums[0] else float("-inf")
+            if v <= target:
+                res = mid
+                left = mid + 1
+            else:
+                right = mid - 1
+        return True if nums[res] == target else False
+```
 
 ## [744. 寻找比目标字母大的最小字母](https://leetcode-cn.com/problems/find-smallest-letter-greater-than-target/)
 
