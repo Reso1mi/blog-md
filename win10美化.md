@@ -6,6 +6,20 @@ tags:
 categories:
 	[杂项]
 ---
+
+## UPDATE
+
+2021.4.16，收到了win10-20H的更新推送，毫不犹豫的更新了，因为之前就听说这个更新对磁贴做了优化，背景可以透明
+
+新版磁贴效果图：
+
+![](https://i.loli.net/2021/04/16/F6EB4HLqcDrIxTg.png)
+
+下面为原文：
+
+> 更新后之前的`StartlsBack++`用不了，所以我找了最新版本的，文中的链接也更新了下
+
+---
 ## 背景
 个人比较喜欢简洁干净的桌面，但是又不想使用一些第三方的主题或者插件（一方面是系统占用的问题，另一方面是感觉不太搭且折腾起来也挺麻烦），所以自己动手稍微调了下
 ## 效果
@@ -31,7 +45,7 @@ StartlsBack++，可以设置任务栏图标间距，图标大小，以及图标�
 ![](https://i.loli.net/2021/04/02/X8myNKl9Cbiskht.gif)
 如果需要透明就勾选上 **动态透明度** 的选项
 
-下载地址：https://wws.lanzous.com/iXk0cnl0nkh
+下载地址：https://wwe.lanzous.com/iI8Hlo6js1i
 
 ### 任务栏动态展示
 这里使用SmartTaskBar，也是唯一一个需要后台运行的插件，占用极低，开机自启![](https://i.loli.net/2021/04/02/pi82P1NZeKGQ6us.png)
