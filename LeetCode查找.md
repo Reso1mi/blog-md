@@ -1116,7 +1116,7 @@ public boolean containsNearbyAlmostDuplicate(int[] nums, int k, int t) {
 
 **解法二**
 
-看了下评论区，发现其实可以直接比较两个边界，这样可以少一次查找的操作，效率有很大提升
+看了下评论区，发现其实可以直接和两个边界`[u-t,u+t]`比较，只要两个数都在这个范围内就一定符合条件，这样可以少一次查找的操作，效率有很大提升
 
 ```java
 public boolean containsNearbyAlmostDuplicate2(int[] nums, int k, int t) {
