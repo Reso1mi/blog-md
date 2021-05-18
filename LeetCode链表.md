@@ -4,7 +4,7 @@ title:
 tags:
   [链表,LeetCode]
 categories:
-    [算法]
+  [算法]
 date: 2019/2/27
 cover: http://static.imlgw.top///20190227/gPprrxbrdwAx.jpg?imageslim
 ---

@@ -1,10 +1,10 @@
 ---
 title: 
- Hexo第一篇博客
+  Hexo第一篇博客
 tags: 
   [Hexo ,体验,入门]
 categories: Hexo
-date: 2018/5/10 9:00
+date: 2018/5/10
 ---
 第一篇Hexo博客
 =====

@@ -1,6 +1,6 @@
 ---
 title: 
-   Linux磁盘与文件系统
+  Linux磁盘与文件系统
 tags: 
   [Linux,操作系统,读书笔记]
 categories:

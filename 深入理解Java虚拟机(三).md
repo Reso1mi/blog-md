@@ -1,10 +1,10 @@
 ---
 title: 
-   深入理解Java虚拟机(三)
+  深入理解Java虚拟机(三)
 tags: 
   [Class结构,JVM]
 categories:
-     [JVM]
+  [JVM]
 cover: http://static.imlgw.top/blog/20190905/bvODiOGH0IfM.jpg?imageslim
 date: 2019/9/5
 ---

@@ -4,9 +4,9 @@ title:
 tags:
   [多线程,并发编程]
 categories:
-	[并发]
+  [并发]
 cover: http://static.imlgw.top///20190323/oGikrmykzg5w.jpg?imageslim
-date: 2019/4/7 12:00
+date: 2019/4/7
 ---
 ## 1.线程与进程区别
 

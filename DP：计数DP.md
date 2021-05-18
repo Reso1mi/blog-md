@@ -1,10 +1,10 @@
 ---
 title: 
-   DP：计数DP
+  DP：计数DP
 tags: 
   [算法,动态规划]
 categories:
-    [算法]
+  [算法]
 date: 2021/4/9
 ---
 

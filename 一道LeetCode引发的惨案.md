@@ -5,7 +5,7 @@ tags:
   [数据结构,算法,搜索]
 date: 2018/10/31
 categories:
-	[算法]
+  [算法]
 ---
 ## 一道LeetCode搜索题引发的惨案
  ### 1.先上 [题目](https://leetcode-cn.com/problems/word-ladder/) 

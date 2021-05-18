@@ -1,10 +1,10 @@
 ---
 title: 
-   LeetCode贪心
+  LeetCode贪心
 tags: 
   [LeetCode,贪心]
 categories:
-	[算法]
+  [算法]
 date: 2020/1/21
 ---
 

@@ -1,10 +1,11 @@
 ---
 title: 
- Rabin-Karp算法
+  Rabin-Karp算法
 tags: 
   [数据结构,算法]
 categories:
-	[算法]
+  [算法]
+date: 2020/7/1
 ---
  > 见到好几次了，感觉不是很难，学一手，本来想详细的写一下完整的Rabin-Karp解析的，但是目前确实时间有点紧，加上自己也没做几题，理解的可能还不到位，等后面有时间再来补吧
  ## [1044. 最长重复子串](https://leetcode-cn.com/problems/longest-duplicate-substring/)

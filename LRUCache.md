@@ -1,10 +1,10 @@
 ---
 title: 
-   LRU队列实现
+  LRU队列实现
 tags: 
   [LeetCode,LRU]
 categories:
-	[算法]
+  [算法]
 date: 2019/11/16
 cover: http://static.imlgw.top/image/featureimages/8.jpg
 ---

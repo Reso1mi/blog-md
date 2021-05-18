@@ -4,7 +4,7 @@ title:
 tags: 
   [JMeter,秒杀]
 categories:
-	[Web]
+  [Web]
 date: 2019/6/6
 cover: http://static.imlgw.top/image/20190713/Blog-Built-in-JMeter-Functions.png
 ---

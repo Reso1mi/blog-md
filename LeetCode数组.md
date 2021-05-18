@@ -4,7 +4,7 @@ title:
 tags:
   [数组,LeetCode]
 categories:
-	[算法]
+  [算法]
 date: 2019/5/4
 ---
 

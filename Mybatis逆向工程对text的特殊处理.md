@@ -1,11 +1,11 @@
 ---
 title: 
-   Mybatis逆向工程对text的特殊处理
+  Mybatis逆向工程对text的特殊处理
 tags: 
   [技术,框架]
-date: 2018/5/23 9:00
+date: 2018/5/23
 categories:
-		[Web]
+  [Web]
 ---
 # Mybatis对Mysql中text类型的特殊处理
 - 昨天晚上在做cms的crud的时候遇到的问题，编辑的时候不回显内容，然后f12看了下响应的json里面content也为null，然后去service里面把那个pojo加了toString把几条数据直接打印出来 因为用了分页然后打印出来的也并不是数据

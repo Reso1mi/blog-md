@@ -1,10 +1,10 @@
 ---
 title: 
-   LeetCode二分查找
+  LeetCode二分查找
 tags: 
   [LeetCode,二分]
 categories:
-	[算法]
+  [算法]
 date: 2019/12/6
 cover: http://static.imlgw.top/5.jpg
 ---

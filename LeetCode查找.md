@@ -1,10 +1,10 @@
 ---
 title: 
-   LeetCode查找
+  LeetCode查找
 tags: 
   [LeetCode,查找]
 categories:
-	[算法]
+  [算法]
 cover: http://static.imlgw.top/blog/20190915/vqTRbmP6PbOo.jpg?imageslim
 date: 2019/9/15
 ---

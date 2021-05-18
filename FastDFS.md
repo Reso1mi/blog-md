@@ -1,11 +1,11 @@
 ---
 title: 
-  - FastDFS学习
+  FastDFS学习
 tags:
-   [入门,FastDFS,淘淘商城]
+  [入门,FastDFS,淘淘商城]
 categories:
-   [运维]
-date: 2018/5/16 9:00
+  [运维]
+date: 2018/5/16
 ---
 # FastDFS学习笔记
 - FastDFS简介

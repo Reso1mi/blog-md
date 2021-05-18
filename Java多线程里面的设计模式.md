@@ -4,7 +4,7 @@ title:
 tags: 
   [设计模式,多线程]
 categories:
-	[并发]
+  [并发]
 date: 2019/4/9
 cover: http://static.imlgw.top/blog/20190726/C6uND3E3nwWJ.jpg?imageslim
 ---

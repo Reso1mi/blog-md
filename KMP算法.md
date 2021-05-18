@@ -1,10 +1,11 @@
 ---
 title: 
- KMP算法
+  KMP算法
 tags: 
   [数据结构,算法]
 categories:
-	[算法]
+  [算法]
+date: 2020/5/13
 ---
 
 ## 前言

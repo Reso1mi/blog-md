@@ -1,11 +1,12 @@
 ---
 title: 
-   Fuck面试
+  Fuck面试
 tags: 
   [面试]
 categories:
-    [踩坑记录]
+  [踩坑记录]
 hidden: True
+date: 2020/9/4
 ---
 
 # 自我介绍

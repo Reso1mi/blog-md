@@ -1,6 +1,6 @@
 ---
 title: 
-   Linux文件权限和目录配置
+  Linux文件权限和目录配置
 tags: 
   [Linux]
 categories:

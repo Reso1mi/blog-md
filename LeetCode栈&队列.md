@@ -1,10 +1,10 @@
 ---
 title: 
-   LeetCode栈&队列
+  LeetCode栈&队列
 tags: 
   [LeetCode]
 categories:
-	[算法]
+  [算法]
 cover: http://static.imlgw.top/blog/20191002/0SOOjUptvAlJ.jpg?imageslim
 date: 2019/10/1
 ---

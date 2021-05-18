@@ -2,7 +2,7 @@
 title: SpringMVC - 处理静态资源 (转)
 tags: [技术,Spring,转载]
 categories: [Web]
-date: 2018/5/21 9:00
+date: 2018/5/21
 ---
 ## **【1】第一种示例与解决办法**
 

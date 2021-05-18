@@ -1,10 +1,10 @@
 ---
 title: 
-   你有FreeBug么? --->Spring-solr
+  你有FreeBug么? --->Spring-solr
 tags:
-   [Bug,Solr,Spring]
+  [Bug,Solr,Spring]
 categories:
-   [踩坑记录]
+  [踩坑记录]
 date: 2018/10/5
 ---
 ## FreeBug ? 哎呦，不错喔。

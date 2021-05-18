@@ -1,10 +1,10 @@
 ---
 title: 
-   Spring-Redis遇到的bug
+  Spring-Redis遇到的bug
 tags:
-   [Bug,Redis,Spring]
+  [Bug,Redis,Spring]
 categories:
-   [踩坑记录]
+  [踩坑记录]
 date: 2018/9/24
 ---
 
