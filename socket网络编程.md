@@ -1,12 +1,12 @@
 ---
-title:
-  Socket网络编程
+title: Socket网络编程
 tags:
-  [Socket]
+  - Socket
 categories:
-  [网络编程]
+  - 网络编程
 date: 2019/7/19
-cover: http://static.imlgw.top/image/20190719/Ob9k514MhYVn.png?imageslim
+cover: 'http://static.imlgw.top/image/20190719/Ob9k514MhYVn.png?imageslim'
+abbrlink: df38ad26
 ---
 
 ### Socket概述

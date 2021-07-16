@@ -1,11 +1,11 @@
 ---
-title: 
-  搜索：Flood Fill
-tags: 
-  [算法]
+title: 搜索：Flood Fill
+tags:
+  - 算法
 categories:
-  [算法]
+  - 算法
 date: 2021/3/25
+abbrlink: 89c67f8e
 ---
 
 ## [1097. 池塘计数](https://www.acwing.com/problem/content/1099/)

@@ -1,11 +1,12 @@
 ---
-title: 
-  LeetCode位运算
+title: LeetCode位运算
 tags:
-  [LeetCode,位运算]
+  - LeetCode
+  - 位运算
 categories:
-  [算法]
+  - 算法
 date: 2020/07/03
+abbrlink: a9fb61a5
 ---
 
 > 从[数组专题](http://imlgw.top/2019/05/04/leetcode-shu-zu/)抽离出来的，时间就不做矫正了，我也不知道啥时候开始做的

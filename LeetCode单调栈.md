@@ -1,12 +1,12 @@
 ---
-title: 
-  LeetCode单调栈
-tags: 
-  [LeetCode]
+title: LeetCode单调栈
+tags:
+  - LeetCode
 categories:
-  [算法]
-cover: http://static.imlgw.top/blog/20191002/0SOOjUptvAlJ.jpg?imageslim
+  - 算法
+cover: 'http://static.imlgw.top/blog/20191002/0SOOjUptvAlJ.jpg?imageslim'
 date: 2020/8/28
+abbrlink: bdc9d1de
 ---
 
 > 从[栈&队列专题](http://imlgw.top/2019/10/01/leetcode-zhan-dui-lie/)中抽取出来

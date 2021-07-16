@@ -1,12 +1,12 @@
 ---
-title: 
-  LeetCode栈&队列
-tags: 
-  [LeetCode]
+title: LeetCode栈&队列
+tags:
+  - LeetCode
 categories:
-  [算法]
-cover: http://static.imlgw.top/blog/20191002/0SOOjUptvAlJ.jpg?imageslim
+  - 算法
+cover: 'http://static.imlgw.top/blog/20191002/0SOOjUptvAlJ.jpg?imageslim'
 date: 2019/10/1
+abbrlink: 627d9e22
 ---
 
 ## [20. 有效的括号](https://leetcode-cn.com/problems/valid-parentheses/)

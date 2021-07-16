@@ -1,11 +1,11 @@
 ---
-title: 
-  DP：数字三角形模型
-tags: 
-  [算法]
+title: DP：数字三角形模型
+tags:
+  - 算法
 categories:
-  [算法]
+  - 算法
 date: 2020/11/9
+abbrlink: 22c967e1
 ---
 
 

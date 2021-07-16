@@ -1,12 +1,13 @@
 ---
-title: 
-  LeetCode背包问题
-tags: 
-  [LeetCode,背包]
+title: LeetCode背包问题
+tags:
+  - LeetCode
+  - 背包
 categories:
-  [算法]
+  - 算法
 date: 2019/11/29
-cover: http://static.imlgw.top/blog/20191117/lAgAEVtKwR4j.jpg?imageslim
+cover: 'http://static.imlgw.top/blog/20191117/lAgAEVtKwR4j.jpg?imageslim'
+abbrlink: f68a53d9
 ---
 
 > 从[动态规划专题](http://imlgw.top/2019/09/01/leetcode-dong-tai-gui-hua/) 中抽取出来的

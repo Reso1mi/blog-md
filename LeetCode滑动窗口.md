@@ -1,12 +1,13 @@
 ---
-title: 
-  LeetCode滑动窗口
-tags: 
-  [LeetCode,滑动窗口]
+title: LeetCode滑动窗口
+tags:
+  - LeetCode
+  - 滑动窗口
 categories:
-  [算法]
-cover: http://static.imlgw.top/blog/20190903/ASNQ7j0W9dWO.jpg?imageslim
+  - 算法
+cover: 'http://static.imlgw.top/blog/20190903/ASNQ7j0W9dWO.jpg?imageslim'
 date: 2019/7/20
+abbrlink: 41e491de
 ---
 
 ## LeetCode 滑动窗口

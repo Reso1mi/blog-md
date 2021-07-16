@@ -1,11 +1,12 @@
 ---
-title: 
-  Spring请求参数获取的几种方式（转）
-tags: 
-  [Spring,转载]
+title: Spring请求参数获取的几种方式（转）
+tags:
+  - Spring
+  - 转载
 categories:
-  [Web]
+  - Web
 date: 2018/5/17
+abbrlink: 81b3fc53
 ---
 # [springmvc请求参数获取的几种方法](http://www.cnblogs.com/xiaoxi/p/5695783.html)
 **1、直接把表单的参数写在Controller相应的方法的形参中，适用于get方式提交，不适用于post方式提交。**

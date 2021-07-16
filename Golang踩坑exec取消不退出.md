@@ -1,11 +1,12 @@
 ---
-title: 
- Golang踩坑：exec取消后不退出
-tags: 
-  [开源项目,Golang]
+title: Golang踩坑：exec取消后不退出
+tags:
+  - 开源项目
+  - Golang
 categories:
-  [踩坑记录]
+  - 踩坑记录
 date: 2020/8/25
+abbrlink: 4d00b309
 ---
 
 ## 背景

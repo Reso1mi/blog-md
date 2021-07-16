@@ -1,12 +1,12 @@
 ---
-title: 
-  由于cmd引发的血案
+title: 由于cmd引发的血案
 tags:
-  [Bug]
+  - Bug
 categories:
-  [踩坑记录]
+  - 踩坑记录
 date: 2019/12/8
-cover: http://static.imlgw.top/blog/20200303/f8kp7iXgf8l4.png?imageslim
+cover: 'http://static.imlgw.top/blog/20200303/f8kp7iXgf8l4.png?imageslim'
+abbrlink: 6ff78e85
 ---
 
 ## 前言

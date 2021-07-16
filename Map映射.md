@@ -1,11 +1,12 @@
 ---
-title: 
-  Map映射结构
-tags: 
-  [数据结构,映射]
+title: Map映射结构
+tags:
+  - 数据结构
+  - 映射
 categories:
-  [数据结构]
+  - 数据结构
 date: 2019/11/25
+abbrlink: 96f168ad
 ---
 
 ## Map接口

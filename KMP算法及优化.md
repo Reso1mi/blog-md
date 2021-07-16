@@ -1,11 +1,12 @@
 ---
-title: 
-  KMP算法及优化
-tags: 
-  [数据结构,算法]
+title: KMP算法及优化
+tags:
+  - 数据结构
+  - 算法
 date: 2018/9/6
 categories:
-  [算法]
+  - 算法
+abbrlink: 4d30a252
 ---
 ## KMP算法及优化
 > 后面有时间再来重写一下，kmp还是挺重要的

@@ -1,12 +1,13 @@
 ---
-title: 
-  LeetCode回溯&递归
-tags: 
-  [LeetCode,回溯]
+title: LeetCode回溯&递归
+tags:
+  - LeetCode
+  - 回溯
 categories:
-  [算法]
-cover: http://static.imlgw.top/blog/20191012/HDV7c2plcAl2.jpg?imageslim
+  - 算法
+cover: 'http://static.imlgw.top/blog/20191012/HDV7c2plcAl2.jpg?imageslim'
 date: 2019/10/10
+abbrlink: 26679fc
 ---
 
 ## [17. 电话号码的字母组合](https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/)

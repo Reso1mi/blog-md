@@ -1,12 +1,13 @@
 ---
-title: 
-  LeetCode二分查找
-tags: 
-  [LeetCode,二分]
+title: LeetCode二分查找
+tags:
+  - LeetCode
+  - 二分
 categories:
-  [算法]
+  - 算法
 date: 2019/12/6
-cover: http://static.imlgw.top/5.jpg
+cover: 'http://static.imlgw.top/5.jpg'
+abbrlink: ac033e1a
 ---
 
 >  从 [数组专题](http://imlgw.top/2019/05/04/leetcode-shu-zu/) 中抽取出来的 

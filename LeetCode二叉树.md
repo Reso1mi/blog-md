@@ -1,12 +1,13 @@
 ---
-title: 
-  LeetCode二叉树
-tags: 
-  [LeetCode,二叉树]
+title: LeetCode二叉树
+tags:
+  - LeetCode
+  - 二叉树
 categories:
-  [算法]
+  - 算法
 date: 2019/11/06
-cover: http://static.imlgw.top/blog/20191106/pcmvnEK8Hwg8.png?imageslim
+cover: 'http://static.imlgw.top/blog/20191106/pcmvnEK8Hwg8.png?imageslim'
+abbrlink: 43c532c9
 ---
 
 ## _LeetCode 二叉树_

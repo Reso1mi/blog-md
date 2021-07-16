@@ -1,11 +1,12 @@
 ---
-title: 
-  LeetCode数组
+title: LeetCode数组
 tags:
-  [数组,LeetCode]
+  - 数组
+  - LeetCode
 categories:
-  [算法]
+  - 算法
 date: 2019/5/4
+abbrlink: a9999be0
 ---
 
 ## LeetCode 数组

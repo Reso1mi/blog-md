@@ -1,11 +1,12 @@
 ---
-title: 
-  Spring-Security遇到的小问题
+title: Spring-Security遇到的小问题
 tags:
-  [Bug,Spring]
+  - Bug
+  - Spring
 categories:
-  [踩坑记录]
+  - 踩坑记录
 date: 2018/11/26
+abbrlink: 2dc72c90
 ---
 ## Spring Security 配置 intercept-url 的小问题
 

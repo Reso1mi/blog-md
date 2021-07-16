@@ -1,12 +1,12 @@
 ---
-title: 
-  JNI初探
-tags: 
-  [JNI]
+title: JNI初探
+tags:
+  - JNI
 categories:
-	[JVM]
-cover: http://static.imlgw.top///20190502/y8XHEV5ee1kv.png?imageslim
+  - JVM
+cover: 'http://static.imlgw.top///20190502/y8XHEV5ee1kv.png?imageslim'
 date: 2019/5/2
+abbrlink: f8b3ee4a
 ---
 
 ## JNI简介

@@ -1,12 +1,14 @@
 ---
-title: 
-  NodeJS模仿Express封装路由
+title: NodeJS模仿Express封装路由
 tags:
-  [NodeJS,ES6,JavaScript]
+  - NodeJS
+  - ES6
+  - JavaScript
 categories:
-  [Web]
+  - Web
 date: 2018/12/3
-cover: https://imlgwpicture.oss-cn-qingdao.aliyuncs.com/blogImage/timg%5B1%5D.jpg
+cover: 'https://imlgwpicture.oss-cn-qingdao.aliyuncs.com/blogImage/timg%5B1%5D.jpg'
+abbrlink: 3b46123d
 ---
 
 ## NodeJS模仿Express封装路由

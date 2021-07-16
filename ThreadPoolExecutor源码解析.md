@@ -1,12 +1,13 @@
 ---
-title:
-  ThreadPoolExecutor源码解析
+title: ThreadPoolExecutor源码解析
 tags:
-  [多线程,并发编程]
+  - 多线程
+  - 并发编程
 categories:
-  [并发]
+  - 并发
 date: 2019/7/30
-cover: http://static.imlgw.top/blog/20190806/wdUz2J3lFXcL.jpg?imageslim
+cover: 'http://static.imlgw.top/blog/20190806/wdUz2J3lFXcL.jpg?imageslim'
+abbrlink: ca94e89b
 ---
 
 ## 深入ThreadPoolExecutor源码

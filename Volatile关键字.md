@@ -1,12 +1,13 @@
 ---
-title:
-  Volatile关键字详解
+title: Volatile关键字详解
 tags:
-  [多线程,并发编程]
+  - 多线程
+  - 并发编程
 categories:
-  [并发]
+  - 并发
 date: 2019/4/29
-cover: http://static.imlgw.top///20190429/O1leMFc6AcR4.png?imageslim
+cover: 'http://static.imlgw.top///20190429/O1leMFc6AcR4.png?imageslim'
+abbrlink: 1b898227
 ---
 
 ## JMM&CPU缓存

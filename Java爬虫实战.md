@@ -1,12 +1,14 @@
 ---
-title: 
-  Java爬虫实战(一) ：爬取斗图社所有gif
-tags: 
-  [爬虫,Java,misc]
+title: Java爬虫实战(一) ：爬取斗图社所有gif
+tags:
+  - 爬虫
+  - Java
+  - misc
 categories:
-  [爬虫]
+  - 爬虫
 date: 2018/11/30
-cover: http://static.imlgw.top///20190407/sAP81lBQEv3Q.png?imageslim
+cover: 'http://static.imlgw.top///20190407/sAP81lBQEv3Q.png?imageslim'
+abbrlink: ada76fed
 ---
 ## Java爬虫实战(一) ：爬取斗图社所有gif
 最近开始玩爬虫 , 还是挺有意思的 , 虽然写爬虫一般都是用Python比较方便，但是也没有必要为了写爬虫再学一门语言 ,虽然也挺简单，但是还是对Java比较习惯，后面可能会学Python但是目前还是先用java写着玩玩。

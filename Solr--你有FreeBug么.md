@@ -1,11 +1,13 @@
 ---
-title: 
-  你有FreeBug么? --->Spring-solr
+title: 你有FreeBug么? --->Spring-solr
 tags:
-  [Bug,Solr,Spring]
+  - Bug
+  - Solr
+  - Spring
 categories:
-  [踩坑记录]
+  - 踩坑记录
 date: 2018/10/5
+abbrlink: 8e2bbf7a
 ---
 ## FreeBug ? 哎呦，不错喔。
  昨天从上午10点开始一直到晚上 11：58才把那几个Bug给解决了，前两个Bug确实蛮奇怪的，特别是第一个Bug ,最后一个Bug....纯属智障。把这几个Bug记录下┗|｀O′|┛ 

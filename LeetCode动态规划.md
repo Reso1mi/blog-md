@@ -1,12 +1,13 @@
 ---
-title: 
-  LeetCode动态规划
-tags: 
-  [LeetCode,动态规划]
+title: LeetCode动态规划
+tags:
+  - LeetCode
+  - 动态规划
 categories:
-  [算法]
-cover: http://static.imlgw.top/blog/20190903/6oWNO41xhu1B.jpg?imageslim
+  - 算法
+cover: 'http://static.imlgw.top/blog/20190903/6oWNO41xhu1B.jpg?imageslim'
 date: 2019/9/1
+abbrlink: ece53aaa
 ---
 
 ## [70. 爬楼梯](https://leetcode-cn.com/problems/climbing-stairs/)

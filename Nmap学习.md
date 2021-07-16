@@ -1,11 +1,12 @@
 ---
-title: 
-  Nmap学习
+title: Nmap学习
 tags:
-  [Kali,Nmap]
+  - Kali
+  - Nmap
 date: 2018/6/17
 categories:
-  [渗透]
+  - 渗透
+abbrlink: d5f81032
 ---
 
 ## Nmap简介

@@ -1,12 +1,13 @@
 ---
-title:
-  CAS与原子变量
+title: CAS与原子变量
 tags:
-  [多线程,并发编程]
+  - 多线程
+  - 并发编程
 categories:
-  [并发]
+  - 并发
 date: 2019/4/22
-cover: http://static.imlgw.top/image/20190713/wallhaven-zmpd3j.jpg
+cover: 'http://static.imlgw.top/image/20190713/wallhaven-zmpd3j.jpg'
+abbrlink: 2c91a79
 ---
 
 ## CAS

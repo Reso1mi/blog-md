@@ -1,12 +1,14 @@
 ---
-title: 
-  Redis集群搭建
+title: Redis集群搭建
 tags:
-  [集群搭建,Redis,淘淘商城]
+  - 集群搭建
+  - Redis
+  - 淘淘商城
 categories:
-  [Web]
+  - Web
 date: 2018/5/27
-img: https://p1.ssl.qhmsg.com/dr/270_500_/t0147083ec93e20e687.png?size=363x363
+img: 'https://p1.ssl.qhmsg.com/dr/270_500_/t0147083ec93e20e687.png?size=363x363'
+abbrlink: 3e4345d9
 ---
 # Redis集群搭建
 # 一、Redis简介

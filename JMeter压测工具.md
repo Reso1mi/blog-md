@@ -1,12 +1,13 @@
 ---
-title: 
-  JMeter压测
-tags: 
-  [JMeter,秒杀]
+title: JMeter压测
+tags:
+  - JMeter
+  - 秒杀
 categories:
-  [Web]
+  - Web
 date: 2019/6/6
-cover: http://static.imlgw.top/image/20190713/Blog-Built-in-JMeter-Functions.png
+cover: 'http://static.imlgw.top/image/20190713/Blog-Built-in-JMeter-Functions.png'
+abbrlink: f990e699
 ---
 
 ## JMeter入门

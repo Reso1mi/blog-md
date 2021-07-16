@@ -1,11 +1,11 @@
 ---
-title: 
-  Hexo添加其他的评论系统
+title: Hexo添加其他的评论系统
 tags:
-  [Hexo]
+  - Hexo
 date: 2018/7/1
 categories:
-  [Hexo]
+  - Hexo
+abbrlink: bbbb4402
 ---
 
 ## 最近换了一个Hexo的主题，也就是现在的这款，但是支持的评论系统两个已经关了，还有一个会被墙。所以就自己来加了一个

@@ -1,11 +1,12 @@
 ---
-title: 
-  CAS单点登陆系统Demo
-tags: 
-  [CAS,SSO]
+title: CAS单点登陆系统Demo
+tags:
+  - CAS
+  - SSO
 categories:
-  [Web]
+  - Web
 date: 2018/11/17
+abbrlink: '65571397'
 ---
 ##  单点登陆系统 --CAS
 - 关于CAS的介绍网上都有。这里主要记录如何使用，如何配置和集成一些框架。

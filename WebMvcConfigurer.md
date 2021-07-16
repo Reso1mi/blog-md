@@ -1,12 +1,13 @@
 ---
-title:
-  WebMvcConfigurer小结
+title: WebMvcConfigurer小结
 tags:
-  [SpringMVC]
+  - SpringMVC
 categories:
-  [Web]
+  - Web
 date: 2019/5/20
-cover: http://static.imlgw.top/image/20190713/8b2b25e9-a8de-b3f4-a810-7814a40a193c.png
+cover: >-
+  http://static.imlgw.top/image/20190713/8b2b25e9-a8de-b3f4-a810-7814a40a193c.png
+abbrlink: a28427
 ---
 
 ## 起源

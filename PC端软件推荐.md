@@ -1,11 +1,11 @@
 ---
-title:
-  PC端软件推荐
+title: PC端软件推荐
 tags:
-  [软件推荐]
+  - 软件推荐
 categories:
-  [杂项]
+  - 杂项
 date: 2020/11/19
+abbrlink: 944ca6e0
 ---
 
 # 贾老板专属链接

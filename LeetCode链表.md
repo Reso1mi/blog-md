@@ -1,12 +1,13 @@
 ---
-title: 
-  LeetCode链表
+title: LeetCode链表
 tags:
-  [链表,LeetCode]
+  - 链表
+  - LeetCode
 categories:
-  [算法]
+  - 算法
 date: 2019/2/27
-cover: http://static.imlgw.top///20190227/gPprrxbrdwAx.jpg?imageslim
+cover: 'http://static.imlgw.top///20190227/gPprrxbrdwAx.jpg?imageslim'
+abbrlink: bef97aa3
 ---
 
 > 链表专题是最开始学算法的时候写的，很多代码都写得很烂，目前正在慢慢的重写，u1s1链表的题还是很考验细心的，稍不注意就连错了

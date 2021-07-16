@@ -1,11 +1,11 @@
 ---
-title: 
-  Linux文件权限和目录配置
-tags: 
-  [Linux]
+title: Linux文件权限和目录配置
+tags:
+  - Linux
 categories:
-  [Linux]
+  - Linux
 date: 2020/5/27
+abbrlink: 91d3cf25
 ---
 
 > 本文全文摘抄自《鸟叔的LInux私房菜》，对部分用词做了转换，仅保留了我感兴趣的部分，便于以后查找

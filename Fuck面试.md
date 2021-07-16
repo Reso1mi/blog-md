@@ -1,12 +1,12 @@
 ---
-title: 
-  Fuck面试
-tags: 
-  [面试]
+title: Fuck面试
+tags:
+  - 面试
 categories:
-  [踩坑记录]
-hidden: True
+  - 踩坑记录
+hidden: true
 date: 2020/9/4
+abbrlink: ec7b18dc
 ---
 
 # 自我介绍

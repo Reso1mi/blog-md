@@ -1,11 +1,11 @@
 ---
-title: 
-  DP：背包模型
-tags: 
-  [算法]
+title: DP：背包模型
+tags:
+  - 算法
 categories:
-  [算法]
+  - 算法
 date: 2021/3/2
+abbrlink: e60f310b
 ---
 > 相关文章 [LeetCode背包问题](http://imlgw.top/2019/11/29/leetcode-bei-bao-wen-ti/) 
 

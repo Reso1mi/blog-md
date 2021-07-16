@@ -1,10 +1,12 @@
 ---
-title: 
-  Hexo第一篇博客
-tags: 
-  [Hexo ,体验,入门]
+title: Hexo第一篇博客
+tags:
+  - Hexo
+  - 体验
+  - 入门
 categories: Hexo
 date: 2018/5/10
+abbrlink: 80494c7d
 ---
 第一篇Hexo博客
 =====

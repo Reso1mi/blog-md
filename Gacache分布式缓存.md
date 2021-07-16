@@ -1,12 +1,13 @@
 ---
-title: 
-  Gacache分布式缓存
-tags: 
-  [开源项目,Gacache]
+title: Gacache分布式缓存
+tags:
+  - 开源项目
+  - Gacache
 categories:
-  [Web]
+  - Web
 date: 2020/6/2
 sticky: 2
+abbrlink: 1f88320a
 ---
 
 ## TOC

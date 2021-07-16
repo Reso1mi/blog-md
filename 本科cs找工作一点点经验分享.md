@@ -1,13 +1,13 @@
 ---
-title:
-  找工作一点点经验分享
+title: 找工作一点点经验分享
 tags:
-  [感悟]
+  - 感悟
 categories:
-  [感悟]
-hidden: True
+  - 感悟
+hidden: true
 indexing: false
 date: 2020/5/22
+abbrlink: 6cbc338d
 ---
   
 ## 前言

@@ -1,11 +1,11 @@
 ---
-title: 
-  Nginx学习
+title: Nginx学习
 tags:
-  [Nginx]
+  - Nginx
 categories:
-  [Web]
+  - Web
 date: 2018/5/13
+abbrlink: dda0de9c
 ---
 # Nginx学习笔记
 - Nginx简介

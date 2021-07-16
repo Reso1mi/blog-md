@@ -1,12 +1,13 @@
 ---
-title:
-  AQS源码解析（上）
+title: AQS源码解析（上）
 tags:
-  [多线程,并发编程]
+  - 多线程
+  - 并发编程
 categories:
-  [并发]
-cover: http://static.imlgw.top/blog/20190924/fjWv53purgaU.jpg?imageslim
+  - 并发
+cover: 'http://static.imlgw.top/blog/20190924/fjWv53purgaU.jpg?imageslim'
 date: 2019/9/24
+abbrlink: c279d77a
 ---
 
 ## AbstractQueuedSynchronized

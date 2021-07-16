@@ -1,12 +1,13 @@
 ---
-title: 
-  深入理解Java虚拟机（二）
-tags: 
-  [ClassLoader,JVM]
+title: 深入理解Java虚拟机（二）
+tags:
+  - ClassLoader
+  - JVM
 categories:
-  [JVM]
+  - JVM
 date: 2019/8/17
-cover: http://static.imlgw.top/blog/20190826/dYaTXirlDNhC.jpg?imageslim
+cover: 'http://static.imlgw.top/blog/20190826/dYaTXirlDNhC.jpg?imageslim'
+abbrlink: 2c0986bb
 ---
 
 > 这一篇主要讲JVM的类加载机制，本来很久之前就写了，但是这几天又重新学习了一遍，纠正了之前很多错误的观点，然后又补充了很多东西

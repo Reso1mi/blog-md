@@ -1,12 +1,13 @@
 ---
-title:
-  Java多线程基础
+title: Java多线程基础
 tags:
-  [多线程,并发编程]
+  - 多线程
+  - 并发编程
 categories:
-  [并发]
-cover: http://static.imlgw.top///20190323/oGikrmykzg5w.jpg?imageslim
+  - 并发
+cover: 'http://static.imlgw.top///20190323/oGikrmykzg5w.jpg?imageslim'
 date: 2019/4/7
+abbrlink: 32b13d92
 ---
 ## 1.线程与进程区别
 
