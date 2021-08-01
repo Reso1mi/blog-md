@@ -1,5 +1,5 @@
 ---
-title: LeetCode数组
+title: LeetCode 数组
 tags:
   - 数组
   - LeetCode
@@ -11,7 +11,7 @@ abbrlink: a9999be0
 
 ## LeetCode 数组
 
-> 善用ctrl+f
+> 善用 ctrl+f
 
 ## [167. 两数之和 II - 输入有序数组](https://leetcode-cn.com/problems/two-sum-ii-input-array-is-sorted/)
 
@@ -19,17 +19,17 @@ abbrlink: a9999be0
 
 函数应该返回这两个下标值 index1 和 index2，其中 index1 必须小于 index2*。*
 
-**说明:**
+**说明：**
 
 - 返回的下标值（index1 和 index2）不是从零开始的。
 - 你可以假设每个输入只对应唯一的答案，而且你不可以重复使用相同的元素。
 
-**示例:**
+**示例：**
 
 ```java
-输入: numbers = [2, 7, 11, 15], target = 9
-输出: [1,2]
-解释: 2 与 7 之和等于目标数 9 。因此 index1 = 1, index2 = 2 。
+输入：numbers = [2, 7, 11, 15], target = 9
+输出：[1,2]
+解释：2 与 7 之和等于目标数 9 。因此 index1 = 1, index2 = 2 。
 ```
 
 两数之和的变种，看见**有序**其实也可以使用二分来做，但是时间复杂度是`O(NlogN)`，相对较高
@@ -66,11 +66,11 @@ public int[] twoSum(int[] numbers, int target) {
 
 图中垂直线代表输入数组 [1,8,6,2,5,4,8,3,7]。在此情况下，容器能够容纳水（表示为蓝色部分）的最大值为 49。
 
-**示例:**
+**示例：**
 
 ```java
-输入: [1,8,6,2,5,4,8,3,7]
-输出: 49
+输入：[1,8,6,2,5,4,8,3,7]
+输出：49
 ```
 
 **解法一**
@@ -119,9 +119,9 @@ public int maxArea(int[] height) {
 }
 ```
 
-212ms，40%，利用双指针稍微优化了下，依然是遍历找每个柱的最大值，但是尾指针在移动时先判断下，如果比头指针大就直接break，因为**已经是最大值**了，tail是从右向左移动的
+212ms，40%，利用双指针稍微优化了下，依然是遍历找每个柱的最大值，但是尾指针在移动时先判断下，如果比头指针大就直接 break，因为**已经是最大值**了，tail 是从右向左移动的
 
-> 开始改的时候忘了将尾指针归位，结果还对了，而且90%的beats.....哈哈哈，误打误撞搞了个最优解出来。
+> 开始改的时候忘了将尾指针归位，结果还对了，而且 90%的 beats..... 哈哈哈，误打误撞搞了个最优解出来。
 
 **解法二**
 
@@ -135,7 +135,7 @@ public int maxArea(int[] height) {
     int max=0;
     while(left<right){
         max=Math.max((right-left)*Math.min(height[left],height[right]),max);
-        //if(left<right){ 隐约记得之前也这样写过。。。没想到这次又在这里WA了
+        //if(left<right){ 隐约记得之前也这样写过。没想到这次又在这里 WA 了
         if(height[left]<height[right]){
             left++;
         }else{
@@ -150,7 +150,7 @@ public int maxArea(int[] height) {
 
 ![mark](http://static.imlgw.top///20190505/1uze479AHHLo.png?imageslim)
 
-这个时候如果移动尾指针，明显面积只可能减小，所以只有移动头指针才有可能增大这个区域的面积，这样一来就可以省掉很多没必要的计算，有点像贪心，时间复杂度O(N)
+这个时候如果移动尾指针，明显面积只可能减小，所以只有移动头指针才有可能增大这个区域的面积，这样一来就可以省掉很多没必要的计算，有点像贪心，时间复杂度 O(N)
 
 ## [42. 接雨水](https://leetcode-cn.com/problems/trapping-rain-water/)
 
@@ -158,23 +158,20 @@ public int maxArea(int[] height) {
 
 ![rainwatertrap.png](https://i.loli.net/2019/05/14/5cda71129045d93180.png)
 
-
-
-
 上面是由数组 `[0,1,0,2,1,0,1,3,2,1,2,1]` 表示的高度图，在这种情况下，可以接 6 个单位的雨水（蓝色部分表示雨水）。
 
-**示例:**
+**示例：**
 
 ```java
-输入: [0,1,0,2,1,0,1,3,2,1,2,1]
-输出: 6
+输入：[0,1,0,2,1,0,1,3,2,1,2,1]
+输出：6
 ```
 
 **解法一**
 
-> 我最开始思路是填满后用总面积减数组和，跑过了130+个，有一种特殊的跑不过了，懒得去处理那个边界了，不太优雅
+> 我最开始思路是填满后用总面积减数组和，跑过了 130+个，有一种特殊的跑不过了，懒得去处理那个边界了，不太优雅
 
-这个题目的关键就是每个柱子能接的水是**左右最长柱子(都大于当前柱子)中的较小的那个减去当前柱子**。
+这个题目的关键就是每个柱子能接的水是**左右最长柱子（都大于当前柱子）中的较小的那个减去当前柱子**。
 
 所以我们可以用两个数组分别存储每个柱子左右的最长柱子（做预处理），这样就得到了一种有点动态规划意思的解法
 
@@ -216,11 +213,11 @@ public static int trap(int []height){
     while(left<=right){
         leftMax=Math.max(leftMax,height[left]);
         rightMax=Math.max(rightMax,height[right]);
-        //leftMax小于rightMax,那么靠近leftMax的柱子left可以接的雨水就可以确定了
+        //leftMax 小于 rightMax, 那么靠近 leftMax 的柱子 left 可以接的雨水就可以确定了
         if (leftMax<rightMax) {
             res+=leftMax-height[left]; 
             left++;
-        }else{ //反之leftMax大于rightMax,那么考近rightMax的柱子right可以接的最多的雨水就可以i确定了
+        }else{ //反之 leftMax 大于 rightMax, 那么考近 rightMax 的柱子 right 可以接的最多的雨水就可以 i 确定了
             res+=rightMax-height[right];
             right--;
         }
@@ -231,11 +228,11 @@ public static int trap(int []height){
 
 个人感觉这个是最好理解的版本，我这里最开始的哪个版本不是这样写的，当时自己肯定也没搞懂，包括现在我也没搞懂那种写法
 
-![[图片来自liweiwei1419大佬](https://leetcode-cn.com/u/liweiwei1419/)](http://static.imlgw.top/blog/20200129/Dy8M19G4XwSn.png?imageslim)
+![[图片来自 liweiwei1419 大佬](https://leetcode-cn.com/u/liweiwei1419/)](http://static.imlgw.top/blog/20200129/Dy8M19G4XwSn.png?imageslim)
 
-这两种情况对应的就是循环中的if的两个分支，双指针向中间靠拢，当`leftMax`小于`rightMax`的时候我们不用去考虑当前`left`柱子右边实际的最大的右边的柱子是谁，我们只需要知道`left`柱子 左边最大值`leftMax`的值就ok，因为此时`left` 柱子能接水的量是由`leftMax`决定的，反之对应第二种情况，`right`柱子的接水量则是由`rightMax` 决定的，最后遍历完所有的柱子就可以确定整体的接水量
+这两种情况对应的就是循环中的 if 的两个分支，双指针向中间靠拢，当`leftMax`小于`rightMax`的时候我们不用去考虑当前`left`柱子右边实际的最大的右边的柱子是谁，我们只需要知道`left`柱子 左边最大值`leftMax`的值就 ok，因为此时`left` 柱子能接水的量是由`leftMax`决定的，反之对应第二种情况，`right`柱子的接水量则是由`rightMax` 决定的，最后遍历完所有的柱子就可以确定整体的接水量
 
-> 这里的if分支的条件有的解法中写的是leftMax < nums[right]甚至nums[left] < nums[right] 这也是我上面说的不理解的地方，因为这样写也是可以AC的😅，后面有时间再回头看看吧
+> 这里的 if 分支的条件有的解法中写的是 leftMax < nums[right] 甚至 nums[left] < nums[right] 这也是我上面说的不理解的地方，因为这样写也是可以 AC 的😅，后面有时间再回头看看吧
 
 **解法二**
 
@@ -282,11 +279,11 @@ public static int trap6(int[] height) {
 
 这种有点不好理解，其实是按照层来计算的，栈里面是递减的元素，如果读到比栈顶大的元素就**按层**计算递减栈**底部元素**到**当前元素**能蓄水的面积。
 
-> 2020/1/29回顾
+> 2020/1/29 回顾
 >
-> 这个解法其实就是单调栈😂，当时还是菜鸟根本就不懂，现在回头一看就懂了hahaha~ 
+> 这个解法其实就是单调栈😂，当时还是菜鸟根本就不懂，现在回头一看就懂了 hahaha~ 
 >
-> 放到[单调栈专题](http://imlgw.top/2019/10/01/leetcode-zhan-dui-lie/#%E5%8D%95%E8%B0%83%E6%A0%88)里面解释了
+> 放到 [单调栈专题](http://imlgw.top/2019/10/01/leetcode-zhan-dui-lie/#%E5%8D%95%E8%B0%83%E6%A0%88) 里面解释了
 
 ## [15. 三数之和](https://leetcode-cn.com/problems/3sum/)
 
@@ -295,7 +292,7 @@ public static int trap6(int[] height) {
 **注意：**答案中不可以包含重复的三元组。
 
 ```java
-例如, 给定数组 nums = [-1, 0, 1, 2, -1, -4]，
+例如，给定数组 nums = [-1, 0, 1, 2, -1, -4]，
 
 满足要求的三元组集合为：
 [
@@ -318,7 +315,7 @@ public static List<List<Integer>> threeSum(int[] nums) {
     // 完备性
     for (int i = 0; i < len-2; i++) {
         if(nums[i]>0){
-            //大于0了，后面的和加起来肯定>0了
+            //大于 0 了，后面的和加起来肯定>0 了
             break;
         }
         //遍历数组，相同的元素只需要遍历一遍，不然会重复
@@ -338,20 +335,20 @@ public static List<List<Integer>> threeSum(int[] nums) {
                 while (L<R && nums[R] == nums[R-1]) R--;
                 L++;
                 R--;
-            } else if (sum < 0){ //小于0所以要增大L,逼近0 else R--;
+            } else if (sum < 0){ //小于 0 所以要增大 L, 逼近 0 else R--;
                  L++;   
-            } else R--; //大于0就减小R
+            } else R--; //大于 0 就减小 R
         }
     }
     return list;
 }
 ```
 
-代码思路就是遍历数组，然后从**i**位置后面的数组中找能和**i**凑成一对的元素，这里关键就是这里怎么找这两个元素 满足nums[L]+nums[R]=-nums[i]，问题就转化成了上面的**两数之和**，但是这里用暴力法肯定是过不了的，hashMap这里也不好用，所以这里我们可以先给数组排个序，然后利用**双指针对撞**，逐渐逼近0，还有一个很需要注意的地方就是二次去重，如下图
+代码思路就是遍历数组，然后从** i **位置后面的数组中找能和** i **凑成一对的元素，这里关键就是这里怎么找这两个元素 满足 nums[L]+nums[R]=-nums[i]，问题就转化成了上面的**两数之和**，但是这里用暴力法肯定是过不了的，hashMap 这里也不好用，所以这里我们可以先给数组排个序，然后利用**双指针对撞**，逐渐逼近 0，还有一个很需要注意的地方就是二次去重，如下图
 
 ![mark](http://static.imlgw.top///20190505/5YlNbCLe57fb.png?imageslim)
 
-当找到一组时有可能L，R的下一个位置的值没变这样就会导致重复。
+当找到一组时有可能 L，R 的下一个位置的值没变这样就会导致重复。
 
 ## [16. 最接近的三数之和](https://leetcode-cn.com/problems/3sum-closest/)
 
@@ -396,7 +393,7 @@ public int threeSumClosest(int[] nums, int target) {
 }
 ```
 
-一遍**bugfree**，其实都挺简单，这两题我一直在考虑别的算法，我想的是排序后从两遍向中间然后...就不bb了，反之很多没考虑到的地方。
+一遍** bugfree**，其实都挺简单，这两题我一直在考虑别的算法，我想的是排序后从两遍向中间然后。.. 就不 bb 了，反之很多没考虑到的地方。
 
 ## [18. 四数之和](https://leetcode-cn.com/problems/4sum/)
 
@@ -421,7 +418,7 @@ public int threeSumClosest(int[] nums, int target) {
 
 **解法一**
 
-和三数之和一样，但是更加繁琐了，提交了5，6次才AC，还是看了别人的代码的
+和三数之和一样，但是更加繁琐了，提交了 5，6 次才 AC，还是看了别人的代码的
 
 ```java
 public static List<List<Integer>> fourSum(int[] nums, int target) {
@@ -430,7 +427,7 @@ public static List<List<Integer>> fourSum(int[] nums, int target) {
     int n=nums.length;
     //0 0 -1 1
     for (int i=0;i<n-3;i++) {
-        //这里我开始写的是和后一个比较，0，0，0，0这种过不了
+        //这里我开始写的是和后一个比较，0，0，0，0 这种过不了
         if(i>0 && nums[i]==nums[i-1])continue;
         if (nums[i]+nums[i+1]+nums[i+2]+nums[i+3]>target) break;
         if (nums[i]+nums[n-1]+nums[n-2]+nums[n-3]<target) continue;
@@ -445,7 +442,7 @@ public static List<List<Integer>> fourSum(int[] nums, int target) {
             while(left<right){
                 if (target-two==nums[left]+nums[right]) {
                     res.add(Arrays.asList(nums[i],nums[j],nums[left],nums[right]));
-                    //想清楚什么时候跳,放外面就错了
+                    //想清楚什么时候跳，放外面就错了
                     while(left<right && nums[left]==nums[left+1]){left++;};
                     while(left<right && nums[right]==nums[right-1]){right--;};
                     left++;
@@ -461,7 +458,6 @@ public static List<List<Integer>> fourSum(int[] nums, int target) {
     return res;
 }
 ```
-
 
 ## [26. 删除排序数组中的重复项](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array/)
 
@@ -491,7 +487,7 @@ public static List<List<Integer>> fourSum(int[] nums, int target) {
 
 **解法一**
 
-实不相瞒，这题一开始我暴力做的，冒泡的思想，太蠢了😅 ，注意题目要求空间复杂度O(1)
+实不相瞒，这题一开始我暴力做的，冒泡的思想，太蠢了😅 ，注意题目要求空间复杂度 O(1)
 
 ```java
 public int removeDuplicates(int[] nums) {
@@ -534,20 +530,20 @@ public int removeDuplicates(int[] nums) {
 你不需要考虑数组中超出新长度后面的元素。
 ```
 
-**说明:**
+**说明：**
 
-为什么返回数值是整数，但输出的答案是数组呢?
+为什么返回数值是整数，但输出的答案是数组呢？
 
 请注意，输入数组是以**“引用”**方式传递的，这意味着在函数里修改输入数组对于调用者是可见的。
 
-你可以想象内部操作如下:
+你可以想象内部操作如下：
 
 ```java
 // nums 是以“引用”方式传递的。也就是说，不对实参做任何拷贝
 int len = removeDuplicates(nums);
 
 // 在函数里修改输入数组对于调用者是可见的。
-// 根据你的函数返回的长度, 它会打印出数组中该长度范围内的所有元素。
+// 根据你的函数返回的长度，它会打印出数组中该长度范围内的所有元素。
 for (int i = 0; i < len; i++) {
     print(nums[i]);
 }
@@ -555,7 +551,7 @@ for (int i = 0; i < len; i++) {
 
 **解法一**
 
-上面题目加一点，在前后相等的时候判断index前是否已经有两个相等
+上面题目加一点，在前后相等的时候判断 index 前是否已经有两个相等
 
 ```java
 public int removeDuplicates(int[] nums) {
@@ -636,11 +632,11 @@ public int removeElement2(int[] nums, int val) {
 
 给定一个数组 `nums`，编写一个函数将所有 `0` 移动到数组的末尾，同时保持非零元素的相对顺序。
 
-**示例:**
+**示例：**
 
 ```java
-输入: [0,1,0,3,12]
-输出: [1,3,12,0,0]
+输入：[0,1,0,3,12]
+输出：[1,3,12,0,0]
 ```
 
 **说明**:
@@ -668,15 +664,15 @@ public void moveZeroes(int[] nums) {
 }
 ```
 
-其实就是借助上面题目的思路，最后再补0就ok了，其实也还可以优化下
+其实就是借助上面题目的思路，最后再补 0 就 ok 了，其实也还可以优化下
 
 **解法二**
 
-保持`[0,m)` 为非0元素，遇到非0元素就和右边界进行交换
+保持`[0,m)` 为非 0 元素，遇到非 0 元素就和右边界进行交换
 
 ```java
 public void moveZeroes(int[] nums) {
-    int m=0; //[0,m)为非0元素
+    int m=0; //[0,m) 为非 0 元素
     for(int i=0;i<nums.length;i++){
         if(nums[i]!=0){
             if(i!=m){
@@ -708,7 +704,7 @@ public void moveZeroes(int[] nums) {
 
 **解法一**
 
-直接上最优解吧，这题暴力法O(N!)，空间也超过了
+直接上最优解吧，这题暴力法 O(N!)，空间也超过了
 
 ```java
 public void nextPermutation(int[] nums) {
@@ -721,12 +717,12 @@ public void nextPermutation(int[] nums) {
             //找到第一个峰值左相邻的元素（从左到右）
             i--;
         }
-        //逆序的, 没有最大值
+        //逆序的，没有最大值
         if(i==-1){
             reverse(nums,0);
             return;
         }
-        //找到峰值右边 [i+1 , len-1] 最后一个比i 大的元素
+        //找到峰值右边 [i+1 , len-1] 最后一个比 i 大的元素
         for (int j=len-1;j>i;j--) {
             if(nums[j]>nums[i]){
                 swap(nums,j,i);
@@ -753,8 +749,8 @@ private  static void swap(int[] nums, int i, int j) {
 
 - 第一步，逆序找到第一个峰值的左边第一个元素 `a[i-1]`。
 
-- 将峰值右边的**最小的**比`a[i-1]`大的`a[j]`(其实就是`右边最后一个比它大的元素`)元素与**a[i-1]**交换。
-- 翻转刚刚调整过`a[i-1]`后面的逆序的数组(`a[i]-->a[len-1]`)。
+- 将峰值右边的**最小的**比`a[i-1]`大的`a[j]`（其实就是`右边最后一个比它大的元素`) 元素与** a[i-1] **交换。
+- 翻转刚刚调整过`a[i-1]`后面的逆序的数组 (`a[i]-->a[len-1]`)。
 
 ![mark](http://static.imlgw.top/blog/20190728/G6uqlPyjPLdV.png?imageslim)
 
@@ -762,20 +758,20 @@ private  static void swap(int[] nums, int i, int j) {
 
 ## [556. 下一个更大元素 III](https://leetcode-cn.com/problems/next-greater-element-iii/)
 
-给定一个32位正整数 n，你需要找到最小的32位整数，其与 n 中存在的位数完全相同，并且其值大于n。如果不存在这样的32位整数，则返回-1。
+给定一个 32 位正整数 n，你需要找到最小的 32 位整数，其与 n 中存在的位数完全相同，并且其值大于 n。如果不存在这样的 32 位整数，则返回-1。
 
 **示例 1:**
 
 ```java
-输入: 12
-输出: 21
+输入：12
+输出：21
 ```
 
 **示例 2:**
 
 ```java
-输入: 21
-输出: -1
+输入：21
+输出：-1
 ```
 
 **解法一**
@@ -794,7 +790,7 @@ public int nextGreaterElement(int n) {
     char[] nums=sb.reverse().toString().toCharArray();
     int len=nums.length;
     for (int i=len-1;i>0;i--) {
-        if (nums[i]>nums[i-1]) { //逆序的峰值i
+        if (nums[i]>nums[i-1]) { //逆序的峰值 i
             if (i==0) return -1; 
             for (int j=len-1;j>=i;j--) {
                 if (nums[j]>nums[i-1]) {
@@ -830,21 +826,20 @@ public void swap(char[] nums,int a,int b){
 **示例 1:**
 
 ```java
-输入: [3,2,3]
-输出: 3
+输入：[3,2,3]
+输出：3
 ```
-
 
 **示例 2:**
 
 ```java
-输入: [2,2,1,1,1,2,2]
-输出: 2
+输入：[2,2,1,1,1,2,2]
+输出：2
 ```
 
 **解法一**
 
-分治法， (`HashMap`或者排序什么的方法就不说了，笔试可以那样写，面试就不能这样了)
+分治法， (`HashMap`或者排序什么的方法就不说了，笔试可以那样写，面试就不能这样了）
 
 ```java
 public int majorityElement(int[] nums) {
@@ -889,7 +884,7 @@ public int majorityElement(int[] nums) {
         if (sum==0) {
             res=nums[i];
         }
-        //将众数看做1,其他的看作-1,最后和一定是大于0的
+        //将众数看做 1, 其他的看作-1, 最后和一定是大于 0 的
         if (res!=nums[i]) {
             sum--;
         }else{
@@ -901,27 +896,26 @@ public int majorityElement(int[] nums) {
 ```
 **解法三**
 
-刚刚看见一种解法，当作求第k大，用快选就行了，时间复杂度`O(N)`
+刚刚看见一种解法，当作求第 k 大，用快选就行了，时间复杂度`O(N)`
 
 ## [229. 求众数 II](https://leetcode-cn.com/problems/majority-element-ii/)
 
 给定一个大小为 n 的数组，找出其中所有出现超过 ⌊ n/3 ⌋ 次的元素。
 
-**说明:** 要求算法的时间复杂度为 O(n)，空间复杂度为 O(1)。
+**说明：** 要求算法的时间复杂度为 O(n)，空间复杂度为 O(1)。
 
 **示例 1:**
 
 ```java
-输入: [3,2,3]
-输出: [3]
+输入：[3,2,3]
+输出：[3]
 ```
-
 
 **示例 2:**
 
 ```java
-输入: [1,1,1,3,3,2,2,2]
-输出: [1,2]
+输入：[1,1,1,3,3,2,2,2]
+输出：[1,2]
 ```
 
 **解法一**
@@ -929,18 +923,18 @@ public int majorityElement(int[] nums) {
 和上面的方法一样，抵消去除三个不同的元素对众数没有任何影响，但是最后需要判断是否都是符合条件的
 
 ```go
-//update：2020.4.23 用go在web上随手写了一个，感觉比之前java写的哪个好理解
+//update：2020.4.23 用 go 在 web 上随手写了一个，感觉比之前 java 写的哪个好理解
 func majorityElement(nums []int) []int {
     var res []int
-    //超过n/3的元素最多2个
-    cand1:=-1 //设置成nums中不存在的值比较好,比如-1
+    //超过 n/3 的元素最多 2 个
+    cand1:=-1 //设置成 nums 中不存在的值比较好，比如-1
     count1:=0
     cand2:=-1
     count2:=0
     for _,num:=range nums{
-        if num==cand1{ //投1
+        if num==cand1{ //投 1
             count1++
-        }else if num==cand2{ //投2
+        }else if num==cand2{ //投 2
             count2++
         }else { //都不投
             if count1==0 {
@@ -983,27 +977,27 @@ func majorityElement(nums []int) []int {
 **示例 1:**
 
 ```java
-输入: [1,2,0]
-输出: 3
+输入：[1,2,0]
+输出：3
 ```
 
 **示例 2:**
 
 ```java
-输入: [3,4,-1,1]
-输出: 2
+输入：[3,4,-1,1]
+输出：2
 ```
 
 **示例 3:**
 
 ```java
-输入: [7,8,9,11,12]
-输出: 1
+输入：[7,8,9,11,12]
+输出：1
 ```
 
 **解法一**
 
-Head题，想到了桶排序，但是空间不符合要求，看了评论扣了半天边界也没抠出来
+Head 题，想到了桶排序，但是空间不符合要求，看了评论扣了半天边界也没抠出来
 
 ```java
 public int firstMissingPositive(int[] nums) {
@@ -1027,7 +1021,7 @@ public int firstMissingPositive(int[] nums) {
 }
 ```
 
-其实也是桶排序的思想，不过这里是利用交换来定位每个元素，首相我们将原数组看作桶，题目要求的正整数，所以我们桶中存的应该是`【1，nums.length】`，也就是0位置应该存放的是1，1位置存放的应该是2....再归位后重新遍历数组，如果某个位置的`nums[i]!=i+1` 就说明这个是第一个缺失的正数，遍历完了之后没有找到，全部对应上了，那就说明我们缺少的第一个正数是`nums.length+1`
+其实也是桶排序的思想，不过这里是利用交换来定位每个元素，首相我们将原数组看作桶，题目要求的正整数，所以我们桶中存的应该是`【1，nums.length】`，也就是 0 位置应该存放的是 1，1 位置存放的应该是 2.... 再归位后重新遍历数组，如果某个位置的`nums[i]!=i+1` 就说明这个是第一个缺失的正数，遍历完了之后没有找到，全部对应上了，那就说明我们缺少的第一个正数是`nums.length+1`
 
 **Update:2020.6.27**
 ```golang
@@ -1069,23 +1063,23 @@ public int firstMissingPositive2(int[] nums) {
 }
 ```
 
-lc上提交后的空间消耗居然比上面的还小一点😂
+lc 上提交后的空间消耗居然比上面的还小一点😂
 
 ## [442. 数组中重复的数据](https://leetcode-cn.com/problems/find-all-duplicates-in-an-array/)
 
-给定一个整数数组 a，其中1 ≤ a[i] ≤ n （n为数组长度）, 其中有些元素出现两次而其他元素出现一次。
+给定一个整数数组 a，其中 1 ≤ a[i] ≤ n （n 为数组长度）, 其中有些元素出现两次而其他元素出现一次。
 
 找到所有出现两次的元素。
 
-你可以不用到任何额外空间并在O(n)时间复杂度内解决这个问题吗？
+你可以不用到任何额外空间并在 O(n) 时间复杂度内解决这个问题吗？
 
 **示例：**
 
 ```java
-输入:
+输入：
 [4,3,2,7,8,2,3,1]
 
-输出:
+输出：
 [2,3]
 ```
 
@@ -1136,21 +1130,21 @@ public List<Integer> findDuplicates(int[] nums) {
 
 找到所有在 [1, n] 范围之间没有出现在数组中的数字。
 
-您能在不使用额外空间且时间复杂度为O(n)的情况下完成这个任务吗? 你可以假定返回的数组不算在额外空间内。
+您能在不使用额外空间且时间复杂度为 O(n) 的情况下完成这个任务吗？你可以假定返回的数组不算在额外空间内。
 
-**示例:**
+**示例：**
 
 ```java
-输入:
+输入：
 [4,3,2,7,8,2,3,1]
 
-输出:
+输出：
 [5,6]
 ```
 
 **解法一**
 
-首先想到的解法，利用的和上面缺失的第一个正数一样的思路，抽屉原理，归位每个数字，最后没有归为的index就是消失的数字
+首先想到的解法，利用的和上面缺失的第一个正数一样的思路，抽屉原理，归位每个数字，最后没有归为的 index 就是消失的数字
 
 ```java
 public List<Integer> findDisappearedNumbers(int[] nums) {
@@ -1200,7 +1194,7 @@ public List<Integer> findDisappearedNumbers(int[] nums) {
 
 题目给定了数值的范围就是`[1,n]`所以可以遍历每个元素，将该元素正确位置的值取反置为负数
 
-比如 `5 1 1 3 2` 遍历到5的时候就会将末尾的2变为-2，依次类推，最后得到的就是`[-5,-1,-1,3,-2]` ，最后再遍历一遍，其中值为正数的元素的索引+1就是消失的数字
+比如 `5 1 1 3 2` 遍历到 5 的时候就会将末尾的 2 变为-2，依次类推，最后得到的就是`[-5,-1,-1,3,-2]` ，最后再遍历一遍，其中值为正数的元素的索引+1 就是消失的数字
 
 ## [75. 颜色分类](https://leetcode-cn.com/problems/sort-colors/)
 
@@ -1208,20 +1202,20 @@ public List<Integer> findDisappearedNumbers(int[] nums) {
 
 此题中，我们使用整数 0、 1 和 2 分别表示红色、白色和蓝色。
 
-**注意:**
+**注意：**
 不能使用代码库中的排序函数来解决这道题。
 
-**示例:**
+**示例：**
 
 ```java
-输入: [2,0,2,1,1,0]
-输出: [0,0,1,1,2,2]
+输入：[2,0,2,1,1,0]
+输出：[0,0,1,1,2,2]
 ```
 
 **进阶：**
 
 - 一个直观的解决方案是使用计数排序的两趟扫描算法。
-  首先，迭代计算出0、1 和 2 元素的个数，然后按照0、1、2的排序，重写当前数组。
+  首先，迭代计算出 0、1 和 2 元素的个数，然后按照 0、1、2 的排序，重写当前数组。
 - 你能想出一个仅使用常数空间的一趟扫描算法吗？
 
 **解法一**
@@ -1247,7 +1241,7 @@ public static void sortColors(int[] nums) {
 }
 ```
 
-当然还有更优秀的做法，利用**三向切分快排**的思想(荷兰国旗问题)
+当然还有更优秀的做法，利用**三向切分快排**的思想（荷兰国旗问题）
 
 ```java
 public static void sortColors(int[] nums) {
@@ -1280,20 +1274,20 @@ public static swap(int []nums,int a,int b){
 **示例 1:**
 
 ```java
-输入: "A man, a plan, a canal: Panama"
-输出: true
+输入："A man, a plan, a canal: Panama"
+输出：true
 ```
 
 **示例 2:**
 
 ```java
-输入: "race a car"
-输出: false
+输入："race a car"
+输出：false
 ```
 
 **解法一**
 
-easy题，对撞指针
+easy 题，对撞指针
 
 ```java
 public Boolean isPalindrome(String s) {
@@ -1333,7 +1327,7 @@ public Boolean isNumOrchar(char ch){
 }
 ```
 
-代码写多了，不够简洁，其实可以直接用**Character**的API
+代码写多了，不够简洁，其实可以直接用** Character **的 API
 
 ```java
 public Boolean isPalindrome(String s) {
@@ -1353,8 +1347,6 @@ public Boolean isPalindrome(String s) {
     return true;
 }
 ```
-
-
 
 ## [345. 反转字符串中的元音字母](https://leetcode-cn.com/problems/reverse-vowels-of-a-string/)
 
@@ -1460,7 +1452,7 @@ public static void merge(int[] nums1, int m, int[] nums2, int n) {
 
 **解法二**
 
-看了下评论区发现自己还是太年轻了，原来这题是可以在**O(1)**的空间复杂度下完成的
+看了下评论区发现自己还是太年轻了，原来这题是可以在** O(1) **的空间复杂度下完成的
 
 ```java
 public static void merge3(int[] nums1, int m, int[] nums2, int n) {
@@ -1482,11 +1474,11 @@ public static void merge3(int[] nums1, int m, int[] nums2, int n) {
 }
 ```
 
-合并后的长度确定，nums1的空间也足够，所以完全可以从后往前，从大到小，从而避免了使用额外的空间储存结果，学到了学到了👏
+合并后的长度确定，nums1 的空间也足够，所以完全可以从后往前，从大到小，从而避免了使用额外的空间储存结果，学到了学到了👏
 
 **解法三**
 
-时隔多年，LeetCode打卡又做了一遍，这次直接想到了最优解，而且代码很简洁
+时隔多年，LeetCode 打卡又做了一遍，这次直接想到了最优解，而且代码很简洁
 
 ```java
 public void merge(int[] A, int m, int[] B, int n) {
@@ -1494,7 +1486,7 @@ public void merge(int[] A, int m, int[] B, int n) {
     int len=A.length,ai=m-1,bi=n-1,i=len-1;
     while(ai>=0 && bi>=0) A[i--]=A[ai] > B[bi] ? A[ai--]:B[bi--];
     while(bi>=0) A[i--]=B[bi--];
-    //ai剩余的不用管
+    //ai 剩余的不用管
 }
 ```
 ## [532. 逆序对](https://www.lintcode.com/problem/reverse-pairs/description)
@@ -1502,23 +1494,23 @@ public void merge(int[] A, int m, int[] B, int n) {
 （来自领扣）
 
 在数组中的两个数字如果前面一个数字大于后面的数字，则这两个数字组成一个逆序对。给你一个数组，求出这个数组中逆序对的总数。
-概括：如果a[i] > a[j] 且 i < j， a[i] 和 a[j] 构成一个逆序对。
+概括：如果 a[i] > a[j] 且 i < j， a[i] 和 a[j] 构成一个逆序对。
 
-**样例1**
+**样例 1**
 
 ```java
-输入: A = [2, 4, 1, 3, 5]
-输出: 3
-解释:
+输入：A = [2, 4, 1, 3, 5]
+输出：3
+解释：
 (2, 1), (4, 1), (4, 3) 是逆序对
 ```
 
-**样例2**
+**样例 2**
 
 ```java
-输入: A = [1, 2, 3, 4]
-输出: 0
-解释:
+输入：A = [1, 2, 3, 4]
+输出：0
+解释：
 没有逆序对
 ```
 
@@ -1548,13 +1540,13 @@ public long merge(int[] nums,int left,int mid,int right){
     int i=left,j=mid+1;
     int index=0;
     while(i<=mid && j<=right){
-        //小于等于的时候让i先进栈
+        //小于等于的时候让 i 先进栈
         //help[index++]=nums[i]<=nums[j] ? nums[i++]:nums[j++];
         if (nums[i]<=nums[j]) {
             help[index++] = nums[i++];
         }else{
             help[index++] = nums[j++];
-            res+= mid-i+1; //j和i-mid间的所有元素形成逆序对
+            res+= mid-i+1; //j 和 i-mid 间的所有元素形成逆序对
         }
     }
     while(i<=mid){
@@ -1571,27 +1563,27 @@ public long merge(int[] nums,int left,int mid,int right){
 }
 ```
 
-归并排序的思路，最开始我是在每次i>j和最后收尾的时候res++，然后结果总是不对，然后取查了答案才意识到不能这样算，当`nums[i] > nums[j]` 的时候，`i~j` 形成的逆序对其实不只一个，而是`[i,mid]` 区间的所有元素，如果你只是+1的话就会漏掉许多情况，因为下一步 `j++` 就会将 `j` 向后移动，那些情况就考虑不到了
+归并排序的思路，最开始我是在每次 i>j 和最后收尾的时候 res++，然后结果总是不对，然后取查了答案才意识到不能这样算，当`nums[i] > nums[j]` 的时候，`i~j` 形成的逆序对其实不只一个，而是`[i,mid]` 区间的所有元素，如果你只是+1 的话就会漏掉许多情况，因为下一步 `j++` 就会将 `j` 向后移动，那些情况就考虑不到了
 
 ## [315. 计算右侧小于当前元素的个数](https://leetcode-cn.com/problems/count-of-smaller-numbers-after-self/)
 
 给定一个整数数组 nums，按要求返回一个新数组 counts。数组 counts 有该性质： counts[i] 的值是  nums[i] 右侧小于 nums[i] 的元素的数量。
 
-**示例:**
+**示例：**
 
 ```java
-输入: [5,2,6,1]
-输出: [2,1,1,0] 
-解释:
+输入：[5,2,6,1]
+输出：[2,1,1,0] 
+解释：
 5 的右侧有 2 个更小的元素 (2 和 1).
 2 的右侧仅有 1 个更小的元素 (1).
 6 的右侧有 1 个更小的元素 (1).
-1 的右侧有 0 个更小的元素.
+1 的右侧有 0 个更小的元素。
 ```
 
 **错误解法一**
 
-这个bug我大概看了有两三个小时，人都看傻了，必须放上来纪念下
+这个 bug 我大概看了有两三个小时，人都看傻了，必须放上来纪念下
 
 ```go
 import(
@@ -1631,7 +1623,7 @@ func merge(num []Element,left int,mid int,right int,count []int){
     j:=mid+1
     index:=0
     for i<=mid && j<=right {
-        if num[i].val<=num[j].val{ //说明j前面的元素都小于i
+        if num[i].val<=num[j].val{ //说明 j 前面的元素都小于 i
             count[num[i].idx]+=(j-mid-1)
             help[index]=num[i].val
             i++
@@ -1658,7 +1650,7 @@ func merge(num []Element,left int,mid int,right int,count []int){
 }
 ```
 
-一开始用go写的，调了半天没调出来，我以为是go的啥问题（刚学go不太熟）然后用Java又写了一遍
+一开始用 go 写的，调了半天没调出来，我以为是 go 的啥问题（刚学 go 不太熟）然后用 Java 又写了一遍
 
 ```java
 class Solution {
@@ -1688,7 +1680,7 @@ class Solution {
 
     public void merge(Pair [] nums,int left,int mid,int right,int[] count){
         int i=left,j=mid+1;
-        //出Bug的地方，应该用 Pair[] 
+        //出 Bug 的地方，应该用 Pair[] 
         int[] helper=new int[right-left+1];
         int index=0;
         while(i<=mid && j<=right){
@@ -1707,7 +1699,7 @@ class Solution {
             helper[index++]=nums[j++].value;
         }
         for(int k=0;k<helper.length;k++){
-            //这里无形之中将索引和数据的对应关系打乱了。。。。。
+            //这里无形之中将索引和数据的对应关系打乱了。
             nums[left+k].value=helper[k];
         }
     }
@@ -1723,7 +1715,7 @@ class Solution {
 }
 ```
 
-还是不对，和之前go的结果是一样的，这段代码我反复地看了3个小时，楞是没看出来哪里写错了，我是真的菜啊！！！！！！！！！
+还是不对，和之前 go 的结果是一样的，这段代码我反复地看了 3 个小时，楞是没看出来哪里写错了，我是真的菜啊！！！！！！！！！
 
 **解法一**
 
@@ -1762,15 +1754,15 @@ public void merge(Pair [] nums,int left,int mid,int right,int[] count){
         if(nums[i].value>nums[j].value){
             helper[index++]=nums[j++];
         }else{
-            //i<=j 那么mid+1~j-1的肯定都比i小
+            //i<=j 那么 mid+1~j-1 的肯定都比 i 小
             //(j-1)-(mid+1)+1=j-mid-1
             count[nums[i].index]+=j-mid-1;
             helper[index++]=nums[i++];
         }
     }
     while(i<=mid){
-        //j没了，那么所有的j的元素都比i小
-        //等价于right-mid
+        //j 没了，那么所有的 j 的元素都比 i 小
+        //等价于 right-mid
         count[nums[i].index]+=j-mid-1;
         helper[index++]=nums[i++];
     }
@@ -1883,39 +1875,39 @@ Could you optimize your algorithm to use only *O*(*k*) extra space?
  }
 ```
 
-直接利用组合数的公式，m列第n个元素等于C(n-1,M-1)
+直接利用组合数的公式，m 列第 n 个元素等于 C(n-1,M-1)
 
 ## [54. 螺旋矩阵](https://leetcode-cn.com/problems/spiral-matrix/)
 
-给定一个包含 m x n 个元素的矩阵（m 行, n 列），请按照顺时针螺旋顺序，返回矩阵中的所有元素。
+给定一个包含 m x n 个元素的矩阵（m 行，n 列），请按照顺时针螺旋顺序，返回矩阵中的所有元素。
 
 **示例 1:**
 
 ```java
-输入:
+输入：
 [
  [ 1, 2, 3 ],
  [ 4, 5, 6 ],
  [ 7, 8, 9 ]
 ]
-输出: [1,2,3,6,9,8,7,4,5]
+输出：[1,2,3,6,9,8,7,4,5]
 ```
 
 **示例 2:**
 
 ```java
-输入:
+输入：
 [
   [1, 2, 3, 4],
   [5, 6, 7, 8],
   [9,10,11,12]
 ]
-输出: [1,2,3,4,8,12,11,10,9,5,6,7]
+输出：[1,2,3,4,8,12,11,10,9,5,6,7]
 ```
 
 **解法一**
 
-这题很久之前做过，这次又来做的时候还是没做出来，忘了之前咋做的了，用模拟的方法搞了半天，没搞出来，然后瞄了一眼之前写的才写出来....
+这题很久之前做过，这次又来做的时候还是没做出来，忘了之前咋做的了，用模拟的方法搞了半天，没搞出来，然后瞄了一眼之前写的才写出来。...
 
 ```java
 public static List<Integer> spiralOrder2(int[][] matrix) {
@@ -1959,7 +1951,7 @@ public static List<Integer> spiralOrder2(int[][] matrix) {
                 res.add(matrix[tra--][trb]);
             }
         }
-        //向内靠拢(缩圈)
+        //向内靠拢（缩圈）
         la++;
         lb++;
         ra--;
@@ -1975,11 +1967,11 @@ public static List<Integer> spiralOrder2(int[][] matrix) {
 
 给定一个正整数 n，生成一个包含 1 到 n^2 所有元素，且元素按顺时针顺序螺旋排列的正方形矩阵。
 
-**示例:**
+**示例：**
 
 ```java
-输入: 3
-输出:
+输入：3
+输出：
 [
  [ 1, 2, 3 ],
  [ 8, 9, 4 ],
@@ -1988,7 +1980,7 @@ public static List<Integer> spiralOrder2(int[][] matrix) {
 ```
 
 **解法一**
-> UPDATE(2020.12.17)：更新了通用的解法，对应[AcWing756.蛇形矩阵](https://www.acwing.com/problem/content/description/758/)，美化了下代码
+> UPDATE(2020.12.17)：更新了通用的解法，对应 [AcWing756. 蛇形矩阵](https://www.acwing.com/problem/content/description/758/)，美化了下代码
 ```java
 import java.io.*;
 import java.util.*;
@@ -2032,7 +2024,7 @@ class Main {
 }
 ```
 
-上一题的简化版，2020.2.11白板写的，还行
+上一题的简化版，2020.2.11 白板写的，还行
 
 ## [48. 旋转图像](https://leetcode-cn.com/problems/rotate-image/)
 
@@ -2103,7 +2095,7 @@ public void rotate(int[][] matrix) {
             matrix[lx+i][ry]=temp;
         }
         //缩圈
-        len-=2; //写ry-ly可能会好一点，无所谓
+        len-=2; //写 ry-ly 可能会好一点，无所谓
         lx++;ly++;
         rx--;ry--;
     }
@@ -2141,28 +2133,28 @@ public void rotate(int[][] matrix) {
 
 给定一个含有 M x N 个元素的矩阵（M 行，N 列），请以对角线遍历的顺序返回这个矩阵中的所有元素，对角线遍历如下图所示。
 
-**示例:**
+**示例：**
 
 ```
-输入:
+输入：
 [
  [ 1, 2, 3 ],
  [ 4, 5, 6 ],
  [ 7, 8, 9 ]
 ]
 
-输出:  [1,2,4,7,5,3,6,8,9]
+输出：[1,2,4,7,5,3,6,8,9]
 ```
 
  ![JXlfOg.png](https://s1.ax1x.com/2020/05/01/JXlfOg.png)
 
-**说明:**
+**说明：**
 
 1. 给定矩阵中的元素总数不会超过 100000 。
 
 **解法一**
 
-因为是先做的下面的那一题，所以我这里直接延用了前面的思路，借助了map额外的空间，其实做复杂了
+因为是先做的下面的那一题，所以我这里直接延用了前面的思路，借助了 map 额外的空间，其实做复杂了
 
 ```go
 //借助额外空间
@@ -2196,7 +2188,7 @@ func findDiagonalOrder(matrix [][]int) []int {
 
 **解法二**
 
-模拟，不过是从整体上模拟，比较好的解法，不借助map
+模拟，不过是从整体上模拟，比较好的解法，不借助 map
 
 ```go
 //比较好的解法
@@ -2230,7 +2222,7 @@ func findDiagonalOrder(matrix [][]int) []int {
     return res
 }
 
-//获取 (lx,ly) 和 (rx,ry)之间的点
+//获取 (lx,ly) 和 (rx,ry) 之间的点
 func help(matrix [][]int, lx, ly, rx, ry int, flag bool, res *[]int) {
     for lx >= rx && ly <= ry {
         if flag {
@@ -2293,7 +2285,7 @@ func help(matrix [][]int, lx, ly, rx, ry int, flag bool, res *[]int) {
 
 **解法一**
 
-186th周赛的t3，还是挺有意思的，这题我拿到的第一想法其实是找一下关系直接排序，但是实际上有更好的方法
+186th 周赛的 t3，还是挺有意思的，这题我拿到的第一想法其实是找一下关系直接排序，但是实际上有更好的方法
 
 ```go
 func findDiagonalOrder(nums [][]int) []int {
@@ -2323,11 +2315,11 @@ func max(a, b int) int {
 }
 ```
 
-上面的解法其实和N皇后里面对行列的处理是一样的，两条对角线，一条行列和相等，一条行列差相等
+上面的解法其实和 N 皇后里面对行列的处理是一样的，两条对角线，一条行列和相等，一条行列差相等
 
-> 这题我还看到了至少3种不同的方法，有一种把这个数组旋转一下，然后当成二叉树，直接做BFS层次遍历😂，脑洞挺大的
+> 这题我还看到了至少 3 种不同的方法，有一种把这个数组旋转一下，然后当成二叉树，直接做 BFS 层次遍历😂，脑洞挺大的
 
-## [215.数组中的第K个最大元素](https://leetcode-cn.com/problems/kth-largest-element-in-an-array/)
+## [215. 数组中的第 K 个最大元素](https://leetcode-cn.com/problems/kth-largest-element-in-an-array/)
 
 Find the **k**th largest element in an unsorted array. Note that it is the kth largest element in the sorted order, not the kth distinct element.
 
@@ -2362,7 +2354,7 @@ public static int findKthLargest(int[] nums, int k) {
     }
     int size=nums.length-1;
     for (int i=0;i<k-1;i++) {
-        swap(nums,0,size);//和堆顶交换K次
+        swap(nums,0,size);//和堆顶交换 K 次
         siftDown(nums,0,--size);//重新调整堆
     }
     return nums[0];
@@ -2400,7 +2392,7 @@ public static  void  swap(int []nums,int a,int b){
 }
 ```
 
-70%左右的beat，当时感觉还行，时间复杂度应该是`O(KlogN)`，后来越想越不对，又去看了下堆排序，发现我之前写的堆排序都是有问题的
+70%左右的 beat，当时感觉还行，时间复杂度应该是`O(KlogN)`，后来越想越不对，又去看了下堆排序，发现我之前写的堆排序都是有问题的
 
 **优化后的大根堆做法**
 
@@ -2442,11 +2434,11 @@ public static  void  swap(int []nums,int a,int b){
 }
 ```
 
-95% beat，比上面的要快很多，相比之前的方法，构造堆的方式发生了变化，上面那种通过自上而下的insert方式时间复杂度是O(NlogN)，其实想想，这两种方式是完全相反的，insert的方式，最后一层每个元素最坏都可能调整`logN`次，而最后一层也是元素最多的一层，这样一来复杂度就会大大增加，相反如果采用从底向上的`swim`方式最后一层都只需要调整`1`次，而根节点需要调整`logN`次，而根节点只有一个，时间复杂度就会大大降低，最终的时间复杂度就是`O(N)`，[具体推算可以看这篇文章](https://www.zhihu.com/question/20729324)， 现在的时间复杂度才真的是`O(KlogN)`
+95% beat，比上面的要快很多，相比之前的方法，构造堆的方式发生了变化，上面那种通过自上而下的 insert 方式时间复杂度是 O(NlogN)，其实想想，这两种方式是完全相反的，insert 的方式，最后一层每个元素最坏都可能调整`logN`次，而最后一层也是元素最多的一层，这样一来复杂度就会大大增加，相反如果采用从底向上的`swim`方式最后一层都只需要调整`1`次，而根节点需要调整`logN`次，而根节点只有一个，时间复杂度就会大大降低，最终的时间复杂度就是`O(N)`，[具体推算可以看这篇文章](https://www.zhihu.com/question/20729324)， 现在的时间复杂度才真的是`O(KlogN)`
 
 ![mark](http://static.imlgw.top/image/20190617/kVuvnMfjuSns.png?imageslim)
 
-> 💥💥 上面这两种做法是有问题的，失去了用堆的优势，大根堆的做法必须要阿将整个堆构建完成后才能去找topk这样的话内存消耗比较大，应该维护一个小根堆，这样如果数据量很大的时候不用全读入内存中，  这题因为是我自己实现的堆，所以建堆的复杂度是O(N)（如果使用官方的API，建堆的时间复杂度就是NlogN），最终大根堆小根堆复杂度取决于K和N的大小关系，但是面试的时候最好不要说用大根堆的做法
+> 💥💥 上面这两种做法是有问题的，失去了用堆的优势，大根堆的做法必须要阿将整个堆构建完成后才能去找 topk 这样的话内存消耗比较大，应该维护一个小根堆，这样如果数据量很大的时候不用全读入内存中，  这题因为是我自己实现的堆，所以建堆的复杂度是 O(N)（如果使用官方的 API，建堆的时间复杂度就是 NlogN），最终大根堆小根堆复杂度取决于 K 和 N 的大小关系，但是面试的时候最好不要说用大根堆的做法
 
 **解法二**
 
@@ -2455,14 +2447,14 @@ public static  void  swap(int []nums,int a,int b){
 ```java
 public int findKthLargest(int[] nums, int k) {
     int size=nums.length;
-    //先维护一个大小为k的小根堆 ,这里要注意k不是下标，k=index+1
+    //先维护一个大小为 k 的小根堆 , 这里要注意 k 不是下标，k=index+1
     for (int i = k/2; i >=0; i--) {
         heapIfy(nums,i,k);
     }
-	//再从k开始向里面插入元素
+	//再从 k 开始向里面插入元素
     for (int i=k;i<size;i++) {
-        if(nums[i]>nums[0]) { //大于小根堆堆顶,进取代它
-            //小根堆求第K大,保证这个堆的元素是整个堆的前k大的元素，堆顶就是第k大
+        if(nums[i]>nums[0]) { //大于小根堆堆顶，进取代它
+            //小根堆求第 K 大，保证这个堆的元素是整个堆的前 k 大的元素，堆顶就是第 k 大
             swap(nums,i,0);
             heapIfy(nums,0,k);
         }
@@ -2494,9 +2486,9 @@ private  void swap(int[] nums, int l, int r) {
 }
 ```
 
-2ms，99%beat，一般情况下的topK问题，如果用堆解决的话应该都是采用**小根堆**这种做法来做，时间复杂度为`O(NlogK)`，维护一个大小为k的小根堆，然后再遍历后面n-k个元素，依次和当前最小堆的堆顶比较（当前topK中的最小元素，堆顶），如果比它小就和它交换然后调整堆，这样就始终保持了这个堆是当前的topK小，最后的堆顶就是第K大的元素。
+2ms，99%beat，一般情况下的 topK 问题，如果用堆解决的话应该都是采用**小根堆**这种做法来做，时间复杂度为`O(NlogK)`，维护一个大小为 k 的小根堆，然后再遍历后面 n-k 个元素，依次和当前最小堆的堆顶比较（当前 topK 中的最小元素，堆顶），如果比它小就和它交换然后调整堆，这样就始终保持了这个堆是当前的 topK 小，最后的堆顶就是第 K 大的元素。
 
-_关于节省空间的问题，其实很好理解，去找一个OJ试一下就懂了_
+_关于节省空间的问题，其实很好理解，去找一个 OJ 试一下就懂了_
 
 ```java
 import java.util.*;
@@ -2507,7 +2499,7 @@ public class Main{
         int K=sc.nextInt();
         PriorityQueue<Integer> queue=new PriorityQueue<>((a,b)->b-a);
         for(int i=0;i<N;i++){
-            int num=sc.nextInt(); //一个个的读入,而不是一起读入
+            int num=sc.nextInt(); //一个个的读入，而不是一起读入
             queue.add(num);
             if(queue.size()>K){
                 queue.poll();
@@ -2567,15 +2559,15 @@ public static  void  swap(int []nums,int a,int b){
 }
 ```
 
-这里最好用**随机**的**partition**，我试了下**不随机**大概`50+ms 30%beat`，这种随机的大概`3ms 97%beats `，差距还是很大的，时间复杂度是**O(N)**
+这里最好用**随机**的** partition**，我试了下**不随机**大概`50+ms 30%beat`，这种随机的大概`3ms 97%beats `，差距还是很大的，时间复杂度是** O(N)**
 
-> 至于为什么是O(N)，我们可以来分析下，这里**假设每次划分都是差不多中点的位置**，如果是快排，那么在**partition**之后依然需要两边的子数组进行**partition**，分治整个递归栈的高度就是`logN`，每层都是N，所以整体的复杂度就**O(NlogN)**....扯远了，回到正题
+> 至于为什么是 O(N)，我们可以来分析下，这里**假设每次划分都是差不多中点的位置**，如果是快排，那么在** partition **之后依然需要两边的子数组进行** partition**，分治整个递归栈的高度就是`logN`，每层都是 N，所以整体的复杂度就** O(NlogN)**.... 扯远了，回到正题
 >
-> 来说说我们这里为什么是O(N)，这里我们沿用前面的分析过程，递归栈深度依然是`logN`，但是我们在这里第一次确定划分点的相对**k**的位置后，下一步**只需要划分其中一边的元素，不用对另一边的元素继续**，也就是n/2，再往下就是n/4，n/8，n/16 ....   而 `(1+1/2+1/4+1/8+......1/2^n)n <=2n` ，也就是说整体的复杂度是低于O(2N)的，所以这里复杂度就是O(N)
+> 来说说我们这里为什么是 O(N)，这里我们沿用前面的分析过程，递归栈深度依然是`logN`，但是我们在这里第一次确定划分点的相对** k **的位置后，下一步**只需要划分其中一边的元素，不用对另一边的元素继续**，也就是 n/2，再往下就是 n/4，n/8，n/16 ....   而 `(1+1/2+1/4+1/8+......1/2^n)n <=2n` ，也就是说整体的复杂度是低于 O(2N) 的，所以这里复杂度就是 O(N)
 
 **三切分快排优化**
 
-ACWing上交的，wa了好几次，发现是二分写错了，哎，二分真难，其实还可以做一下随机处理
+ACWing 上交的，wa 了好几次，发现是二分写错了，哎，二分真难，其实还可以做一下随机处理
 
 ```java
 import java.util.*;
@@ -2628,19 +2620,19 @@ public class Main{
 
 **Update: 2020.6.28**
 
-用go重写下，又写了半天。。。真的菜，主要是最后划分元素的时候，区间只有1也应该继续划分，也就是`left <= right`，上面的解法就没考虑这个，而是在循环退出后返回left，实际上并不是好方法。。。（后面还是会再写的，尽量缩短code时间）
+用 go 重写下，又写了半天。真的菜，主要是最后划分元素的时候，区间只有 1 也应该继续划分，也就是`left <= right`，上面的解法就没考虑这个，而是在循环退出后返回 left，实际上并不是好方法。（后面还是会再写的，尽量缩短 code 时间）
 ```golang
 //1 2 3 4 5 6
 func findKthLargest(nums []int, k int) int {
     k = len(nums) - k //转换下
     var left = 0
     var right = len(nums)-1
-    for left <= right{ //第一个WA点，这里是最容易写错的
+    for left <= right{ //第一个 WA 点，这里是最容易写错的
         mid := partition(nums, left, right)
         if mid[1] < k{
-            left = mid[1]+1 //WA点
+            left = mid[1]+1 //WA 点
         }else if mid[0] > k{
-            right = mid[0]-1 //WA点
+            right = mid[0]-1 //WA 点
         }else{
             return nums[mid[0]]
         }
@@ -2651,9 +2643,9 @@ func findKthLargest(nums []int, k int) int {
 func partition(nums []int, left int, right int) []int{
     base := left
     var less = left
-    var more = right+1 //WA点
+    var more = right+1 //WA 点
     var i = left
-    for i < more{ //WA点
+    for i < more{ //WA 点
         if nums[i] < nums[base]{
             less++
             nums[less], nums[i] = nums[i], nums[less]
@@ -2666,13 +2658,13 @@ func partition(nums []int, left int, right int) []int{
         }
     }
     nums[less], nums[base] = nums[base], nums[less]
-    return []int{less,more-1} //WA点，注意配合上面的二分
+    return []int{less,more-1} //WA 点，注意配合上面的二分
 }
 ```
 
 **解法四**
 
-[BFPRT算法](https://zhuanlan.zhihu.com/p/31498036) 大佬们提出来的根据上面快排改进而来，其实面试把小根堆和快排的解法答出来应该就差不多了，这个解法还是有些不容易写出来
+[BFPRT 算法](https://zhuanlan.zhihu.com/p/31498036) 大佬们提出来的根据上面快排改进而来，其实面试把小根堆和快排的解法答出来应该就差不多了，这个解法还是有些不容易写出来
 
 ```java
 public static int findKthLargest(int []nums,int k){
@@ -2696,13 +2688,13 @@ public static int findKthLargest(int[] nums,int l,int r,int k) {
 //中位数的中位数，主要的核心就是在这里
 public static int  findMid(int []nums,int l,int r){
     int leftSub=l;
-    //分组求中位数，5等分
+    //分组求中位数，5 等分
     for (int i=l;i<r-4;i+=5) {
         insertSort(nums,i,i+4);
         //将每一组的中位数统一放到左侧，用于递归
         swap(nums,leftSub++,i+2);
     }
-    //处理剩下的不足5个的
+    //处理剩下的不足 5 个的
     if (r-l<4) {
         insertSort(nums,l,r);
         swap(nums,leftSub,l+(r-l)/2);
@@ -2723,7 +2715,7 @@ public static void insertSort(int []nums,int l,int r){
     }
 }
 
-//快排partition
+//快排 partition
 public static int partition(int []nums,int left,int right){
     int base=left;
     while(left<right){
@@ -2749,13 +2741,13 @@ public static void swap(int []nums,int a,int b){
 }
 ```
 
-[具体的时间复杂度证明](https://zhuanlan.zhihu.com/p/31498036)，当n取5时候，在划分的时候**至少**会大于**3n/10**的元素，避免了极端情况，保证在最坏情况下也不会太坏。
+[具体的时间复杂度证明](https://zhuanlan.zhihu.com/p/31498036)，当 n 取 5 时候，在划分的时候**至少**会大于** 3n/10 **的元素，避免了极端情况，保证在最坏情况下也不会太坏。
 
 ![mark](http://static.imlgw.top/image/20190617/Lc4M5f2qkegH.png?imageslim)
 
-如上图，每一列为分好的一组元素，中间黄色部分为每组的中位数，红色块为**中位数的中位数**，这个中位数至少会大于等于左上角黑框框住的部分，所以在划分的时候会保证至少减小大约3n/10 的规模。
+如上图，每一列为分好的一组元素，中间黄色部分为每组的中位数，红色块为**中位数的中位数**，这个中位数至少会大于等于左上角黑框框住的部分，所以在划分的时候会保证至少减小大约 3n/10 的规模。
 
-所以时间复杂度   `T(N)<=T(n/5)+T( 7n/10)+c*n`  总体时间复杂度**O(N)**，至于为什么不用其他的元素可以看看上面的那篇文章。
+所以时间复杂度   `T(N)<=T(n/5)+T( 7n/10)+c*n`  总体时间复杂度** O(N)**，至于为什么不用其他的元素可以看看上面的那篇文章。
 
 ## [347. 前 K 个高频元素](https://leetcode-cn.com/problems/top-k-frequent-elements/)
 
@@ -2764,15 +2756,15 @@ public static void swap(int []nums,int a,int b){
 **示例 1:**
 
 ```java
-输入: nums = [1,1,1,2,2,3], k = 2
-输出: [1,2]
+输入：nums = [1,1,1,2,2,3], k = 2
+输出：[1,2]
 ```
 
 **示例 2:**
 
 ```java
-输入: nums = [1], k = 1
-输出: [1]
+输入：nums = [1], k = 1
+输出：[1]
 ```
 
 **说明：**
@@ -2782,7 +2774,7 @@ public static void swap(int []nums,int a,int b){
 你的算法的时间复杂度必须优于 O(n log n) , n 是数组的大小。
 ```
 
-也是TopK问题，但是这题其实还有个条件，`不会给出有歧义的数据` ，举个例子
+也是 TopK 问题，但是这题其实还有个条件，`不会给出有歧义的数据` ，举个例子
 
 `nums=[1,1,1,2,2,2,3,3,3] ，k=2` 这样的就是有歧义的
 
@@ -2799,7 +2791,7 @@ public static List<Integer> topKFrequent(int[] nums, int k) {
     }
     HashMap<Integer,Integer> fre=new HashMap<>();
     for (int i=0;i<nums.length;i++) {
-        //fre.get(i) nums[i]出现的频次
+        //fre.get(i) nums[i] 出现的频次
         fre.put(nums[i],fre.getOrDefault(nums[i],0)+1);
     }
     //1:3,2:3,3:1
@@ -2824,14 +2816,14 @@ static class ComparatorMap implements Comparator<HashMap.Entry<Integer,Integer>>
 ```
 用大根堆不太好，容易爆内存，但是在这一题可以保证顺序，`但是题目并没有要求顺序`，时间复杂度~~O(KlogN)~~
 
-这里错了，建堆的时间复杂度就是`O(NlogN)`了，只有自己手写的堆，采用自底向上的方式建堆时间复杂度才是O(N) ，可以参考 [之前的文章](http://imlgw.top/2018/12/11/chang-jian-pai-xu-suan-fa-zong-jie/#%E5%A0%86%E6%8E%92%E5%BA%8F%E6%9B%B4%E4%BC%98%E7%9A%84%E5%81%9A%E6%B3%95) ，这也是上面topK问题中提到的
+这里错了，建堆的时间复杂度就是`O(NlogN)`了，只有自己手写的堆，采用自底向上的方式建堆时间复杂度才是 O(N) ，可以参考 [之前的文章](http://imlgw.top/2018/12/11/chang-jian-pai-xu-suan-fa-zong-jie/#%E5%A0%86%E6%8E%92%E5%BA%8F%E6%9B%B4%E4%BC%98%E7%9A%84%E5%81%9A%E6%B3%95) ，这也是上面 topK 问题中提到的
 
 **解法二**
 
 小根堆的做法
 
 ```java
-//UPDATE：2020.9.7之前的解法太丑陋了
+//UPDATE：2020.9.7 之前的解法太丑陋了
 public int[] topKFrequent(int[] nums, int k) {
     HashMap<Integer,Integer> freq = new HashMap<>();
     for (int i = 0; i < nums.length; i++) {
@@ -2855,7 +2847,7 @@ public int[] topKFrequent(int[] nums, int k) {
 }
 ```
 
-时间复杂度`O(NlogK)`因为只维护了一个K大小的小根堆 ，时间复杂度和大根堆~~O(KlogN)~~ `O(NlogN)`相比会快很多，除此之外，如果N和K很接近的话可以考虑`O(Nlog(N-K))` 的做法，维护一个N-K的大根堆，里面存频率最低的那些元素，最后返回其他的元素（no code， just talk）
+时间复杂度`O(NlogK)`因为只维护了一个 K 大小的小根堆 ，时间复杂度和大根堆~~O(KlogN)~~ `O(NlogN)`相比会快很多，除此之外，如果 N 和 K 很接近的话可以考虑`O(Nlog(N-K))` 的做法，维护一个 N-K 的大根堆，里面存频率最低的那些元素，最后返回其他的元素（no code， just talk）
 
 **解法三**
 
@@ -2868,7 +2860,7 @@ public static List<Integer> topKFrequent(int[] nums, int k) {
     }
     HashMap<Integer,Integer> fre=new HashMap<>();
     for (int i=0;i<nums.length;i++) {
-        //记录nums[i]出现的频次
+        //记录 nums[i] 出现的频次
         fre.put(nums[i],fre.getOrDefault(nums[i],0)+1);
     }
     ArrayList<Integer> [] bucket=new ArrayList[nums.length+1];
@@ -2877,7 +2869,7 @@ public static List<Integer> topKFrequent(int[] nums, int k) {
             bucket[fre.get(num)]=new ArrayList<>();
         }
         //桶排序
-        bucket[fre.get(num)].add(num); //所有出现fre.get(num)次的元素构成一条链表
+        bucket[fre.get(num)].add(num); //所有出现 fre.get(num) 次的元素构成一条链表
     }
     ArrayList<Integer> res=new ArrayList<>();
     int topk=bucket.length-1;
@@ -2895,11 +2887,11 @@ public static List<Integer> topKFrequent(int[] nums, int k) {
 }
 ```
 
-桶排序的思路，时间复杂度`O(N)`，空间复杂度也是`O(N)`，在leetcode提交三种方法的差距不大，可能是数据量太少了
+桶排序的思路，时间复杂度`O(N)`，空间复杂度也是`O(N)`，在 leetcode 提交三种方法的差距不大，可能是数据量太少了
 
 **解法四** (UPDATE:2020.9.7)
 
-基于快选的做法，时间复杂度O(N)，之前一直懒得写，今天补一下
+基于快选的做法，时间复杂度 O(N)，之前一直懒得写，今天补一下
 ```golang
 type Node struct {
     Val   int
@@ -2954,7 +2946,6 @@ func partition(nums []*Node, i int, j int) int {
 }
 ```
 
-
 ## [295. 数据流的中位数](https://leetcode-cn.com/problems/find-median-from-data-stream/)
 
 中位数是有序列表中间的数。如果列表长度是偶数，中位数则是中间两个数的平均值。
@@ -2980,8 +2971,7 @@ addNum(3)
 findMedian() -> 2
 ```
 
-
-**进阶:**
+**进阶：**
 
 - 如果数据流中所有整数都在 0 到 100 范围内，你将如何优化你的算法？
 - 如果数据流中 99% 的整数都在 0 到 100 范围内，你将如何优化你的算法？
@@ -3017,7 +3007,7 @@ public double findMedian() {
 }
 ```
 
-前半部分用大跟堆，后半部分小根堆，每次将一个堆的最值放到另一个堆中，这样保证了大跟堆的最大值一定小于小根堆的最小值，另外我们还需要保证两个堆的差距不能大于1，这里我将多的放到小根堆中，最后在奇数的时候将小根堆的堆顶弹出就可以了
+前半部分用大跟堆，后半部分小根堆，每次将一个堆的最值放到另一个堆中，这样保证了大跟堆的最大值一定小于小根堆的最小值，另外我们还需要保证两个堆的差距不能大于 1，这里我将多的放到小根堆中，最后在奇数的时候将小根堆的堆顶弹出就可以了
 
 ## [66. 加一](https://leetcode-cn.com/problems/plus-one/)
 
@@ -3030,17 +3020,17 @@ public double findMedian() {
 **示例 1:**
 
 ```java
-输入: [1,2,3]
-输出: [1,2,4]
-解释: 输入数组表示数字 123。
+输入：[1,2,3]
+输出：[1,2,4]
+解释：输入数组表示数字 123。
 ```
 
 **示例 2:**
 
 ```java
-输入: [4,3,2,1]
-输出: [4,3,2,2]
-解释: 输入数组表示数字 4321。
+输入：[4,3,2,1]
+输出：[4,3,2,2]
+解释：输入数组表示数字 4321。
 ```
 
 **解法一**
@@ -3073,15 +3063,15 @@ func plusOne(digits []int) []int {
 **示例 1:**
 
 ```java
-输入: a = "11", b = "1"
-输出: "100"
+输入：a = "11", b = "1"
+输出："100"
 ```
 
 **示例 2:**
 
 ```java
-输入: a = "1010", b = "1011"
-输出: "10101"
+输入：a = "1010", b = "1011"
+输出："10101"
 ```
 
 **解法一**
@@ -3114,7 +3104,6 @@ public String addBinary(String a, String b) {
 }
 ```
 
-
 **解法二**
 
 上面的解法是完全的模拟解法，不够优雅
@@ -3142,9 +3131,9 @@ public String addBinary(String a, String b) {
 
 **注意：**
 
-1. num1 和num2 的长度都小于 5100.
-2. num1 和num2 都只包含数字 0-9.
-3. num1 和num2 都不包含任何前导零。
+1. num1 和 num2 的长度都小于 5100.
+2. num1 和 num2 都只包含数字 0-9.
+3. num1 和 num2 都不包含任何前导零。
 4. 你不能使用任何內建 BigInteger 库， 也不能直接将输入的字符串转换为整数形式。
 
 **解法一**
@@ -3179,21 +3168,20 @@ public String addStrings(String num1, String num2) {
 **示例 1:**
 
 ```java
-输入: num1 = "2", num2 = "3"
-输出: "6"
+输入：num1 = "2", num2 = "3"
+输出："6"
 ```
 
 **示例 2:**
 
 ```java
-输入: num1 = "123", num2 = "456"
-输出: "56088"
+输入：num1 = "123", num2 = "456"
+输出："56088"
 ```
-
 
 **说明：**
 
-1. num1 和 num2 的长度小于110。
+1. num1 和 num2 的长度小于 110。
 2. num1 和 num2 只包含数字 0-9。
 3. num1 和 num2 均不以零开头，除非是数字 0 本身。
 4. 不能使用任何标准库的大数类型（比如 BigInteger）或直接将输入转换为整数来处理。
@@ -3211,7 +3199,7 @@ public static String multiply2(String num1, String num2) {
     int[] res=new int[n1+n2];
     for (int i=n1-1;i>=0;i--) {
         for (int j=n2-1;j>=0;j--) {
-            //主要就是对这个i+j+1的理解
+            //主要就是对这个 i+j+1 的理解
             res[i+j+1]+=(num1.charAt(i)-48)*(num2.charAt(j)-48);
         }
     }
@@ -3222,7 +3210,7 @@ public static String multiply2(String num1, String num2) {
             res[i]%=10;
         }
     }
-    //去掉前面多余的0
+    //去掉前面多余的 0
     int index=0;
     while (index<res.length-1&&res[index]==0) { 
         index++;
@@ -3240,7 +3228,7 @@ public static String multiply2(String num1, String num2) {
 
 **解法二**
 
-其实仔细分析，会发现上面的代码其实有很多多余的操作，比如去掉前面的0，因为两个**非0的数相乘**，最后的结果最多n1+n2位，最少n1+n2-1位，所以前面的0**最多就一个**
+其实仔细分析，会发现上面的代码其实有很多多余的操作，比如去掉前面的 0，因为两个**非 0 的数相乘**，最后的结果最多 n1+n2 位，最少 n1+n2-1 位，所以前面的 0 **最多就一个**
 
 ```java
 public static String multiply(String num1, String num2) {
@@ -3252,11 +3240,11 @@ public static String multiply(String num1, String num2) {
     int[] res=new int[n1+n2];
     for (int i=n1-1;i>=0;i--) {
         for (int j=n2-1;j>=0;j--) {
-            //注意这里的i+j+1
+            //注意这里的 i+j+1
             res[i+j+1]+=(num1.charAt(i)-48)*(num2.charAt(j)-48);
         }
     }
-    //处理进位(其实这里res[0]是不可能大于10的)，模拟下知道了
+    //处理进位（其实这里 res[0] 是不可能大于 10 的），模拟下知道了
     for(int i=res.length-1;i>=0;i--) {
         if(res[i]>=10){
             res[i-1]+=res[i]/10;
@@ -3265,7 +3253,7 @@ public static String multiply(String num1, String num2) {
     }
     StringBuilder sb=new StringBuilder();
     for (int i=0;i<res.length;i++) {
-        //前面最多只有一个0(除了两个数中有一个为0的时候)
+        //前面最多只有一个 0（除了两个数中有一个为 0 的时候）
         if (i==0 && res[i]==0) continue;
         sb.append(res[i]);
     }
@@ -3277,7 +3265,7 @@ public static String multiply(String num1, String num2) {
 其实上面的进位和计算对应位置的值可以同时处理，这是最接近人手算的思路了
 
 ```java
-//update: 2020.4.16 在web上重新推了一遍
+//update: 2020.4.16 在 web 上重新推了一遍
 //idx : 0 1 2
 //i :   4 5 6
 //j :   1 2 3
@@ -3297,14 +3285,14 @@ public String multiply(String num1, String num2) {
         for(int j=n2-1;j>=0;j--){
             int sum=res[i+j+1]+(num1.charAt(i)-48)*(num2.charAt(j)-48);
             res[i+j+1]=sum%10;
-            //res[i+j]会超过10,但是由于我们是倒推的,所以这个会在下一轮进行处理,否则就无法处理了
+            //res[i+j] 会超过 10, 但是由于我们是倒推的，所以这个会在下一轮进行处理，否则就无法处理了
             res[i+j]+=sum/10; 
         }
     }   
-    //n*m位数 乘积应该是 (m+n-1 ~ m+n)位
-    //前两个为0一定是0
+    //n*m 位数 乘积应该是 (m+n-1 ~ m+n) 位
+    //前两个为 0 一定是 0
     if(res[0]==0 && res[1]==0) return "0";
-    //去除前导0（最多一个）
+    //去除前导 0（最多一个）
     StringBuilder sb=new StringBuilder();
     for(int i=0;i<res.length;i++){
         if(res[i]==0 && i==0)continue;
@@ -3335,32 +3323,30 @@ public String multiply(String num1, String num2) {
 **示例 1:**
 
 ```java
-输入: "42"
-输出: 42
+输入："42"
+输出：42
 ```
-
 
 **示例 2:**
 
 ```java
-输入: "   -42"
-输出: -42
-解释: 第一个非空白字符为 '-', 它是一个负号。
+输入："   -42"
+输出：-42
+解释：第一个非空白字符为 '-', 它是一个负号。
      我们尽可能将负号与后面所有连续出现的数字组合起来，最后得到 -42 。
 ```
-
 
 **示例 3:**
 
 ```java
-输入: "4193 with words"
-输出: 4193
-解释: 转换截止于数字 '3' ，因为它的下一个字符不为数字。
+输入："4193 with words"
+输出：4193
+解释：转换截止于数字 '3' ，因为它的下一个字符不为数字。
 ```
 
 **解法一**
 
-之前一直很排斥这道题，知道这次朋友阿里面试问了这道题。。。
+之前一直很排斥这道题，知道这次朋友阿里面试问了这道题。
 
 ```java
 public int myAtoi(String str) {
@@ -3380,18 +3366,18 @@ public int myAtoi(String str) {
     }
     //正负数的边界
     int limit=positive?-MAX:MIN;
-    //过滤0
+    //过滤 0
     while(index<str.length()&&str.charAt(index)=='0')index++;
-    //取每一位,在非字符截止
+    //取每一位，在非字符截止
     while(index<str.length()&&isDigit(str.charAt(index))){
         int digit=str.charAt(index++)-'0';
         if(res<(limit+digit)/10){
             return positive?MAX:MIN;
         }
-        //这里的res>=limit
+        //这里的 res>=limit
         res=res*10-digit;
     }
-    //if(index!=str.length()) return 0; //中途遇到非数字(也是合法的)
+    //if(index!=str.length()) return 0; //中途遇到非数字（也是合法的）
     return positive?-res:res;
 }
 
@@ -3400,17 +3386,17 @@ public boolean isDigit(char c){
 }
 ```
 
-参考了`Integer.parseInt(String s, int radix)`方法对边界的处理方式, **用负数来表示正负数的边界**
+参考了`Integer.parseInt(String s, int radix)`方法对边界的处理方式，**用负数来表示正负数的边界**
 
-1. 这样正数的边界就是`-INT_MAX`,负数是`INT_MIN`
+1. 这样正数的边界就是`-INT_MAX`, 负数是`INT_MIN`
 
-2. 然后我们同样也用负数来保存结果, `res=res\*10-digit`
+2. 然后我们同样也用负数来保存结果，`res=res\*10-digit`
 
-3. 我们需要保证这个值是在`INT`范围内的, 也就是 res*10-digit>=limit (负边界)
+3. 我们需要保证这个值是在`INT`范围内的，也就是 res*10-digit>=limit （负边界）
 
-4. 所以我们需要对`res`做判断,但是直接判断可能会溢出,所以进行移项,变换为 `res<(limit+digit)/10`
+4. 所以我们需要对`res`做判断，但是直接判断可能会溢出，所以进行移项，变换为 `res<(limit+digit)/10`
 
-5. 最后如果是正数就返回 `-res`,负数就返回`res`
+5. 最后如果是正数就返回 `-res`, 负数就返回`res`
 
 还是十分巧妙的 👏👏
 
@@ -3433,7 +3419,6 @@ public boolean isDigit(char c){
 输入：str1 = "ABABAB", str2 = "ABAB"
 输出："AB"
 ```
-
 
 **示例 3：**
 
@@ -3459,7 +3444,7 @@ public String gcdOfStrings(String str1, String str2) {
         index2++;
         index1++;
     }
-    //gcd(str2,余数)
+    //gcd(str2, 余数）
     return gcdOfStrings(str2,str1.substring(index1,str1.length()));
 }
 ```
@@ -3480,14 +3465,14 @@ public int gcd(int a,int b){
     return gcd(b,a%b);
 }
 ```
-第一个条件充分性的证明还是有点不太理解，不过后面的最大公因子的长度就是str1和str2长度倒是可以通过反证来证明出来，这里直接copy题解[大佬](https://leetcode-cn.com/problems/greatest-common-divisor-of-strings/solution/tan-tan-zheng-ming-wei-shi-yao-liang-zi-fu-chuan-c/) 的证明
+第一个条件充分性的证明还是有点不太理解，不过后面的最大公因子的长度就是 str1 和 str2 长度倒是可以通过反证来证明出来，这里直接 copy 题解 [大佬](https://leetcode-cn.com/problems/greatest-common-divisor-of-strings/solution/tan-tan-zheng-ming-wei-shi-yao-liang-zi-fu-chuan-c/) 的证明
 
-假设两字符串的长度分别为l1, l2, 他们的最大公约数是k。
+假设两字符串的长度分别为 l1, l2, 他们的最大公约数是 k。
 现已知道两字符串存在最大公因子（第一行代码），假设该字串的长度为`k'`。
 
 下面开始反证，
 若`k' < k`，而根据题意`k'`也为`l1, l2` 的公约数，则`k'`必能被`k`整除，这说明我们可以将该字串的长度扩充到`k`，同时保持它仍然为`str1`和`str2`的公因子，所以这种情况下这个长度为`k`的公因子就不是最大公因子。
-若`k' > k`， 根据题意`k'`为`l1`, `l2` 的公约数， 而k为最大公约数，而这时出现了一个比最大公约数还大的公约数，这是矛盾的，所以这种情况也是不可能的。
+若`k' > k`， 根据题意`k'`为`l1`, `l2` 的公约数， 而 k 为最大公约数，而这时出现了一个比最大公约数还大的公约数，这是矛盾的，所以这种情况也是不可能的。
 
 综合以上，最大公因子的长度必然等于两串长度的最大公约数。
 
@@ -3573,7 +3558,7 @@ public int gcd(int a,int b){
     return gcd(b,a%b);
 }
 ```
-wa一次就知道咋做了，一开始以为只要所有元素出现次数可以整除就行了，wa了之后就意识到只要求一个最大公约数就可以了
+wa 一次就知道咋做了，一开始以为只要所有元素出现次数可以整除就行了，wa 了之后就意识到只要求一个最大公约数就可以了
 
 **解法二**
 
@@ -3595,7 +3580,7 @@ public boolean hasGroupsSizeX2(int[] deck) {
         if(hash[i]!=0){
             if(hash[i]<2) return false;
             g= g!=-1?gcd(g,hash[i]):hash[i];
-            if(g==1) return false; //优化,提前终止
+            if(g==1) return false; //优化，提前终止
         }
     }
     return g>=2;
@@ -3617,25 +3602,23 @@ public boolean hasGroupsSizeX2(int[] deck) {
 **示例 1:**
 
 ```java
-输入: version1 = "0.1", version2 = "1.1"
-输出: -1
+输入：version1 = "0.1", version2 = "1.1"
+输出：-1
 ```
 
 **示例 2:**
 
 ```java
-输入: version1 = "1.0.1", version2 = "1"
-输出: 1
+输入：version1 = "1.0.1", version2 = "1"
+输出：1
 ```
-
 
 **示例 3:**
 
 ```java
-输入: version1 = "7.5.2.4", version2 = "7.5.3"
-输出: -1
+输入：version1 = "7.5.2.4", version2 = "7.5.3"
+输出：-1
 ```
-
 
 **示例 4：**
 
@@ -3644,7 +3627,6 @@ public boolean hasGroupsSizeX2(int[] deck) {
 输出：0
 解释：忽略前导零，“01” 和 “001” 表示相同的数字 “1”。
 ```
-
 
 **示例 5：**
 
@@ -3661,7 +3643,7 @@ public boolean hasGroupsSizeX2(int[] deck) {
 
 **解法一**
 
-貌似笔试喜欢出这题，挺简单的，用java分割的时候要注意 `"."` 是一个正则表达式，匹配任意单个字符，我们如果要将它看作一个普通字符需要加上双斜线`"\\."`
+貌似笔试喜欢出这题，挺简单的，用 java 分割的时候要注意 `"."` 是一个正则表达式，匹配任意单个字符，我们如果要将它看作一个普通字符需要加上双斜线`"\\."`
 
 ```java
 public int compareVersion(String version1, String version2) {
@@ -3694,7 +3676,6 @@ E T O E S I I G
 E   D   H   N
 ```
 
-
 之后，你的输出需要从左往右逐行读取，产生出一个新的字符串，比如："LCIRETOESIIGEDHN"。
 
 请你实现这个将字符串进行指定行数变换的函数：
@@ -3706,16 +3687,16 @@ string convert(string s, int numRows);
 **示例 1:**
 
 ```java
-输入: s = "LEETCODEISHIRING", numRows = 3
-输出: "LCIRETOESIIGEDHN"
+输入：s = "LEETCODEISHIRING", numRows = 3
+输出："LCIRETOESIIGEDHN"
 ```
 
 **示例 2:**
 
 ```java
-输入: s = "LEETCODEISHIRING", numRows = 4
-输出: "LDREOEIIECIHNTSG"
-解释:
+输入：s = "LEETCODEISHIRING", numRows = 4
+输出："LDREOEIIECIHNTSG"
+解释：
 L     D     R
 E   O E   I I
 E C   I H   N
@@ -3761,7 +3742,7 @@ public String convert(String s, int numRows) {
 }
 ```
 
-就是将字符按照之字形填入一个二维数组中，然后按规则取出来就ok，最优解看了，明天再来写！
+就是将字符按照之字形填入一个二维数组中，然后按规则取出来就 ok，最优解看了，明天再来写！
 
 **解法二**
 
@@ -3791,7 +3772,7 @@ s = "axc", t = "ahbgdc"
 
 **后续挑战 :**
 
-如果有大量输入的 S，称作S1, S2, ... , Sk 其中 k >= 10亿，你需要依次检查它们是否为 T 的子序列。在这种情况下，你会怎样改变代码？
+如果有大量输入的 S，称作 S1, S2, ... , Sk 其中 k >= 10 亿，你需要依次检查它们是否为 T 的子序列。在这种情况下，你会怎样改变代码？
 
 **解法一**
 
@@ -3826,7 +3807,7 @@ public boolean subsequence(String s,String t,int sindex,int tindex){
     if (sindex == s.length()) {
         return true;
     }
-    //上下if不能交换,可能最后一个才相等
+    //上下 if 不能交换，可能最后一个才相等
     if (tindex == t.length()) {
         return false;
     }
@@ -3836,7 +3817,7 @@ public boolean subsequence(String s,String t,int sindex,int tindex){
 **解法二**
 
 ```java
-//大量的s字符串 处理
+//大量的 s 字符串 处理
 public boolean isSubsequence3(String s, String t) {
     //预处理
     ArrayList<ArrayList<Integer>> hash=new ArrayList<>();
@@ -3846,7 +3827,7 @@ public boolean isSubsequence3(String s, String t) {
     for (int i=0;i<t.length();i++) {
         hash.get(t.charAt(i)-'a').add(i);
     }
-    //经过上面的预处理,后面的处理就会很快,不用再遍历t字符串
+    //经过上面的预处理，后面的处理就会很快，不用再遍历 t 字符串
     int lastIndex=-1;
     for (int i=0;i<s.length();i++) {
         List<Integer> indexList=hash.get(s.charAt(i)-'a');
@@ -3859,7 +3840,7 @@ public boolean isSubsequence3(String s, String t) {
     return true;
 }
 
-//找到第一个比target大的元素
+//找到第一个比 target 大的元素
 public int binarySearch(List<Integer> list,int target){
     int left=0,right=list.size()-1;
     while(left<=right){
@@ -3881,33 +3862,32 @@ public int binarySearch(List<Integer> list,int target){
 **示例 1:**
 
 ```java
-输入: [1,2,3,4,5,6,7] 和 k = 3
-输出: [5,6,7,1,2,3,4]
-解释:
-向右旋转 1 步: [7,1,2,3,4,5,6]
-向右旋转 2 步: [6,7,1,2,3,4,5]
-向右旋转 3 步: [5,6,7,1,2,3,4]
+输入：[1,2,3,4,5,6,7] 和 k = 3
+输出：[5,6,7,1,2,3,4]
+解释：
+向右旋转 1 步：[7,1,2,3,4,5,6]
+向右旋转 2 步：[6,7,1,2,3,4,5]
+向右旋转 3 步：[5,6,7,1,2,3,4]
 ```
-
 
 **示例 2:**
 
 ```java
-输入: [-1,-100,3,99] 和 k = 2
-输出: [3,99,-1,-100]
-解释: 
-向右旋转 1 步: [99,-1,-100,3]
-向右旋转 2 步: [3,99,-1,-100]
+输入：[-1,-100,3,99] 和 k = 2
+输出：[3,99,-1,-100]
+解释：
+向右旋转 1 步：[99,-1,-100,3]
+向右旋转 2 步：[3,99,-1,-100]
 ```
 
-**说明:**
+**说明：**
 
 - 尽可能想出更多的解决方案，至少有三种不同的方法可以解决这个问题。
 - 要求使用空间复杂度为 O(1) 的 **原地** 算法 
 
 **解法一**
 
-常规解法，每次保留数组最后一个元素，从后往前将每个元素赋值为前一个元素的值，这样就相当于将数组整体向后循环移动一次，循环移动k次就是最后的结果
+常规解法，每次保留数组最后一个元素，从后往前将每个元素赋值为前一个元素的值，这样就相当于将数组整体向后循环移动一次，循环移动 k 次就是最后的结果
 
 ```java
 public void rotate(int[] nums, int k) {
@@ -3925,7 +3905,7 @@ public void rotate(int[] nums, int k) {
     }
 }
 ```
-时间复杂度较高，`O(NK)` Java可以过，但是C/C++可能过不了
+时间复杂度较高，`O(NK)` Java 可以过，但是 C/C++可能过不了
 
 **解法二**
 
@@ -3967,7 +3947,7 @@ public void swap(int []nums,int a,int b){
 
 **解法一**
 
-10.20竞赛第一题，判断给定的点是不是再一条直线上，判断和前两个点是不是在一条直线上，注意不要直接除算斜率，那样是不准确的
+10.20 竞赛第一题，判断给定的点是不是再一条直线上，判断和前两个点是不是在一条直线上，注意不要直接除算斜率，那样是不准确的
 
 ```java
 public boolean checkStraightLine(int[][] coordinates) {
@@ -4001,7 +3981,6 @@ public boolean checkStraightLine(int[][] coordinates) {
 解释："/a/b/" 是 "/a" 的子文件夹，而 "/c/d/e" 是 "/c/d" 的子文件夹。
 ```
 
-
 **示例 2：**
 
 ```java
@@ -4009,7 +3988,6 @@ public boolean checkStraightLine(int[][] coordinates) {
 输出：["/a"]
 解释：文件夹 "/a/b/c" 和 "/a/b/d/" 都会被删除，因为它们都是 "/a" 的子文件夹。
 ```
-
 
 **示例 3：**
 
@@ -4028,7 +4006,7 @@ public boolean checkStraightLine(int[][] coordinates) {
 
 **解法一**
 
-`2019.10.20`的竞赛题，当时没做出来。。。一直超时，太菜了
+`2019.10.20`的竞赛题，当时没做出来。一直超时，太菜了
 
 ```java
 public List<String> removeSubfolders(String[] folder) {
@@ -4047,7 +4025,7 @@ public List<String> removeSubfolders(String[] folder) {
 ```
 当时我想到了排序，但是并没处理好，排序之后还是傻傻的一个个去对比，其实排序后就很清楚了
 
-`folder = ["/a","/a/b","/c/d","/c/d/e","/c/f"]` 题目其实也在暗示我们要排序，给的case都是排好序的
+`folder = ["/a","/a/b","/c/d","/c/d/e","/c/f"]` 题目其实也在暗示我们要排序，给的 case 都是排好序的
 
 当然这里很精髓的一步就是在对比的时候在 `folder[root]` 后面加上一个 `"/"` ，这样就不会将 `a/b/c` 判断为 `a/b/ca` 的根目录了~
 
@@ -4058,17 +4036,16 @@ public List<String> removeSubfolders(String[] folder) {
 **示例 1：**
 
 ```java
-输入: "babad"
-输出: "bab"
-注意: "aba" 也是一个有效答案。
+输入："babad"
+输出："bab"
+注意："aba" 也是一个有效答案。
 ```
-
 
 **示例 2：**
 
 ```java
-输入: "cbbd"
-输出: "bb"
+输入："cbbd"
+输出："bb"
 ```
 
 **解法一**
@@ -4080,10 +4057,10 @@ public String longestPalindrome(String s) {
     if (s==null || s.length()<=0) {
         return "";
     }
-    String res=s.charAt(0)+"";//只有1个字符
+    String res=s.charAt(0)+"";//只有 1 个字符
     for (int i=1;i<s.length();i++) {
-        String even=palindrome(s,i-1,i); //偶数长度回文,从两个字符中间开始扩散
-        String odd=palindrome(s,i,i); //奇数长度回文,从某一个字符开始扩散
+        String even=palindrome(s,i-1,i); //偶数长度回文，从两个字符中间开始扩散
+        String odd=palindrome(s,i,i); //奇数长度回文，从某一个字符开始扩散
         String temp=odd.length()>even.length()?odd:even;
         if (temp.length()>res.length()) {
             res=temp;
@@ -4100,12 +4077,11 @@ public String palindrome(String s,int i,int j){
     return s.substring(i+1,j);
 }
 ```
-如果采用暴力法的话就是枚举所有子串，判断是不是回文串，最后求个最长的，时间复杂度`O(N^3)` ，但是我们可以利用回文的特征，利用中心扩散法，以`str`的**各个位置**作为中心，向两边扩散，最后求得最大值，注意得这里说的是**各个位置**，这个里面其实就包含了元素之间的间隙，其实整体思路还是挺简单的，但经过我们小小的转换思路，时间复杂度就降低到了`O(N^2)`，当然，这里还不是最优解，最优应该是[Manacher](https://oi-wiki.org/string/manacher/) （马拉车）算法，等后面有时间我再来研究这种算法
+如果采用暴力法的话就是枚举所有子串，判断是不是回文串，最后求个最长的，时间复杂度`O(N^3)` ，但是我们可以利用回文的特征，利用中心扩散法，以`str`的**各个位置**作为中心，向两边扩散，最后求得最大值，注意得这里说的是**各个位置**，这个里面其实就包含了元素之间的间隙，其实整体思路还是挺简单的，但经过我们小小的转换思路，时间复杂度就降低到了`O(N^2)`，当然，这里还不是最优解，最优应该是 [Manacher](https://oi-wiki.org/string/manacher/) （马拉车）算法，等后面有时间我再来研究这种算法
 
 ## [336. 回文对](https://leetcode-cn.com/problems/palindrome-pairs/)
 
 Difficulty: **困难**
-
 
 给定一组 **互不相同** 的单词， 找出所有**不同**的索引对`(i, j)`，使得列表中的两个单词， `words[i] + words[j]` ，可拼接成回文串。
 
@@ -4127,7 +4103,7 @@ Difficulty: **困难**
 
 **解法一**
 
-枚举单词的所有前缀or后缀，如果除了前缀or后缀剩余部分是回文串，并且在dict中存在前缀or后缀的翻转，那么这两个单词就能构成回文对
+枚举单词的所有前缀 or 后缀，如果除了前缀 or 后缀剩余部分是回文串，并且在 dict 中存在前缀 or 后缀的翻转，那么这两个单词就能构成回文对
 ```golang
 func palindromePairs(words []string) [][]int {
     var dict = make(map[string]int)
@@ -4140,7 +4116,7 @@ func palindromePairs(words []string) [][]int {
             if idx, ok := dict[words[i][:j]]; ok && idx != i && isPalindrome(words[i][j:]) {
                 res = append(res, []int{i, idx})
             }
-            //这里需要判断下j!=0，避免重复的判断，s[0:] == s[:len(s)]
+            //这里需要判断下 j!=0，避免重复的判断，s[0:] == s[:len(s)]
             if idx, ok := dict[words[i][j:]]; j != 0 && ok && idx != i && isPalindrome(words[i][:j]) {
                 res = append(res, []int{idx, i})
             }
@@ -4173,19 +4149,19 @@ func isPalindrome(s string) bool {
 
 在构造过程中，请注意区分大小写。比如 `"Aa"` 不能当做一个回文字符串。
 
-**注意:**
+**注意：**
 假设字符串的长度不会超过 1010。
 
 **示例 1:**
 
 ```java
-输入:
+输入：
 "abccccdd"
 
-输出:
+输出：
 7
 
-解释:
+解释：
 我们可以构造的最长的回文串是"dccaccd", 它的长度是 7。
 ```
 
@@ -4223,21 +4199,21 @@ public int longestPalindrome(String s) {
 **示例 1:**
 
 ```java
-输入: "aba"
-输出: True
+输入："aba"
+输出：True
 ```
 
 **示例 2:**
 
 ```java
-输入: "abca"
-输出: True
-解释: 你可以删除c字符。
+输入："abca"
+输出：True
+解释：你可以删除 c 字符。
 ```
 
-**注意:**
+**注意：**
 
-1. 字符串只包含从 a-z 的小写字母。字符串的最大长度是50000。
+1. 字符串只包含从 a-z 的小写字母。字符串的最大长度是 50000。
 
 **解法一**
 
@@ -4296,7 +4272,6 @@ public boolean valid(String s,int left,int right){
 先删除回文子序列 "a"，然后再删除 "bb"。
 ```
 
-
 **示例 3：**
 
 ```java
@@ -4305,7 +4280,6 @@ public boolean valid(String s,int left,int right){
 解释："baabb" -> "b" -> "". 
 先删除回文子序列 "baab"，然后再删除 "b"。
 ```
-
 
 **示例 4：**
 
@@ -4337,14 +4311,13 @@ public int removePalindromeSub(String s) {
 }
 ```
 
-题目说了只有两个字母a和b，而且要删除的是**回文子序列**，这样一说就清楚了，这才是简单题的水准呐~还是挺有意思的，脑筋急转弯hahaha
-
+题目说了只有两个字母 a 和 b，而且要删除的是**回文子序列**，这样一说就清楚了，这才是简单题的水准呐~还是挺有意思的，脑筋急转弯 hahaha
 
 ## [435. 无重叠区间](https://leetcode-cn.com/problems/non-overlapping-intervals/)
 
 给定一个区间的集合，找到需要移除区间的最小数量，使剩余区间互不重叠。
 
-注意:
+注意：
 
 - 可以认为区间的终点总是大于它的起点。
 - 区间 [1,2] 和 [2,3] 的边界相互“接触”，但没有相互重叠。
@@ -4352,31 +4325,31 @@ public int removePalindromeSub(String s) {
 **示例 1:**
 
 ```java
-输入: [ [1,2], [2,3], [3,4], [1,3] ]
+输入：[ [1,2], [2,3], [3,4], [1,3] ]
 
-输出: 1
+输出：1
 
-解释: 移除 [1,3] 后，剩下的区间没有重叠。
+解释：移除 [1,3] 后，剩下的区间没有重叠。
 ```
 
 **示例 2:**
 
 ```java
-输入: [ [1,2], [1,2], [1,2] ]
+输入：[ [1,2], [1,2], [1,2] ]
 
-输出: 2
+输出：2
 
-解释: 你需要移除两个 [1,2] 来使剩下的区间没有重叠。
+解释：你需要移除两个 [1,2] 来使剩下的区间没有重叠。
 ```
 
 **示例 3:**
 
 ```java
-输入: [ [1,2], [2,3] ]
+输入：[ [1,2], [2,3] ]
 
-输出: 0
+输出：0
 
-解释: 你不需要移除任何区间，因为它们已经是无重叠的了。
+解释：你不需要移除任何区间，因为它们已经是无重叠的了。
 ```
 
 **解法一**
@@ -4403,7 +4376,7 @@ public int eraseOverlapIntervals(int[][] intervals) {
     return intervals.length-max;
 }
 ```
-171ms，8%，感觉快要过不了了。。。本来是是写的记忆化递归的，结果过不了。。。卡在倒数第二个case上
+171ms，8%，感觉快要过不了了。本来是是写的记忆化递归的，结果过不了。卡在倒数第二个 case 上
 
 ```java
 HashMap<Pair,Integer> cache=new HashMap<>();//TLE
@@ -4413,7 +4386,7 @@ public int eraseOverlapIntervals2(int[][] intervals) {
     return intervals.length-dfs(intervals,0,Integer.MIN_VALUE);
 }
 
-//背包问题,返回最多可以留下的区间
+//背包问题，返回最多可以留下的区间
 public int dfs(int[][] intervals,int index,int prev) {
     if (index==intervals.length) {
         return 0;
@@ -4439,8 +4412,8 @@ public int eraseOverlapIntervals(int[][] intervals) {
     if (intervals==null || intervals.length<=0) {
         return 0;
     }
-    //按照起点排序,重叠的时候选择保留结尾小的那一个
-    //Arrays.sort(intervals,(a,b)->a[0]-b[0]); lambda初始化效率会低一点
+    //按照起点排序，重叠的时候选择保留结尾小的那一个
+    //Arrays.sort(intervals,(a,b)->a[0]-b[0]); lambda 初始化效率会低一点
     Arrays.sort(intervals,new Comparator<int[]>(){
         @Override
         public int compare(int[] a,int[] b){
@@ -4462,8 +4435,6 @@ public int eraseOverlapIntervals(int[][] intervals) {
 ```
 按照起点排序，在重叠的时候优先选择结尾小的哪一个，这样就可能得到更多的区间组合，关于这个算法的正确性我就不证明了
 
-
-
 ## [263. 丑数](https://leetcode-cn.com/problems/ugly-number/)
 
 编写一个程序判断给定的数是否为丑数。
@@ -4473,31 +4444,31 @@ public int eraseOverlapIntervals(int[][] intervals) {
 **示例 1:**
 
 ```java
-输入: 6
-输出: true
-解释: 6 = 2 × 3
+输入：6
+输出：true
+解释：6 = 2 × 3
 ```
 
 **示例 2:**
 
 ```java
-输入: 8
-输出: true
-解释: 8 = 2 × 2 × 2
+输入：8
+输出：true
+解释：8 = 2 × 2 × 2
 ```
 
 **示例 3:**
 
 ```java
-输入: 14
-输出: false 
-解释: 14 不是丑数，因为它包含了另外一个质因数 7。
+输入：14
+输出：false 
+解释：14 不是丑数，因为它包含了另外一个质因数 7。
 ```
 
 **说明：**
 
 1. `1` 是丑数。
-2. 输入不会超过 `32` 位有符号整数的范围: `[−231,  231 − 1]`。
+2. 输入不会超过 `32` 位有符号整数的范围：`[−231,  231 − 1]`。
 
 **解法一**
 
@@ -4546,7 +4517,6 @@ public boolean isUgly(int num) {
 解释：餐馆与示例 1 相同，但在 veganFriendly = 0 的过滤条件下，应该考虑所有餐馆。
 ```
 
-
 **示例 3：**
 
 ```java
@@ -4565,7 +4535,7 @@ public boolean isUgly(int num) {
 
 **解法一**
 
-看到这个题，javaer不用stream可太可惜了hahaha
+看到这个题，javaer 不用 stream 可太可惜了 hahaha
 
 ```java
 public List<Integer> filterRestaurants(int[][] restaurants, int veganFriendly, int maxPrice, int maxDistance) {
@@ -4581,7 +4551,7 @@ public List<Integer> filterRestaurants(int[][] restaurants, int veganFriendly, i
 
 给你两个数 `hour` 和 `minutes` 。请你返回在时钟上，由给定时间的时针和分针组成的较小角的角度（60 单位制）。
 
-这题就懒得copy了，19场双周赛的第三题，不应该是mid题的。。。
+这题就懒得 copy 了，19 场双周赛的第三题，不应该是 mid 题的。
 
 **解法一**
 
@@ -4593,7 +4563,7 @@ public double angleClock(int hour, int minutes) {
 }
 ```
 
-化简一下是 **h时m分的夹角为：5.5m-30h**
+化简一下是 **h 时 m 分的夹角为：5.5m-30h**
 
 ## [5169. 日期之间隔几天](https://leetcode-cn.com/problems/number-of-days-between-two-dates/)
 
@@ -4603,7 +4573,7 @@ public double angleClock(int hour, int minutes) {
 
 **解法一**
 
-177周赛的T1
+177 周赛的 T1
 
 ```java
 import java.time.*;
@@ -4615,11 +4585,11 @@ class Solution {
 }
 ```
 
-做LeetCode少数导包了的题🤣
+做 LeetCode 少数导包了的题🤣
 
 **解法二**
 
-copy大佬的原生解法
+copy 大佬的原生解法
 
 ```java
 
@@ -4666,8 +4636,8 @@ private boolean isRun(int year) {
 **示例 1:**
 
 ```java
-输入: "Let's take LeetCode contest"
-输出: "s'teL ekat edoCteeL tsetnoc" 
+输入："Let's take LeetCode contest"
+输出："s'teL ekat edoCteeL tsetnoc" 
 ```
 
 **注意：**在字符串中，每个单词由单个空格分隔，并且字符串中不会有任何额外的空格
@@ -4706,26 +4676,24 @@ public void reverse(char[] s,int left,int right){
 **示例 1：**
 
 ```java
-输入: "the sky is blue"
-输出: "blue is sky the"
+输入："the sky is blue"
+输出："blue is sky the"
 ```
-
 
 **示例 2：**
 
 ```java
-输入: "  hello world!  "
-输出: "world! hello"
-解释: 输入字符串可以在前面或者后面包含多余的空格，但是反转后的字符不能包括。
+输入："  hello world!  "
+输出："world! hello"
+解释：输入字符串可以在前面或者后面包含多余的空格，但是反转后的字符不能包括。
 ```
-
 
 **示例 3：**
 
 ```java
-输入: "a good   example"
-输出: "example good a"
-解释: 如果两个单词间有多余的空格，将反转后单词间的空格减少到只含一个。
+输入："a good   example"
+输出："example good a"
+解释：如果两个单词间有多余的空格，将反转后单词间的空格减少到只含一个。
 ```
 
 **说明：**
@@ -4763,7 +4731,7 @@ public String reverseWords(String s) {
     return sb.toString();
 }
 ```
-比较原生的做法，最开始写的借助split等方法的，比较简单就不多说了
+比较原生的做法，最开始写的借助 split 等方法的，比较简单就不多说了
 
 **解法二**
 
@@ -4775,9 +4743,9 @@ public String reverseWords(String s) {
 
 ## [面试题 01.06. 字符串压缩](https://leetcode-cn.com/problems/compress-string-lcci/)
 
-字符串压缩。利用字符重复出现的次数，编写一种方法，实现基本的字符串压缩功能。比如，字符串aabcccccaaa会变为a2b1c5a3。若“压缩”后的字符串没有变短，则返回原先的字符串。你可以假设字符串中只包含大小写英文字母（a至z）。
+字符串压缩。利用字符重复出现的次数，编写一种方法，实现基本的字符串压缩功能。比如，字符串 aabcccccaaa 会变为 a2b1c5a3。若“压缩”后的字符串没有变短，则返回原先的字符串。你可以假设字符串中只包含大小写英文字母（a 至 z）。
 
-case就不粘了
+case 就不粘了
 
 **解法一**
 
@@ -4804,12 +4772,12 @@ public String compressString(String S) {
 
 给定长度为 n 的整数数组 nums，其中 n > 1，返回输出数组 output ，其中 output[i] 等于 nums 中除 nums[i] 之外其余各元素的乘积。
 
-**示例:**
+**示例：**
 
 ```java
-输入: [1,2,3,4]
-输出: [24,12,8,6]
-说明: 请不要使用除法，且在 O(n) 时间复杂度内完成此题。
+输入：[1,2,3,4]
+输出：[24,12,8,6]
+说明：请不要使用除法，且在 O(n) 时间复杂度内完成此题。
 ```
 
 **进阶：**
@@ -4825,9 +4793,9 @@ public int[] productExceptSelf(int[] nums) {
         return new int[0];
     }
     int[] left=new int[nums.length+1]; 
-    left[0]=1;//left[i]: [0 ~ i-1]的累积
+    left[0]=1;//left[i]: [0 ~ i-1] 的累积
     int[] right=new int[nums.length+1];
-    right[nums.length]=1; //right[i]: [i ~ nums.length-1]的累积
+    right[nums.length]=1; //right[i]: [i ~ nums.length-1] 的累积
     for (int i=1;i<=nums.length;i++) {
         left[i]=left[i-1]*nums[i-1];
     }
@@ -4846,7 +4814,7 @@ public int[] productExceptSelf(int[] nums) {
 
 **解法二**
 
-O(1)进阶版有时间再来补
+O(1) 进阶版有时间再来补
 
 ## [5341. 最后 K 个数的乘积](https://leetcode-cn.com/problems/product-of-the-last-k-numbers/)
 
@@ -4896,7 +4864,7 @@ add 和 getProduct 两种操作加起来总共不会超过 40000 次。
 
 **解法一**
 
-176周赛的第二题，思路倒是很容易想到，维护一个前缀积，然后用全积除以对应k位置的就行了，但是细节的处理出了大问题haha~
+176 周赛的第二题，思路倒是很容易想到，维护一个前缀积，然后用全积除以对应 k 位置的就行了，但是细节的处理出了大问题 haha~
 
 ```java
 LinkedList<Integer> product=null;
@@ -4923,27 +4891,26 @@ public int getProduct(int k) {
     return product.getLast()/product.get(product.size()-k-1);
 }
 ```
-一开始维护了所有的前缀积，结果后面的case过不了，出现了除0异常，很显然把0换成1，后面的case大了之后累乘的结果太大了，溢出为0了。
+一开始维护了所有的前缀积，结果后面的 case 过不了，出现了除 0 异常，很显然把 0 换成 1，后面的 case 大了之后累乘的结果太大了，溢出为 0 了。
 
-上面代码的处理方式是参考了大佬的解法，遇到0的时候就直接重置队列，最后如果k大于队列长度说明这个序列肯定是包含了0，直接返回0就可以了
+上面代码的处理方式是参考了大佬的解法，遇到 0 的时候就直接重置队列，最后如果 k 大于队列长度说明这个序列肯定是包含了 0，直接返回 0 就可以了
 
-## [面试题64. 求1+2+…+n](https://leetcode-cn.com/problems/qiu-12n-lcof/)
+## [面试题 64. 求 1+2+…+n](https://leetcode-cn.com/problems/qiu-12n-lcof/)
 
-求 `1+2+...+n` ，要求不能使用乘除法、for、while、if、else、switch、case等关键字及条件判断语句（A?B:C）。
+求 `1+2+...+n` ，要求不能使用乘除法、for、while、if、else、switch、case 等关键字及条件判断语句（A?B:C）。
 
 **示例 1：**
 
 ```java
-输入: n = 3
-输出: 6
+输入：n = 3
+输出：6
 ```
-
 
 **示例 2：**
 
 ```java
-输入: n = 9
-输出: 45
+输入：n = 9
+输出：45
 ```
 
 **限制：**
@@ -4952,7 +4919,7 @@ public int getProduct(int k) {
 
 **解法一**
 
-我一开始想的是把 `n*(n-1)/2`  展开，变成平方，用pow代替，除2用移位代替，但是想了想感觉pow底层应该也是用了乘
+我一开始想的是把 `n*(n-1)/2`  展开，变成平方，用 pow 代替，除 2 用移位代替，但是想了想感觉 pow 底层应该也是用了乘
 
 所以还是得用递归，但是递归必须有出口，这里的关键就是怎么停止
 
@@ -4973,7 +4940,7 @@ public int sumNums(int n) {
 
 **解法一**
 
-拒绝采样，两次Rand7()拒绝大于40的情况
+拒绝采样，两次 Rand7() 拒绝大于 40 的情况
 
 ```java
 public int rand10() {
@@ -4997,20 +4964,20 @@ public int rand10() {
 
 打乱一个没有重复元素的数组。
 
-**示例:**
+**示例：**
 
 ```java
 // 以数字集合 1, 2 和 3 初始化数组。
 int[] nums = {1,2,3};
 Solution solution = new Solution(nums);
 
-// 打乱数组 [1,2,3] 并返回结果。任何 [1,2,3]的排列返回的概率应该相同。
+// 打乱数组 [1,2,3] 并返回结果。任何 [1,2,3] 的排列返回的概率应该相同。
 solution.shuffle();
 
-// 重设数组到它的初始状态[1,2,3]。
+// 重设数组到它的初始状态 [1,2,3]。
 solution.reset();
 
-// 随机返回数组[1,2,3]打乱后的结果。
+// 随机返回数组 [1,2,3] 打乱后的结果。
 solution.shuffle();
 ```
 
@@ -5038,7 +5005,7 @@ public int[] reset() {
 /** Returns a random shuffling of the array. */
 public int[] shuffle() {
     for (int i=nums.length-1;i>=0;i--) {
-        //从尾部开始这样对于Java会简单一点点
+        //从尾部开始这样对于 Java 会简单一点点
         int rand=(int)(random.nextInt(i+1)); //随机【0,i】的元素
         swap(nums,i,rand);
     }
@@ -5052,22 +5019,22 @@ public void swap(int[] nums,int a,int b){
 }
 ```
 
-## [面试题61. 扑克牌中的顺子](https://leetcode-cn.com/problems/bu-ke-pai-zhong-de-shun-zi-lcof/)
+## [面试题 61. 扑克牌中的顺子](https://leetcode-cn.com/problems/bu-ke-pai-zhong-de-shun-zi-lcof/)
 
-从扑克牌中随机抽5张牌，判断是不是一个顺子，即这5张牌是不是连续的。2～10为数字本身，A为1，J为11，Q为12，K为13，而大、小王为 0 ，可以看成任意数字。A 不能视为 14。
+从扑克牌中随机抽 5 张牌，判断是不是一个顺子，即这 5 张牌是不是连续的。2～10 为数字本身，A 为 1，J 为 11，Q 为 12，K 为 13，而大、小王为 0 ，可以看成任意数字。A 不能视为 14。
 
 **示例 1:**
 
 ```java
-输入: [1,2,3,4,5]
-输出: True
+输入：[1,2,3,4,5]
+输出：True
 ```
 
 **示例 2:**
 
 ```java
-输入: [0,0,1,2,5]
-输出: True
+输入：[0,0,1,2,5]
+输出：True
 ```
 
 **限制：**
@@ -5078,14 +5045,14 @@ public void swap(int[] nums,int a,int b){
 
 **解法一**
 
-只有5张牌，先排除对子，然后求最大和最小的牌面之差就行了，小于等于4就肯定是顺子
+只有 5 张牌，先排除对子，然后求最大和最小的牌面之差就行了，小于等于 4 就肯定是顺子
 
 ```java
 public boolean isStraight(int[] nums) {
     int[] bucket=new int[14];
     for(int i=0;i<5;i++){
         bucket[nums[i]]++;
-        //有非0的对子,直接false
+        //有非 0 的对子，直接 false
         if(nums[i]!=0 && bucket[nums[i]] >1 ){
             return false;
         }
@@ -5096,7 +5063,7 @@ public boolean isStraight(int[] nums) {
         if(bucket[i]==1 && start==-1) start=i;
         if(bucket[j]==1 && end==-1) end=j;
     }
-    //小于等于4就行,多的用0补
+    //小于等于 4 就行，多的用 0 补
     return end-start<=4;
 }
 ```
@@ -5191,14 +5158,12 @@ public int[] distributeCandies(int candies, int num_people) {
 解释：0 + 2 + 1 = -6 + 6 - 7 + 9 + 1 = 2 + 0 + 1
 ```
 
-
 **示例 2：**
 
 ```java
 输入：[0,2,1,-6,6,7,9,-1,2,0,1]
 输出：false
 ```
-
 
 **示例 3：**
 
@@ -5224,9 +5189,9 @@ public boolean canThreePartsEqualSum(int[] A) {
     for(int i=1;i<=A.length;i++){
         preSum[i]=preSum[i-1]+A[i-1];
     }
-    for(int i=1;i<preSum.length-2;i++){ //保证剩下2个
+    for(int i=1;i<preSum.length-2;i++){ //保证剩下 2 个
         if(preSum[A.length]-preSum[i]==preSum[i]*2){
-            for(int j=i+1;j<preSum.length-1;j++){ //保证剩下1个
+            for(int j=i+1;j<preSum.length-1;j++){ //保证剩下 1 个
                 if(preSum[A.length]-preSum[i]==(preSum[j]-preSum[i])*2){
                     //System.out.println(i+" "+j);
                     return true;
@@ -5248,7 +5213,7 @@ public boolean canThreePartsEqualSum(int[] A) {
     for(int i=0;i<A.length;i++) sum+=A[i];
     if(sum%3!=0) return false;
     int count=0,tempSum=0;
-    //i到达A.length-1保证有第3段,否则有可能target=0 只分为两段就没了
+    //i 到达 A.length-1 保证有第 3 段，否则有可能 target=0 只分为两段就没了
     for(int i=0;i<A.length-1;i++){ 
         tempSum+=A[i];
         if(tempSum==sum/3){
@@ -5260,7 +5225,7 @@ public boolean canThreePartsEqualSum(int[] A) {
     return false;
 }
 ```
-这题的WA点就是 sum=0的时候，有可能按照划分的逻辑只将数组划分为两段，所以要注意边界
+这题的 WA 点就是 sum=0 的时候，有可能按照划分的逻辑只将数组划分为两段，所以要注意边界
 
 ## [调整数组顺序使奇数位于偶数前面（牛客）](https://www.nowcoder.com/practice/beb5aa231adc45b2a5dcc5b62c93f593?tpId=13&&tqId=11166&rp=2&ru=/activity/oj&qru=/ta/coding-interviews/question-ranking)
 
@@ -5318,7 +5283,7 @@ public void swap(int[] array,int a,int b){
 
 **解法一**
 
-憨憨解法，最后还被一个大case越界给卡了
+憨憨解法，最后还被一个大 case 越界给卡了
 
 ```java
 public boolean isRectangleOverlap(int[] rec1, int[] rec2) {
@@ -5358,7 +5323,6 @@ public boolean isRectangleOverlap(int[] rec1, int[] rec2) {
 输出：34
 ```
 
-
 **示例 3：**
 
 ```java
@@ -5372,7 +5336,6 @@ public boolean isRectangleOverlap(int[] rec1, int[] rec2) {
 输入：[[1,1,1],[1,0,1],[1,1,1]]
 输出：32
 ```
-
 
 **示例 5：**
 
@@ -5398,7 +5361,7 @@ public int surfaceArea(int[][] grid) {
     int res=0;
     for (int i=0;i<N;i++) {
         for (int j=0;j<N;j++) {
-            //正面,背面暴露的面积
+            //正面，背面暴露的面积
             res+= Math.max(j<N-1?grid[i][j+1]-grid[i][j]:grid[i][j],0);
             res+= Math.max(j>0?grid[i][j-1]-grid[i][j]:grid[i][j],0);
             //左和右边暴露的面积
@@ -5411,7 +5374,7 @@ public int surfaceArea(int[][] grid) {
     return res;
 }
 ```
-我太蠢了，开始直接分别算6个面，然后发现有坑，又去算坑的面积。。。结果就陷进去了
+我太蠢了，开始直接分别算 6 个面，然后发现有坑，又去算坑的面积。结果就陷进去了
 
 **解法二**
 
@@ -5451,13 +5414,13 @@ public int surfaceArea(int[][] grid) {
 **示例 :**
 
 ```java
-输入:
+输入：
 [[0,1,0,0],
  [1,1,1,0],
  [0,1,0,0],
  [1,1,0,0]]
 
-输出: 16
+输出：16
 ```
 
 **解法一**
@@ -5465,7 +5428,7 @@ public int surfaceArea(int[][] grid) {
 偶然翻到的题，发现和上面的是一样的
 
 ```java
-//和892类似的解法，简化版
+//和 892 类似的解法，简化版
 public int islandPerimeter(int[][] grid) {
     int count=0;
     int left=0,up=0;
@@ -5485,7 +5448,7 @@ public int islandPerimeter(int[][] grid) {
     return count*4-(up+left)*2;
 }
 ```
-> 看到题解区有大佬dfs的，通过方格的变化统计有效的边，比如从1->0就可以增加一条边，而从1->边界又可以增加一条边，还是挺秒的
+> 看到题解区有大佬 dfs 的，通过方格的变化统计有效的边，比如从 1->0 就可以增加一条边，而从 1->边界又可以增加一条边，还是挺秒的
 
 ## [999. 车的可用捕获量](https://leetcode-cn.com/problems/available-captures-for-rook/)
 
@@ -5603,18 +5566,18 @@ public boolean valid(final int[][] board,int x,int y){
     return x>=0 && x<board.length && y>=0 && y<board[0].length;
 }
 ```
-我理解的原地就是在原数组上做修改，但是并没有说不能用额外空间吧。。。但是看了评论区大佬们都不是这样写的，都是用的位运算，用int空的位保存状态，最后移位，懒得写了，感觉没啥意思，水题
+我理解的原地就是在原数组上做修改，但是并没有说不能用额外空间吧。但是看了评论区大佬们都不是这样写的，都是用的位运算，用 int 空的位保存状态，最后移位，懒得写了，感觉没啥意思，水题
 
 ## [204. 计数质数](https://leetcode-cn.com/problems/count-primes/)
 
 统计所有小于非负整数 *n* 的质数的数量。
 
-**示例:**
+**示例：**
 
 ```java
-输入: 10
-输出: 4
-解释: 小于 10 的质数一共有 4 个, 它们是 2, 3, 5, 7 。
+输入：10
+输出：4
+解释：小于 10 的质数一共有 4 个，它们是 2, 3, 5, 7 。
 ```
 
 **解法一**
@@ -5628,7 +5591,7 @@ public int countPrimes(int n) {
     Arrays.fill(prime,true);
     for(int i=2;i*i<n;i++){
         if(prime[i]){
-            //从i*i开始,i*(i-1)已经被前面的统计了
+            //从 i*i 开始，i*(i-1) 已经被前面的统计了
             for(int j=i*i;j<n;j+=i){
                 prime[j]=false;
             }
@@ -5641,9 +5604,9 @@ public int countPrimes(int n) {
     return res;
 }
 ```
-## [171. Excel表列序号](https://leetcode-cn.com/problems/excel-sheet-column-number/)
+## [171. Excel 表列序号](https://leetcode-cn.com/problems/excel-sheet-column-number/)
 
-给定一个Excel表格中的列名称，返回其相应的列序号。
+给定一个 Excel 表格中的列名称，返回其相应的列序号。
 
 例如，
 
@@ -5658,22 +5621,22 @@ public int countPrimes(int n) {
 **示例 1:**
 
 ```java
-输入: "A"
-输出: 1
+输入："A"
+输出：1
 ```
 
 **示例 2:**
 
 ```java
-输入: "AB"
-输出: 28
+输入："AB"
+输出：28
 ```
 
 **示例 3:**
 
 ```java
-输入: "ZY"
-输出: 701
+输入："ZY"
+输出：701
 ```
 
 **解法一**
@@ -5681,7 +5644,7 @@ public int countPrimes(int n) {
 朋友作业帮面试问了这道题，其实就是进制的转换，写了个回转的
 
 ```java
-//26进制转10进制
+//26 进制转 10 进制
 public int titleToNumber(String s) {
     if(s==null || s.length()<=0) return 0;
     int res=0,n=s.length();
@@ -5693,18 +5656,18 @@ public int titleToNumber(String s) {
     return res;
 }
 
-//10进制转26进制
+//10 进制转 26 进制
 public String numberToTitle(int s) {
     StringBuilder res=new StringBuilder();
     while(s!=0){
-        //这个s-1要注意啊woc
+        //这个 s-1 要注意啊 woc
         res.append((char)((s-1)%26+65));
         s=(s-1)/26;
     }
     return res.reverse().toString();
 }
 ```
-## [168. Excel表列名称](https://leetcode-cn.com/problems/excel-sheet-column-title/)
+## [168. Excel 表列名称](https://leetcode-cn.com/problems/excel-sheet-column-title/)
 
 给定一个正整数，返回它在 Excel 表中相对应的列名称。
 
@@ -5723,22 +5686,22 @@ public String numberToTitle(int s) {
 **示例 1:**
 
 ```java
-输入: 1
-输出: "A"
+输入：1
+输出："A"
 ```
 
 **示例 2:**
 
 ```java
-输入: 28
-输出: "AB"
+输入：28
+输出："AB"
 ```
 
 **示例 3:**
 
 ```java
-输入: 701
-输出: "ZY"
+输入：701
+输出："ZY"
 ```
 
 **解法一**
@@ -5747,7 +5710,7 @@ public String numberToTitle(int s) {
 public String numberToTitle(int s) {
     StringBuilder res=new StringBuilder();
     while(s!=0){
-        //这个s-1要注意啊woc
+        //这个 s-1 要注意啊 woc
         res.append((char)((s-1)%26+65));
         s=(s-1)/26;
     }
@@ -5755,7 +5718,7 @@ public String numberToTitle(int s) {
 }
 ```
 
-go写法
+go 写法
 
 ```go
 func convertToTitle(n int) string {
@@ -5779,25 +5742,25 @@ func convertToTitle(n int) string {
 **示例 1:**
 
 ```java
-输入: 
+输入：
 nums = [1, 7, 3, 6, 5, 6]
-输出: 3
-解释: 
-索引3 (nums[3] = 6) 的左侧数之和(1 + 7 + 3 = 11)，与右侧数之和(5 + 6 = 11)相等。
-同时, 3 也是第一个符合要求的中心索引。
+输出：3
+解释：
+索引 3 (nums[3] = 6) 的左侧数之和 (1 + 7 + 3 = 11)，与右侧数之和 (5 + 6 = 11) 相等。
+同时，3 也是第一个符合要求的中心索引。
 ```
 
 **示例 2:**
 
 ```java
-输入: 
+输入：
 nums = [1, 2, 3]
-输出: -1
-解释: 
+输出：-1
+解释：
 数组中不存在满足此条件的中心索引。
 ```
 
-**说明:**
+**说明：**
 
 - `nums` 的长度范围为 `[0, 10000]`。
 - 任何一个 `nums[i]` 将会是一个范围在 `[-1000, 1000]`的整数。
@@ -5813,12 +5776,12 @@ func pivotIndex(nums []int) int {
     if n==0{
         return -1
     }
-    pre:=make([]int,n+1) //i之前的元素和,不包含i
+    pre:=make([]int,n+1) //i 之前的元素和，不包含 i
     pre[0]=0
-    last:=make([]int,n+1) //(i-1)之后元素和,不包含(i-1)
+    last:=make([]int,n+1) //(i-1) 之后元素和，不包含 (i-1)
     last[n]=0
     for i,j := 1,n-1;i<=n && j>=0; i,j = i+1,j-1 {
-        //这里其实只要代入值验证第一次的转移是正确的就行了,不用考虑太多
+        //这里其实只要代入值验证第一次的转移是正确的就行了，不用考虑太多
         pre[i]=pre[i-1]+nums[i-1]
         last[j]=last[j+1]+nums[j]
     }
@@ -5846,7 +5809,7 @@ func pivotIndex(nums []int) int {
     for _,num:= range nums{
         sum+=num
     }
-    temp:=0 //包含了边界0
+    temp:=0 //包含了边界 0
     for i:=0;i<n;i++{
         if temp*2+nums[i]==sum{
             return i
@@ -5887,7 +5850,7 @@ func pivotIndex(nums []int) int {
 
 **解法一**
 
-之前写了，没记录，这次PDD笔试考了这题
+之前写了，没记录，这次 PDD 笔试考了这题
 
 ```java
 public int minIncrementForUnique(int[] A) {
@@ -5907,7 +5870,7 @@ public int minIncrementForUnique(int[] A) {
 
 > 这题还有一些方法优化，首先是排序可以用桶排序，然后还可以用并查集（比较麻烦），或者也有数学分析找规律的方法
 
-## [面试题05. 替换空格](https://leetcode-cn.com/problems/ti-huan-kong-ge-lcof/)
+## [面试题 05. 替换空格](https://leetcode-cn.com/problems/ti-huan-kong-ge-lcof/)
 
 请实现一个函数，把字符串 `s` 中的每个空格替换成"%20"。
 
@@ -5947,11 +5910,11 @@ public String replaceSpace(String s) {
 
 **解法二**
 
-原题是要求O(1)空间的，这里虽然无法做到，但是可以模拟下
+原题是要求 O(1) 空间的，这里虽然无法做到，但是可以模拟下
 
 ```java
-//原题目的要求应该是在O(1)空间下,但是Java的String是不可变的
-//所以不可能O(1),我们需要改一下函数签名
+//原题目的要求应该是在 O(1) 空间下，但是 Java 的 String 是不可变的
+//所以不可能 O(1), 我们需要改一下函数签名
 public String replaceSpace(/*StringBuilder*/ String ss) {
     StringBuilder s=new StringBuilder(ss); //这里是为了验证
     int oldLen=s.length();
@@ -5959,7 +5922,7 @@ public String replaceSpace(/*StringBuilder*/ String ss) {
         if(s.charAt(i)==' ') s.append("xx"); //扩充字符长度
     }
     int newLen=s.length();
-    //逆序,避免覆盖
+    //逆序，避免覆盖
     int i=oldLen-1,j=newLen-1;
     while(i>=0){
         char c=s.charAt(i--);
@@ -5975,33 +5938,33 @@ public String replaceSpace(/*StringBuilder*/ String ss) {
 }
 ```
 
-## [面试题45. 把数组排成最小的数](https://leetcode-cn.com/problems/ba-shu-zu-pai-cheng-zui-xiao-de-shu-lcof/)
+## [面试题 45. 把数组排成最小的数](https://leetcode-cn.com/problems/ba-shu-zu-pai-cheng-zui-xiao-de-shu-lcof/)
 
 输入一个非负整数数组，把数组里所有数字拼接起来排成一个数，打印能拼接出的所有数字中最小的一个。
 
 **示例 1:**
 
 ```java
-输入: [10,2]
-输出: "102"
+输入：[10,2]
+输出："102"
 ```
 **示例 2:**
 
 ```java
-输入: [3,30,34,5,9]
-输出: "3033459"
+输入：[3,30,34,5,9]
+输出："3033459"
 ```
 
-**提示:**
+**提示：**
 - `0 < nums.length <= 100`
 
-**说明:**
+**说明：**
 
 输出结果可能非常大，所以你需要返回一个字符串而不是整数；拼接起来的数字可能会有前导 0，最后结果不需要去掉前导 0
 
 **解法一**
 
-一开始贼sb，想了一大堆有的没的😅
+一开始贼 sb，想了一大堆有的没的😅
 ![UTOOLS1592838604659.png](https://upload.cc/i1/2020/06/22/zOQcTL.png)
 ```java
 public String minNumber(int[] nums) {
@@ -6013,7 +5976,7 @@ public String minNumber(int[] nums) {
     return sb.toString();
 }
 ```
-虽然绕了一大圈，所幸还是自己做出来了，但是为什么这样就是对的呢？其实这里我也是想当然了，严谨的应该对这个排序规则的传递性进行证明，也就是`xy>yx && yz>zy ==> xz>xz ?`这个成立，排序的结果才是对的，这里我就不copy了，证明也不是很难，大家可以去原题[题解区](https://leetcode-cn.com/problems/ba-shu-zu-pai-cheng-zui-xiao-de-shu-lcof/solution/mian-shi-ti-45-ba-shu-zu-pai-cheng-zui-xiao-de-s-4/378553)看看
+虽然绕了一大圈，所幸还是自己做出来了，但是为什么这样就是对的呢？其实这里我也是想当然了，严谨的应该对这个排序规则的传递性进行证明，也就是`xy>yx && yz>zy ==> xz>xz ?`这个成立，排序的结果才是对的，这里我就不 copy 了，证明也不是很难，大家可以去原题 [题解区](https://leetcode-cn.com/problems/ba-shu-zu-pai-cheng-zui-xiao-de-shu-lcof/solution/mian-shi-ti-45-ba-shu-zu-pai-cheng-zui-xiao-de-s-4/378553) 看看
 
 ## [179. 最大数](https://leetcode-cn.com/problems/largest-number/)
 
@@ -6022,19 +5985,19 @@ public String minNumber(int[] nums) {
 **示例 1:**
 
 ```java
-输入: [10,2]
-输出: 210
+输入：[10,2]
+输出：210
 ```
 **示例 2:**
 
 ```java
-输入: [3,30,34,5,9]
-输出: 9534330
-说明: 输出结果可能非常大，所以你需要返回一个字符串而不是整数。
+输入：[3,30,34,5,9]
+输出：9534330
+说明：输出结果可能非常大，所以你需要返回一个字符串而不是整数。
 ```
 **解法一**
 
-和上一题一摸一样，借机学习下golang的自定义排序
+和上一题一摸一样，借机学习下 golang 的自定义排序
 ```golang
 type StringSlice []string
 
@@ -6048,7 +6011,7 @@ func largestNumber(nums []int) string {
         strs[i] = strconv.Itoa(n)
     }
     sort.Sort(StringSlice(strs))
-    //return strings.Join(strs,"") 要去前导0...
+    //return strings.Join(strs,"") 要去前导 0...
     // var res = ""
     // var idx = 0
     // for idx < len(strs)-1 && strs[idx] == "0" {
@@ -6059,50 +6022,49 @@ func largestNumber(nums []int) string {
     //     idx++
     // }
     res := strings.Join(strs, "")
-    if res[0] == '0' { //第一个为0肯定就全部是0了...前面的写法明显没动脑子
+    if res[0] == '0' { //第一个为 0 肯定就全部是 0 了。.. 前面的写法明显没动脑子
         return "0"
     }
     return res
 }
 ```
-看了大佬们的提交记录发现go 1.8在sort包中引入了
+看了大佬们的提交记录发现 go 1.8 在 sort 包中引入了
 
 `func Slice(slice interface{}, less func(i, j int) bool)`
 
-通过这个就不用很麻烦的去实现3个函数了，只需要实现`Less`比较器就可以了（其实这才是正常的做法，其他语言中也都是类似的，其他两个`len`和`swap`感觉意义不大，一般不会改这两个函数，完全可以自动生成）
-> 看评论区又看到一个很好的[反证的思路](https://leetcode-cn.com/problems/largest-number/solution/zui-da-shu-bi-jiao-gui-ze-chuan-di-xing-yi-ji-suan/344160)，大致意思就是：假设存在序列`"...ab..."`为最大数，且不满足该排序规则`ab>ba`，也就是说`ab<ba`，那我们交换序列中ab的位置变为`"...ba..."`很明显`"...ba..."`>`"...ab..."`，与假设矛盾，所以最大数一定满足该排序规则
+通过这个就不用很麻烦的去实现 3 个函数了，只需要实现`Less`比较器就可以了（其实这才是正常的做法，其他语言中也都是类似的，其他两个`len`和`swap`感觉意义不大，一般不会改这两个函数，完全可以自动生成）
+> 看评论区又看到一个很好的 [反证的思路](https://leetcode-cn.com/problems/largest-number/solution/zui-da-shu-bi-jiao-gui-ze-chuan-di-xing-yi-ji-suan/344160)，大致意思就是：假设存在序列`"...ab..."`为最大数，且不满足该排序规则`ab>ba`，也就是说`ab<ba`，那我们交换序列中 ab 的位置变为`"...ba..."`很明显`"...ba..."`>`"...ab..."`，与假设矛盾，所以最大数一定满足该排序规则
 
 ## [334. 递增的三元子序列](https://leetcode-cn.com/problems/increasing-triplet-subsequence/)
 
 Difficulty: **中等**
 
-
 给定一个未排序的数组，判断这个数组中是否存在长度为 3 的递增子序列。
 
-数学表达式如下:
+数学表达式如下：
 
 > 如果存在这样的 _i, j, k, _ 且满足 0 ≤ _i_ < _j_ < _k_ ≤ _n_-1，  
 > 使得 _arr[i]_ < _arr[j]_ < _arr[k]_ ，返回 true ; 否则返回 false 。
 
-**说明:** 要求算法的时间复杂度为 O(_n_)，空间复杂度为 O(_1_) 。
+**说明：** 要求算法的时间复杂度为 O(_n_)，空间复杂度为 O(_1_) 。
 
 **示例 1:**
 
 ```go
-输入: [1,2,3,4,5]
-输出: true
+输入：[1,2,3,4,5]
+输出：true
 ```
 
 **示例 2:**
 
 ```go
-输入: [5,4,3,2,1]
-输出: false
+输入：[5,4,3,2,1]
+输出：false
 ```
 
 **解法一**
 
-题目限制了空间复杂度O(1)时间复杂度O(N)，所以利用额外空间的方案就不适用了，我们只需要记录当前元素**之前的最小值**，和最小值**右边的次小值**就ok了，在循环中不断的更新这两个值
+题目限制了空间复杂度 O(1) 时间复杂度 O(N)，所以利用额外空间的方案就不适用了，我们只需要记录当前元素**之前的最小值**，和最小值**右边的次小值**就 ok 了，在循环中不断的更新这两个值
 ```golang
 func increasingTriplet(nums []int) bool {
     var INT_MAX = int(^uint(0)>>1)
@@ -6112,7 +6074,7 @@ func increasingTriplet(nums []int) bool {
     for i := 0; i < n; i++{
         if nums[i] <= a{
             a = nums[i]
-            //b = a 这里不用更新次小值，因为我们要保证a在b前面
+            //b = a 这里不用更新次小值，因为我们要保证 a 在 b 前面
         }else if nums[i] <= b{
             b = nums[i]
         }else{
@@ -6122,48 +6084,47 @@ func increasingTriplet(nums []int) bool {
     return false
 }
 ```
-很可惜是在看了题解区才明白，真的菜啊，一开始想劈叉了，我一直在考虑中间的元素，想怎么求左右的最小最大值。。。
+很可惜是在看了题解区才明白，真的菜啊，一开始想劈叉了，我一直在考虑中间的元素，想怎么求左右的最小最大值。
 
 ## [172. 阶乘后的零](https://leetcode-cn.com/problems/factorial-trailing-zeroes/)
 
 Difficulty: **简单**
-
 
 给定一个整数 _n_，返回 _n_! 结果尾数中零的数量。
 
 **示例 1:**
 
 ```go
-输入: 3
-输出: 0
-解释: 3! = 6, 尾数中没有零。
+输入：3
+输出：0
+解释：3! = 6, 尾数中没有零。
 ```
 
 **示例 2:**
 
 ```go
-输入: 5
-输出: 1
-解释: 5! = 120, 尾数中有 1 个零.
+输入：5
+输出：1
+解释：5! = 120, 尾数中有 1 个零。
 ```
 
-**说明:** 你算法的时间复杂度应为 _O_(log _n_)。
+**说明：** 你算法的时间复杂度应为 _O_(log _n_)。
 
 **解法一**
 
-首先需要明确题目要求什么，`n!`结尾0的个数，直接算阶乘的值显然是不可能的，值会很大很容易溢出，而且大数相乘的时间复杂度也很高
+首先需要明确题目要求什么，`n!`结尾 0 的个数，直接算阶乘的值显然是不可能的，值会很大很容易溢出，而且大数相乘的时间复杂度也很高
 
-我们考虑下末尾的0是怎么来的，我们知道一个数x10，末尾就会多一个0，这里也一样，所以我们要求的就是在阶乘的过程中乘了多少个10，那么10从哪里来呢？
+我们考虑下末尾的 0 是怎么来的，我们知道一个数 x10，末尾就会多一个 0，这里也一样，所以我们要求的就是在阶乘的过程中乘了多少个 10，那么 10 从哪里来呢？
 
-我们将10拆解成`2*5`，问题就又转化成了，阶乘中产生了多少对`2*5`的因子，注意这个并不是单纯指1~n中某一个值2，或者5，而是中间每个数拆分出来的因子，比如15就拆分成3*5，中间就有一个5的因子，现在问题明确了，我们如何去求2或者5的因子个数呢？
+我们将 10 拆解成`2*5`，问题就又转化成了，阶乘中产生了多少对`2*5`的因子，注意这个并不是单纯指 1~n 中某一个值 2，或者 5，而是中间每个数拆分出来的因子，比如 15 就拆分成 3*5，中间就有一个 5 的因子，现在问题明确了，我们如何去求 2 或者 5 的因子个数呢？
 
-根据**短板理论**，很明显这两个因子我们只需要求其中**个数较少**的那一个就可以了，少的那个一定可以找到配对的另一个因子，举个例子，假设我们`n!`中产生了2个**5的因子**，和5个**2的因子**，那么很明显最后我们最后配对的`2x5`只有2对，也就是结尾会有2个0，那么2和5我们求哪一个呢？或者说2和5的因子数量一定会有固定的大小关系么？
+根据**短板理论**，很明显这两个因子我们只需要求其中**个数较少**的那一个就可以了，少的那个一定可以找到配对的另一个因子，举个例子，假设我们`n!`中产生了 2 个** 5 的因子**，和 5 个** 2 的因子**，那么很明显最后我们最后配对的`2x5`只有 2 对，也就是结尾会有 2 个 0，那么 2 和 5 我们求哪一个呢？或者说 2 和 5 的因子数量一定会有固定的大小关系么？
 
-其实上面的问题凭直觉就能看出来，明显5的个数会少一些，应该求5的个数，但是秉承着严谨的态度，我们还是应该实际的算一算，而且后面code的时候也是需要算的
+其实上面的问题凭直觉就能看出来，明显 5 的个数会少一些，应该求 5 的个数，但是秉承着严谨的态度，我们还是应该实际的算一算，而且后面 code 的时候也是需要算的
 
-首先看2的个数，我们每隔2个数就会产生一个2的因子，比如2，4，6，8，10...，但是同时有的数会有多个因子，这个里面也会产生2，比如4就可以拆解成`2x2`，也就是每隔`4`个元素，抛开原来每隔`2`个元素产生的2，会额外的再产生一个2的因子，同理8可以拆解成`2x2x2`，也就是所每隔8个元素又会产生一个额外的2，所以总体的n!中，包含2的因子个数是 `n/2 + n/4 + n/8 + ...`，同理也可推出5的因子个数，如下：
+首先看 2 的个数，我们每隔 2 个数就会产生一个 2 的因子，比如 2，4，6，8，10...，但是同时有的数会有多个因子，这个里面也会产生 2，比如 4 就可以拆解成`2x2`，也就是每隔`4`个元素，抛开原来每隔`2`个元素产生的 2，会额外的再产生一个 2 的因子，同理 8 可以拆解成`2x2x2`，也就是所每隔 8 个元素又会产生一个额外的 2，所以总体的 n! 中，包含 2 的因子个数是 `n/2 + n/4 + n/8 + ...`，同理也可推出 5 的因子个数，如下：
 ![mark](http://static.imlgw.top/blog/20200630/lFrypQIJu57J.png?imageslim)
-很明显同样项数m的情况下，5的因子的个数要更少，所以我们直接求因子5的个数就行了
+很明显同样项数 m 的情况下，5 的因子的个数要更少，所以我们直接求因子 5 的个数就行了
 
 有了上面的结论，代码就很容易写了，直接模拟就行了，时间复杂度`O(log(5,N))`
 ```golang
@@ -6177,25 +6138,24 @@ func trailingZeroes(n int) int {
 }
 ```
 
-## [793. 阶乘函数后K个零](https://leetcode-cn.com/problems/preimage-size-of-factorial-zeroes-function/)
+## [793. 阶乘函数后 K 个零](https://leetcode-cn.com/problems/preimage-size-of-factorial-zeroes-function/)
 
 Difficulty: **困难**
 
+ `f(x)` 是 `x!` 末尾是 0 的数量。（回想一下 `x! = 1 * 2 * 3 * ... * x`，且`0! = 1`）
 
- `f(x)` 是 `x!` 末尾是0的数量。（回想一下 `x! = 1 * 2 * 3 * ... * x`，且`0! = 1`）
-
-例如， `f(3) = 0` ，因为3! = 6的末尾没有0；而 `f(11) = 2` ，因为11!= 39916800末端有2个0。给定 `K`，找出多少个非负整数`x` ，有 `f(x) = K` 的性质。
+例如， `f(3) = 0` ，因为 3! = 6 的末尾没有 0；而 `f(11) = 2` ，因为 11!= 39916800 末端有 2 个 0。给定 `K`，找出多少个非负整数`x` ，有 `f(x) = K` 的性质。
 
 ```golang
 示例 1:
-输入:K = 0
-输出:5
-解释: 0!, 1!, 2!, 3!, and 4! 均符合 K = 0 的条件。
+输入：K = 0
+输出：5
+解释：0!, 1!, 2!, 3!, and 4! 均符合 K = 0 的条件。
 
 示例 2:
-输入:K = 5
-输出:0
-解释:没有匹配到这样的 x!，符合K = 5 的条件。
+输入：K = 5
+输出：0
+解释：没有匹配到这样的 x!，符合 K = 5 的条件。
 ```
 
 **注意：**
@@ -6204,7 +6164,7 @@ Difficulty: **困难**
 
 **解法一**
 
-上一题的逆向，挺有意思的，可惜了，一开始没想出来，我知道答案肯定是0 or 5但是不知道咋验证了。。。明明上一题之前就做过了，真菜啊，看了评论区才恍然大悟
+上一题的逆向，挺有意思的，可惜了，一开始没想出来，我知道答案肯定是 0 or 5 但是不知道咋验证了。明明上一题之前就做过了，真菜啊，看了评论区才恍然大悟
 ```golang
 //ans: 0 or 5
 func preimageSizeFZF(K int) int {
@@ -6226,7 +6186,7 @@ func preimageSizeFZF(K int) int {
     return 0
 }
 ​
-//172.阶乘后的0
+//172. 阶乘后的 0
 func trailingZeroes(n int) int {
     var count = 0
     for n > 0 {
@@ -6246,13 +6206,13 @@ Difficulty: **中等**
 **示例 1:**
 
 ```go
-输入: 
+输入：
 [
   [1,1,1],
   [1,0,1],
   [1,1,1]
 ]
-输出: 
+输出：
 [
   [1,0,1],
   [0,0,0],
@@ -6263,13 +6223,13 @@ Difficulty: **中等**
 **示例 2:**
 
 ```go
-输入: 
+输入：
 [
   [0,1,2,0],
   [3,4,5,2],
   [1,3,1,5]
 ]
-输出: 
+输出：
 [
   [0,0,0,0],
   [0,4,5,0],
@@ -6277,12 +6237,11 @@ Difficulty: **中等**
 ]
 ```
 
-**进阶:**
+**进阶：**
 
 *   一个直接的解决方案是使用  O(mn) 的额外空间，但这并不是一个好的解决方案。
 *   一个简单的改进方案是使用 O(m+n) 的额外空间，但这仍然不是最好的解决方案。
 *   你能想出一个常数空间的解决方案吗？
-
 
 **解法一**
 
@@ -6342,7 +6301,6 @@ func setZeroes(matrix [][]int)  {
 
 Difficulty: **简单**
 
-
 你正在使用一堆木板建造跳水板。有两种类型的木板，其中长度较短的木板长度为`shorter`，长度较长的木板长度为`longer`。你必须正好使用`k`块木板。编写一个方法，生成跳水板所有可能的长度。
 
 返回的长度需要从小到大排列。
@@ -6364,7 +6322,7 @@ k = 3
 
 **解法一**
 
-tag里面有递归，记忆化什么的。。。加上看见群友的讨论，又先入为主了，唉，写了半天的回溯，想着怎么去重，突然意识到直接一个循环就能解决了。。。菜啊
+tag 里面有递归，记忆化什么的。加上看见群友的讨论，又先入为主了，唉，写了半天的回溯，想着怎么去重，突然意识到直接一个循环就能解决了。菜啊
 ```golang
 func divingBoard(shorter int, longer int, k int) []int {
     if k == 0{
@@ -6381,14 +6339,14 @@ func divingBoard(shorter int, longer int, k int) []int {
 }
 ```
 
-## [NC82.苹果树](https://www.nowcoder.com/practice/145b8d917c1e44c0b2b2462433b3029d?tpId=110&&tqId=33503&rp=1&ru=/ta/job-code&qru=/ta/job-code/question-ranking)
+## [NC82. 苹果树](https://www.nowcoder.com/practice/145b8d917c1e44c0b2b2462433b3029d?tpId=110&&tqId=33503&rp=1&ru=/ta/job-code&qru=/ta/job-code/question-ranking)
 牛牛有一个苹果园。又到了一年一度的收获季，牛牛现在要去采摘苹果买给市场的摊贩们。
-牛牛的果园里面有n棵苹果树，第i棵苹果树上有a[i]个果子。
+牛牛的果园里面有 n 棵苹果树，第 i 棵苹果树上有 a[i] 个果子。
 牛牛为了保证果子的新鲜程度，每天都会去苹果树上采摘果子。
 牛牛特意安排一个计划表：
 
-计划m天去采摘果子。对于第i天，它会去所有果树上轮流采摘b[i]个果子。
-如果对于第i天，某棵果树上没有b[i]个果子，那么它只会把当前果树上的果子采摘完。
+计划 m 天去采摘果子。对于第 i 天，它会去所有果树上轮流采摘 b[i] 个果子。
+如果对于第 i 天，某棵果树上没有 b[i] 个果子，那么它只会把当前果树上的果子采摘完。
 
 牛牛想知道它每天能供应多少个苹果给市场的摊贩们。
 
@@ -6397,21 +6355,21 @@ func divingBoard(shorter int, longer int, k int) []int {
 - 1 <= a[i] , b[i] <= 1e9
 - 1 <= len(a), len(b) <= 1e5
 
-**示例1**
+**示例 1**
 ```go
 输入 : [10,20,10],[5,7,2]
 输出 : [15,17,2]
 说明 :
-苹果树上的果子变化[10,20,10]-->[5,15,5]-->[0,8,0]-->[0,6,0]
+苹果树上的果子变化 [10,20,10]-->[5,15,5]-->[0,8,0]-->[0,6,0]
 ```
 
 **解法一**
 
 在牛客看见是头条二面的一道题，找到了牛客对应的题目，尝试了下，首先写了楼主的 前缀和+二分的解法
 
-很可惜通过率0，报错的数据很大，一看就知道溢出了
+很可惜通过率 0，报错的数据很大，一看就知道溢出了
 ```java
-//前缀和+二分的做法（容易溢出，random稍微调大点就溢出了，过不了OJ）
+//前缀和+二分的做法（容易溢出，random 稍微调大点就溢出了，过不了 OJ）
 public static long[] solve2 (int[] a, int[] b) {
     if(a==null || a.length==0){
         return new long[0];
@@ -6441,7 +6399,7 @@ public static long[] solve2 (int[] a, int[] b) {
     return res;
 }
 
-//小于target的最后一个
+//小于 target 的最后一个
 public static int search(int[] a, int target){
     int left = 0;
     int right = a.length-1;
@@ -6460,14 +6418,14 @@ public static int search(int[] a, int target){
 ```
 **解法二**
 
-双指针的解法，还是很巧妙的，这题如果考虑去减掉每棵树的果子其实就走远了，那样时间复杂度肯定是O(N^2)的，其实我们完全不用每次都把果子的数量给减掉，首先我们对果树进行排序，这样方便进行区间的摘取，对整体分区变为 `无剩余 | 剩余不足 | 剩余足够`三个区间
+双指针的解法，还是很巧妙的，这题如果考虑去减掉每棵树的果子其实就走远了，那样时间复杂度肯定是 O(N^2) 的，其实我们完全不用每次都把果子的数量给减掉，首先我们对果树进行排序，这样方便进行区间的摘取，对整体分区变为 `无剩余 | 剩余不足 | 剩余足够`三个区间
 
-每次摘取都是将前n天的合并起来一起摘，然后看**剩余不足**和**剩余足够**分界线在哪里，剩余不足的部分就直接加起来，然后减去前`n-1`天在该果树上采摘的数量，得到就是剩下的当天可以采摘的数量，之后这部分**剩余不足**的就变成了**无剩余**
+每次摘取都是将前 n 天的合并起来一起摘，然后看**剩余不足**和**剩余足够**分界线在哪里，剩余不足的部分就直接加起来，然后减去前`n-1`天在该果树上采摘的数量，得到就是剩下的当天可以采摘的数量，之后这部分**剩余不足**的就变成了**无剩余**
 
 最后，在分界线以后的部分就都是剩余足够的部分，直接乘法计算就行了（小心溢出）
 
 ```java
-//正解 双指针，时间复杂度O(m+n)
+//正解 双指针，时间复杂度 O(m+n)
 public static long[] solve (int[] a, int[] b) {
     Arrays.sort(a);
     int p = 0;
@@ -6493,27 +6451,26 @@ public static long[] solve (int[] a, int[] b) {
 
 Difficulty: **简单**
 
-
 给定一个长度为 _n_ 的**非空**整数数组，找到让数组所有元素相等的最小移动次数。每次移动将会使 _n_ - 1 个元素增加 1。
 
-**示例:**
+**示例：**
 
 ```go
-输入:
+输入：
 [1,2,3]
 
-输出:
+输出：
 3
 
-解释:
-只需要3次移动（注意每次移动会增加两个元素的值）：
+解释：
+只需要 3 次移动（注意每次移动会增加两个元素的值）：
 
 [1,2,3]  =>  [2,3,3]  =>  [3,4,3]  =>  [4,4,4]
 ```
 
 **解法一**
 
-n-1个元素+1，就相当于1个元素-1，思维的转换，题目就变得简单了
+n-1 个元素+1，就相当于 1 个元素-1，思维的转换，题目就变得简单了
 ```golang
 func minMoves(nums []int) int {
     var min = math.MaxInt32
@@ -6534,39 +6491,38 @@ func minMoves(nums []int) int {
 
 Difficulty: **简单**
 
-
-给定一个字符串 `s`，计算具有相同数量0和1的非空(连续)子字符串的数量，并且这些子字符串中的所有0和所有1都是组合在一起的。
+给定一个字符串 `s`，计算具有相同数量 0 和 1 的非空（连续）子字符串的数量，并且这些子字符串中的所有 0 和所有 1 都是组合在一起的。
 
 重复出现的子串要计算它们出现的次数。
 
 **示例 1 :**
 
 ```golang
-输入: "00110011"
-输出: 6
-解释: 有6个子串具有相同数量的连续1和0：“0011”，“01”，“1100”，“10”，“0011” 和 “01”。
+输入："00110011"
+输出：6
+解释：有 6 个子串具有相同数量的连续 1 和 0：“0011”，“01”，“1100”，“10”，“0011” 和 “01”。
 
 请注意，一些重复出现的子串要计算它们出现的次数。
 
-另外，“00110011”不是有效的子串，因为所有的0（和1）没有组合在一起。
+另外，“00110011”不是有效的子串，因为所有的 0（和 1）没有组合在一起。
 ```
 
 **示例 2 :**
 
 ```golang
-输入: "10101"
-输出: 4
-解释: 有4个子串：“10”，“01”，“10”，“01”，它们具有相同数量的连续1和0。
+输入："10101"
+输出：4
+解释：有 4 个子串：“10”，“01”，“10”，“01”，它们具有相同数量的连续 1 和 0。
 ```
 
 **注意：**
 
-*   `s.length` 在1到50,000之间。
+*   `s.length` 在 1 到 50,000 之间。
 *   `s` 只包含“0”或“1”字符。
 
 **解法一**
 
-将字符转换为连续字符个数的排列，比如111100011000-->4323，然后我们将相邻两个数的最小值加入结果集就行了，3+2+2=7，下面的解法合并了两步操作
+将字符转换为连续字符个数的排列，比如 111100011000-->4323，然后我们将相邻两个数的最小值加入结果集就行了，3+2+2=7，下面的解法合并了两步操作
 ```golang
 func countBinarySubstrings(s string) int {
     var n = len(s)
@@ -6642,11 +6598,9 @@ Difficulty: **简单**
 
 *   你可以用 `O(N)` 的时间复杂度和 `O(1)` 的空间复杂度解决该问题吗？
 
-
-
 **解法一**
 
-O（N）空间的就不写了，随便搞搞就行了，关键是O(1)空间的解法，这里核心就是双指针从后想前扫描，然后注意边界就ok了
+O（N）空间的就不写了，随便搞搞就行了，关键是 O(1) 空间的解法，这里核心就是双指针从后想前扫描，然后注意边界就 ok 了
 ```java
 public boolean backspaceCompare(String S, String T) {
     int i = S.length()-1;

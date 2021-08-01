@@ -1,5 +1,5 @@
 ---
-title: LeetCode滑动窗口
+title: LeetCode 滑动窗口
 tags:
   - LeetCode
   - 滑动窗口
@@ -31,12 +31,12 @@ abbrlink: 41e491de
 
 返回滑动窗口最大值。
 
-**示例:**
+**示例：**
 
 ```java
-输入: nums = [1,3,-1,-3,5,3,6,7], 和 k = 3
-输出: [3,3,5,5,6,7] 
-解释: 
+输入：nums = [1,3,-1,-3,5,3,6,7], 和 k = 3
+输出：[3,3,5,5,6,7] 
+解释：
 
   滑动窗口的位置                最大值
 ---------------               -----
@@ -60,7 +60,7 @@ abbrlink: 41e491de
 
 ```java
 public static int[] maxSlidingWindow2(int[] nums, int k) {
-    //题目上说的不为空，还是给我来了个空。。。。
+    //题目上说的不为空，还是给我来了个空。
     if(nums.length==0){
         return new int[]{};
     }
@@ -71,10 +71,10 @@ public static int[] maxSlidingWindow2(int[] nums, int k) {
     list.add(0);
     for (int i=1;i<nums.length;i++) {
         while(!list.isEmpty() && nums[list.getLast()]<nums[i]){
-            //小于nums[i]的元素,从右边(尾)出队列 ,控制最左边(头)最大
+            //小于 nums[i] 的元素，从右边（尾）出队列 , 控制最左边（头）最大
             list.removeLast();
         }
-        //然后将它加到队列中，从右边(尾)
+        //然后将它加到队列中，从右边（尾）
         list.addLast(i);
         //如果队列溢出了就从右边移除一个（头）
         if(i-list.getFirst()==k){
@@ -90,23 +90,23 @@ public static int[] maxSlidingWindow2(int[] nums, int k) {
 
 > 2020.2.9 回头看了下，这不是单调队列么😂（用堆也可以啦，不过既然要在头尾都操作，直接用队列会更方便）
 
-其实开始我也不会做，看了提示后搞了半天才弄出来，23ms，70%左右，思路就是利用一个双端队列(头尾都可以进出)，队列中存**数组下标**，然后遍历数组，在进入队列时从右向左遍历队尾，将**小于当前元素**的队尾元素去除(因为已经没用了，后面的最大值不可能是它们)，举个例子
+其实开始我也不会做，看了提示后搞了半天才弄出来，23ms，70%左右，思路就是利用一个双端队列（头尾都可以进出），队列中存**数组下标**，然后遍历数组，在进入队列时从右向左遍历队尾，将**小于当前元素**的队尾元素去除（因为已经没用了，后面的最大值不可能是它们），举个例子
 
-> [2，1，-1，3，......]  k=3 ，当读到**3**这个元素的时候，窗口再向右移动最大值肯定不会是右边的元素了，所以直接剔除他们，在纸上画一画就明白了
+> [2，1，-1，3，......]  k=3 ，当读到** 3 **这个元素的时候，窗口再向右移动最大值肯定不会是右边的元素了，所以直接剔除他们，在纸上画一画就明白了
 
-然后很关键的一步就是什么时候移除最左边的元素，其实按照人的思路来想就是最左边的元素不在窗口内的时候，比如上面的例子，读到**3**的时候，**2**其实就应该剔除了因为它已经不在窗口内了。用代码来描述就是
+然后很关键的一步就是什么时候移除最左边的元素，其实按照人的思路来想就是最左边的元素不在窗口内的时候，比如上面的例子，读到** 3 **的时候，**2 **其实就应该剔除了因为它已经不在窗口内了。用代码来描述就是
 
-`i-list.getFirst()==k`，i代表**当前元素下标**，上面的例子**3**对应的**i**就是**3**，**list.getFirst()=0**，刚好差为k，就代表**2**已经超出窗口了应该移除了。
+`i-list.getFirst()==k`，i 代表**当前元素下标**，上面的例子** 3 **对应的** i **就是** 3**，**list.getFirst()=0**，刚好差为 k，就代表** 2 **已经超出窗口了应该移除了。
 
-其实这里我开始不是这样做的，我在队列里面存的不是元素索引，我存的是元素，然后在判断什么时候移除的时候发现判断不了，**index**也只是结果元素的下标，并不能代表队列最左元素的下标，对于数组存下标优先于存元素，多一个已知量有时候还是很方便的
+其实这里我开始不是这样做的，我在队列里面存的不是元素索引，我存的是元素，然后在判断什么时候移除的时候发现判断不了，**index **也只是结果元素的下标，并不能代表队列最左元素的下标，对于数组存下标优先于存元素，多一个已知量有时候还是很方便的
 
 **解法二**
 
-属于对暴力法的优化吧，最坏情况下时间复杂度`O(NK)`，比如完全逆序的情况（2020.2.9回顾fix）
+属于对暴力法的优化吧，最坏情况下时间复杂度`O(NK)`，比如完全逆序的情况（2020.2.9 回顾 fix）
 
 ```java
 public static int[] maxSlidingWindow3(int[] nums, int k) {
-    //题目上说的不为空，还是给我来了个空。。。。
+    //题目上说的不为空，还是给我来了个空。
     int len = nums.length;
     if (len == 0) return new int[]{};
     if (len == 1) return new int[]{nums[0]};
@@ -132,14 +132,14 @@ public static int[] maxSlidingWindow3(int[] nums, int k) {
                 localMax = max(nums[x], localMax);
             }
         }
-        //剩下的请况就是 比当前最大值小，并且最大值不是最左边的元素(还没有出界)，最大值不变
-        //copy到结果中
+        //剩下的请况就是 比当前最大值小，并且最大值不是最左边的元素（还没有出界），最大值不变
+        //copy 到结果中
         result[i] = localMax;
     }
     return result;
 }
 
-//其实可以用Math.max()
+//其实可以用 Math.max()
 public static int max(int a,int b){
     if(a>=b)return a;
     return b;
@@ -159,9 +159,8 @@ public static int max(int a,int b){
 ```java
 输入：arr = [2,2,2,2,5,5,5,8], k = 3, threshold = 4
 输出：3
-解释：子数组 [2,5,5],[5,5,5] 和 [5,5,8] 的平均值分别为 4，5 和 6 。其他长度为 3 的子数组的平均值都小于 4 （threshold 的值)。
+解释：子数组 [2,5,5],[5,5,5] 和 [5,5,8] 的平均值分别为 4，5 和 6 。其他长度为 3 的子数组的平均值都小于 4 （threshold 的值）。
 ```
-
 
 **示例 2：**
 
@@ -169,7 +168,6 @@ public static int max(int a,int b){
 输入：arr = [1,1,1,1,1], k = 1, threshold = 0
 输出：5
 ```
-
 
 **示例 3：**
 
@@ -179,14 +177,12 @@ public static int max(int a,int b){
 解释：前 6 个长度为 3 的子数组平均值都大于 5 。注意平均值不是整数。
 ```
 
-
 **示例 4：**
 
 ```java
 输入：arr = [7,7,7,7,7,7,7], k = 7, threshold = 7
 输出：1
 ```
-
 
 **示例 5：**
 
@@ -204,7 +200,7 @@ public static int max(int a,int b){
 
 **解法一**
 
-19双周赛的第2题，很简单的滑动窗口，枚举所有窗口计数就行了
+19 双周赛的第 2 题，很简单的滑动窗口，枚举所有窗口计数就行了
 
 ```java
 public int numOfSubarrays(int[] arr, int k, int threshold) {
@@ -233,31 +229,31 @@ public int numOfSubarrays(int[] arr, int k, int threshold) {
 **示例 1:**
 
 ```java
-输入: "abcabcbb"
-输出: 3 
-解释: 因为无重复字符的最长子串是 "abc"，所以其长度为 3。
+输入："abcabcbb"
+输出：3 
+解释：因为无重复字符的最长子串是 "abc"，所以其长度为 3。
 ```
 
 **示例 2:**
 
 ```java
-输入: "bbbbb"
-输出: 1
-解释: 因为无重复字符的最长子串是 "b"，所以其长度为 1。
+输入："bbbbb"
+输出：1
+解释：因为无重复字符的最长子串是 "b"，所以其长度为 1。
 ```
 
 **示例 3:**
 
 ```java
-输入: "pwwkew"
-输出: 3
-解释: 因为无重复字符的最长子串是 "wke"，所以其长度为 3。
+输入："pwwkew"
+输出：3
+解释：因为无重复字符的最长子串是 "wke"，所以其长度为 3。
      请注意，你的答案必须是 子串 的长度，"pwke" 是一个子序列，不是子串。
 ```
 
 **解法一**
 
-这题其实很久以前(半年前)做过一次，当时用的方法很low😂
+这题其实很久以前（半年前）做过一次，当时用的方法很 low😂
 
 ![mark](http://static.imlgw.top///20190503/zQ9MBrOhQm4S.png?imageslim)
 
@@ -278,14 +274,14 @@ public int lengthOfLongestSubstring(String s) {
                 temp = s.substring(i, j+1);
             } else break;
         }
-        //Break出来后判断是否是最长的k
+        //Break 出来后判断是否是最长的 k
         length=temp.length()>length?temp.length():length;
     }
     return length;
 }
 ```
 
-我这种完全就是利用api暴力法，居然还跑过了，时间复杂度应该是O(N3)，这题的ac率还是挺低的只有 29.3%
+我这种完全就是利用 api 暴力法，居然还跑过了，时间复杂度应该是 O(N3)，这题的 ac 率还是挺低的只有 29.3%
 
 **解法二**
 
@@ -316,7 +312,7 @@ public static int lengthOfLongestSubstring4(String s) {
                 break;
             }
         }
-        //每次结束循环后 尾index-头index
+        //每次结束循环后 尾 index-头 index
         max=tail-head+1 > max?tail-head+1:max;
         //System.out.println(max);
     }
@@ -324,21 +320,21 @@ public static int lengthOfLongestSubstring4(String s) {
 }
 ```
 
-20ms左右80%左右，思路也比较清晰，遍历字符串，然后从后往前遍历字符串，判断当前字符串在前面有没有，有的话就将前面相等那个元素(index)前的元素都移除（窗口右移）
+20ms 左右 80%左右，思路也比较清晰，遍历字符串，然后从后往前遍历字符串，判断当前字符串在前面有没有，有的话就将前面相等那个元素 (index) 前的元素都移除（窗口右移）
 
 eg: `[head...index....tail] i`  向右移动`....index [head ... i]`
 
-把当前元素添加进来，时间复杂度是O(N^2)，比上面单纯的暴力法要快多了，但是并不是最优解
+把当前元素添加进来，时间复杂度是 O(N^2)，比上面单纯的暴力法要快多了，但是并不是最优解
 
 **解法三**
 
-上面的算法，其实还可以优化，每次判断前面有没有重复元素的时候可以直接用一个大小256的扩展ASCII码表数组来判断（前提是这些字符都在标准的ASCII字符中），`freq[s.charAt(i)]` 代表的就是s.charAt(i)这个字符在窗口内出现过没有，出现过就为1，否则就是0，这里如果ASCII不够其实也可以用HashMap，查找效率也很高接近O(1)
+上面的算法，其实还可以优化，每次判断前面有没有重复元素的时候可以直接用一个大小 256 的扩展 ASCII 码表数组来判断（前提是这些字符都在标准的 ASCII 字符中），`freq[s.charAt(i)]` 代表的就是 s.charAt(i) 这个字符在窗口内出现过没有，出现过就为 1，否则就是 0，这里如果 ASCII 不够其实也可以用 HashMap，查找效率也很高接近 O(1)
 
 ```java
 public int lengthOfLongestSubstring(String s) {
     int length=s.length();
     if(length==0) return 0;
-    int[] freq=new int[256]; //ASCII码表
+    int[] freq=new int[256]; //ASCII 码表
     freq[s.charAt(0)]=1;
     int head=0,tail=0;
     int max=1;
@@ -357,46 +353,46 @@ public int lengthOfLongestSubstring(String s) {
     return max;
 }
 ```
-这种做法最坏情况（没有重复的字符）下其实会遍历两遍数组tail先移动到尾部head随后有移动到尾部，但是比较好理解，解法四实际上就是对这里的优化，head每次移动都是直接移动到上一个重复元素的位置，而不是一个一个的向右移
+这种做法最坏情况（没有重复的字符）下其实会遍历两遍数组 tail 先移动到尾部 head 随后有移动到尾部，但是比较好理解，解法四实际上就是对这里的优化，head 每次移动都是直接移动到上一个重复元素的位置，而不是一个一个的向右移
 
 **解法四**
 
-提交记录上最快的方法，理解起来有点费劲，现在回头看又看不懂了。。。
+提交记录上最快的方法，理解起来有点费劲，现在回头看又看不懂了。
 
 ```java
 public int lengthOfLongestSubstring(String s) {
     int n = s.length(), ans = 0;
-    //索引为元素值，这里因为元素都是字符转过来就是askll码，所以可以直接这样
+    //索引为元素值，这里因为元素都是字符转过来就是 askll 码，所以可以直接这样
     int[] index = new int[128];
     for (int j = 0, i = 0; j < n; j++) {
-        //如果字符 char 在没有出现过，index[char]为0，出现则index[char]是遍历出现的最后的char的位置
-        // index[s.charAt(j)] 是当前字符上一次出现的位置(从1开始)
+        //如果字符 char 在没有出现过，index[char] 为 0，出现则 index[char] 是遍历出现的最后的 char 的位置
+        // index[s.charAt(j)] 是当前字符上一次出现的位置（从 1 开始）
         i = Math.max(i,index[s.charAt(j)]);
-        //j - i + 1 就是舍弃s.charAt(j)重复出现之前字符的长度  如abca,当s.charAt(j) == a时，j - i + 1就是bca的长度
+        //j - i + 1 就是舍弃 s.charAt(j) 重复出现之前字符的长度  如 abca, 当 s.charAt(j) == a 时，j - i + 1 就是 bca 的长度
         //求最大值常规操作
         ans = Math.max(ans, j - i + 1);
         index[s.charAt(j)] = j + 1;
-        // 从1开始
+        // 从 1 开始
     }
     return ans;
 }
 ```
 
-这里最主要就是这个**i**的理解
+这里最主要就是这个** i **的理解
 
 ![mark](http://static.imlgw.top///20190503/Qcj2l3E0v5sN.png?imageslim)
 
-这个i不一定是当前元素上一次出现的位置，也有可能是离**当前**元素从右向左**最近**的**重复字符**的_位置_。而index中存的就是这个元素的索引位置+1，为什么要加1？
+这个 i 不一定是当前元素上一次出现的位置，也有可能是离**当前**元素从右向左**最近**的**重复字符**的_位置_。而 index 中存的就是这个元素的索引位置+1，为什么要加 1？
 
 ![mark](http://static.imlgw.top///20190503/N4GzYaft0suh.png?imageslim)
 
-主要是因为i的默认值是0而数组默认值也是0，如果以0开始就会出现上面的情况。
+主要是因为 i 的默认值是 0 而数组默认值也是 0，如果以 0 开始就会出现上面的情况。
 
-其实这两种算法也比较类似，只是后面判断字符是否出现过的方式不同，前者是直接遍历这个子串，后者是利用字符为索引，其值就是上一次出现的位置(+1)，借此来计算长度。
+其实这两种算法也比较类似，只是后面判断字符是否出现过的方式不同，前者是直接遍历这个子串，后者是利用字符为索引，其值就是上一次出现的位置 (+1)，借此来计算长度。
 
 **回首掏**
 
-19/9/14，在网页上又写了一种不同的解法，属于解法4的变体（做的时候并没有想到解法4），`freq[]` 数组索引是字符串，但是值是该字符在s中对应的索引，不会遍历两遍数组，left可以通过索引直接跳到上一次出现的位置
+19/9/14，在网页上又写了一种不同的解法，属于解法 4 的变体（做的时候并没有想到解法 4），`freq[]` 数组索引是字符串，但是值是该字符在 s 中对应的索引，不会遍历两遍数组，left 可以通过索引直接跳到上一次出现的位置
 
 ```java
 public static int lengthOfLongestSubstring6(String s) {
@@ -407,7 +403,7 @@ public static int lengthOfLongestSubstring6(String s) {
     Arrays.fill(freq,-1);
     while(right<s.length()){
         char sr=s.charAt(right);
-        //已经存在,并且在窗口内
+        //已经存在，并且在窗口内
         if(freq[sr]!=-1 && freq[sr]>=left){
             //System.out.println(left+","+right+","+freq[sr]);
             res=Math.max(res,right-left);
@@ -422,7 +418,7 @@ public static int lengthOfLongestSubstring6(String s) {
     return res;
 }
 ```
-**回首掏2**
+**回首掏 2**
 
 ```java
 public static int lengthOfLongestSubstring7(String s) {
@@ -433,25 +429,25 @@ public static int lengthOfLongestSubstring7(String s) {
     //Arrays.fill(freq,-1);
     while(right<s.length()){
         char sr=s.charAt(right);
-        //已经存在(出现过),并且上一次出现在窗口内
+        //已经存在（出现过）, 并且上一次出现在窗口内
         if(freq[sr]!=0 && freq[sr]>=left){
-            //这里不包含right,所以不用加1
+            //这里不包含 right, 所以不用加 1
             res=Math.max(res,right-left);
-            //left移动到重复位置元素的下一个
-            //因为freq的值是存的索引+1所以这里不用+1
+            //left 移动到重复位置元素的下一个
+            //因为 freq 的值是存的索引+1 所以这里不用+1
             left=freq[sr];
         }else{
-            //这里包含right所以需要加1
+            //这里包含 right 所以需要加 1
             res=Math.max(res,right-left+1);
         }
-        //加1是为了区别s的第一个字符
+        //加 1 是为了区别 s 的第一个字符
         freq[sr]=right+1;
         right++;
     }
     return res;
 }
 ```
-感觉对这题有很深的执念😅，对上面右优化了一下，但是其实还是上面的解法三比较简单，说到解法三，我又抽风改了一个boolean数组版本的
+感觉对这题有很深的执念😅，对上面右优化了一下，但是其实还是上面的解法三比较简单，说到解法三，我又抽风改了一个 boolean 数组版本的
 
 ```java
 //update: 2020.4.13 重写了一遍，代码更简洁了
@@ -476,7 +472,7 @@ public int lengthOfLongestSubstring(String s) {
 统一使用`for-while`结构，能用`for-if`的一定可以用`for-while`，反过来就不行
 
 ```java
-//2020.5.5根据自己总结的滑窗模板重写
+//2020.5.5 根据自己总结的滑窗模板重写
 public int lengthOfLongestSubstring(String s) {
     if(s==null || s.length()<=0) {
         return 0;
@@ -487,7 +483,7 @@ public int lengthOfLongestSubstring(String s) {
     boolean[] freq=new boolean[128];
     for(int right=0;right<n;right++){
         while(freq[s.charAt(right)]){
-            freq[s.charAt(left++)]=false; //left不用限制
+            freq[s.charAt(left++)]=false; //left 不用限制
         }
         freq[s.charAt(right)]=true;
         res=Math.max(res,right-left+1);
@@ -497,7 +493,7 @@ public int lengthOfLongestSubstring(String s) {
 ```
 **最优解**
 
-map记录元素最后出现的位置，当重复的时候更新起点，只用遍历一遍
+map 记录元素最后出现的位置，当重复的时候更新起点，只用遍历一遍
 ```go
 func lengthOfLongestSubstring(s string) int {
     if len(s)==0{
@@ -526,32 +522,32 @@ func Max(a,b int) int{
 
 ## [219. 存在重复元素 II](https://leetcode-cn.com/problems/contains-duplicate-ii/)
 
-给定一个整数数组和一个整数 *k*，判断数组中是否存在两个不同的索引 *i* 和 *j*，使得 **nums [i] = nums [j]**，并且 *i* 和 *j* 的差的绝对值最大(不超过)为 *k*。
+给定一个整数数组和一个整数 *k*，判断数组中是否存在两个不同的索引 *i* 和 *j*，使得 **nums [i] = nums [j]**，并且 *i* 和 *j* 的差的绝对值最大（不超过）为 *k*。
 
 **示例 1:**
 
 ```java
-输入: nums = [1,2,3,1], k = 3
-输出: true
+输入：nums = [1,2,3,1], k = 3
+输出：true
 ```
 
 **示例 2:**
 
 ```java
-输入: nums = [1,0,1,1], k = 1
-输出: true
+输入：nums = [1,0,1,1], k = 1
+输出：true
 ```
 
 **示例 3:**
 
 ```java
-输入: nums = [1,2,3,1,2,3], k = 2
-输出: false
+输入：nums = [1,2,3,1,2,3], k = 2
+输出：false
 ```
 
 **解法一**
 
-这题建议区看看原版的英文题，这里翻译过来有点误导人，应该是不超过k，写个最大搞得我有点懵
+这题建议区看看原版的英文题，这里翻译过来有点误导人，应该是不超过 k，写个最大搞得我有点懵
 
 ```java
 public static Boolean containsNearbyDuplicate2(int[] nums, int k) {
@@ -561,7 +557,7 @@ public static Boolean containsNearbyDuplicate2(int[] nums, int k) {
     for (int i=1;i<len;i++) {
         int index=i-1;
         while(i-index<=k){
-            //k步之内
+            //k 步之内
             if(index<0){
                 break;
             }
@@ -574,7 +570,7 @@ public static Boolean containsNearbyDuplicate2(int[] nums, int k) {
 }
 ```
 
-暴力法，惨不忍睹，600ms，15%beats 。这题最好的做法还是借助hash表
+暴力法，惨不忍睹，600ms，15%beats 。这题最好的做法还是借助 hash 表
 
 **解法二**
 
@@ -589,7 +585,7 @@ public static Boolean containsNearbyDuplicate3(int[] nums, int k) {
             if(i-index<=k) {
                 return true;
             } else {
-                //大于k了那前面那个没用了
+                //大于 k 了那前面那个没用了
                 map.replace(nums[i],i);
             }
         } else {
@@ -600,9 +596,9 @@ public static Boolean containsNearbyDuplicate3(int[] nums, int k) {
 }
 ```
 
-12ms，90%，其实效率的差距就在查找子串里有没有这个字符上，HashMap的containsKey的效率比我们遍历的不知道高到那里去了，底层源码暂时还看不太懂，以后看的时候再专门来讲
+12ms，90%，其实效率的差距就在查找子串里有没有这个字符上，HashMap 的 containsKey 的效率比我们遍历的不知道高到那里去了，底层源码暂时还看不太懂，以后看的时候再专门来讲
 
-19.9.14又做了一遍，直接在网页上写的，本来应该是bugfree的，结果减反了。。。
+19.9.14 又做了一遍，直接在网页上写的，本来应该是 bugfree 的，结果减反了。
 
 ```java
 public static boolean containsNearbyDuplicate4(int[] nums, int k) {
@@ -610,7 +606,7 @@ public static boolean containsNearbyDuplicate4(int[] nums, int k) {
 	int left=0,right=0;
 	while(right<nums.length){
 		if(hashMap.containsKey(nums[right])){
-			//md,重新做的时候这里减反了真是个zz
+			//md, 重新做的时候这里减反了真是个 zz
 			if(right-hashMap.get(nums[right])<=k){
 				return true;
 			} else{
@@ -624,7 +620,7 @@ public static boolean containsNearbyDuplicate4(int[] nums, int k) {
 	return false;
 }
 ```
-19.9.15又做了一遍，这次代码写的很简洁，思路也不同了，直接利用set集合，维护一个大小为k的连续set(窗口)
+19.9.15 又做了一遍，这次代码写的很简洁，思路也不同了，直接利用 set 集合，维护一个大小为 k 的连续 set（窗口）
 
 ```java
 public boolean containsNearbyDuplicate(int[] nums, int k) {
@@ -645,17 +641,17 @@ public boolean containsNearbyDuplicate(int[] nums, int k) {
 
 给定一个含有 **n** 个正整数的数组和一个正整数 **s ，**找出该数组中满足其和 **≥ s** 的长度最小的连续子数组**。**如果不存在符合条件的连续子数组，返回 0。
 
-**示例:** 
+**示例：** 
 
 ```java
-输入: s = 7, nums = [2,3,1,2,4,3]
-输出: 2
-解释: 子数组 [4,3] 是该条件下的长度最小的连续子数组。
+输入：s = 7, nums = [2,3,1,2,4,3]
+输出：2
+解释：子数组 [4,3] 是该条件下的长度最小的连续子数组。
 ```
 
-**进阶:**
+**进阶：**
 
-如果你已经完成了*O*(*n*) 时间复杂度的解法, 请尝试 *O*(*n* log *n*) 时间复杂度的解法。
+如果你已经完成了* O*(*n*) 时间复杂度的解法，请尝试 *O*(*n* log *n*) 时间复杂度的解法。
 
 **解法一**
 
@@ -670,7 +666,7 @@ public static int minSubArrayLen(int s, int[] nums) {
         if(nums[i-1]>=s) return 1;
         int index=i-1;
         int sum=nums[i];
-        //累加前面的元素，直到大于s或者index<0
+        //累加前面的元素，直到大于 s 或者 index<0
         while(sum<s&&index>=0){
             sum+=nums[index--];
         }
@@ -684,7 +680,7 @@ public static int minSubArrayLen(int s, int[] nums) {
 }
 ```
 
-这个是最开始想到了思路比较清晰，遍历数组然后逆序求和直到大于S，要注意边界，比较慢，主要就是那个循环累加前面的元素会很耗费时间，111ms，14% beats🤣
+这个是最开始想到了思路比较清晰，遍历数组然后逆序求和直到大于 S，要注意边界，比较慢，主要就是那个循环累加前面的元素会很耗费时间，111ms，14% beats🤣
 
 **解法二**
 
@@ -706,9 +702,9 @@ public static int minSubArrayLen2(int s, int[] nums) {
         } else{
             //尾指针到达边界了
             if(tail==len-1) break;
-            //尾节点++，(右边界右移)
+            //尾节点++，（右边界右移）
             sum+=nums[++tail];
-            //如果有元素大于s直接返回，节约时间
+            //如果有元素大于 s 直接返回，节约时间
             if(nums[tail]>=s){
                 return 1;
             }
@@ -785,7 +781,7 @@ func Min(a, b int) int {
 }
 ```
 
-## [面试题57 - II. 和为s的连续正数序列](https://leetcode-cn.com/problems/he-wei-sde-lian-xu-zheng-shu-xu-lie-lcof/) 
+## [面试题 57 - II. 和为 s 的连续正数序列](https://leetcode-cn.com/problems/he-wei-sde-lian-xu-zheng-shu-xu-lie-lcof/) 
 
 输入一个正整数 target ，输出所有和为 target 的连续正整数序列（至少含有两个数）。
 
@@ -797,7 +793,6 @@ func Min(a, b int) int {
 输入：target = 9
 输出：[[2,3,4],[4,5]]
 ```
-
 
 **示例 2：**
 
@@ -812,26 +807,26 @@ func Min(a, b int) int {
 
 **解法一**
 
-滑动窗口，根据等差数列前n项和求sum，然后逐步的缩圈，右移
+滑动窗口，根据等差数列前 n 项和求 sum，然后逐步的缩圈，右移
 
 ```java
 public int[][] findContinuousSequence(int target) {
     List<int[]> res=new ArrayList<>();
     int left=1,right=2;
     int sum=0;
-    //9 right最多到5
+    //9 right 最多到 5
     while(left<=right && right<=(target+1)/2){
-        //等差数列前n项和
+        //等差数列前 n 项和
         int n=right-left+1;
         sum=left*n+n*(n-1)/2;
         if(sum>target){
             left++; //剔除一个小的
         }else if(sum<target){
             right++; //添加一个大的
-        }else{ //build结果集
+        }else{ //build 结果集
             res.add(build(left,right));
-            left++;//窗口左移,剔除一个小的
-            right++; //回头重写发现这里还可以优化,右边界也可以扩大
+            left++;//窗口左移，剔除一个小的
+            right++; //回头重写发现这里还可以优化，右边界也可以扩大
         }
     }
     return res.toArray(new int[0][0]);
@@ -878,9 +873,9 @@ public int[] build(int left,int right){
  因此，返回该滑动窗口的中位数数组 `[1,-1,-1,3,5,6]`。
 
 **提示：**
-假设`k`是合法的，即：`k` 始终小于输入的非空数组的元素个数.
+假设`k`是合法的，即：`k` 始终小于输入的非空数组的元素个数。
 
-head题，理清楚思路后也不难。
+head 题，理清楚思路后也不难。
 
 ```java
 public static double[] medianSlidingWindow(int[] nums, int k) {
@@ -897,7 +892,7 @@ public static double[] medianSlidingWindow(int[] nums, int k) {
     printArray(queue);
     if (k%2==0) {
         res[0]=queue[(k-1)/2]/2.0+queue[(k-1)/2+1]/2.0;
-        //注意除小数 .。。。。这里的测试用例Integer最大值，直接相加/2会越界
+        //注意除小数 .。这里的测试用例 Integer 最大值，直接相加/2 会越界
     } else {
         res[0]=queue[k/2];
     }
@@ -1030,8 +1025,8 @@ public  static int binarySearch(List<Integer> list,int lo,int hi,int target){
 **示例：**
 
 ```java
-输入: S = "ADOBECODEBANC", T = "ABC"
-输出: "BANC"
+输入：S = "ADOBECODEBANC", T = "ABC"
+输出："BANC"
 ```
 
 **说明：**
@@ -1045,7 +1040,7 @@ public  static int binarySearch(List<Integer> list,int lo,int hi,int target){
 public static String minWindow(String s, String t) {
     int slen=s.length();
     int tlen=t.length();
-    int l=0,r=0; //初始都为0
+    int l=0,r=0; //初始都为 0
     int[] target=new int[256]; //A:1 B:1 C:1
     int[] window=new int[256];
     int count=0; //不同字符的数量
@@ -1057,13 +1052,13 @@ public static String minWindow(String s, String t) {
             count++; //统计不同字符出现的次数
         }
     }
-    int match=0; //match代表已经匹配的字符
+    int match=0; //match 代表已经匹配的字符
     int[] res=new int[]{0,Integer.MAX_VALUE};
     while(r<slen){
         char c=s.charAt(r); 
         if(target[c]!=0){ //在目标子串中存在
-            window[c]++; //window对应的char++
-            if(window[c]==target[c]){ //到达了目标串中该char所需的数量
+            window[c]++; //window 对应的 char++
+            if(window[c]==target[c]){ //到达了目标串中该 char 所需的数量
                 match++;
             }
         }
@@ -1086,18 +1081,18 @@ public static String minWindow(String s, String t) {
     return res[1]==Integer.MAX_VALUE?"":s.substring(res[0],res[1]);
 }
 ```
-10ms 86%，Hard题，其实大致的思路还是有的，主要是不知道怎么去和目标串对比，没想到用一个`window`数组去对比，一致想的是在目标串的数组上做手脚，但是越想越复杂。。。太蠢了😅，这题其实也可以用一个HashMap来做，但是我看了下提交记录上的普遍都是7,80ms，相对都比较慢，实际上题目没有明确的说明有特殊字符的话都是可以用一个**ASCII**数组来充当HashMap的，当然我这里用数组的时候相比HashMap要多了一步，需要统计不同字符出现的次数，不过这个操作也是常数级别的操作，并不耗时，整体时间复杂度O(N+M)，NM分别代表目标子串`t` 和源字符串 `p`的长度，首先遍历了`t` 然后滑动窗口，后面的滑动窗口左右边界最多移动2M次
+10ms 86%，Hard 题，其实大致的思路还是有的，主要是不知道怎么去和目标串对比，没想到用一个`window`数组去对比，一致想的是在目标串的数组上做手脚，但是越想越复杂。太蠢了😅，这题其实也可以用一个 HashMap 来做，但是我看了下提交记录上的普遍都是 7,80ms，相对都比较慢，实际上题目没有明确的说明有特殊字符的话都是可以用一个** ASCII **数组来充当 HashMap 的，当然我这里用数组的时候相比 HashMap 要多了一步，需要统计不同字符出现的次数，不过这个操作也是常数级别的操作，并不耗时，整体时间复杂度 O(N+M)，NM 分别代表目标子串`t` 和源字符串 `p`的长度，首先遍历了`t` 然后滑动窗口，后面的滑动窗口左右边界最多移动 2M 次
 
 **Update**
 
-2020.4.15，在瞄了一眼之前做的之后按照之前的思路重写了一遍，感觉还行，有一个地方WA了一次
+2020.4.15，在瞄了一眼之前做的之后按照之前的思路重写了一遍，感觉还行，有一个地方 WA 了一次
 
 ```java
 //update: 2020.4.15
 public String minWindow(String s, String t) {
     if(s==null || t==null) return "";
-    int[] needMap=new int[128]; //需要的字符map
-    int[] curMap=new int[128];  //已经匹配的字符map
+    int[] needMap=new int[128]; //需要的字符 map
+    int[] curMap=new int[128];  //已经匹配的字符 map
     int needCount=0; //需要匹配的字符个数
     for(int i=0;i<t.length();i++){
         if(needMap[t.charAt(i)]==0){
@@ -1124,7 +1119,7 @@ public String minWindow(String s, String t) {
             char cl=s.charAt(left);
             if(curMap[cl]!=0){
                 curMap[cl]--;
-                //这里注意，WA点，开始写的=0
+                //这里注意，WA 点，开始写的=0
                 if(curMap[cl]<needMap[cl]){
                     matchCount--;
                 }
@@ -1136,12 +1131,11 @@ public String minWindow(String s, String t) {
     return Integer.MAX_VALUE==maxRight?"":s.substring(minLeft,maxRight+1);
 }
 ```
-> 刷题的时候发现有一道很类似的题，[最小窗口子序列](http://imlgw.top/2019/09/01/leetcode-dong-tai-gui-hua/#857-%E6%9C%80%E5%B0%8F%E7%9A%84%E7%AA%97%E5%8F%A3%E5%AD%90%E5%BA%8F%E5%88%97%EF%BC%88LintCode%EF%BC%89)唯一的区别就是这道题要求有序（子序列）
+> 刷题的时候发现有一道很类似的题，[最小窗口子序列](http://imlgw.top/2019/09/01/leetcode-dong-tai-gui-hua/#857-%E6%9C%80%E5%B0%8F%E7%9A%84%E7%AA%97%E5%8F%A3%E5%AD%90%E5%BA%8F%E5%88%97%EF%BC%88LintCode%EF%BC%89) 唯一的区别就是这道题要求有序（子序列）
 
 ## [632. 最小区间](https://leetcode-cn.com/problems/smallest-range-covering-elements-from-k-lists/)
 
 Difficulty: **困难**
-
 
 你有 `k` 个升序排列的整数数组。找到一个**最小**区间，使得 `k` 个列表中的每个列表至少有一个数包含在其中。
 
@@ -1150,27 +1144,26 @@ Difficulty: **困难**
 **示例 1:**
 
 ```java
-输入:[[4,10,15,24,26], [0,9,12,20], [5,18,22,30]]
-输出: [20,24]
-解释: 
+输入：[[4,10,15,24,26], [0,9,12,20], [5,18,22,30]]
+输出：[20,24]
+解释：
 列表 1：[4, 10, 15, 24, 26]，24 在区间 [20,24] 中。
 列表 2：[0, 9, 12, 20]，20 在区间 [20,24] 中。
 列表 3：[5, 18, 22, 30]，22 在区间 [20,24] 中。
 ```
 
-**注意:**
+**注意：**
 
 1.  给定的列表可能包含重复元素，所以在这里升序表示 >= 。
 2.  1 <= `k` <= 3500
 3.  -10<sup>5</sup> <= `元素的值` <= 10<sup>5</sup>
-
 
 **解法一**
 
 ```golang
 func smallestRange(nums [][]int) []int {
     var n = len(nums)
-    //列表中所有元素k,存在于那些数组中
+    //列表中所有元素 k, 存在于那些数组中
     var m = make(map[int][]int)
     var Max = func (a, b int) int {if a > b {return a}; return b}
     var Min = func (a, b int) int {if a < b {return a}; return b}
@@ -1185,7 +1178,7 @@ func smallestRange(nums [][]int) []int {
             minV = Min(minV, nums[i][j])
         }
     }
-    //同 76.最小覆盖子串，这题可能思维的转换比较重要
+    //同 76. 最小覆盖子串，这题可能思维的转换比较重要
     var count = 0
     var freq = make([]int, n+1)
     var res =[]int{minV, maxV}
@@ -1220,7 +1213,7 @@ func smallestRange(nums [][]int) []int {
 ```
 **解法二**
 
-上面的解法并不是最好的解法，没有用到有序的条件，比较好的解法应该是小根堆（本来打算用Go撸一个的，写一半感觉太麻烦了，不过整体小根堆的逻辑实现是对的，就是没有泛型要改很多东西，不太方便）
+上面的解法并不是最好的解法，没有用到有序的条件，比较好的解法应该是小根堆（本来打算用 Go 撸一个的，写一半感觉太麻烦了，不过整体小根堆的逻辑实现是对的，就是没有泛型要改很多东西，不太方便）
 ![](https://i.loli.net/2020/11/30/Q5KsxNi3MquZtWE.png)
 维护两个最值，一个是找到一个能覆盖当前所有列表的最小的右端点（max），一个是当前列表最小的那个元素（最左的端点），然后不断缩减左端点求最小区间
 ```java
@@ -1232,7 +1225,7 @@ class Node {
     }
 }
 
-//k组链表，平均m个元素，时间复杂度 O(kmlog(k))
+//k 组链表，平均 m 个元素，时间复杂度 O(kmlog(k))
 public int[] smallestRange(List<List<Integer>> nums) {
     PriorityQueue<Node> pq = new PriorityQueue<>((a, b) -> nums.get(a.i).get(a.j)-nums.get(b.i).get(b.j));
     int INF = (int) 1e5+1;
@@ -1244,7 +1237,7 @@ public int[] smallestRange(List<List<Integer>> nums) {
     int [] res = {-INF, INF};
     while (true) {
         Node cur = pq.poll();
-        //应该把val也存进去的，懒得改了
+        //应该把 val 也存进去的，懒得改了
         if (max-nums.get(cur.i).get(cur.j) < res[1]-res[0]) {
             res[0] = nums.get(cur.i).get(cur.j);
             res[1] = max;
@@ -1273,12 +1266,12 @@ public int[] smallestRange(List<List<Integer>> nums) {
 **示例 1:**
 
 ```java
-输入:
+输入：
 s: "cbaebabacd" p: "abc"
-输出:
+输出：
 [0, 6]
 
-解释:
+解释：
 起始索引等于 0 的子串是 "cba", 它是 "abc" 的字母异位词。
 起始索引等于 6 的子串是 "bac", 它是 "abc" 的字母异位词。
 ```
@@ -1286,13 +1279,13 @@ s: "cbaebabacd" p: "abc"
  **示例 2:**
 
 ```java
-输入:
+输入：
 s: "abab" p: "ab"
 
-输出:
+输出：
 [0, 1, 2]
 
-解释:
+解释：
 起始索引等于 0 的子串是 "ab", 它是 "ab" 的字母异位词。
 起始索引等于 1 的子串是 "ba", 它是 "ab" 的字母异位词。
 起始索引等于 2 的子串是 "ab", 它是 "ab" 的字母异位词。
@@ -1300,7 +1293,7 @@ s: "abab" p: "ab"
 
 **解法一**
 
-这题和上面一题其实一样，只是这里要求是连续的，在上面一题的基础上在添加结果的时候判断下长度就OK
+这题和上面一题其实一样，只是这里要求是连续的，在上面一题的基础上在添加结果的时候判断下长度就 OK
 
 ```java
 public List<Integer> findAnagrams(String s, String p) {
@@ -1391,11 +1384,11 @@ func findAnagrams(s string, p string) []int {
 
 **解法二**
 
-正常的做法，实际上上面的解法一直在避免直接比较target和window，但是实际上比较这两个数组的成本是很低的，两个数组长度固定，比较时间复杂度O(1)，具体情况具体分析，不过套模板几乎是通用的
+正常的做法，实际上上面的解法一直在避免直接比较 target 和 window，但是实际上比较这两个数组的成本是很低的，两个数组长度固定，比较时间复杂度 O(1)，具体情况具体分析，不过套模板几乎是通用的
 ```golang
 func findAnagrams(s string, p string) []int {
     var left = 0
-    //-'a'看起来太丑了，直接128
+    //-'a'看起来太丑了，直接 128
     var target [128]int //注意用数组，可以直接比较
     var window [128]int
     for _, sp := range p {
@@ -1426,19 +1419,19 @@ func findAnagrams(s string, p string) []int {
 
 换句话说，第一个字符串的排列之一是第二个字符串的子串。
 
-**示例1:**
+**示例 1:**
 
 ```java
-输入: s1 = "ab" s2 = "eidbaooo"
-输出: True
-解释: s2 包含 s1 的排列之一 ("ba").
+输入：s1 = "ab" s2 = "eidbaooo"
+输出：True
+解释：s2 包含 s1 的排列之一 ("ba").
 ```
 
-**示例2:**
+**示例 2:**
 
 ```java
-输入: s1= "ab" s2 = "eidboaoo"
-输出: False
+输入：s1= "ab" s2 = "eidboaoo"
+输出：False
 ```
 
 **注意：**
@@ -1448,7 +1441,7 @@ func findAnagrams(s string, p string) []int {
 
 **解法一**
 
-这题其实是 [76.最小覆盖子串](#76-最小覆盖子串) 的弱化版本，套路滑窗，但是有一些细节需要注意
+这题其实是 [76. 最小覆盖子串](#76-最小覆盖子串) 的弱化版本，套路滑窗，但是有一些细节需要注意
 
 ```java
 public boolean checkInclusion(String s1, String s2) {
@@ -1480,7 +1473,7 @@ public boolean checkInclusion(String s1, String s2) {
         while(right-left+1>n1){
             int cl=s2.charAt(left)-'a';
             if(freq[cl]>0){
-                //WA点，开始写错了
+                //WA 点，开始写错了
                 //window[cl]--;
                 if(window[cl]==freq[cl]){
                     match--; //match--的前提是原本是匹配的
@@ -1497,7 +1490,7 @@ public boolean checkInclusion(String s1, String s2) {
 }
 ```
 
-一开始写完了，测试了用例发现都是对的，心里一喜，难道又bugfree了？提交，结果还是WA了🤣，debug了半天，根据错误的哪个长case自己构造了一个短case（长的不好debug），然后发现了问题，这个问题我看见评论区也有人问到，顺手还回了一下😁，其实错误的原因就是套模板没套好，没理解模板的细节
+一开始写完了，测试了用例发现都是对的，心里一喜，难道又 bugfree 了？提交，结果还是 WA 了🤣，debug 了半天，根据错误的哪个长 case 自己构造了一个短 case（长的不好 debug），然后发现了问题，这个问题我看见评论区也有人问到，顺手还回了一下😁，其实错误的原因就是套模板没套好，没理解模板的细节
 
 这里的核心问题就是`match--`的时候有一个大前提：`cl`字符已经匹配好了，也就是`window[cl]==freq[cl]`
 
@@ -1513,7 +1506,7 @@ if (target[left]!=0) {
 }
 ```
 
-这样写就有可能window[left]还没有匹配上，这个时候直接减就错了，之前的模板中缩圈都是在match==count的前提下缩圈的，所以没问题，都是匹配的，其实也可以像之前的模板一样写，就像下面这样
+这样写就有可能 window[left] 还没有匹配上，这个时候直接减就错了，之前的模板中缩圈都是在 match==count 的前提下缩圈的，所以没问题，都是匹配的，其实也可以像之前的模板一样写，就像下面这样
 
 ```java
 public boolean checkInclusion(String s1, String s2) {
@@ -1575,19 +1568,19 @@ public boolean checkInclusion(String s1, String s2) {
 **示例 1:**
 
 ```java
-输入:
+输入：
 big = [7,5,9,0,2,1,3,5,7,9,1,1,5,8,8,9,7]
 small = [1,5,9]
-输出: [7,10]
+输出：[7,10]
 ```
 
 **示例 2:**
 
 ```java
-输入:
+输入：
 big = [1,2,3]
 small = [4]
-输出: []
+输出：[]
 ```
 
 **提示：**
@@ -1597,7 +1590,7 @@ small = [4]
 
 **解法一**
 
-也是属于 [76.最小覆盖子串](#76-最小覆盖子串)的弱化，虽然解法都一样，没啥好说的，注意细节
+也是属于 [76. 最小覆盖子串](#76-最小覆盖子串)的弱化，虽然解法都一样，没啥好说的，注意细节
 
 ```java
 //没啥好说的，套模板就行了
@@ -1643,7 +1636,7 @@ public int[] shortestSeq(int[] big, int[] small) {
 }
 ```
 
-## [1004. 最大连续1的个数 III](https://leetcode-cn.com/problems/max-consecutive-ones-iii/)
+## [1004. 最大连续 1 的个数 III](https://leetcode-cn.com/problems/max-consecutive-ones-iii/)
 
 给定一个由若干 `0` 和 `1` 组成的数组 `A`，我们最多可以将 `K` 个值从 0 变成 1 。
 
@@ -1677,7 +1670,7 @@ public int[] shortestSeq(int[] big, int[] small) {
 
 **解法一**
 
-这题其实下面一题[424. 替换后的最长重复字符](#424-替换后的最长重复字符)的弱化版本
+这题其实下面一题 [424. 替换后的最长重复字符](#424-替换后的最长重复字符)的弱化版本
 
 ```java
 //简单的滑窗
@@ -1687,7 +1680,7 @@ public int longestOnes(int[] A, int K) {
     int left=0,res=0,countA=0;
     for(int right=0;right<N;right++){
         countA+=(A[right]&1);
-        //if也可以，个人喜欢while通用性更强
+        //if 也可以，个人喜欢 while 通用性更强
         while(right-left+1-countA>K){ 
             countA-=(A[left++]&1);
         }
@@ -1701,7 +1694,6 @@ public int longestOnes(int[] A, int K) {
 ## [5434. 删掉一个元素以后全为 1 的最长子数组](https://leetcode-cn.com/problems/longest-subarray-of-1s-after-deleting-one-element/)
 
 Difficulty: **中等**
-
 
 给你一个二进制数组 `nums` ，你需要从中删掉一个元素。
 
@@ -1754,14 +1746,14 @@ Difficulty: **中等**
 
 **解法一**
 
-29th双周赛的t3，秒切，其实是上一题[1004. 最大连续1的个数 III](#1004-最大连续1的个数-iii)的弱化
+29th 双周赛的 t3，秒切，其实是上一题 [1004. 最大连续 1 的个数 III](#1004-最大连续 1 的个数-iii) 的弱化
 ```java
    public int longestSubarray(int[] nums) {
        int res=0, sum=0;
        int left=0;
        for(int right=0;right<nums.length;right++){
            sum+=(nums[right]&1);
-           //区间和小于right-left-1说明中间不止一个0需要缩减窗口
+           //区间和小于 right-left-1 说明中间不止一个 0 需要缩减窗口
            while(left<right && sum<= right-left-1){
                if(nums[left] == 1){
                    sum--;
@@ -1774,37 +1766,37 @@ Difficulty: **中等**
        return res;
    }
 ```
-很可惜这次前3题15分钟就做完了，都是直接web上写的，本以为有机会AK，最后一题搞了半天最后交了一发还是没过，貌似很多人写了假算法，贪心莽过了（lc数据太弱了）
+很可惜这次前 3 题 15 分钟就做完了，都是直接 web 上写的，本以为有机会 AK，最后一题搞了半天最后交了一发还是没过，貌似很多人写了假算法，贪心莽过了（lc 数据太弱了）
 ![UTOOLS1593333299362.png](https://upload.cc/i1/2020/06/28/mhTiQ9.png)
 
 ## [424. 替换后的最长重复字符](https://leetcode-cn.com/problems/longest-repeating-character-replacement/)
 
 给你一个仅由大写英文字母组成的字符串，你可以将任意位置上的字符替换成另外的字符，总共可最多替换 k 次。在执行上述操作后，找到包含重复字母的最长子串的长度。
 
-**注意:**
+**注意：**
 字符串长度 和 k 不会超过 104。
 
 **示例 1:**
 
 ```java
-输入:
+输入：
 s = "ABAB", k = 2
-输出:
+输出：
 4
-解释:
-用两个'A'替换为两个'B',反之亦然。
+解释：
+用两个'A'替换为两个'B', 反之亦然。
 ```
 
 **示例 2:**
 
 ```java
-输入:
+输入：
 s = "AABABBA", k = 1
-输出:
+输出：
 4
-解释:
-将中间的一个'A'替换为'B',字符串变为 "AABBBBA"
-子串 "BBBB" 有最长重复字母, 答案为 4
+解释：
+将中间的一个'A'替换为'B', 字符串变为 "AABBBBA"
+子串 "BBBB" 有最长重复字母，答案为 4
 ```
 
 **解法一**
@@ -1818,9 +1810,9 @@ public int characterReplacement(String s, int k) {
     while (end < s.length()) {
         //当前窗口出现最多的字符
         cur = Math.max(cur, ++count[s.charAt(end)]);
-        //不能替换了,不同字符太多了,需要缩减窗口
+        //不能替换了，不同字符太多了，需要缩减窗口
         while (end - start + 1 - cur > k){
-            //缩减左边界的count
+            //缩减左边界的 count
             count[s.charAt(start)]--;
             start++;//不能替换了，start++
         }
@@ -1852,7 +1844,7 @@ public int characterReplacement(String s, int k) {
         maxFreq=Math.max(maxFreq,freq[c]);
         while((right-left+1-maxFreq)>k){
             freq[s.charAt(left)]--;
-            left++; //这里实际上只会执行一次，改成if也是可以的，不过为了统一写法就不改了
+            left++; //这里实际上只会执行一次，改成 if 也是可以的，不过为了统一写法就不改了
         }
         res=Math.max(res,right-left+1);
     }
@@ -1860,15 +1852,15 @@ public int characterReplacement(String s, int k) {
 }
 ```
 
-重写这题的时候发现这题还是挺有意思的，这个里面的`maxFreq`是一个只增不减的量，是一个历史最大值，只有当出现更大的freq的时候才会更新`maxFreq`，当`maxFreq`保持不变的时候结果不会受到影响，只有出现了更大freq的时候才有可能会使结果变大
+重写这题的时候发现这题还是挺有意思的，这个里面的`maxFreq`是一个只增不减的量，是一个历史最大值，只有当出现更大的 freq 的时候才会更新`maxFreq`，当`maxFreq`保持不变的时候结果不会受到影响，只有出现了更大 freq 的时候才有可能会使结果变大
 
 > [拷贝自题解区](https://leetcode-cn.com/problems/longest-repeating-character-replacement/solution/hua-dong-chuang-kou-chang-gui-tao-lu-by-xiaoneng/) 
 >
-> 因为我们只对最长有效的子字符串感兴趣，所以我们的滑动窗口不需要收缩，即使窗口可能覆盖无效的子字符串。我们可以通过在右边添加一个字符来扩展窗口，或者将整个窗口向右边移动一个字符。而且我们只在新字符的计数超过历史最大计数(来自覆盖有效子字符串的前一个窗口)时才增长窗口。也就是说，我们不需要精确的当前窗口的最大计数;我们只关心最大计数是否超过历史最大计数;这只会因为新字符而发生。
+> 因为我们只对最长有效的子字符串感兴趣，所以我们的滑动窗口不需要收缩，即使窗口可能覆盖无效的子字符串。我们可以通过在右边添加一个字符来扩展窗口，或者将整个窗口向右边移动一个字符。而且我们只在新字符的计数超过历史最大计数（来自覆盖有效子字符串的前一个窗口）时才增长窗口。也就是说，我们不需要精确的当前窗口的最大计数；我们只关心最大计数是否超过历史最大计数；这只会因为新字符而发生。
 
 **解法二**
 
-憨憨的解法，不过绝对是能AC的，时间复杂度并没有问题，依然是`O(N)`
+憨憨的解法，不过绝对是能 AC 的，时间复杂度并没有问题，依然是`O(N)`
 
 ```java
 public int characterReplacement(String s, int k) {
@@ -1927,7 +1919,7 @@ public int characterReplacement(String s, int k) {
 ```java
 输入：s = "QQWE"
 输出：1
-解释：我们需要把一个 'Q' 替换成 'R'，这样得到的 "RQWE" (或 "QRWE") 是平衡的。
+解释：我们需要把一个 'Q' 替换成 'R'，这样得到的 "RQWE" （或 "QRWE") 是平衡的。
 ```
 
 **示例 3：**
@@ -1958,7 +1950,7 @@ public int characterReplacement(String s, int k) {
 
 (update: 2020.4.15)
 
-我拿到这题，首先想到的是无脑套路滑窗，既然要保证平衡，那么每个字符出现的次数都应该是`N/4`，所以我们可以统计下多出来的有几个，比如`QQQW`，那么多出来的就是2个**`Q`**，也就是说我们要求的窗口内**至少**有2个Q，这样问题其实就转换成了 [76. 最小覆盖子串](#76-最小覆盖子串)（这明明是个mid题，你咋还给转换成hard了，你是不是傻🤣）
+我拿到这题，首先想到的是无脑套路滑窗，既然要保证平衡，那么每个字符出现的次数都应该是`N/4`，所以我们可以统计下多出来的有几个，比如`QQQW`，那么多出来的就是 2 个**`Q`**，也就是说我们要求的窗口内**至少**有 2 个 Q，这样问题其实就转换成了 [76. 最小覆盖子串](#76-最小覆盖子串）（这明明是个 mid 题，你咋还给转换成 hard 了，你是不是傻🤣)
 
 其实最小覆盖子串看起来好像挺难，但是是有套路的，我们直接套模板就可以了
 
@@ -1966,9 +1958,9 @@ public int characterReplacement(String s, int k) {
 public int balancedString(String s) {
     if(s==null || s.length()<=0) return -1;
     int N=s.length();
-    //这里用26有的浪费,为了方便写代码,就这样吧
+    //这里用 26 有的浪费，为了方便写代码，就这样吧
     int[] need=new int[26];
-    //初始化为-N/4这样最后得到的大于0的值就是多出来的
+    //初始化为-N/4 这样最后得到的大于 0 的值就是多出来的
     Arrays.fill(need,-N/4);
     int[] cur=new int[26];
     for(int i=0;i<N;i++){
@@ -2011,15 +2003,15 @@ public int balancedString(String s) {
 
 **解法二**
 
-上面的解法是考虑`窗口内`的元素组成，窗口内至少应该有哪些元素，反过来想，我们窗口内的元素是多出来的元素，我们是把多的元素放到窗口中，那么窗口外的元素就肯定都是`小于等于N/4`的了，那么我们就可以利用这一点进行滑窗，统计符合条件的窗口的最小值，这样代码就会简洁很多
+上面的解法是考虑`窗口内`的元素组成，窗口内至少应该有哪些元素，反过来想，我们窗口内的元素是多出来的元素，我们是把多的元素放到窗口中，那么窗口外的元素就肯定都是`小于等于 N/4`的了，那么我们就可以利用这一点进行滑窗，统计符合条件的窗口的最小值，这样代码就会简洁很多
 
 ```java
-//code删掉了，之前的代码有点问题，最后的返回值有些情况过不去，lc的case太弱了，让我过了
+//code 删掉了，之前的代码有点问题，最后的返回值有些情况过不去，lc 的 case 太弱了，让我过了
 ```
 
 **UPDATE: (2020.5.4)**
 
-按照先前的模板来分析下，这里要求的是最小的修改次数，很明显不能用`for-if`，所以采用`for-while`的结构，`for-while`最基本的结构就是外层枚举所有`right`，内层根据题目要求缩减`left`，但是这题left也需要控制边界，我这里用的是`left<=right` 但是实际上这样会有一类case结果不对，比如"QWER"这样的，返回的结果是1，~~我上面在最后做了特判~~（上面的特判是错的，比如“QWEE”这样的就返回0），其实这里还可以修改下边界，改成`left<N`，这样就没问题了，这样left就可以超过right达到right+1，这样对”QWER"就能得到正确的结果，并且根据题目信息当`left=right+1`之后`left`就不会再增加了，while条件就无法满足了，但是有的题目`left`是不用设置限制的，基本上都是在达到right+1之后就不会继续增加了
+按照先前的模板来分析下，这里要求的是最小的修改次数，很明显不能用`for-if`，所以采用`for-while`的结构，`for-while`最基本的结构就是外层枚举所有`right`，内层根据题目要求缩减`left`，但是这题 left 也需要控制边界，我这里用的是`left<=right` 但是实际上这样会有一类 case 结果不对，比如"QWER"这样的，返回的结果是 1，~~我上面在最后做了特判~~（上面的特判是错的，比如“QWEE”这样的就返回 0），其实这里还可以修改下边界，改成`left<N`，这样就没问题了，这样 left 就可以超过 right 达到 right+1，这样对”QWER"就能得到正确的结果，并且根据题目信息当`left=right+1`之后`left`就不会再增加了，while 条件就无法满足了，但是有的题目`left`是不用设置限制的，基本上都是在达到 right+1 之后就不会继续增加了
 
 ```java
 class Solution {
@@ -2057,7 +2049,7 @@ class Solution {
 ```java
 输入：s = "abcabc"
 输出：10
-解释：包含 a，b 和 c 各至少一次的子字符串为 "abc", "abca", "abcab", "abcabc", "bca", "bcab", "bcabc", "cab", "cabc" 和 "abc" (相同字符串算多次)。
+解释：包含 a，b 和 c 各至少一次的子字符串为 "abc", "abca", "abcab", "abcabc", "bca", "bcab", "bcabc", "cab", "cabc" 和 "abc" （相同字符串算多次）。
 ```
 
 **示例 2：**
@@ -2082,7 +2074,7 @@ class Solution {
 
 **解法一**
 
-20双周赛T3
+20 双周赛 T3
 
 ```java
 public int numberOfSubstrings(String s) {
@@ -2109,7 +2101,7 @@ public boolean valid(int[] freq){
 
 **解法二**
 
-2020.5.4 用自己总结的滑窗模板重写，也是`for-while`结构，right和left不能同时扩展。比如`"aaacb"`这样的case
+2020.5.4 用自己总结的滑窗模板重写，也是`for-while`结构，right 和 left 不能同时扩展。比如`"aaacb"`这样的 case
 
 ```java
 public int numberOfSubstrings(String s) {
@@ -2185,7 +2177,7 @@ public int numberOfSubstrings(String s) {
 
 **解法一**
 
-186周赛T2，很明显的滑动窗口，前后拿K张最大，只需要求一个最小的`[n-k]`区间值就行了，也可以用前缀和，思路都一样
+186 周赛 T2，很明显的滑动窗口，前后拿 K 张最大，只需要求一个最小的`[n-k]`区间值就行了，也可以用前缀和，思路都一样
 
 ```go
 func maxScore(cardPoints []int, k int) int {
@@ -2225,7 +2217,7 @@ func min(a, b int) int {
 
 ```
 
-Tag里面有dp，确实这题和前面的[石子游戏](http://imlgw.top/2019/09/01/leetcode-dong-tai-gui-hua/#877-%E7%9F%B3%E5%AD%90%E6%B8%B8%E6%88%8F)有一点像，但是还是滑窗来的比较直接。。
+Tag 里面有 dp，确实这题和前面的 [石子游戏](http://imlgw.top/2019/09/01/leetcode-dong-tai-gui-hua/#877-%E7%9F%B3%E5%AD%90%E6%B8%B8%E6%88%8F) 有一点像，但是还是滑窗来的比较直接。
 
 ## [1208. 尽可能使字符串相等](https://leetcode-cn.com/problems/get-equal-substrings-within-budget/)
 
@@ -2289,7 +2281,7 @@ func equalSubstring(s string, t string, maxCost int) int {
 }
 
 func getCost(a, b byte) int {
-    if a < b { //a-b<0 byte是uint8直接这样减会变成正数
+    if a < b { //a-b<0 byte 是 uint8 直接这样减会变成正数
         return int(b - a)
     }
     return int(a - b)
@@ -2307,7 +2299,7 @@ func max(a, b int) int {
 
 **思考**
 
-下面`for-while`的结构似乎更加统一，上面`for-if`的结构只能用在求**最长，最大**的情况下，这种时候`left`和`right`允许同时加加，所以用`if`也是可以的，但是求最短的时候，比如上面[209. 长度最小的子数组](#209-长度最小的子数组)就不能用`for-if` ，当right到达边界的时候left可能还需要继续移动，所以不能用`if`
+下面`for-while`的结构似乎更加统一，上面`for-if`的结构只能用在求**最长，最大**的情况下，这种时候`left`和`right`允许同时加加，所以用`if`也是可以的，但是求最短的时候，比如上面 [209. 长度最小的子数组](#209-长度最小的子数组)就不能用`for-if` ，当 right 到达边界的时候 left 可能还需要继续移动，所以不能用`if`
 
 ```go
 func equalSubstring(s string, t string, maxCost int) int {
@@ -2354,7 +2346,7 @@ func equalSubstring(s string, t string, maxCost int) int {
 
 **解法一**
 
-滑动窗口的感觉来了，越来越熟练了，这题直接bugfree了😁
+滑动窗口的感觉来了，越来越熟练了，这题直接 bugfree 了😁
 
 ```java
 public int maxSatisfied(int[] customers, int[] grumpy, int X) {
@@ -2367,7 +2359,7 @@ public int maxSatisfied(int[] customers, int[] grumpy, int X) {
         if(grumpy[right]==1){
             window+=customers[right];
         }
-        //while和if都可以,个人比较喜欢while通用性比较强
+        //while 和 if 都可以，个人比较喜欢 while 通用性比较强
         while(right-left+1>X){
             if(grumpy[left]==1){
                 window-=customers[left];
@@ -2383,7 +2375,7 @@ public int maxSatisfied(int[] customers, int[] grumpy, int X) {
     return res+max;
 }
 ```
-可以看到仍然是前面总结的`for-while`结构，等我把所有的滑窗tag做完了再来总结一波
+可以看到仍然是前面总结的`for-while`结构，等我把所有的滑窗 tag 做完了再来总结一波
 
 ## [1040. 移动石子直到连续 II](https://leetcode-cn.com/problems/moving-stones-until-consecutive-ii/)
 
@@ -2433,7 +2425,7 @@ public int maxSatisfied(int[] customers, int[] grumpy, int X) {
 
 **解法一**
 
-懵逼，某次周赛的T4，嗯抄，不会做，题目都差点没看懂
+懵逼，某次周赛的 T4，嗯抄，不会做，题目都差点没看懂
 
 ```java
 public int[] numMovesStonesII(int[] stones) {
@@ -2448,7 +2440,7 @@ public int[] numMovesStonesII(int[] stones) {
     int[] res=new int[2];
     res[0]=Integer.MAX_VALUE;
     for(int right=0;right<N;right++){
-        //整个区间范围大于N了需要缩小区间
+        //整个区间范围大于 N 了需要缩小区间
         while(stones[right]-stones[left]+1>N){ 
             left++;
         }
@@ -2546,7 +2538,6 @@ public boolean vowel(char ch){
 
 Difficulty: **中等**
 
-
 给你一个二进制字符串 `s` 和一个整数 `k` 。
 
 如果所有长度为 `k` 的二进制字符串都是 `s` 的子串，请返回 True ，否则请返回 False 。
@@ -2595,12 +2586,11 @@ Difficulty: **中等**
 *   `s` 中只含 0 和 1 。
 *   `1 <= k <= 20`
 
-
 **解法一**
 
-某次周赛的T2还是T3，忘了，我用了最暴力的方法，直接回溯生成了所有的二进制串，然后对比的，写的很快，也AC了，但是但是后面一直没时间重写，今天偶然发现了这道题，重写下
+某次周赛的 T2 还是 T3，忘了，我用了最暴力的方法，直接回溯生成了所有的二进制串，然后对比的，写的很快，也 AC 了，但是但是后面一直没时间重写，今天偶然发现了这道题，重写下
 
-经典for-while结构
+经典 for-while 结构
 ```golang
 func hasAllCodes(s string, k int) bool {
     var set = make(map[int]bool)
@@ -2609,7 +2599,7 @@ func hasAllCodes(s string, k int) bool {
     for right := 0; right < len(s); right++{
         cur = cur * 2 + int(s[right] & 1)
         for right - left + 1 > k{
-            cur &= ^(1 << k) //将首位置为0
+            cur &= ^(1 << k) //将首位置为 0
             left++
         }
         if right - left + 1 == k{
@@ -2619,12 +2609,11 @@ func hasAllCodes(s string, k int) bool {
     return len(set) == 1 << k
 }
 ```
-这个题也可以直接存字符串进去，但是存字符串的时间复杂度就不是O(N)了(N为字符长度)，而是O(KN)，因为字符串Hash的复杂度是O(K)，但是这里K很小，所以其实也无所谓，但是我们还是要追求更加优秀的解法，所以最好的做法还是将其转换成数字，然后存到哈希表中，这里看了别人的解法又学到了一手位运算的小技巧，`cur & ^(1<<k)`（k为cur长度-1）可以将cur首位置为0，也就是消去首位，原理也很简单，就不赘述了
+这个题也可以直接存字符串进去，但是存字符串的时间复杂度就不是 O(N) 了 (N 为字符长度），而是 O(KN)，因为字符串 Hash 的复杂度是 O(K)，但是这里 K 很小，所以其实也无所谓，但是我们还是要追求更加优秀的解法，所以最好的做法还是将其转换成数字，然后存到哈希表中，这里看了别人的解法又学到了一手位运算的小技巧，`cur & ^(1<<k)`（k 为 cur 长度-1）可以将 cur 首位置为 0，也就是消去首位，原理也很简单，就不赘述了
 
 ## [1498. 满足条件的子序列数目](https://leetcode-cn.com/problems/number-of-subsequences-that-satisfy-the-given-sum-condition/)
 
 Difficulty: **中等**
-
 
 给你一个整数数组 `nums` 和一个整数 `target` 。
 
@@ -2699,7 +2688,7 @@ public int numSubseq(int[] nums, int target) {
         }
         if (left <= right) {
             //nums[left] + nums[right] <>= target 
-            //包含left的子序列个数: left固定，在[left+1,right]选若干个，就有 2^(right-left) 种选法
+            //包含 left 的子序列个数：left 固定，在 [left+1,right] 选若干个，就有 2^(right-left) 种选法
             count = (count + pow[right-left]) % MOD ;
         }
         left++;
@@ -2735,7 +2724,7 @@ public int numSubseq(int[] nums, int target) {
     return (int) count % MOD;
 }
 
-//搜索最后一个小于等于target的值
+//搜索最后一个小于等于 target 的值
 public int search(int[] nums, int target){
     int left = 0, right = nums.length-1;
     int res = -1;
@@ -2754,7 +2743,6 @@ public int search(int[] nums, int target){
 ## [904. 水果成篮](https://leetcode-cn.com/problems/fruit-into-baskets/)
 
 Difficulty: **中等**
-
 
 在一排树中，第 `i` 棵树产生 `tree[i]` 型的水果。  
 你可以**从你选择的任何树开始**，然后重复执行以下步骤：
@@ -2807,10 +2795,9 @@ Difficulty: **中等**
 1.  `1 <= tree.length <= 40000`
 2.  `0 <= tree[i] < tree.length`
 
-
 **解法一**
 
-题目意思其实就是求只包含2个元素的最长子串，题目表述的不太清楚，已经反馈了
+题目意思其实就是求只包含 2 个元素的最长子串，题目表述的不太清楚，已经反馈了
 ```golang
 func totalFruit(tree []int) int {
     var left = 0
@@ -2835,29 +2822,29 @@ func totalFruit(tree []int) int {
     return res
 }
 ```
-## [NC562.牛牛的魔法卡](https://www.nowcoder.com/practice/9b6fe52a68904c77aa81502f57ceac86)
+## [NC562. 牛牛的魔法卡](https://www.nowcoder.com/practice/9b6fe52a68904c77aa81502f57ceac86)
 
 牛牛从小就有收集魔法卡的习惯，他最大的愿望就是能够集齐 k 种不同种类的魔法卡，现在有 n 张魔法卡，这 n 张魔法卡存在于一维坐标点上，
 每张魔法卡可能属于某一种类。牛牛如果想收集魔法卡就需要从当前坐标点跳跃到另外一个魔法卡所在的坐标点，花费的代价是两个跳跃坐标点之间的距离差。
 牛牛可以从任意的坐标点出发，牛牛想知道他集齐 k 种魔法卡所花费的最小代价是多少，如果集不齐 k 种魔法卡，输出-1。
 第一行输入两个整数 n,k, 分别表示魔法卡的个数和种类个数。
-接下来有n行，每行两个数x，y 分别表示属于哪一种魔法卡和魔法卡所在的坐标
+接下来有 n 行，每行两个数 x，y 分别表示属于哪一种魔法卡和魔法卡所在的坐标
 
-**示例1**
+**示例 1**
 ```go
-输入: 7,3,[[0,1],[0,2],[1,5],[1,1],[0,7],[2,8],[1,3]]
-输出: 3
-说明: 
-样例一：牛牛从坐标点5出发，经过7、8两个点就收集了3张不同种类的魔法卡，达成成就。所需代价 （7-5）+（8-7） = 3
+输入：7,3,[[0,1],[0,2],[1,5],[1,1],[0,7],[2,8],[1,3]]
+输出：3
+说明：
+样例一：牛牛从坐标点 5 出发，经过 7、8 两个点就收集了 3 张不同种类的魔法卡，达成成就。所需代价 （7-5）+（8-7） = 3
 ```
-**备注:**
+**备注：**
 - 1<=n<=10^6
 - 1<=k<=50 0<=x<k
 - 0 <= y <= 1e9
 
 **解法一**
 
-tag是二分，但是想了一会儿感觉好像没啥好的二分的思路，二分答案貌似可行，不过这题滑窗的思路更简单，类似[76-最小覆盖子串](#76-最小覆盖子串)滑就完事儿了
+tag 是二分，但是想了一会儿感觉好像没啥好的二分的思路，二分答案貌似可行，不过这题滑窗的思路更简单，类似 [76-最小覆盖子串](#76-最小覆盖子串)滑就完事儿了
 ```java
 public int solve (int n, int k, int[][] card) {
     // write code here
@@ -2889,26 +2876,26 @@ public int solve (int n, int k, int[][] card) {
 ```
 ## [1870. 全零子串的数量（LintCode）](https://www.lintcode.com/problem/number-of-substrings-with-all-zeroes/description)
 
-给出一个只包含0或1的字符串str,请返回这个字符串中全为0的子字符串的个数 1<=|str|<=30000
+给出一个只包含 0 或 1 的字符串 str, 请返回这个字符串中全为 0 的子字符串的个数 1<=|str|<=30000
 
-**例1:**
+**例 1:**
 ```go
-输入:"00010011"
-输出:9
-解释:
-"0"子字符串有5个,
-"00"子字符串有3个,
-"000"子字符串有1个。
-所以返回9
+输入："00010011"
+输出：9
+解释：
+"0"子字符串有 5 个，
+"00"子字符串有 3 个，
+"000"子字符串有 1 个。
+所以返回 9
 ```
-**例2:**
+**例 2:**
 ```go
-输入:"010010"
-输出:5
+输入："010010"
+输出：5
 ```
 **解法一**
 
-直接滑就行了，统计所有0区间的长度，注意组合数的计算就行了
+直接滑就行了，统计所有 0 区间的长度，注意组合数的计算就行了
 ```java
 // 1 1 1 1 1 (5+4+3+2+1) = n(n-1)/2 + n or n(n+1)/2
 public int stringCount(String str) {
@@ -2933,41 +2920,41 @@ public int stringCount(String str) {
 
 ## [1529. 绝对差不超过限制的三元子数组（LintCode](https://www.lintcode.com/problem/triplet-subarray-with-absolute-diff-less-than-or-equal-to-limit/description)）
 
-给定一个递增的整数数组nums，和一个表示限制的整数limit，请你返回满足条件的三元子数组的个数，使得该子数组中的任意两个元素之间的绝对差小于或者等于limit。
+给定一个递增的整数数组 nums，和一个表示限制的整数 limit，请你返回满足条件的三元子数组的个数，使得该子数组中的任意两个元素之间的绝对差小于或者等于 limit。
 
 如果不存在满足条件的子数组，则返回 0 。
 
 **数据范围：** 1 ≤ len(nums) ≤ 1e4，1 ≤ limit ≤ 1e6，0 ≤ nums[i] ≤ 1e6
-由于答案可能很大，请返回它对99997867取余后的结果。
+由于答案可能很大，请返回它对 99997867 取余后的结果。
 
 **样例 1:**
 ```go
 输入：[1, 2, 3, 4], 3
 输出：4
-解释：可选方案有(1, 2, 3), (1, 2, 4), (1, 3, 4), (2, 3, 4)。因此，满足条件的三元组有4个。
+解释：可选方案有 (1, 2, 3), (1, 2, 4), (1, 3, 4), (2, 3, 4)。因此，满足条件的三元组有 4 个。
 ```
 
 **样例 2:**
 ```go
 输入：[1, 10, 20, 30, 50], 19
 输出：1
-解释：唯一可行的三元组是(1, 10, 20)，所以答案为1。
+解释：唯一可行的三元组是 (1, 10, 20)，所以答案为 1。
 ```
 **挑战**
-你可以只用O(n)的时间复杂度解决这个问题吗？
+你可以只用 O(n) 的时间复杂度解决这个问题吗？
 
 **解法一**
 
-我一开始看见是Hard想的挺复杂的，什么单调栈都搞出来了，但是仔细看题会发现题目给的数组是有序的，所以直接滑窗然后统计就行了，这里需要注意计算的方式，避免算重
+我一开始看见是 Hard 想的挺复杂的，什么单调栈都搞出来了，但是仔细看题会发现题目给的数组是有序的，所以直接滑窗然后统计就行了，这里需要注意计算的方式，避免算重
 ```java
-//LintCode上居然是Hard，感觉不是很难
+//LintCode 上居然是 Hard，感觉不是很难
 public int tripletSubarray(int[] nums, int limit) {
     // write your code here
     int n = nums.length;
     int left = 0, right = 0;
     int res = 0;
     while (left <= right) {
-        //找到最远的合法right
+        //找到最远的合法 right
         while (right < n && nums[right]-nums[left] <= limit) {
             right++;
         }
@@ -2976,38 +2963,38 @@ public int tripletSubarray(int[] nums, int limit) {
         int len = right-left-1;
         left++;
         if (len < 2) continue;
-        //C(len,2) 求以left开头，包含left的所有3元组，这样不会重复
+        //C(len,2) 求以 left 开头，包含 left 的所有 3 元组，这样不会重复
         res += len*(len-1)/2;
     }
     return res;
 }
 ```
-> 感觉自己静下心来想的话很多题目还是可以自己做出来的，但是就是想的可能有点慢，特别是竞赛中，规定了时间后一慌就更慢了。。看来还是练少了
+> 感觉自己静下心来想的话很多题目还是可以自己做出来的，但是就是想的可能有点慢，特别是竞赛中，规定了时间后一慌就更慢了。看来还是练少了
 
-## [1375. 至少K个不同字符的子串（LintCode）](https://www.lintcode.com/problem/substring-with-at-least-k-distinct-characters/description)
+## [1375. 至少 K 个不同字符的子串（LintCode）](https://www.lintcode.com/problem/substring-with-at-least-k-distinct-characters/description)
 
 给定一个仅包含小写字母的字符串 S.
 
-返回 S 中至少包含 k 个不同字符的子串的数量.
+返回 S 中至少包含 k 个不同字符的子串的数量。
 
 - 10 ≤ length(S) ≤ 1,000,000
 - 1 ≤ k ≤ 26
 
 **样例 1:**
 ```go
-输入: S = "abcabcabca", k = 4
-输出: 0
-解释: 字符串中一共就只有 3 个不同的字符.
+输入：S = "abcabcabca", k = 4
+输出：0
+解释：字符串中一共就只有 3 个不同的字符。
 ```
 **样例 2:**
 ```go
-输入: S = "abcabcabcabc", k = 3
-输出: 55
-解释: 任意长度不小于 3 的子串都含有 a, b, c 这三个字符.
-    比如,长度为 3 的子串共有 10 个, "abc", "bca", "cab" ... "abc"
-    长度为 4 的子串共有 9 个, "abca", "bcab", "cabc" ... "cabc"
+输入：S = "abcabcabcabc", k = 3
+输出：55
+解释：任意长度不小于 3 的子串都含有 a, b, c 这三个字符。
+    比如，长度为 3 的子串共有 10 个，"abc", "bca", "cab" ... "abc"
+    长度为 4 的子串共有 9 个，"abca", "bcab", "cabc" ... "cabc"
     ...
-    长度为 12 的子串有 1 个, 就是 S 本身.
+    长度为 12 的子串有 1 个，就是 S 本身。
     所以答案是 1 + 2 + ... + 10 = 55.
 ```
 
@@ -3030,7 +3017,7 @@ public long kDistinctCharacters(String s, int k) {
         while (count >= k && left <= right) {
             // abc | abcabcabc
             // l r(2)          n(12)
-            //统计以s[left,right]开头的所有子串
+            //统计以 s[left,right] 开头的所有子串
             //10+9+8+7+...+1
             res += n-right;
             char cl = s.charAt(left);
@@ -3045,21 +3032,21 @@ public long kDistinctCharacters(String s, int k) {
 }
 ```
 
-## [386. 最多有k个不同字符的最长子字符串(LintCode)](https://www.lintcode.com/problem/longest-substring-with-at-most-k-distinct-characters/description)
+## [386. 最多有 k 个不同字符的最长子字符串 (LintCode)](https://www.lintcode.com/problem/longest-substring-with-at-most-k-distinct-characters/description)
 
-给定字符串S，找到最多有k个不同字符的最长子串T。
+给定字符串 S，找到最多有 k 个不同字符的最长子串 T。
 
 **样例 1:**
 ```go
-输入: S = "eceba" 并且 k = 3
-输出: 4
-解释: T = "eceb"
+输入：S = "eceba" 并且 k = 3
+输出：4
+解释：T = "eceb"
 ```
 **样例 2:**
 ```go
-输入: S = "WORLD" 并且 k = 4
-输出: 4
-解释: T = "WORL" 或 "ORLD"
+输入：S = "WORLD" 并且 k = 4
+输出：4
+解释：T = "WORL" 或 "ORLD"
 ```
 **挑战**： O(n) 时间复杂度
 
@@ -3096,7 +3083,6 @@ public int lengthOfLongestSubstringKDistinct(String s, int k) {
 ## [1675. 数组的最小偏移量](https://leetcode-cn.com/problems/minimize-deviation-in-array/)
 
 Difficulty: **困难**
-
 
 给你一个由 `n` 个正整数组成的数组 `nums` 。
 
@@ -3142,7 +3128,7 @@ Difficulty: **困难**
 
 **解法一**
 
-和上面[632-最小区间](#632-最小区间)一样，将数据变成和最小区间一样的形式，然后直接套用
+和上面 [632-最小区间](#632-最小区间)一样，将数据变成和最小区间一样的形式，然后直接套用
 ```java
 public int minimumDeviation(int[] nums) {
     PriorityQueue<int[]> pq = new PriorityQueue<>((a, b)->a[2]-b[2]);

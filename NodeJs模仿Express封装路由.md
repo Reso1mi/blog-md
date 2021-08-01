@@ -1,5 +1,5 @@
 ---
-title: NodeJS模仿Express封装路由
+title: NodeJS 模仿 Express 封装路由
 tags:
   - NodeJS
   - ES6
@@ -11,9 +11,9 @@ cover: 'https://imlgwpicture.oss-cn-qingdao.aliyuncs.com/blogImage/timg%5B1%5D.j
 abbrlink: 3b46123d
 ---
 
-## NodeJS模仿Express封装路由
+## NodeJS 模仿 Express 封装路由
 
-_最近才开始学NodeJs也不知道为啥就突然对这个很感兴趣,(可能Java写烦了😄)，感觉用这个开发还是挺快的，而且性能也很好，借此也了解下函数式编程的特点和异步编程的思想。_
+_最近才开始学 NodeJs 也不知道为啥就突然对这个很感兴趣，（可能 Java 写烦了😄)，感觉用这个开发还是挺快的，而且性能也很好，借此也了解下函数式编程的特点和异步编程的思想。_
 
 - ### 没封装前
   原生的就差不多是这样的。
@@ -25,7 +25,7 @@ _最近才开始学NodeJs也不知道为啥就突然对这个很感兴趣,(可�
 	const http = require("http");
 	const fs = require("fs");
 	const path = require("path");
-	const querystring = require("querystring"); //json转换
+	const querystring = require("querystring"); //json 转换
 	const scores = require("./StudentScore.json");
 	const template = require("art-template");
 	http.createServer((req, resp) => {
@@ -61,15 +61,15 @@ _最近才开始学NodeJs也不知道为啥就突然对这个很感兴趣,(可�
 	});
 ```
 
-- Express的方式
-通过const app=express(); 获得一个app的对象后面就通过这个来操作
+- Express 的方式
+通过 const app=express(); 获得一个 app 的对象后面就通过这个来操作
 ![oss](https://imlgwpicture.oss-cn-qingdao.aliyuncs.com/blogImage/D~KS%28D1%5B%5DUS5TBZPO7KTJ88.png)
 - 手动封装
 
 ```java
 	var url = require('url');
 	
-	//封装方法改变res  绑定res.send()
+	//封装方法改变 res  绑定 res.send()
 	function changeRes(res) {
 	
 	    res.send = function(data) {
@@ -85,18 +85,14 @@ _最近才开始学NodeJs也不知道为啥就突然对这个很感兴趣,(可�
 	//定义暴露的模块  return 里面定义的模块
 	var Server = function() {
 	
-	
 	    var G = this; /*全局变量*/
 	
-	    //处理get和post请求
+	    //处理 get 和 post 请求
 	    this._get = {};
 	
 	    this._post = {};
 	
-	
-	
 	    var app = function(req, res) {
-	
 	
 	        changeRes(res);
 	
@@ -109,10 +105,9 @@ _最近才开始学NodeJs也不知道为啥就突然对这个很感兴趣,(可�
 	        //获取请求的方式 get  post
 	        var method = req.method.toLowerCase();
 	
-	
 	        if (G['_' + method][pathname]) {
 	
-	            if (method == 'post') { /*执行post请求*/
+	            if (method == 'post') { /*执行 post 请求*/
 	
 	                var postStr = '';
 	                req.on('data', function(chunk) {
@@ -121,11 +116,11 @@ _最近才开始学NodeJs也不知道为啥就突然对这个很感兴趣,(可�
 	                })
 	                req.on('end', function(err, chunk) {
 	                    //添加请求属性
-	                    req.myBody = postStr; /*表示拿到post的值*/
+	                    req.myBody = postStr; /*表示拿到 post 的值*/
 	                    /*执行方法*/
 	                    G['_' + method][pathname](req, res);
 	                })
-	            } else { /*执行get请求*/
+	            } else { /*执行 get 请求*/
 	                G['_' + method][pathname](req, res); /*执行方法*/
 	            }
 	        } else {
@@ -184,19 +179,14 @@ _最近才开始学NodeJs也不知道为啥就突然对这个很感兴趣,(可�
 	});
 	
 	myApp.get("/express", (req, resp) => {
-	    resp.send("模仿Express封装路由");
+	    resp.send("模仿 Express 封装路由");
 	    console.log(req);
 	});
 	myApp.post("/postExpress", (req, resp) => {
-	    resp.send("模仿Express封装路由");
+	    resp.send("模仿 Express 封装路由");
 	    console.log(req.myBody);
 	});
 ```
 
 ---
-通过这个体会下Express的封装
-
-
-
-
-
+通过这个体会下 Express 的封装

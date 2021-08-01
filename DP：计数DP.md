@@ -7,6 +7,7 @@ categories:
   - 算法
 date: 2021/4/9
 abbrlink: b34c4165
+mathjax: true
 ---
 
 ## [900. 整数划分](https://www.acwing.com/problem/content/description/902/)

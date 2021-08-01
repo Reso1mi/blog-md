@@ -6,6 +6,7 @@ categories:
   - 算法
 date: 2020/11/14
 abbrlink: f00d00a3
+mathjax: true
 ---
 
 > 现在打算写一些短点的文章了，LeetCode系列不会再append了，如果写lc题会单独开一篇文章，然后写题解

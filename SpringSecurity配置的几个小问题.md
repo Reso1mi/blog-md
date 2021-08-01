@@ -1,5 +1,5 @@
 ---
-title: Spring-Security遇到的小问题
+title: Spring-Security 遇到的小问题
 tags:
   - Bug
   - Spring
@@ -35,10 +35,10 @@ abbrlink: 2dc72c90
 ```java
 <http use-expressions="false" entry-point-ref="casProcessingFilterEntryPoint">
 		<intercept-url pattern="/**" access="ROLE_USER"/>
-        <!--经过SpringSecurity的环境上下文，偶然发现一个小坑-->
+        <!--经过 SpringSecurity 的环境上下文，偶然发现一个小坑-->
         <intercept-url pattern="/cart/*.do" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
         <csrf disabled="true"/>
-        <!-- custom-filter为过滤器， position 表示将过滤器放在指定的位置上，before表示放在指定位置之前  ，after表示放在指定的位置之后  -->
+        <!-- custom-filter 为过滤器， position 表示将过滤器放在指定的位置上，before 表示放在指定位置之前  ，after 表示放在指定的位置之后  -->
         <custom-filter ref="casAuthenticationFilter"  position="CAS_FILTER" />
         <custom-filter ref="requestSingleLogoutFilter" before="LOGOUT_FILTER"/>
         <custom-filter ref="singleLogoutFilter" before="CAS_FILTER"/>

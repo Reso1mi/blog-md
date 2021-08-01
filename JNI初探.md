@@ -1,5 +1,5 @@
 ---
-title: JNI初探
+title: JNI 初探
 tags:
   - JNI
 categories:
@@ -9,23 +9,23 @@ date: 2019/5/2
 abbrlink: f8b3ee4a
 ---
 
-## JNI简介
+## JNI 简介
 
-> JNI是**Java Native Interface**的缩写，它提供了若干的API实现了Java和其他语言的通信（主要是[C](https://baike.baidu.com/item/C/7252092)&[C++](https://baike.baidu.com/item/C%2B%2B)）。从Java1.1开始，JNI标准成为java平台的一部分，它允许Java代码和其他语言写的代码进行交互。JNI一开始是为了本地已编译语言，尤其是C和C++而设计的，但是它并不妨碍你使用其他编程语言，只要调用约定受支持就可以了。使用java与本地已编译的代码交互，通常会丧失平台可移植性。但是，有些情况下这样做是可以接受的，甚至是必须的。例如，使用一些旧的库，与硬件、操作系统进行交互，或者为了提高程序的性能。JNI标准至少要保证本地代码能工作在任何Java 虚拟机环境。
+> JNI 是** Java Native Interface **的缩写，它提供了若干的 API 实现了 Java 和其他语言的通信（主要是 [C](https://baike.baidu.com/item/C/7252092)&[C++](https://baike.baidu.com/item/C%2B%2B)）。从 Java1.1 开始，JNI 标准成为 java 平台的一部分，它允许 Java 代码和其他语言写的代码进行交互。JNI 一开始是为了本地已编译语言，尤其是 C 和 C++而设计的，但是它并不妨碍你使用其他编程语言，只要调用约定受支持就可以了。使用 java 与本地已编译的代码交互，通常会丧失平台可移植性。但是，有些情况下这样做是可以接受的，甚至是必须的。例如，使用一些旧的库，与硬件、操作系统进行交互，或者为了提高程序的性能。JNI 标准至少要保证本地代码能工作在任何 Java 虚拟机环境。
 
-相信大家在看源码的时候都看见过用**native**修饰的方法，这些方法就是用C/C++语言实现的，那到底java是如何调用的这些方法的呢？
+相信大家在看源码的时候都看见过用** native **修饰的方法，这些方法就是用 C/C++语言实现的，那到底 java 是如何调用的这些方法的呢？
 
 ## 上手
 
 **准备工作**
 
-> 文中环境为Linux下Centos6版本
+> 文中环境为 Linux 下 Centos6 版本
 
-✅ 首先需要有`JDK`(我的是jdk1.7)，编译java
+✅ 首先需要有`JDK`（我的是 jdk1.7)，编译 java
 
-✅ 然后需要`gcc` 用来编译C/C++
+✅ 然后需要`gcc` 用来编译 C/C++
 
-**Java代码**
+**Java 代码**
 
 ```java
 public class JniTest {
@@ -43,7 +43,7 @@ public class JniTest {
 }
 ```
 
-在静态代码块里面加载了一个[动态链接库](https://baike.baidu.com/item/%E5%8A%A8%E6%80%81%E9%93%BE%E6%8E%A5%E5%BA%93%E6%96%87%E4%BB%B6)
+在静态代码块里面加载了一个 [动态链接库](https://baike.baidu.com/item/%E5%8A%A8%E6%80%81%E9%93%BE%E6%8E%A5%E5%BA%93%E6%96%87%E4%BB%B6)
 
 编写完之后直接`javac JniTest.java`编译一下，然后执行`javah -jni  JniTest`，会在当前目录下生成一个`JniTest.h`的头文件如下
 
@@ -68,10 +68,9 @@ JNIEXPORT void JNICALL Java_JniTest_hi
 #ifdef __cplusplus
 }
 #endif
-#endif
 ```
 
-**C代码**
+**C 代码**
 
 ```java
 #include<stdio.h>
@@ -84,8 +83,8 @@ JNIEXPORT void JNICALL Java_JniTest_hi
 }
 ```
 
-- `JNIEnv*`：用于引用JNI环境，该指针变量可以访问所有JNI函数
-- `jobject`：引用`this` Java对象，也就是可以用来访问当前java调用者
+- `JNIEnv*`：用于引用 JNI 环境，该指针变量可以访问所有 JNI 函数
+- `jobject`：引用`this` Java 对象，也就是可以用来访问当前 java 调用者
 
 写完之后执行如下命令编译它
 
@@ -115,4 +114,4 @@ gcc -fPIC -D_REENTRANT  -I"$JAVA_HOME/include"  -I"$JAVA_HOME/include/linux" -c 
 
 ![mark](http://static.imlgw.top///20190502/rKdNPEwUmstf.png?imageslim)
 
->  篇文章中只是简单的调用了C语言的代码，关于如何传递参数，如何返回值，后面遇到之再做记录
+>  篇文章中只是简单的调用了 C 语言的代码，关于如何传递参数，如何返回值，后面遇到之再做记录

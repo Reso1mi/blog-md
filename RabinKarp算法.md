@@ -1,5 +1,5 @@
 ---
-title: Rabin-Karp算法
+title: Rabin-Karp 算法
 tags:
   - 数据结构
   - 算法
@@ -8,11 +8,10 @@ categories:
 date: 2020/7/1
 abbrlink: 194514a9
 ---
- > 见到好几次了，感觉不是很难，学一手，本来想详细的写一下完整的Rabin-Karp解析的，但是目前确实时间有点紧，加上自己也没做几题，理解的可能还不到位，等后面有时间再来补吧
+ > 见到好几次了，感觉不是很难，学一手，本来想详细的写一下完整的 Rabin-Karp 解析的，但是目前确实时间有点紧，加上自己也没做几题，理解的可能还不到位，等后面有时间再来补吧
  ## [1044. 最长重复子串](https://leetcode-cn.com/problems/longest-duplicate-substring/)
 
 Difficulty: **困难**
-
 
 给出一个字符串 `S`，考虑其所有**重复子串**（`S` 的连续子串，出现两次或多次，可能会有重叠）。
 
@@ -37,10 +36,9 @@ Difficulty: **困难**
 1.  `2 <= S.length <= 10^5`
 2.  `S` 由小写英文字母组成。
 
-
 **解法一**
 
-看题解区学习了一下，整体的思路倒是不难，主要就是一个`rolling hash`的过程，然后就是关于MOD的选取，到现在也不是很清楚怎么选MOD。。。
+看题解区学习了一下，整体的思路倒是不难，主要就是一个`rolling hash`的过程，然后就是关于 MOD 的选取，到现在也不是很清楚怎么选 MOD。
 ```java
 public String longestDupSubstring(String S) {
     int n = S.length();
@@ -71,12 +69,12 @@ public String longestDupSubstring(String S) {
 
 public int RabinKarp(int len, int B, int[] nums, long MOD){
     //hash(S) = s[0] * B^(len-1) + s[1] * B^(len-2) + ... + s[n-1] *1
-    //B^(len-1) (移除左端点时需要的值)
+    //B^(len-1) （移除左端点时需要的值）
     long BL = 1;
     for (int i = 0; i < len - 1; i++){
         BL = (BL * B) % MOD;
     }
-    //[0,len-1]的hash值
+    //[0,len-1] 的 hash 值
     long h = 0;
     for (int i = 0; i < len; i++){
         h = (h * B + nums[i]) % MOD;
@@ -85,7 +83,7 @@ public int RabinKarp(int len, int B, int[] nums, long MOD){
     set.add(h);
     //rolling hash
     for (int i = 1; i <= nums.length - len; i++){
-        //+MOD是为了负数取模
+        //+MOD 是为了负数取模
         h = (h - nums[i - 1] * BL % MOD + MOD) % MOD;
         h = (h * B + nums[i + len - 1]) % MOD;
         if (set.contains(h)){
@@ -99,7 +97,7 @@ public int RabinKarp(int len, int B, int[] nums, long MOD){
 
 **解法二**
 
-补充一下冲突检测，猜mod也太玄学了😂
+补充一下冲突检测，猜 mod 也太玄学了😂
 > 这个冲突检测的方法有问题，留下做个印证，正确的检测请直接看 解法三
 
 ```java
@@ -129,23 +127,23 @@ public String longestDupSubstring(String S) {
 
 public int RabinKarp(int len, int B, String S, long MOD){
     //hash(S) = s[0] * B^(len-1) + s[1] * B^(len-2) + ... + s[n-1] *1
-    //B^(len-1) (移除左端点时需要的值)
+    //B^(len-1) （移除左端点时需要的值）
     long BL = 1;
     for (int i = 0; i < len - 1; i++){
         BL = (BL * B) % MOD;
     }
-    //[0,len-1]的hash值
+    //[0,len-1] 的 hash 值
     long h = 0;
     for (int i = 0; i < len; i++){
         h = (h * B + S.charAt(i) - 'a') % MOD;
     }
-    //这里肯定不能直接存字符串做冲突检测，太大了会MLE
-    //存一个起始地址就可以了len已知
+    //这里肯定不能直接存字符串做冲突检测，太大了会 MLE
+    //存一个起始地址就可以了 len 已知
     HashMap<Long,Integer> map = new HashMap<>();
     map.put(h, 0);
     //rolling hash
     for (int i = 1; i <= S.length() - len; i++){
-        //+MOD是为了负数取模
+        //+MOD 是为了负数取模
         h = (h - (S.charAt(i-1) - 'a') * BL % MOD + MOD) % MOD;
         h = (h * B + (S.charAt(len + i -1) - 'a')) % MOD;
         Integer start = map.get(h);
@@ -158,14 +156,14 @@ public int RabinKarp(int len, int B, String S, long MOD){
 }
 ```
 
-> 关于这个冲突检测有一个小问题，我尝试减小了`MOD`的大小，比如101，这样计算出来的结果在数据量较大的就不对了，得到的字符虽然确实是重复了，但是并不是最长的，按道理写了冲突检测后即使我MOD取1应该都是可以找出来的啊？======>
-> 在写上面这段话的时候突然想明白了，因为`MOD`取的太小，导致冲突的概率大大增加，而这里我做冲突检测的时候只保存了一个值，也就是说会有很多值被舍弃掉，也许你舍弃的值可能恰好就是最后的答案，字符越长，发生这种情况的概率就越高，所以说我这里冲突检测做的并不完全，能过也纯属运气，正确的冲突检测应该保存一个`List`链表，然后在发生冲突的时候在List中找有没有和当前字符相等的，这样一来，时间复杂度就会上去（其实这个过程就是设计Hash表的过程，链地址法解决冲突）
+> 关于这个冲突检测有一个小问题，我尝试减小了`MOD`的大小，比如 101，这样计算出来的结果在数据量较大的就不对了，得到的字符虽然确实是重复了，但是并不是最长的，按道理写了冲突检测后即使我 MOD 取 1 应该都是可以找出来的啊？======>
+> 在写上面这段话的时候突然想明白了，因为`MOD`取的太小，导致冲突的概率大大增加，而这里我做冲突检测的时候只保存了一个值，也就是说会有很多值被舍弃掉，也许你舍弃的值可能恰好就是最后的答案，字符越长，发生这种情况的概率就越高，所以说我这里冲突检测做的并不完全，能过也纯属运气，正确的冲突检测应该保存一个`List`链表，然后在发生冲突的时候在 List 中找有没有和当前字符相等的，这样一来，时间复杂度就会上去（其实这个过程就是设计 Hash 表的过程，链地址法解决冲突）
 
 **解法三**
 
-下面的应该就没什么问题了，链地址法，时间复杂度会增大，耗时增加到了500ms+，但是确保了100%的正确率，这是值得的，这次把mod调小也不会出错了（但是可能会TLE，冲突变大了），总体来说，这几番折腾收获还是挺大的，好事还是要多磨啊
+下面的应该就没什么问题了，链地址法，时间复杂度会增大，耗时增加到了 500ms+，但是确保了 100%的正确率，这是值得的，这次把 mod 调小也不会出错了（但是可能会 TLE，冲突变大了），总体来说，这几番折腾收获还是挺大的，好事还是要多磨啊
 ```java
-//再写一波检测冲突。。。
+//再写一波检测冲突。
 //上面的写的有问题，检测不完全
 public String longestDupSubstring(String S) {
     int n = S.length();
@@ -192,23 +190,23 @@ public String longestDupSubstring(String S) {
 
 public int RabinKarp(int len, int B, String S, long MOD){
     //hash(S) = s[0] * B^(len-1) + s[1] * B^(len-2) + ... + s[n-1] *1
-    //B^(len-1) (移除左端点时需要的值)
+    //B^(len-1) （移除左端点时需要的值）
     long BL = 1;
     for (int i = 0; i < len - 1; i++){
         BL = (BL * B) % MOD;
     }
-    //[0,len-1]的hash值
+    //[0,len-1] 的 hash 值
     long h = 0;
     for (int i = 0; i < len; i++){
         h = (h * B + S.charAt(i) - 'a') % MOD;
     }
-    //这里肯定不能直接存字符串做冲突检测，太大了会MLE
-    //存一个起始地址就可以了len已知
+    //这里肯定不能直接存字符串做冲突检测，太大了会 MLE
+    //存一个起始地址就可以了 len 已知
     HashMap<Long,List<Integer>> map = new HashMap<>();
     map.put(h, new ArrayList(){{add(0);}});
     //rolling hash
     for (int i = 1; i <= S.length() - len; i++){
-        //+MOD是为了负数取模
+        //+MOD 是为了负数取模
         h = (h - (S.charAt(i-1) - 'a') * BL % MOD + MOD) % MOD;
         h = (h * B + (S.charAt(len + i -1) - 'a')) % MOD;
         List<Integer> starts = map.get(h);
@@ -239,7 +237,6 @@ public boolean check(List<Integer> starts, int i, String s, int len){
 }
 ```
 
-
 ## [718. 最长重复子数组](https://leetcode-cn.com/problems/maximum-length-of-repeated-subarray/)
 
 给两个整数数组 `A` 和 `B` ，返回两个数组中公共的、长度最长的子数组的长度。
@@ -247,22 +244,22 @@ public boolean check(List<Integer> starts, int i, String s, int len){
 **示例 1:**
 
 ```java
-输入:
+输入：
 A: [1,2,3,2,1]
 B: [3,2,1,4,7]
-输出: 3
-解释: 
+输出：3
+解释：
 长度最长的公共子数组是 [3, 2, 1]。
 ```
 
-**说明:**
+**说明：**
 
 1. 1 <= len(A), len(B) <= 1000
 2. 0 <= A[i], B[i] < 100
 
 **解法一**
 
-dp的解法是O(N^2)的，略显暴力，动态规划的解法放在[dp专题](http://imlgw.top/2019/09/01/leetcode-dong-tai-gui-hua/#718-%E6%9C%80%E9%95%BF%E9%87%8D%E5%A4%8D%E5%AD%90%E6%95%B0%E7%BB%84)中，这里要介绍的是二分+字符串Hash的`O(NlogN)`的解法
+dp 的解法是 O(N^2) 的，略显暴力，动态规划的解法放在 [dp 专题](http://imlgw.top/2019/09/01/leetcode-dong-tai-gui-hua/#718-%E6%9C%80%E9%95%BF%E9%87%8D%E5%A4%8D%E5%AD%90%E6%95%B0%E7%BB%84) 中，这里要介绍的是二分+字符串 Hash 的`O(NlogN)`的解法
 
 这里直接莽过了，且效率极高（16ms），就不写冲突检测了
 ```java
@@ -308,7 +305,7 @@ public boolean RabinKarp(int[] A,int[] B, int L){
     for(int i = 1; i <= B.length - L; i++){
         hB = (hB - B[i-1] * BL % MOD + MOD) % MOD;
         hB = (hB * BASE + B[L + i -1]) % MOD;
-        //这里还可以做一下冲突检测，set中需要多存一些信息
+        //这里还可以做一下冲突检测，set 中需要多存一些信息
         if(set.contains(hB)){
             return true;
         }
@@ -323,7 +320,7 @@ Difficulty: **中等**
 
 哦，不！你不小心把一个长篇文章中的空格、标点都删掉了，并且大写也弄成了小写。像句子`"I reset the computer. It still didn’t boot!"`已经变成了`"iresetthecomputeritstilldidntboot"`。在处理标点符号和大小写之前，你得先把它断成词语。当然了，你有一本厚厚的词典`dictionary`，不过，有些词没在词典里。假设文章用`sentence`表示，设计一个算法，把文章断开，要求未识别的字符最少，返回未识别的字符数。
 
-**注意:** 本题相对原题稍作改动，只需返回未识别的字符数
+**注意：** 本题相对原题稍作改动，只需返回未识别的字符数
 
 **示例：**
 
@@ -332,7 +329,7 @@ Difficulty: **中等**
 dictionary = ["looked","just","like","her","brother"]
 sentence = "jesslookedjustliketimherbrother"
 输出： 7
-解释： 断句后为"jess looked just like tim her brother"，共7个未识别字符。
+解释： 断句后为"jess looked just like tim her brother"，共 7 个未识别字符。
 ```
 
 **提示：**
@@ -341,12 +338,11 @@ sentence = "jesslookedjustliketimherbrother"
 *   `dictionary`中总字符数不超过 150000。
 *   你可以认为`dictionary`和`sentence`中只包含小写字母。
 
-
 **解法一**
 
-动态规划和Trie的解法左转[动态规划](http://imlgw.top/2019/09/01/leetcode-dong-tai-gui-hua/)专题，这里记录下字符串Hash的做法，其实字符串Hash的做法相比字典树的做法会慢一点点，不过思路还是很值得学习的
+动态规划和 Trie 的解法左转 [动态规划](http://imlgw.top/2019/09/01/leetcode-dong-tai-gui-hua/) 专题，这里记录下字符串 Hash 的做法，其实字符串 Hash 的做法相比字典树的做法会慢一点点，不过思路还是很值得学习的
 
-这里看官方题解又学到了一点东西，这里在计算hash的时候加了一个1，这样我猜测就是为了避免0的出现，使得后面的base失效，使得冲突的概率变大，比如`aba`和`ba`可能就会被判成一样的字符，我下面的做法没有做减`a`的操作，而是取了更大的BASE，这里就不写冲突检测了，可以直接莽过，上面的第一题确实太离谱了，不按照官方题解的数据来就过不了
+这里看官方题解又学到了一点东西，这里在计算 hash 的时候加了一个 1，这样我猜测就是为了避免 0 的出现，使得后面的 base 失效，使得冲突的概率变大，比如`aba`和`ba`可能就会被判成一样的字符，我下面的做法没有做减`a`的操作，而是取了更大的 BASE，这里就不写冲突检测了，可以直接莽过，上面的第一题确实太离谱了，不按照官方题解的数据来就过不了
 ```java
 public int respace(String[] dictionary, String s) {
     int BASE = 131;
@@ -363,7 +359,7 @@ public int respace(String[] dictionary, String s) {
         for (int j = i; j >= 1; j--) {
             rollhash = (rollhash * BASE + s.charAt(j-1)) % MOD;
             if(set.contains(rollhash)){
-                //注意这里是dp[j-1]，对应s.charAt(j-1)的前一个字符
+                //注意这里是 dp[j-1]，对应 s.charAt(j-1) 的前一个字符
                 dp[i] = Math.min(dp[i], dp[j-1]);
             }
             if(dp[i] == 0){
@@ -374,7 +370,7 @@ public int respace(String[] dictionary, String s) {
     return dp[n];
 }
 
-//注意需要逆向hash，上面计算的时候是j--，是逆向的
+//注意需要逆向 hash，上面计算的时候是 j--，是逆向的
 public long hash(String s, int BASE, long MOD){
     long h = 0;
     for (int i = s.length()-1; i >=0 ; i--) {
@@ -383,12 +379,11 @@ public long hash(String s, int BASE, long MOD){
     return h;
 }
 ```
-> 这个解法也用到了Hash表，但是相比用Hash表存字符，存数字的时间复杂度会低很多，其实字符串Hash也就是为了避免在Hash表中存大量的字符，一来空间占用会非常大，二来对于字符串来说计算字符的`hashCode()`的时间复杂度也是O(N)不可忽略的，而数字长度固定，`hashCode()`直接返回值就行了
+> 这个解法也用到了 Hash 表，但是相比用 Hash 表存字符，存数字的时间复杂度会低很多，其实字符串 Hash 也就是为了避免在 Hash 表中存大量的字符，一来空间占用会非常大，二来对于字符串来说计算字符的`hashCode()`的时间复杂度也是 O(N) 不可忽略的，而数字长度固定，`hashCode()`直接返回值就行了
 
 ## [1316. 不同的循环子字符串](https://leetcode-cn.com/problems/distinct-echo-substrings/)
 
 Difficulty: **困难**
-
 
 给你一个字符串 `text` ，请你返回满足下述条件的 **不同** 非空子字符串的数目：
 
@@ -417,10 +412,9 @@ Difficulty: **困难**
 *   `1 <= text.length <= 2000`
 *   `text` 只包含小写英文字母。
 
-
 **解法一**
 
-哭了，看着KMP的tag进来的，结果发现KMP的不太会写，学习了题解的前缀和Hash的思路，还是有点收获
+哭了，看着 KMP 的 tag 进来的，结果发现 KMP 的不太会写，学习了题解的前缀和 Hash 的思路，还是有点收获
 ```java
 int BASE = 131;
 
@@ -428,9 +422,9 @@ long MOD = (long)1e9+7;
 
 public int distinctEchoSubstrings(String s) {
     int n = s.length();
-    //前缀hash和(前i个元素的hash值)
+    //前缀 hash 和（前 i 个元素的 hash 值）
     long[] hashSum = new long[n+1];
-    //BASE的所有幂乘
+    //BASE 的所有幂乘
     long[] pow = new long[n+1];
     pow[0] = 1;
     hashSum[0] = 0;
@@ -455,7 +449,7 @@ public int distinctEchoSubstrings(String s) {
     return set.size();
 }
 
-// 求s[i,j]区间的哈希值: s[i]*B^j-i + s[i+1]*B^j-i-1 + ... + s[j]
+// 求 s[i,j] 区间的哈希值：s[i]*B^j-i + s[i+1]*B^j-i-1 + ... + s[j]
 // 
 // hashSum[i] = s[0]*B^i-1 + s[1]*B^i-2 +...+ s[i-1]
 // hashSum[j+1] = s[0]*B^j + s[1]*B^j-1 +...+ s[j]
@@ -463,19 +457,19 @@ public int distinctEchoSubstrings(String s) {
 // hash[i,j] = hashSum[j+1] - hashSum[i] * B^j-i+1
 //           = s[i]*B^j-i + s[i+1]*B^j-i-1 +...+s[j]
 public long getHash(long[] hashSum, long[] pow, String s, int i, int j){
-    //j-i+1是[i,j]区间的长度，包含i和j，而hashSum[k]是不包含k的
-    //所以这里需要转换下，j需要+1使得hashSum包含j
+    //j-i+1 是 [i,j] 区间的长度，包含 i 和 j，而 hashSum[k] 是不包含 k 的
+    //所以这里需要转换下，j 需要+1 使得 hashSum 包含 j
     return (hashSum[j+1] - (hashSum[i] * pow[j-i+1]) % MOD + MOD) % MOD;
 }
 ```
 
 **解法二**
 
-KMP的做法肯定就是参考KMP的[459. 重复的子字符串](http://imlgw.top/2020/05/13/kmp-suan-fa/#459-%E9%87%8D%E5%A4%8D%E7%9A%84%E5%AD%90%E5%AD%97%E7%AC%A6%E4%B8%B2)的做法，我看了外网的discuss，只看见了一个这样写的，而且看不太懂，我自己尝试了下，感觉好多地方都会有坑，主要就是去重很麻烦，代码如下
+KMP 的做法肯定就是参考 KMP 的 [459. 重复的子字符串](http://imlgw.top/2020/05/13/kmp-suan-fa/#459-%E9%87%8D%E5%A4%8D%E7%9A%84%E5%AD%90%E5%AD%97%E7%AC%A6%E4%B8%B2) 的做法，我看了外网的 discuss，只看见了一个这样写的，而且看不太懂，我自己尝试了下，感觉好多地方都会有坑，主要就是去重很麻烦，代码如下
 
-下面为错误解法，无法通过OJ，懒得改了，感觉不是个很好的做法
+下面为错误解法，无法通过 OJ，懒得改了，感觉不是个很好的做法
 ```java
-//KMP的做法
+//KMP 的做法
 public int distinctEchoSubstrings(String s) {
     for (int i = 0; i < s.length(); i++) {
         getNext(s.substring(i));

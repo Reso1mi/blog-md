@@ -6,6 +6,7 @@ categories:
   - 算法
 date: 2021/3/2
 abbrlink: e60f310b
+mathjax: true
 ---
 > 相关文章 [LeetCode背包问题](http://imlgw.top/2019/11/29/leetcode-bei-bao-wen-ti/) 
 

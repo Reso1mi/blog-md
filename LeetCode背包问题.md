@@ -1,5 +1,5 @@
 ---
-title: LeetCode背包问题
+title: LeetCode 背包问题
 tags:
   - LeetCode
   - 背包
@@ -10,11 +10,11 @@ cover: 'http://static.imlgw.top/blog/20191117/lAgAEVtKwR4j.jpg?imageslim'
 abbrlink: f68a53d9
 ---
 
-> 从[动态规划专题](http://imlgw.top/2019/09/01/leetcode-dong-tai-gui-hua/) 中抽取出来的
+> 从 [动态规划专题](http://imlgw.top/2019/09/01/leetcode-dong-tai-gui-hua/) 中抽取出来的
 
-## [92.背包问题（lintCode）](https://www.lintcode.com/problem/backpack/description)
+## [92. 背包问题（lintCode）](https://www.lintcode.com/problem/backpack/description)
 
-在n个物品中挑选若干物品装入背包，最多能装多满？假设背包的大小为m，每个物品的大小为A[i]
+在 n 个物品中挑选若干物品装入背包，最多能装多满？假设背包的大小为 m，每个物品的大小为 A[i]
 
 - 你不可以将物品进行切割
 
@@ -22,11 +22,11 @@ abbrlink: f68a53d9
 
 ```java
 样例 1:
-	输入:  [3,4,8,5], backpack size=10
-	输出:  9
+	输入：[3,4,8,5], backpack size=10
+	输出：9
 样例 2:
-	输入:  [2,3,5,7], backpack size=12
-	输出:  12
+	输入：[2,3,5,7], backpack size=12
+	输出：12
 ```
 
 **挑战**
@@ -40,7 +40,7 @@ abbrlink: f68a53d9
 记忆化递归，对于每个元素，有两种选择，装或者不装
 
 ```java
-//用Integer[][],空间会超空间。。。lintCode好严格
+//用 Integer[][], 空间会超空间。lintCode 好严格
 int [][] cache=null;    
 
 public int backPack2(int m,int[] A) {
@@ -54,22 +54,22 @@ public int backPack2(int m,int[] A) {
     return putPack(m,A,A.length-1);
 }
 
-//将A[index,A.len-1]范围内的元素装进大小为m的背包的最大收益
+//将 A[index,A.len-1] 范围内的元素装进大小为 m 的背包的最大收益
 public int putPack(int m,int[] A,int index) {
-    //index==0的时候不应该返回=0代表第一个,是可以装的
-    //对于m也是一样, 这种边界思考一下m就等于0，或者就只有一个元素，index就等于0这种特例就可以
-    //只要这种特例是正确的那么整个递归就是正确的,并不需要去思考整个递归的结束条件
+    //index==0 的时候不应该返回=0 代表第一个，是可以装的
+    //对于 m 也是一样，这种边界思考一下 m 就等于 0，或者就只有一个元素，index 就等于 0 这种特例就可以
+    //只要这种特例是正确的那么整个递归就是正确的，并不需要去思考整个递归的结束条件
     if (index<0 || m<=0) {
         return 0;
     }
     if (cache[index][m]!=-1) {
         return cache[index][m];
     }
-    //不装index位置的元素
+    //不装 index 位置的元素
     int res=putPack(m,A,index-1);
     if (A[index]<=m) {
-        //说明可以装下index位置的元素，所以我们将index位置的元素装进去试试看
-        //然后求出剩下的空间还最多能装多少，最后求是装index收益大还是不装index收益大
+        //说明可以装下 index 位置的元素，所以我们将 index 位置的元素装进去试试看
+        //然后求出剩下的空间还最多能装多少，最后求是装 index 收益大还是不装 index 收益大
         res=Math.max(res,A[index]+putPack(m-A[index],A,index-1));
     }
     cache[index][m]=res;
@@ -79,42 +79,42 @@ public int putPack(int m,int[] A,int index) {
 
 暴力递归的时间复杂度将会是`O((2^N)*N)`
 
-其实整个递归的思路是很清晰明白的，对于每个元素，有两种情况，这也是之所以称之为0-1背包的原因
+其实整个递归的思路是很清晰明白的，对于每个元素，有两种情况，这也是之所以称之为 0-1 背包的原因
 
 - 不选的话，背包的容量不变，改变为问题`putPack(m,A,index-1)`
 - 选的话，背包的容量变小，改变为问题`putPack(m-A[index],A,index-1)+A[index]`
 
 到底选还是不选，取决于两种方案哪一种更好，我们要求的，就是这个最好的方案，知道了这样的递推关系后我们就可以很容易的写出递归方程，这里在递归的过程中有可能会产生重叠的子问题（其实这里我还纠结了好一会儿，我一直感觉没有重叠的子问题，后来画一下递归树就明白了，只是重叠的不明显），所以我们可以通过缓存每次计算的结果来进行记忆化递归，整体的时间复杂度应该是`O(2^N)`，空间`O(M*N)`显然不是我们想要的结果
 
-> 这里一开始我是想用`Integer[][]`的数组，然后就不用赋初始值，判断不为null就行，结果空间溢出了。。。lintCode好严格，换成`int[][]`然后赋个初始值就过了
+> 这里一开始我是想用`Integer[][]`的数组，然后就不用赋初始值，判断不为 null 就行，结果空间溢出了。lintCode 好严格，换成`int[][]`然后赋个初始值就过了
 
 **解法二**
 
 动态规划解法，在讲解之前，我们用一个二维表来分析下整个递推的过程
 
-物品列表（样例1），因为这题价值就是重量，所以w和v是一样的
+物品列表（样例 1），因为这题价值就是重量，所以 w 和 v 是一样的
 
 ![mark](http://static.imlgw.top/blog/20200227/XIvS0eAf1FqA.png?imageslim)
 
-**DpTable（样例1）**
+**DpTable（样例 1）**
 
 ![mark](http://static.imlgw.top/blog/20200227/YkPisR3fx1wa.png?imageslim)
 
-一行一行的看，从左到右，`dp[index][m]`代表 **背包总容量不超过m的情况下，考虑装入`[0,index]`中的元素能获得最大收益**，比如`dp[1][7]`代表的就是背包总容量不超过7的情况下，考虑装入`[0,1]` 范围内的元素所能获得的最大收益，人脑思考结果自然是7了，下面我们分析下如果dp推出这个结果
+一行一行的看，从左到右，`dp[index][m]`代表 **背包总容量不超过 m 的情况下，考虑装入`[0,index]`中的元素能获得最大收益**，比如`dp[1][7]`代表的就是背包总容量不超过 7 的情况下，考虑装入`[0,1]` 范围内的元素所能获得的最大收益，人脑思考结果自然是 7 了，下面我们分析下如果 dp 推出这个结果
 
-前面我们已经分析过0-1背包的递归过程，每个元素面临两个选择，这里也一样
+前面我们已经分析过 0-1 背包的递归过程，每个元素面临两个选择，这里也一样
 
-`dp[1][7]`如果我们选择不装入当前index位置的元素的话，那么最大收益就是`dp[0][7]=3`这一点应该没啥疑问
+`dp[1][7]`如果我们选择不装入当前 index 位置的元素的话，那么最大收益就是`dp[0][7]=3`这一点应该没啥疑问
 
-如果我们考虑装入当前index位置的元素的话，m肯定会减小，那么所获得的最大收益就应该是`A[index]+dp[0][7-4]=7` 
+如果我们考虑装入当前 index 位置的元素的话，m 肯定会减小，那么所获得的最大收益就应该是`A[index]+dp[0][7-4]=7` 
 
-> 注意这里当前index的值都是依赖于上一层`index-1`的计算结果的，也就是依赖于上一次`m,[0,index-1]`最大值的结果，所以我们需要手动的初始化第一层的值）
+> 注意这里当前 index 的值都是依赖于上一层`index-1`的计算结果的，也就是依赖于上一次`m,[0,index-1]`最大值的结果，所以我们需要手动的初始化第一层的值）
 
 最后我们得到的核心状态方程就是下面这样的
 
 `dp[index][m]=max(dp[index-1][m],A[index]+dp[index-1][j-A[index]])`
 
-然后我们根据这个很容易就可以写出dp的解法
+然后我们根据这个很容易就可以写出 dp 的解法
 
 ```java
 //二维动态规划
@@ -137,7 +137,7 @@ public int backPack(int m,int[] A) {
     return dp[A.length-1][m];
 }
 ```
-当然我们肯定是不满足于这种二维的dp的，所以我们还得优化下空间，这里每一层都只依赖于上一层的结果，所以我么很容易就可以改成一维的，当然这里还有个小坑，如果直接按照上面的代码来改的话就是错的，我们先看看正确的改法
+当然我们肯定是不满足于这种二维的 dp 的，所以我们还得优化下空间，这里每一层都只依赖于上一层的结果，所以我么很容易就可以改成一维的，当然这里还有个小坑，如果直接按照上面的代码来改的话就是错的，我们先看看正确的改法
 
 ```java
 public int backPack4(int m,int[] A) {
@@ -191,9 +191,9 @@ public int backPack(int m,int[] A) {
 
 **输入格式**
 
-第一行两个整数，N，V用空格隔开，分别表示物品种数和背包容积。
+第一行两个整数，N，V 用空格隔开，分别表示物品种数和背包容积。
 
-接下来有 N 行，每行两个整数 vi,wi用空格隔开，分别表示第 i 种物品的体积和价值。
+接下来有 N 行，每行两个整数 vi,wi 用空格隔开，分别表示第 i 种物品的体积和价值。
 
 **输出格式**
 
@@ -222,7 +222,7 @@ public int backPack(int m,int[] A) {
 
 **解法一**
 
-相比01背包交换了内循环的顺序就ok了，当然也可以将每个物品拆分，不过复杂度会变高
+相比 01 背包交换了内循环的顺序就 ok 了，当然也可以将每个物品拆分，不过复杂度会变高
 
 ```java
 import java.util.*;
@@ -250,7 +250,7 @@ public class Main{
 
 给定一个只包含正整数的非空数组。是否可以将这个数组分割成两个子集，使得两个子集的元素和相等。
 
-**注意:**
+**注意：**
 
 1. 每个数组中的元素不会超过 100
 2. 数组的大小不会超过 200
@@ -258,21 +258,21 @@ public class Main{
 **示例 1:**
 
 ```java
-输入: [1, 5, 11, 5]
+输入：[1, 5, 11, 5]
 
-输出: true
+输出：true
 
-解释: 数组可以分割成 [1, 5, 5] 和 [11].
+解释：数组可以分割成 [1, 5, 5] 和 [11].
 ```
 
 **示例 2:**
 
 ```
-输入: [1, 2, 3, 5]
+输入：[1, 2, 3, 5]
 
-输出: false
+输出：false
 
-解释: 数组不能分割成两个元素和相等的子集.
+解释：数组不能分割成两个元素和相等的子集。
 ```
 
 **解法一**
@@ -280,7 +280,7 @@ public class Main{
 现在递归写起来已经有点感觉了，类似的题基本上都能写出记忆化递归的方法来
 
 ```java
-//记忆化递归37ms 44%,开始慢是因为stream的原因
+//记忆化递归 37ms 44%, 开始慢是因为 stream 的原因
 Boolean[][] cache=null;
 
 public boolean canPartition(int[] nums) {
@@ -295,7 +295,7 @@ public boolean canPartition(int[] nums) {
     return partition(nums,0,0,sum/2);
 }
 
-//尝试添加[0,index]位置的元素,看能否使得half=sum (这里其实应该直接在sum上减,看能不能减为0)
+//尝试添加 [0,index] 位置的元素，看能否使得 half=sum （这里其实应该直接在 sum 上减，看能不能减为 0)
 public boolean partition(int[] nums,int index,int half,int sum) {
     if (index==nums.length) {
         return false;
@@ -314,24 +314,24 @@ public boolean partition(int[] nums,int index,int half,int sum) {
 ```
 **解法二**
 
-动态规划，依然是典型的背包问题，可以理解为用nums中的元素，填满sum/2容量大小的背包，递推公式
+动态规划，依然是典型的背包问题，可以理解为用 nums 中的元素，填满 sum/2 容量大小的背包，递推公式
 
- `dp[i][j] =dp[i-1][j] || dp[i-1][j-nums[i]]`  选当前元素和不选当前元素，有一个能填满就ok
+ `dp[i][j] =dp[i-1][j] || dp[i-1][j-nums[i]]`  选当前元素和不选当前元素，有一个能填满就 ok
 
 `dp[i][j]` 含义为：考虑`[0,i]` 范围内的元素，能否恰好装满 `j`大小的容器
 
 ```java
-//二维dp
+//二维 dp
 public boolean canPartition(int[] nums) {
     if (nums==null || nums.length<=0) return false;
-    //int sum=Arrays.stream(nums).sum(); 用stream好慢
+    //int sum=Arrays.stream(nums).sum(); 用 stream 好慢
     int sum=0;
     for (int e:nums) sum+=e; //求和
     if (sum%2!=0) {
         return false;
     }
     int half=sum/2;
-    //dp[i][j]的含义是从[0,i]中选取元素,能否刚好填满j
+    //dp[i][j] 的含义是从 [0,i] 中选取元素，能否刚好填满 j
     boolean[][] dp=new boolean[nums.length][half+1];
     for (int j=0;j<=half;j++) {
         dp[0][j]= nums[0]==j;
@@ -359,7 +359,7 @@ public boolean canPartition(int[] nums) {
         return false;
     }
     int half=sum/2;
-    //dp[j]的含义是从[0,i]中选取元素,能否刚好填满j
+    //dp[j] 的含义是从 [0,i] 中选取元素，能否刚好填满 j
     boolean[] dp=new boolean[half+1];
     for (int j=0;j<=half;j++) {
         dp[j]= nums[0]==j;
@@ -384,32 +384,32 @@ public boolean canPartition(int[] nums) {
 **示例 1:**
 
 ```java
-输入: coins = [1, 2, 5], amount = 11
-输出: 3 
-解释: 11 = 5 + 5 + 1
+输入：coins = [1, 2, 5], amount = 11
+输出：3 
+解释：11 = 5 + 5 + 1
 ```
 
 **示例 2:**
 
 ```java
-输入: coins = [2], amount = 3
-输出: -1
+输入：coins = [2], amount = 3
+输出：-1
 ```
 
-**说明:**
+**说明：**
 你可以认为每种硬币的数量是无限的
 
 **解法一**
 
-其实就是dfs，我最开始就是写的dfs只不过时间复杂度太高，没做记忆化，这里其实一开始做了记忆化也一直没跑过，一直超时，最后给的case是6249 好像也不算很大吧，然后我后来把`fill` 填充数组删了，用Integer就跑过了。。。
+其实就是 dfs，我最开始就是写的 dfs 只不过时间复杂度太高，没做记忆化，这里其实一开始做了记忆化也一直没跑过，一直超时，最后给的 case 是 6249 好像也不算很大吧，然后我后来把`fill` 填充数组删了，用 Integer 就跑过了。
 
 ```java
-//记忆化递归AC 50%左右
+//记忆化递归 AC 50%左右
 private Integer[] cache=null;
 
 public int coinChange2(int[] coins,int amount){
     cache=new Integer[amount+1];
-    //Arrays.fill(cache,-1); 这里fill直接tle了。。。。
+    //Arrays.fill(cache,-1); 这里 fill 直接 tle 了。
     return takeCoins(coins,amount);
 }
 
@@ -435,7 +435,7 @@ public int takeCoins(int[] coins, int amount) {
 ```
 **解法二**
 
-动态规划，二维dp，注意这里其实和前面的背包问题就有区别了，这里实际上就是个`无限背包`问题，因为这里的硬币是无限的，每个面值的硬币都可以重复的选取
+动态规划，二维 dp，注意这里其实和前面的背包问题就有区别了，这里实际上就是个`无限背包`问题，因为这里的硬币是无限的，每个面值的硬币都可以重复的选取
 
 **DPTable**
 
@@ -443,14 +443,14 @@ public int takeCoins(int[] coins, int amount) {
 
 **状态定义**
 
-这里`dp[i][j]` 的含义为：**考虑`[0，i]` 范围内的元素，能凑成 `j` 所需的最少硬币数**，和之前的01背包问题状态定义没什么区别
+这里`dp[i][j]` 的含义为：**考虑`[0，i]` 范围内的元素，能凑成 `j` 所需的最少硬币数**，和之前的 01 背包问题状态定义没什么区别
 
 **状态方程**
 
 首先明确一点，这里我们对第`coins[i]`个硬币有两种选择 
 
 1. 不拿 
-2.  拿，拿1~k个(k为硬币个数的限制，这里没有限制，所以是无穷大)
+2.  拿，拿 1~k 个 (k 为硬币个数的限制，这里没有限制，所以是无穷大）
 
 进而我们可以的到状态转移的方程：
 
@@ -491,9 +491,9 @@ public int coinChange4(int[] coins,int amount){
 ```java
 public int coinChange(int[] coins,int amount){
     int[] dp=new int[amount+1];
-    //填充初始值为Integer.MAX_VALUE,代表不可达
+    //填充初始值为 Integer.MAX_VALUE, 代表不可达
     Arrays.fill(dp,Integer.MAX_VALUE);
-    dp[0]=0; //除了dp[0]
+    dp[0]=0; //除了 dp[0]
     for (int i=0;i<coins.length;i++) {
         //注意这里不能逆序！
         for (int j=coins[i];j<=amount;j++) {
@@ -512,9 +512,9 @@ public int coinChange(int[] coins,int amount){
 **示例 1:**
 
 ```java
-输入: amount = 5, coins = [1, 2, 5]
-输出: 4
-解释: 有四种方式可以凑成总金额:
+输入：amount = 5, coins = [1, 2, 5]
+输出：4
+解释：有四种方式可以凑成总金额：
 5=5
 5=2+2+1
 5=2+1+1+1
@@ -524,24 +524,24 @@ public int coinChange(int[] coins,int amount){
 **示例 2:**
 
 ```java
-输入: amount = 3, coins = [2]
-输出: 0
-解释: 只用面额2的硬币不能凑成总金额3。
+输入：amount = 3, coins = [2]
+输出：0
+解释：只用面额 2 的硬币不能凑成总金额 3。
 ```
 
 **示例 3:**
 
 ```java
-输入: amount = 10, coins = [10] 
-输出: 1
+输入：amount = 10, coins = [10] 
+输出：1
 ```
 
-**注意:**
+**注意：**
 
 你可以假设：
 
-- 0 <= amount (总金额) <= 5000
-- 1 <= coin (硬币面额) <= 5000
+- 0 <= amount （总金额） <= 5000
+- 1 <= coin （硬币面额） <= 5000
 - 硬币种类不超过 500 种
 - 结果符合 32 位符号整数
 
@@ -572,14 +572,14 @@ public int change(int amount, int[] coins) {
 ```
 **空间优化**
 
-`f(5)=f(4)+f(3)+f(0)` 突然感觉写二维的有点多余。。。这种子结构要清晰的多
+`f(5)=f(4)+f(3)+f(0)` 突然感觉写二维的有点多余。这种子结构要清晰的多
 
 ```java
-//直接理解一维dp还是不太容易,但是知道递推公式后先写个二维dp再改为一维就很容易
+//直接理解一维 dp 还是不太容易，但是知道递推公式后先写个二维 dp 再改为一维就很容易
 public int change(int amount, int[] coins) {
     int[] dp=new int[amount+1];
     dp[0]=1;
-    //这种方式相当于对dpTable从左向右,一行行的递推
+    //这种方式相当于对 dpTable 从左向右，一行行的递推
     for (int i=0;i<coins.length;i++) {
         for (int j=0;j<=amount;j++) {
             //dp[j]+= dp[j-coins[i]]:0;
@@ -597,7 +597,7 @@ public int change(int amount, int[] coins) {
 ```
 **解法二**
 
-记忆化递归，基本上dp能过得，记忆化递归一定能过，相比之下，我觉得记忆化递归会好写一些
+记忆化递归，基本上 dp 能过得，记忆化递归一定能过，相比之下，我觉得记忆化递归会好写一些
 
 ```java
 public int change(int amount, int[] coins) {
@@ -610,7 +610,7 @@ public int change(int amount, int[] coins) {
 
 Integer[][] cache=null;
 
-//[index,coins.length] 中凑成amount的方案数，考虑顺序
+//[index,coins.length] 中凑成 amount 的方案数，考虑顺序
 public int takeCoins(int amount,int[] coins,int index){
     if (index>=coins.length || amount<0) {
         return 0;
@@ -626,7 +626,7 @@ public int takeCoins(int amount,int[] coins,int index){
 ```
 ## [面试题 08.11. 硬币](https://leetcode-cn.com/problems/coin-lcci/)
 
-硬币。给定数量不限的硬币，币值为25分、10分、5分和1分，编写代码计算n分有几种表示法。(结果可能会很大，你需要将结果模上1000000007)
+硬币。给定数量不限的硬币，币值为 25 分、10 分、5 分和 1 分，编写代码计算 n 分有几种表示法。（结果可能会很大，你需要将结果模上 1000000007)
 
 **解法一**
 
@@ -636,10 +636,10 @@ public int takeCoins(int amount,int[] coins,int index){
 int mod=1000000007;
 
 public int waysToChange(int n) {
-    n/=5; //余数没有影响，都用1补
+    n/=5; //余数没有影响，都用 1 补
     int[] coins={5,2,1}; //币值也/5
     long[] dp=new long[n+1];
-    Arrays.fill(dp,1L); //排除1分的硬币，所有的面额都可以用1分的凑出来
+    Arrays.fill(dp,1L); //排除 1 分的硬币，所有的面额都可以用 1 分的凑出来
     for(int i=0;i<coins.length;i++){
         for(int j=coins[i];j<=n;j++){
             dp[j]=(dp[j]+dp[j-coins[i]])%mod;
@@ -649,13 +649,13 @@ public int waysToChange(int n) {
 }
 ```
 
-直接把时间从114ms干到了17ms，其实时间复杂度没变，但是缩小了解空间，所以整体的时间会提高很多，当然这里能缩小的原因主要还是因为题目比较特殊
+直接把时间从 114ms 干到了 17ms，其实时间复杂度没变，但是缩小了解空间，所以整体的时间会提高很多，当然这里能缩小的原因主要还是因为题目比较特殊
 
 ## [377. 组合总和 Ⅳ](https://leetcode-cn.com/problems/combination-sum-iv/)
 
 给定一个由正整数组成且不存在重复数字的数组，找出和为给定目标正整数的组合的个数。
 
-**示例:**
+**示例：**
 
 ```java
 nums = [1, 2, 3]
@@ -719,7 +719,7 @@ public int combination(int[] nums,int target){
 `f(5)=f(4)+f(3)+f(0)` 这样的
 
 ```java
-//一维dp
+//一维 dp
 public int combinationSum4(int[] nums,int target){
     int[] dp=new int[target+1];
     dp[0]=1;
@@ -732,7 +732,7 @@ public int combinationSum4(int[] nums,int target){
 }
 ```
 
-这里还是要存个疑啊，没搞明白啊，为啥交换个顺序就不一样了呢？一个是按行打表，一个是按列打表？？？还是递归好写。。。
+这里还是要存个疑啊，没搞明白啊，为啥交换个顺序就不一样了呢？一个是按行打表，一个是按列打表？？？还是递归好写。
 
 ## [494. 目标和](https://leetcode-cn.com/problems/target-sum/)
 
@@ -743,9 +743,9 @@ public int combinationSum4(int[] nums,int target){
 **示例 1:**
 
 ```java
-输入: nums: [1, 1, 1, 1, 1], S: 3
-输出: 5
-解释: 
+输入：nums: [1, 1, 1, 1, 1], S: 3
+输出：5
+解释：
 
 -1+1+1+1+1 = 3
 +1-1+1+1+1 = 3
@@ -753,14 +753,14 @@ public int combinationSum4(int[] nums,int target){
 +1+1+1-1+1 = 3
 +1+1+1+1-1 = 3
 
-一共有5种方法让最终目标和为3。
+一共有 5 种方法让最终目标和为 3。
 ```
 
-**注意:**
+**注意：**
 
-- 数组非空，且长度不会超过20。
-- 初始的数组的和不会超过1000。
-- 保证返回的最终结果能被32位整数存下
+- 数组非空，且长度不会超过 20。
+- 初始的数组的和不会超过 1000。
+- 保证返回的最终结果能被 32 位整数存下
 
 **解法一**
 
@@ -780,7 +780,7 @@ public int findTargetSumWays(int[] nums, int S) {
     for(int n:nums)sum+=n;
     if(S>sum)return 0;
     
-    //相当于平移了一下,从[-sum,sum] --> [0,2*sum]
+    //相当于平移了一下，从 [-sum,sum] --> [0,2*sum]
     cache=new Integer[nums.length][2*sum+1];
     return findTarget(nums,S,0,2*sum+1);
 }
@@ -807,16 +807,16 @@ public int findTarget(int[] nums,int S,int index,int max){
     return  temp;
 }
 ```
-这题还是挺有意思的，因为里面是有负数的，直接记忆化是不行的，需要转换一下，这里我是直接将cache数组扩大，同时保证不会有覆盖，所以直接扩大为 2sum就ok，这样整个S的范围就从`[-sum,+sum]` 变为 `[0,2sum]` 从而可以缓存所有的递归结果，其实也可以使用两个数组一个存正数，一个存负数，然后只需要符号取反就ok了，只不过占用的空间会大一点
+这题还是挺有意思的，因为里面是有负数的，直接记忆化是不行的，需要转换一下，这里我是直接将 cache 数组扩大，同时保证不会有覆盖，所以直接扩大为 2sum 就 ok，这样整个 S 的范围就从`[-sum,+sum]` 变为 `[0,2sum]` 从而可以缓存所有的递归结果，其实也可以使用两个数组一个存正数，一个存负数，然后只需要符号取反就 ok 了，只不过占用的空间会大一点
 
 **解法二**
 
-正儿八经的01背包做法
+正儿八经的 01 背包做法
 
 ```java
 public int findTargetSumWays(int[] nums, int S) {
     if(nums==null || nums.length<=0) return 0;
-    //nsum负,psum正; sum;
+    //nsum 负，psum 正；sum;
     //sum=psum+nsum;
     //S=psum-nsum;
     //(sum+S)/2 = psum
@@ -900,11 +900,11 @@ public int dfs(int[] stones,int index,int psum,int sum){
     return dp[index][psum]=min;
 }
 ```
-当我按照这个思路i写出来后发现不好改递推了😂，这个思路确实有一点点怪
+当我按照这个思路 i 写出来后发现不好改递推了😂，这个思路确实有一点点怪
 
 **解法二**
 
-正常的01背包解法，其实把上面的结论反过来就行了，既然要求一个大于等于`sum/2`的最小值，其实就是求一个小于等于`sum/2` 的最大值，这样一说就很清楚了，经典的01背包
+正常的 01 背包解法，其实把上面的结论反过来就行了，既然要求一个大于等于`sum/2`的最小值，其实就是求一个小于等于`sum/2` 的最大值，这样一说就很清楚了，经典的 01 背包
 
 ```java
 public int lastStoneWeightII(int[] stones) {
@@ -916,7 +916,7 @@ public int lastStoneWeightII(int[] stones) {
     for(int i=0;i<n;i++){
         sum+=stones[i];
     }
-    //背包容量为sum/2,求最多能装多少,经典的01背包
+    //背包容量为 sum/2, 求最多能装多少，经典的 01 背包
     int amount=sum/2;
     int[] dp=new int[amount+1];
     for (int i=0;i<stones.length;i++) {
@@ -931,7 +931,7 @@ public int lastStoneWeightII(int[] stones) {
     return sum-2*dp[amount];
 }
 ```
-这里的retrun有两种写法，推荐第二种，第一种还要判奇偶
+这里的 retrun 有两种写法，推荐第二种，第一种还要判奇偶
 
 > 拿到这题的的第一个解法其实是贪心，每次消除两个最大的，用优先队列维护石头大小
 >
@@ -949,7 +949,7 @@ public int lastStoneWeightII(int[] stones) {
 
 你的任务是使用给定的 m 个 0 和 n 个 1 ，找到能拼出存在于数组中的字符串的最大数量。每个 0 和 1 至多被使用一次。
 
-**注意:**
+**注意：**
 
 - 给定 0 和 1 的数量都不会超过 100。
 - 给定字符串数组的长度不会超过 600。
@@ -957,26 +957,26 @@ public int lastStoneWeightII(int[] stones) {
 **示例 1:**
 
 ```java
-输入: Array = {"10", "0001", "111001", "1", "0"}, m = 5, n = 3
-输出: 4
+输入：Array = {"10", "0001", "111001", "1", "0"}, m = 5, n = 3
+输出：4
 
-解释: 总共 4 个字符串可以通过 5 个 0 和 3 个 1 拼出，即 "10","0001","1","0" 。
+解释：总共 4 个字符串可以通过 5 个 0 和 3 个 1 拼出，即 "10","0001","1","0" 。
 ```
 
 **示例 2:**
 
 ```java
-输入: Array = {"10", "0", "1"}, m = 1, n = 1
-输出: 2
+输入：Array = {"10", "0", "1"}, m = 1, n = 1
+输出：2
 
-解释: 你可以拼出 "10"，但之后就没有剩余数字了。更好的选择是拼出 "0" 和 "1" 。
+解释：你可以拼出 "10"，但之后就没有剩余数字了。更好的选择是拼出 "0" 和 "1" 。
 ```
 
 **解法一**
 
-之前只用Java写了个记忆化的，补一下纯dp的
+之前只用 Java 写了个记忆化的，补一下纯 dp 的
 ```golang
-//之前只用Java写了个记忆化的，补一下纯dp的
+//之前只用 Java 写了个记忆化的，补一下纯 dp 的
 func findMaxForm(strs []string, m int, n int) int {
     var sn = len(strs)
     var dp = make([][]int, m+1)
@@ -1061,7 +1061,7 @@ public int[] count(String str){
 - 玩家需要用字母表 letters 里的字母来拼写单词表 words 中的单词。
 - 可以只使用字母表 letters 中的部分字母，但是每个字母最多被使用一次。
 - 单词表 words 中每个单词只能计分（使用）一次。
-- 根据字母得分情况表score，字母 'a', 'b', 'c', ... , 'z' 对应的得分分别为 score[0], score[1], ..., score[25]。
+- 根据字母得分情况表 score，字母 'a', 'b', 'c', ... , 'z' 对应的得分分别为 score[0], score[1], ..., score[25]。
 - 本场游戏的「得分」是指：玩家所拼写出的单词集合里包含的所有字母的得分之和
 
 **示例 1：**
@@ -1071,10 +1071,9 @@ public int[] count(String str){
 输出：23
 解释：
 字母得分为  a=1, c=9, d=5, g=3, o=2
-使用给定的字母表 letters，我们可以拼写单词 "dad" (5+1+5)和 "good" (3+2+2+5)，得分为 23 。
+使用给定的字母表 letters，我们可以拼写单词 "dad" (5+1+5) 和 "good" (3+2+2+5)，得分为 23 。
 而单词 "dad" 和 "dog" 只能得到 21 分。
 ```
-
 
 **示例 2：**
 
@@ -1086,7 +1085,6 @@ public int[] count(String str){
 使用给定的字母表 letters，我们可以组成单词 "ax" (4+5)， "bx" (4+5) 和 "cx" (4+5) ，总得分为 27 。
 单词 "xxxz" 的得分仅为 25 。
 ```
-
 
 **示例 3：**
 
@@ -1109,7 +1107,7 @@ public int[] count(String str){
 
 **解法一**
 
-看着题目就知道这题不简单😂，11.10的周赛最后一题，1ms，用01背包的思路做的，很多地方其实还没处理好
+看着题目就知道这题不简单😂，11.10 的周赛最后一题，1ms，用 01 背包的思路做的，很多地方其实还没处理好
 
 ```java
 public int maxScoreWords(String[] words, char[] letters, int[] score) {
@@ -1157,7 +1155,7 @@ public int getScore(int[] les,String word,int[] score){
 }
 ```
 
-## [HUD4501.小明系列故事——买年货（HUDOJ）](http://acm.hdu.edu.cn/showproblem.php?pid=4501)
+## [HUD4501. 小明系列故事——买年货（HUDOJ）](http://acm.hdu.edu.cn/showproblem.php?pid=4501)
 
 **Problem Description**
 
@@ -1165,9 +1163,9 @@ public int getScore(int[] les,String word,int[] score){
 
 刚到超市，小明就发现超市门口聚集一堆人。用白云女士的话说就是：“那家伙，那场面，真是人山人海，锣鼓喧天，鞭炮齐呤，红旗招展。那可真是相当的壮观啊！”。好奇的小明走过去，奋力挤过人群，发现超市门口贴了一张通知，内容如下
 
-值此新春佳节来临之际，为了回馈广大顾客的支持和厚爱，特举行春节大酬宾、优惠大放送活动。凡是都尚会员都可用会员积分兑换商品，凡是都尚会员都可**免费拿k件商品**，凡是购物顾客均有好礼相送。满100元送bla bla bla bla，满200元送bla bla bla bla bla...blablabla....
+值此新春佳节来临之际，为了回馈广大顾客的支持和厚爱，特举行春节大酬宾、优惠大放送活动。凡是都尚会员都可用会员积分兑换商品，凡是都尚会员都可**免费拿 k 件商品**，凡是购物顾客均有好礼相送。满 100 元送 bla bla bla bla，满 200 元送 bla bla bla bla bla...blablabla....
 
-还没看完通知，小明就高兴的要死，因为他就是都尚的会员啊。迫不及待的小明在超市逛了一圈发现超市里有**n件他想要的商品**。小明顺便对这n件商品打了分，表示商品的实际价值。小明发现身上带了**v1的人民币**，会员卡里面有**v2的积分**。他想知道他最多能买多大价值的商品。
+还没看完通知，小明就高兴的要死，因为他就是都尚的会员啊。迫不及待的小明在超市逛了一圈发现超市里有** n 件他想要的商品**。小明顺便对这 n 件商品打了分，表示商品的实际价值。小明发现身上带了** v1 的人民币**，会员卡里面有** v2 的积分**。他想知道他最多能买多大价值的商品。
 
 由于小明想要的商品实在太多了，他算了半天头都疼了也没算出来，所以请你这位聪明的程序员来帮帮他吧。
  
@@ -1175,8 +1173,8 @@ public int getScore(int[] les,String word,int[] score){
 **Input**
 ```go
 输入包含多组测试用例。
-每组数据的第一行是四个整数n，v1，v2，k；
-然后是n行，每行三个整数a，b，val，分别表示每个商品的价钱，兑换所需积分，实际价值。
+每组数据的第一行是四个整数 n，v1，v2，k；
+然后是 n 行，每行三个整数 a，b，val，分别表示每个商品的价钱，兑换所需积分，实际价值。
 [Technical Specification]
 1 <= n <= 100
 0 <= v1, v2 <= 100
@@ -1189,7 +1187,7 @@ Ps. 只要钱或者积分满足购买一件商品的要求，那么就可以买�
 **Output**
 ```go
 对于每组数据，输出能买的最大价值。
-详细信息见Sample。
+详细信息见 Sample。
 ```
 **Sample Input**
 
@@ -1214,15 +1212,15 @@ Ps. 只要钱或者积分满足购买一件商品的要求，那么就可以买�
 4
 ```
 Source
-2013腾讯编程马拉松初赛第〇场（3月20日）
+2013 腾讯编程马拉松初赛第〇场（3 月 20 日）
 
 **解法一**
 
-三维费用的背包，但是和前面的[474.一和零](#474-一和零)还有点不一样，三个维度的费用是无关的，而1和0中1的个数和0的个数是相关的
-> 代码使用了Petr的输入模板，自己改进了下，增加了输入结束判断，所以看起来特别长
+三维费用的背包，但是和前面的 [474. 一和零](#474-一和零)还有点不一样，三个维度的费用是无关的，而 1 和 0 中 1 的个数和 0 的个数是相关的
+> 代码使用了 Petr 的输入模板，自己改进了下，增加了输入结束判断，所以看起来特别长
 ```java
 import java.util.*;
-import java.io.*;// petr的输入模板
+import java.io.*;// petr 的输入模板
 import java.math.*; // 不是大数题可以不要这个
 
 public class Solve_HDOJ_4501 {
@@ -1245,19 +1243,19 @@ public class Solve_HDOJ_4501 {
             }
             solve(n, v1, v2, k, cost);
         }
-        //别忘了flush
+        //别忘了 flush
         out.flush();
         out.close();
     }
 
-    //因为数据量不大，就直接Scanner了
+    //因为数据量不大，就直接 Scanner 了
     public static void solve(int n, int v1, int v2, int k, int[][] cost) {
         int[][][] dp = new int[k+1][v1+1][v2+1];
         for (int i = 0; i < n; i++) {
             for (int j = k; j >= 0; j--) {
                 for (int u = v1; u >= 0; u--) {
                     for (int w = v2; w >= 0; w--) {
-                        //这里不能直接u>=cost[i][0] w >= cost[i][1]，因为积分和钱和免费拿是分开的，没有关联的
+                        //这里不能直接 u>=cost[i][0] w >= cost[i][1]，因为积分和钱和免费拿是分开的，没有关联的
                         //即使我不能免费拿，但是我能用积分拿，即使不能用积分拿，我可以用钱买
                         //dp[j][u][w] = Math.max(dp[j][u][w], dp[j-1][u-cost[i][0]][w-cost[i][1]] + cost[i][2]);
                         int ans = 0;
@@ -1278,7 +1276,6 @@ public class Solve_HDOJ_4501 {
         out.println(dp[k][v1][v2]);
     }
 }
-
 
 class InputReader {
 
@@ -1305,7 +1302,7 @@ class InputReader {
     }
 
     //有的题目不给有多少组测试用例，只能一直读，读到结尾，需要自己判断结束
-    //该函数也会读取一行，并初始化tokenizer，后序直接nextInt..等就可以读到该行
+    //该函数也会读取一行，并初始化 tokenizer，后序直接 nextInt.. 等就可以读到该行
     public boolean EOF() {
         String str = null;
         try {
@@ -1313,7 +1310,7 @@ class InputReader {
             if (str == null) {
                 return true;
             }
-            //创建tokenizer
+            //创建 tokenizer
             tokenizer = new StringTokenizer(str);
         } catch (IOException e) {
             throw new RuntimeException(e);

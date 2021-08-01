@@ -1,5 +1,5 @@
 ---
-title: Map映射结构
+title: Map 映射结构
 tags:
   - 数据结构
   - 映射
@@ -9,7 +9,7 @@ date: 2019/11/25
 abbrlink: 96f168ad
 ---
 
-## Map接口
+## Map 接口
 
 ```java
 public interface Map<K,V>{
@@ -176,7 +176,7 @@ public class BSTMap<K extends Comparable,V> implements Map<K,V>{
         root=put(root,key,value);
     }
 
-    //add元素后返回新的根节点
+    //add 元素后返回新的根节点
     private Node put(Node node,K key,V value){
         if (node == null) {
             size++;
@@ -369,7 +369,7 @@ public class HashTable<K,V>{
             newHashTable[i]=new TreeMap<>();
         }
         int oldSize=M;
-        this.M=size; //要先将M设置好,不然hash的值不对
+        this.M=size; //要先将 M 设置好，不然 hash 的值不对
         for (int i=0;i<oldSize;i++) {
             TreeMap<K,V> map=hashtable[i];
             for (K key:map.keySet()) {
@@ -400,8 +400,3 @@ public class HashTable<K,V>{
 ## 源码地址
 
 [Github](https://github.com/imlgw/LeetCode/tree/master/tree/map)
-
-
-
-
-

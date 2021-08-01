@@ -1,5 +1,5 @@
 ---
-title: Java多线程之设计模式
+title: Java 多线程之设计模式
 tags:
   - 设计模式
   - 多线程
@@ -29,7 +29,7 @@ public  abstract class Observer {
 }
 ```
 
-**观察者1**
+**观察者 1**
 
 ```java
 public class BinaryObserver extends Observer{
@@ -45,7 +45,7 @@ public class BinaryObserver extends Observer{
 }
 ```
 
-**观察者2**
+**观察者 2**
 
 ```java
 public class OctalOberver extends Observer{
@@ -161,33 +161,33 @@ public class ReadWriteLock {
 
 这个设计模式还是很重要也很常见的，`不可变`顾名思义，一个对象在被创建后对象所有的状态和属性都在其生命周期内都不会发生任何变化。
 
-> 不可变对象一定是线程安全的(里面的任何属性或者应用类型的都不能被修改)，可变对象不一定是线程安全的(SrtingBuffer)。J2EE里面，Servlet就不是线程安全的，struts1的Action也不是线程安全的。
+> 不可变对象一定是线程安全的（里面的任何属性或者应用类型的都不能被修改），可变对象不一定是线程安全的 (SrtingBuffer)。J2EE 里面，Servlet 就不是线程安全的，struts1 的 Action 也不是线程安全的。
 
 通常来说，创建不可变类原则有以下几条：
 
 ① 所有成员变量必须是`private`
 
-② 最好同时用`final`修饰(非必须)
+② 最好同时用`final`修饰（非必须）
 
 ③ 不提供能够修改原有对象状态的方法
 
-- 最常见的方式是不提供setter方法
+- 最常见的方式是不提供 setter 方法
 
 - 如果提供修改方法，需要新创建一个对象，并在新创建的对象上进行修改
 
-④ 通过构造器初始化所有成员变量，引用类型的成员变量必须进行深拷贝(deep copy)
+④ 通过构造器初始化所有成员变量，引用类型的成员变量必须进行深拷贝 (deep copy)
 
-⑤ getter方法不能对外泄露this引用以及成员变量的引用
+⑤ getter 方法不能对外泄露 this 引用以及成员变量的引用
 
-⑥ 最好不允许类被继承(非必须)
+⑥ 最好不允许类被继承（非必须）
 
-　　JDK中提供了一系列方法方便我们创建不可变集合，如：
+　　JDK 中提供了一系列方法方便我们创建不可变集合，如：
 
 `Collections.unmodifiableList(List<? extends T> list)`
 
 ```java
 final public class Person {
-    //定义成final
+    //定义成 final
     private final String name;
     private final String address;
 
@@ -228,7 +228,7 @@ public class StringTest {
         System.out.println(s1.hashCode());*/
         String s = "Hello World";
         System.out.println("s = " + s);//Hello World
-		//String类里面的char[]
+		//String 类里面的 char[]
         Field valueFieldOfString = String.class.getDeclaredField("value");
         valueFieldOfString.setAccessible(true);
 
@@ -239,7 +239,7 @@ public class StringTest {
 }
 ```
 
-## Future设计模式(异步)
+## Future 设计模式（异步）
 
 `Future`接口
 
@@ -347,17 +347,17 @@ public class SyncInvoker {
 >
 > FutureTask   ->实际执行的任务
 >
-> FutureService  ->桥接Future和FutureTask
+> FutureService  ->桥接 Future 和 FutureTask
 
-## Guarded Suspension设计模式
+## Guarded Suspension 设计模式
 
 `保护性暂挂模式`
 
-Guarded是被守护的意思。Suspension是暂停的意思，Guarded Suspension模式通过让线程等待来保证实例的安全性。
+Guarded 是被守护的意思。Suspension 是暂停的意思，Guarded Suspension 模式通过让线程等待来保证实例的安全性。
 
-> 核心思想: 如果某个线程执行特定的操作前需要满足一定的条件，则在该条件未满足时将线程暂停运行（即暂挂线程，使其处于等待（waiting）状态，直到该条件满足时才继续运行）
+> 核心思想：如果某个线程执行特定的操作前需要满足一定的条件，则在该条件未满足时将线程暂停运行（即暂挂线程，使其处于等待（waiting）状态，直到该条件满足时才继续运行）
 
-**Request对象**
+**Request 对象**
 
 ```java
 public class Request {
@@ -422,7 +422,7 @@ public class ServerThread extends Thread{
     public void run() {
         while (!closed) {
             Request request = queue.getRequest();
-            //get可能会返回null
+            //get 可能会返回 null
             if (null == request) {
                 System.out.println("Received the empty request.");
                 break;
@@ -431,7 +431,7 @@ public class ServerThread extends Thread{
             try {
                 Thread.sleep(random.nextInt(1000));
             } catch (InterruptedException e) {
-                //打断后直接return
+                //打断后直接 return
                 return;
             }
         }
@@ -485,14 +485,12 @@ public class SuspensionClient {
         new ClientThread(queue, "Shaw").start();
         ServerThread serverThread = new ServerThread(queue);
         serverThread.start();
-        //serverThread.join(); join住了后面还咋close？？？
+        //serverThread.join(); join 住了后面还咋 close？？？
         Thread.sleep(10000);
         serverThread.close();
     }
 }
 ```
-
-
 
 ## ThreadLocal
 
@@ -513,7 +511,6 @@ public class ThreadLocalSimulator<T> {
         }
     }
 
-
     public T get(){
         Thread currentThread =Thread.currentThread();
         if(threadMap.get(currentThread)==null){
@@ -528,9 +525,7 @@ public class ThreadLocalSimulator<T> {
 }
 ```
 
-
-
-## Balking设计模式
+## Balking 设计模式
 
 >核心思想：当不再适合或者没有必要进行这个操作时，就直接放弃进行这个操作而直接返回，不需要就算了
 
@@ -633,7 +628,7 @@ public class WaiterThread extends Thread {
 }
 ```
 
-## CountDown设计模式
+## CountDown 设计模式
 
 **CountDown**
 
@@ -672,9 +667,8 @@ public class JDKCountDown {
 
     private static final Random random = new Random(System.currentTimeMillis());
 
-
     public static void main(String[] args) throws InterruptedException {
-        //JDK的CountDown
+        //JDK 的 CountDown
         //final CountDownLatch latch=new CountDownLatch(5);
         final CountDown latch=new CountDown(5);
 
@@ -729,7 +723,7 @@ public class SingleGraceful {
     private SingleGraceful(){
 
     }
-    //private静态内部类
+    //private 静态内部类
     private static class InstanceHolder{
         //只会被初始化一次
         private final static SingleGraceful instance=new SingleGraceful();
@@ -741,7 +735,7 @@ public class SingleGraceful {
 }
 ```
 
-JVM只会为static变量分配一次内存，也就是只会初始化一次，而内部类不会在其外部类被加载的同时被加载，所以这也是一种很简洁很优秀的单例
+JVM 只会为 static 变量分配一次内存，也就是只会初始化一次，而内部类不会在其外部类被加载的同时被加载，所以这也是一种很简洁很优秀的单例
 
 ### Enum
 
@@ -769,10 +763,7 @@ public class SingleGraceful2 {
 ```
 
 - 枚举类构造函数是`private`类型的
-- 枚举类的域(field)(`INSTANCE`)其实是相应的enum类型(`Singleton`)的一个静态实例对象，所以只会被初始化一次，构造器也只会被调用一次
+- 枚举类的域 (field)(`INSTANCE`) 其实是相应的 enum 类型 (`Singleton`) 的一个静态实例对象，所以只会被初始化一次，构造器也只会被调用一次
 - 枚举单例可以防止`反序列化` ，`反射`，`克隆`对单例的破坏，所以是一种极其优秀的单例实现。
 
-
-
 > 这里其实还有很多没有介绍出来，设计模式这些东西没有实际的场景去用确实难以体会到它的精髓，需要慢慢的积累经验才行。
-

@@ -1,5 +1,5 @@
 ---
-title: CAS单点登陆系统Demo
+title: CAS 单点登陆系统 Demo
 tags:
   - CAS
   - SSO
@@ -9,43 +9,43 @@ date: 2018/11/17
 abbrlink: '65571397'
 ---
 ##  单点登陆系统 --CAS
-- 关于CAS的介绍网上都有。这里主要记录如何使用，如何配置和集成一些框架。
-- CAS架构图
+- 关于 CAS 的介绍网上都有。这里主要记录如何使用，如何配置和集成一些框架。
+- CAS 架构图
 ![OSS](https://imlgwpicture.oss-cn-qingdao.aliyuncs.com/blogImage/CAS.PNG)
 CAS 的 SSO 实现方式可简化理解为： 1 个 Cookie 和 N 个 Session 。 CAS Server 创建 cookie，在所有应用认证时使用，各应用通过创建各自的 Session 来标识用户是否已登录。
-用 户在一个应用验证通过后，以后用户在同一浏览器里访问此应用时，客户端应用中的过滤器会在 session 里读取到用户信息，所以就不会去 CAS Server 认证。如果在此浏览器里访问别的 web 应用时，客户端应用中的过滤器在 session 里读取不到用户信息，就会去 CAS Server 的 login 接口认证，但这时CAS Server 会读取到浏览器传来的 cookie （ TGC ），所以 CAS Server 不会要求用户去登录页面登录，只是会根据 service 参数生成一个 Ticket ，然后再和 web 应用做一个验 证 ticket 的交互而已。
+用 户在一个应用验证通过后，以后用户在同一浏览器里访问此应用时，客户端应用中的过滤器会在 session 里读取到用户信息，所以就不会去 CAS Server 认证。如果在此浏览器里访问别的 web 应用时，客户端应用中的过滤器在 session 里读取不到用户信息，就会去 CAS Server 的 login 接口认证，但这时 CAS Server 会读取到浏览器传来的 cookie （ TGC ），所以 CAS Server 不会要求用户去登录页面登录，只是会根据 service 参数生成一个 Ticket ，然后再和 web 应用做一个验 证 ticket 的交互而已。
 
-### 1. 配置CAS服务端
-从上面的架构图也可以大概知道CAS运作的方式,首先配置好CAS的Server端，直接将CAS的war包拷到tomcat的webapp目录下然后启动tomcat自动解压就可以了，这里我设置的tomcat的端口是8888，地址栏输入localhost:8888/cas能看到CAS的登陆界面说明部署成功
-*  去除https
-	CAS默认使用的是HTTPS协议，如果使用HTTPS协议需要SSL安全证书（需向特定的机构申请和购买） 。如果对安全要求不高或是在开发测试阶段，可使用HTTP协议。我们这里讲解通过修改配置，让CAS使用HTTP协议。
+### 1. 配置 CAS 服务端
+从上面的架构图也可以大概知道 CAS 运作的方式，首先配置好 CAS 的 Server 端，直接将 CAS 的 war 包拷到 tomcat 的 webapp 目录下然后启动 tomcat 自动解压就可以了，这里我设置的 tomcat 的端口是 8888，地址栏输入 localhost:8888/cas 能看到 CAS 的登陆界面说明部署成功
+*  去除 https
+	CAS 默认使用的是 HTTPS 协议，如果使用 HTTPS 协议需要 SSL 安全证书（需向特定的机构申请和购买） 。如果对安全要求不高或是在开发测试阶段，可使用 HTTP 协议。我们这里讲解通过修改配置，让 CAS 使用 HTTP 协议。
 
-	* 修改cas的WEB-INF/deployerConfigContext.xml找到下面的配置
+	* 修改 cas 的 WEB-INF/deployerConfigContext.xml 找到下面的配置
 <bean class="org.jasig.cas.authentication.handler.support.HttpBasedServiceCredentialsAuthenticationHandler"
 p:httpClient-ref="httpClient"/>
-这里需要增加参数p:requireSecure="false"，requireSecure属性意思为是否需要安全验证，即HTTPS，false为不采用
-   * 修改cas的/WEB-INF/spring-configuration/ticketGrantingTicketCookieGenerator.xml
+这里需要增加参数 p:requireSecure="false"，requireSecure 属性意思为是否需要安全验证，即 HTTPS，false 为不采用
+   * 修改 cas 的/WEB-INF/spring-configuration/ticketGrantingTicketCookieGenerator.xml
 找到下面配置
     <bean id="ticketGrantingTicketCookieGenerator" class="org.jasig.cas.web.support.CookieRetrievingCookieGenerator"
       p:cookieSecure="true"
       p:cookieMaxAge="-1"
       p:cookieName="CASTGC"
       p:cookiePath="/cas" />
-   * 参数p:cookieSecure="true"，同理为HTTPS验证相关，TRUE为采用HTTPS验证，FALSE为不采用https验证。
-参数p:cookieMaxAge="-1"，是COOKIE的最大生命周期，-1为无生命周期，即只在当前打开的窗口有效，关闭或重新打开其它窗口，仍会要求验证。可以根据需要修改为大于0的数字，比如3600等，意思是在3600秒内，打开任意窗口，都不需要验证。
+   * 参数 p:cookieSecure="true"，同理为 HTTPS 验证相关，TRUE 为采用 HTTPS 验证，FALSE 为不采用 https 验证。
+参数 p:cookieMaxAge="-1"，是 COOKIE 的最大生命周期，-1 为无生命周期，即只在当前打开的窗口有效，关闭或重新打开其它窗口，仍会要求验证。可以根据需要修改为大于 0 的数字，比如 3600 等，意思是在 3600 秒内，打开任意窗口，都不需要验证。
 		
-		我们这里将cookieSecure改为false , cookieMaxAge 改为3600
+		我们这里将 cookieSecure 改为 false , cookieMaxAge 改为 3600
 
-   * 修改cas的WEB-INF/spring-configuration/warnCookieGenerator.xml
+   * 修改 cas 的 WEB-INF/spring-configuration/warnCookieGenerator.xml
 		<bean id="warnCookieGenerator" class="org.jasig.cas.web.support.CookieRetrievingCookieGenerator"
 		p:cookieSecure="true"
 		p:cookieMaxAge="-1"
 		p:cookieName="CASPRIVACY"
 		p:cookiePath="/cas" />
-我们这里将cookieSecure改为false , cookieMaxAge 改为3600
+我们这里将 cookieSecure 改为 false , cookieMaxAge 改为 3600
 - 配置数据源
-   - cas有默认的密码但是实际中肯定是要从数据库中查的，所以我们需要配置下数据源
-   - 修改cas服务端中web-inf下deployerConfigContext.xml ，添加如下配置
+   - cas 有默认的密码但是实际中肯定是要从数据库中查的，所以我们需要配置下数据源
+   - 修改 cas 服务端中 web-inf 下 deployerConfigContext.xml ，添加如下配置
 		```java
 		<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" 
 		 p:driverClass="com.mysql.jdbc.Driver"
@@ -77,20 +77,18 @@ p:httpClient-ref="httpClient"/>
 	        </property>
 	</bean>
 	```
-	其中 <entry key-ref="primaryAuthenticationHandler" value-ref="primaryPrincipalResolver" />一句是使用固定的用户名和密码，我们在下面可以看到这两个bean ,如果我们使用数据库认证用户名和密码，需要将这句注释掉。
+	其中 <entry key-ref="primaryAuthenticationHandler" value-ref="primaryPrincipalResolver" />一句是使用固定的用户名和密码，我们在下面可以看到这两个 bean , 如果我们使用数据库认证用户名和密码，需要将这句注释掉。
 	添加下面这一句配置
 	<entry key-ref="dbAuthHandler" value-ref="primaryPrincipalResolver"/>
-  - 将三个jar包加入到cas的lib目录下
+  - 将三个 jar 包加入到 cas 的 lib 目录下
    ![oss](https://imlgwpicture.oss-cn-qingdao.aliyuncs.com/blogImage/casjar.PNG)
-	第一个和第三个大家应该很熟悉了，中间的那个是cas对jdbc的支持包
+	第一个和第三个大家应该很熟悉了，中间的那个是 cas 对 jdbc 的支持包
 	
 
-
-
 ---
-### 2. 普通的web项目集成CAS
- 普通的web项目也就是没有使用Spring之类的框架而采用web.xml配置的普通项目
-* 2.1 为了方便我这里采用maven配置，先添加相应的依赖
+### 2. 普通的 web 项目集成 CAS
+ 普通的 web 项目也就是没有使用 Spring 之类的框架而采用 web.xml 配置的普通项目
+* 2.1 为了方便我这里采用 maven 配置，先添加相应的依赖
 		
 ```java
         <!-- cas -->
@@ -106,9 +104,9 @@ p:httpClient-ref="httpClient"/>
             <scope>provided</scope>
         </dependency>
 ```
-一个是cas客户端的核心包，一个是servlet的包，因为后面会写一些jsp
-然后添加tomcat插件我设置的端口为9002
-* 2.2 因为是普通的web项目所以配置的方式主要是通过web.xml来配置，直接上配置
+一个是 cas 客户端的核心包，一个是 servlet 的包，因为后面会写一些 jsp
+然后添加 tomcat 插件我设置的端口为 9002
+* 2.2 因为是普通的 web 项目所以配置的方式主要是通过 web.xml 来配置，直接上配置
 
 	```java
 	<?xml version="1.0" encoding="UTF-8"?>
@@ -136,7 +134,7 @@ p:httpClient-ref="httpClient"/>
 	        <init-param>
 	            <param-name>casServerLoginUrl</param-name>
 	            <param-value>http://localhost:8888/cas/login</param-value>
-	            <!--这里的server是服务端的IP -->
+	            <!--这里的 server 是服务端的 IP -->
 	        </init-param>
 	        <init-param>
 	            <param-name>serverName</param-name>
@@ -147,7 +145,7 @@ p:httpClient-ref="httpClient"/>
 	        <filter-name>CASFilter</filter-name>
 	        <url-pattern>/*</url-pattern>
 	    </filter-mapping>
-	    <!-- 该过滤器负责对Ticket的校验工作，必须启用它 -->
+	    <!-- 该过滤器负责对 Ticket 的校验工作，必须启用它 -->
 	    <filter>
 	        <filter-name>CAS Validation Filter</filter-name>
 	        <filter-class>org.jasig.cas.client.validation.Cas20ProxyReceivingTicketValidationFilter</filter-class>
@@ -164,7 +162,7 @@ p:httpClient-ref="httpClient"/>
 	        <filter-name>CAS Validation Filter</filter-name>
 	        <url-pattern>/*</url-pattern>
 	    </filter-mapping>
-	    <!-- 该过滤器负责实现HttpServletRequest请求的包裹， 比如允许开发者通过HttpServletRequest的getRemoteUser()方法获得SSO登录用户的登录名，可选配置。 -->
+	    <!-- 该过滤器负责实现 HttpServletRequest 请求的包裹， 比如允许开发者通过 HttpServletRequest 的 getRemoteUser() 方法获得 SSO 登录用户的登录名，可选配置。 -->
 	    <filter>
 	        <filter-name>CAS HttpServletRequest Wrapper Filter</filter-name>
 	        <filter-class>
@@ -175,7 +173,7 @@ p:httpClient-ref="httpClient"/>
 	        <filter-name>CAS HttpServletRequest Wrapper Filter</filter-name>
 	        <url-pattern>/*</url-pattern>
 	    </filter-mapping>
-	    <!-- 该过滤器使得开发者可以通过org.jasig.cas.client.util.AssertionHolder来获取用户的登录名。 比如AssertionHolder.getAssertion().getPrincipal().getName()。 -->
+	    <!-- 该过滤器使得开发者可以通过 org.jasig.cas.client.util.AssertionHolder 来获取用户的登录名。 比如 AssertionHolder.getAssertion().getPrincipal().getName()。 -->
 	    <filter>
 	        <filter-name>CAS Assertion Thread Local Filter</filter-name>
 	        <filter-class>org.jasig.cas.client.util.AssertionThreadLocalFilter</filter-class>
@@ -188,12 +186,12 @@ p:httpClient-ref="httpClient"/>
 
 	```
 
-  * 用户认证过滤器(必选)**AuthenticationFilter**在上面的配置中需要两个参数一个是casServerLoginUrl顾名思义就是CASserver登陆的地址，比如我的是http://localhost:8888/cas/login ，第二个参数是**serverName** ,因为登陆成功后还是要返回你当前的应用所以需要将你当前的应用的地址传递给CASserver比如我的当前应用 http://localhost:9002/
-  * Ticket的校验过滤器(必选)**Cas20ProxyReceivingTicketValidationFilter** 与上面的过滤器类似也需要那两个参数，							  配置了这两个过滤器CAS就能正常运行了
+  * 用户认证过滤器（必选）**AuthenticationFilter **在上面的配置中需要两个参数一个是 casServerLoginUrl 顾名思义就是 CASserver 登陆的地址，比如我的是 http://localhost:8888/cas/login ，第二个参数是** serverName** , 因为登陆成功后还是要返回你当前的应用所以需要将你当前的应用的地址传递给 CASserver 比如我的当前应用 http://localhost:9002/
+  * Ticket 的校验过滤器（必选）**Cas20ProxyReceivingTicketValidationFilter** 与上面的过滤器类似也需要那两个参数，							  配置了这两个过滤器 CAS 就能正常运行了
   * 单点登出过滤器 **SingleSignOutFilter**，顾名思义就是用于单点登出  
   * 另外还有两个过滤器都是为了获取登陆名配置的过滤器，配置一个就行。    
 #
-* 2.3 编写index.jsp(tomcat默认打开的页面)
+* 2.3 编写 index.jsp(tomcat 默认打开的页面）
 	
 	```java
 	<%@ page language="java" contentType="text/html; charset=utf-8"
@@ -205,22 +203,22 @@ p:httpClient-ref="httpClient"/>
 	    <title>一品优购</title>
 	</head>
 	<body>
-	 采用web.xml配置的普通的web模块
+	 采用 web.xml 配置的普通的 web 模块
 	<%=request.getRemoteUser()%>
 	 <a href="http://localhost:8888/cas/logout?service=http://www.imlgw.top">退出登录</a>>
 	</body>
 	</html>
 	
 	```
-	 如果想让cas退出后跳转到指定的页面而不是CAS默认的页面也需要修改配置
-	 修改cas系统的配置文件cas-servlet.xml
+	 如果想让 cas 退出后跳转到指定的页面而不是 CAS 默认的页面也需要修改配置
+	 修改 cas 系统的配置文件 cas-servlet.xml
 	 <bean id="logoutAction" class="org.jasig.cas.web.flow.LogoutAction"
 	 p:servicesManager-ref="servicesManager"
 	 p:followServiceRedirects="${cas.logout.followServiceRedirects:true}"/>
-	将cas.logout.followServiceRedirects改为true后，可以在退出时跳转页面到目标页面
-   然后就可以启动cas和你的应用来测试了。
+	将 cas.logout.followServiceRedirects 改为 true 后，可以在退出时跳转页面到目标页面
+   然后就可以启动 cas 和你的应用来测试了。
 * 2.4 服务端界面改造
-   上面测试成功，但是真实的情况肯定不会用cas默认的那个页面做登陆需要改成你自己的登陆界面，然后你当前应用的登陆页面就没用了。
+   上面测试成功，但是真实的情况肯定不会用 cas 默认的那个页面做登陆需要改成你自己的登陆界面，然后你当前应用的登陆页面就没用了。
   
 	```java
 	<!DOCTYPE >
@@ -302,11 +300,11 @@ p:httpClient-ref="httpClient"/>
 	
 	</html>
 	```
-	可以直接将登陆的页面拷过来然后加上指令再根据cas的登陆页面稍加修改就可以了
+	可以直接将登陆的页面拷过来然后加上指令再根据 cas 的登陆页面稍加修改就可以了
 
 ---
-### 3. Spring项目集成CAS和Spring-security
-* pom依赖
+### 3. Spring 项目集成 CAS 和 Spring-security
+* pom 依赖
 	
 	```java
 	<properties>
@@ -386,8 +384,8 @@ p:httpClient-ref="httpClient"/>
 	        </dependency>
 	    </dependencies>
 	```
-	添加tomcat插件指定端口为9001
-* web.xml配置
+	添加 tomcat 插件指定端口为 9001
+* web.xml 配置
 ```java
 	<?xml version="1.0" encoding="UTF-8"?>
 	<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -416,9 +414,9 @@ p:httpClient-ref="httpClient"/>
 	
 	</web-app>
 ```
-主要配置Spring容器和Spring-security的过滤器
-- spring-security.xml配置
-  其实就是把之前配置在web.xml里面的过滤器采用Spring的方式配置出来
+主要配置 Spring 容器和 Spring-security 的过滤器
+- spring-security.xml 配置
+  其实就是把之前配置在 web.xml 里面的过滤器采用 Spring 的方式配置出来
 
 ``` java
 	<?xml version="1.0" encoding="UTF-8"?>
@@ -428,19 +426,19 @@ p:httpClient-ref="httpClient"/>
 							http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 	
 	    <http pattern="/out.html" security="none"></http>
-	    <!--   entry-point-ref  入口点引用 因为登陆交给cas或者其他的登陆系统,就不会在本系统做登陆需要指定登陆点-->
+	    <!--   entry-point-ref  入口点引用 因为登陆交给 cas 或者其他的登陆系统，就不会在本系统做登陆需要指定登陆点-->
 	    <http use-expressions="false" entry-point-ref="casProcessingFilterEntryPoint">
 	        <intercept-url pattern="/**" access="ROLE_USER"/>
 	        <csrf disabled="true"/>
-	        <!-- custom-filter为过滤器， position 表示将过滤器放在指定的位置上，before表示放在指定位置之前  ，after表示放在指定的位置之后  -->
+	        <!-- custom-filter 为过滤器， position 表示将过滤器放在指定的位置上，before 表示放在指定位置之前  ，after 表示放在指定的位置之后  -->
 	        <custom-filter ref="casAuthenticationFilter"  position="CAS_FILTER" />
 	        <custom-filter ref="requestSingleLogoutFilter" before="LOGOUT_FILTER"/>
 	        <custom-filter ref="singleLogoutFilter" before="CAS_FILTER"/>
 	    </http>
 	
-	    <!-- CAS入口点 开始 -->
+	    <!-- CAS 入口点 开始 -->
 	    <beans:bean id="casProcessingFilterEntryPoint" class="org.springframework.security.cas.web.CasAuthenticationEntryPoint">
-	        <!-- 单点登录服务器登录URL -->
+	        <!-- 单点登录服务器登录 URL -->
 	        <beans:property name="loginUrl" value="http://localhost:8888/cas/login"/>
 	        <beans:property name="serviceProperties" ref="serviceProperties"/>
 	    </beans:bean>
@@ -449,7 +447,7 @@ p:httpClient-ref="httpClient"/>
 	        <!--service 配置自身工程的根地址+/login/cas   -->
 	        <beans:property name="service" value="http://localhost:9001/login/cas"/>
 	    </beans:bean>
-	    <!-- CAS入口点 结束 -->
+	    <!-- CAS 入口点 结束 -->
 	    <!-- 认证过滤器 开始 -->
 	    <beans:bean id="casAuthenticationFilter" class="org.springframework.security.cas.web.CasAuthenticationFilter">
 	        <beans:property name="authenticationManager" ref="authenticationManager"/>
@@ -480,7 +478,6 @@ p:httpClient-ref="httpClient"/>
 	
 	    <!-- 认证过滤器 结束 -->
 	
-	
 	    <!-- 单点登出  开始  -->
 	    <beans:bean id="singleLogoutFilter" class="org.jasig.cas.client.session.SingleSignOutFilter"/>
 	    <!--关联两个地址，相当于封装了前面的地址-->
@@ -496,8 +493,8 @@ p:httpClient-ref="httpClient"/>
 	</beans:beans>
 ```
 
-- userDetailsService编写
-  这是一个认证类是属于Spring-security的，如果不使用CAS那么这个类就是用来验证密码是否正确是否放行的。但是整合了CAS后就不用在里面做认证了，只是为了返回后面的角色集合。
+- userDetailsService 编写
+  这是一个认证类是属于 Spring-security 的，如果不使用 CAS 那么这个类就是用来验证密码是否正确是否放行的。但是整合了 CAS 后就不用在里面做认证了，只是为了返回后面的角色集合。
 
 	```java
 	package top.imlgw.demo;
@@ -514,7 +511,7 @@ p:httpClient-ref="httpClient"/>
 	    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 	        System.out.println("经过认证类");
 	        List<GrantedAuthority> authorities=new ArrayList();
-	        //最开始把这里的role写错了，然后cas登陆成功后也一直被403 forbid，因为SpringSecurity认证没通过，一直没放行
+	        //最开始把这里的 role 写错了，然后 cas 登陆成功后也一直被 403 forbid，因为 SpringSecurity 认证没通过，一直没放行
 	        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 	        //不通过本项目做登陆 所以密码无所谓，在执行这个方法的时候就已经登陆成功了
 	        return new User(username,"",authorities);
@@ -525,7 +522,7 @@ p:httpClient-ref="httpClient"/>
 
 ---
 ### 4. 测试
-启动搭建好的两个服务器，和casServer，然后测试在一个应用登陆后另一个能否进入index页面 .....
+启动搭建好的两个服务器，和 casServer，然后测试在一个应用登陆后另一个能否进入 index 页面 .....
 
 ---
-SpringBoot集成CAS和Spring-security的后面再补充，因为SpringBoot还不太熟悉。
+SpringBoot 集成 CAS 和 Spring-security 的后面再补充，因为 SpringBoot 还不太熟悉。

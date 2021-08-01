@@ -1,5 +1,5 @@
 ---
-title: LeetCode栈&队列
+title: LeetCode 栈&队列
 tags:
   - LeetCode
 categories:
@@ -84,7 +84,7 @@ public boolean isValid2(String s) {
 ```
 **解法二**
 
-其实和上面的解法是一样的，只不过是用的stack是自己用数组简单封装的栈
+其实和上面的解法是一样的，只不过是用的 stack 是自己用数组简单封装的栈
 
 ```java
 public class MyStack<T>{
@@ -122,13 +122,13 @@ public class MyStack<T>{
 }
 ```
 
-3ms，94%，比之前快了一点，去看了下Stack的源码，它的pop是真的删除，我的只是移动了指针，所以效率会高很多
+3ms，94%，比之前快了一点，去看了下 Stack 的源码，它的 pop 是真的删除，我的只是移动了指针，所以效率会高很多
 
 > 后面的题可能还会利用这个`MyStack`
 
 **解法三**
 
-今天看面筋看到一个写这道题，要求O(1)的空间复杂度
+今天看面筋看到一个写这道题，要求 O(1) 的空间复杂度
 
 ```java
 public boolean isValid(String s) {
@@ -147,7 +147,7 @@ public boolean isValid(String s) {
     return "".equals(s);
 }
 ```
-100ms，效率感人，感觉应该说的是这种做法吧，当然还可以写正则表达式来匹配，但是我不太会写。。。
+100ms，效率感人，感觉应该说的是这种做法吧，当然还可以写正则表达式来匹配，但是我不太会写。
 
 ## [678. 有效的括号字符串](https://leetcode-cn.com/problems/valid-parenthesis-string/)
 
@@ -162,28 +162,25 @@ public boolean isValid(String s) {
 **示例 1:**
 
 ```java
-输入: "()"
-输出: True
+输入："()"
+输出：True
 ```
-
 
 **示例 2:**
 
 ```java
-输入: "(*)"
-输出: True
+输入："(*)"
+输出：True
 ```
-
 
 **示例 3:**
 
 ```java
-输入: "(*))"
-输出: True
+输入："(*))"
+输出：True
 ```
 
-
-**注意:**
+**注意：**
 
 1. 字符串大小将在 [1，100] 范围内。
 
@@ -222,10 +219,10 @@ public boolean checkValidString(String s) {
 }
 ```
 
-很可惜没有`bugfree`，最后对左括号的判断改了好几次，一开始写的`bracketStack.size()<=starStack().size()`  然后提交后才意识到还要 `"*("` 这样的情况，然后要消除这种情况也简单，一开始我再栈中存的就是index，从star栈里面取比bracket栈index大的，然后消除，最后再看括号栈是不是空
+很可惜没有`bugfree`，最后对左括号的判断改了好几次，一开始写的`bracketStack.size()<=starStack().size()`  然后提交后才意识到还要 `"*("` 这样的情况，然后要消除这种情况也简单，一开始我再栈中存的就是 index，从 star 栈里面取比 bracket 栈 index 大的，然后消除，最后再看括号栈是不是空
 
 ```java
-//2020.4.10重写一下
+//2020.4.10 重写一下
 public boolean checkValidString(String s) {
     Deque<Integer> stack=new ArrayDeque<>();
     Deque<Integer> helpStack=new ArrayDeque<>();
@@ -300,7 +297,7 @@ public boolean checkValidString(String s) {
 
 **解法一**
 
-没啥好说的，easy题
+没啥好说的，easy 题
 
 ```java
 public int minAddToMakeValid(String S) {
@@ -325,13 +322,13 @@ public int minAddToMakeValid(String S) {
 
 给定一个经过编码的字符串，返回它解码后的字符串。
 
-编码规则为: `k[encoded_string]`，表示其中方括号内部的 `encoded_string` 正好重复 k 次。注意 k 保证为正整数。
+编码规则为：`k[encoded_string]`，表示其中方括号内部的 `encoded_string` 正好重复 k 次。注意 k 保证为正整数。
 
 你可以认为输入字符串总是有效的；输入字符串中没有额外的空格，且输入的方括号总是符合格式要求的。
 
 此外，你可以认为原始数据不包含数字，所有的数字只表示重复的次数 k ，例如不会出现像 3a 或 2[4] 的输入。
 
-**示例:**
+**示例：**
 
 ```java
 s = "3[a]2[bc]", 返回 "aaabcbc".
@@ -348,7 +345,7 @@ public String decodeString(String s) {
     if (s==null || s.length()<=0) {
         return "";
     }
-    //转换为StringBuilder比较好处理,且效率较高
+    //转换为 StringBuilder 比较好处理，且效率较高
     StringBuilder sb=new StringBuilder(s);
     Stack<Integer>  stack=new Stack<>();
     int i=0;//遍历索引
@@ -359,16 +356,16 @@ public String decodeString(String s) {
             int left=stack.pop();//对应左括号索引
             String temp=sb.substring(left+1,i);//相邻括号中的字符
             int preInt=left;
-            //'['前的数字,一开始以为只是个位数,还是挺麻烦的
+            //'['前的数字，一开始以为只是个位数，还是挺麻烦的
             while(preInt-1>=0 && sb.charAt(preInt-1)>='0' && sb.charAt(preInt-1) <='9'){
                 preInt--;
             }
-            //repeat次数
+            //repeat 次数
             int repeat=Integer.valueOf(sb.substring(preInt,left));
             //删除 k[encoded_string] 
             sb.delete(preInt,Math.min(i+1,sb.length()));
             for (int j=0;j<repeat;j++) {
-                //从k位置重新插入字符
+                //从 k 位置重新插入字符
                 sb.insert(preInt,temp);
             }
             //重新定位索引到尾部
@@ -379,7 +376,7 @@ public String decodeString(String s) {
     return sb.toString();
 }
 ```
-一开始是想用一个额外的String来保存结果，结果发现比较麻烦，索性直接将原字符转换为StringBuilder，然后借助api直接在原字符上做改动，因为是在原字符上做改动，所以索引的变化需要额外的注意，这也是最麻烦的一点，需要停下来稍微思考下才能确定，其他的还好，正常的思路，最初WA了一发是因为忽略了前面的数字可能是多位数😂
+一开始是想用一个额外的 String 来保存结果，结果发现比较麻烦，索性直接将原字符转换为 StringBuilder，然后借助 api 直接在原字符上做改动，因为是在原字符上做改动，所以索引的变化需要额外的注意，这也是最麻烦的一点，需要停下来稍微思考下才能确定，其他的还好，正常的思路，最初 WA 了一发是因为忽略了前面的数字可能是多位数😂
 
 **解法二**
 
@@ -395,7 +392,7 @@ public String decodeString(String s) {
     String sb="";
     while(index<s.length()){
         if (s.charAt(index)==']') { //遇到右括号就结束
-            index++;//index定位到右括号下一个
+            index++;//index 定位到右括号下一个
             return sb;
         }else if(s.charAt(index)>='0' && s.charAt(index)<='9'){
             int temp=index;
@@ -415,7 +412,6 @@ public String decodeString(String s) {
     return sb;
 }
 ```
-
 
 ## [344. 反转字符串](https://leetcode-cn.com/problems/reverse-string/)
 
@@ -462,7 +458,7 @@ public void reverseString(char[] s,int l,int r) {
 
 ## [150. 逆波兰表达式求值](https://leetcode-cn.com/problems/evaluate-reverse-polish-notation/)
 
-根据[逆波兰表示法](https://baike.baidu.com/item/%E9%80%86%E6%B3%A2%E5%85%B0%E5%BC%8F/128437)，求表达式的值。
+根据 [逆波兰表示法](https://baike.baidu.com/item/%E9%80%86%E6%B3%A2%E5%85%B0%E5%BC%8F/128437)，求表达式的值。
 
 有效的运算符包括 `+, -, *, /` 。每个运算对象可以是整数，也可以是另一个逆波兰表达式
 
@@ -474,26 +470,25 @@ public void reverseString(char[] s,int l,int r) {
 **示例 1：**
 
 ```java
-输入: ["2", "1", "+", "3", "*"]
-输出: 9
-解释: ((2 + 1) * 3) = 9
+输入：["2", "1", "+", "3", "*"]
+输出：9
+解释：((2 + 1) * 3) = 9
 ```
-
 
 **示例 2：**
 
 ```java
-输入: ["4", "13", "5", "/", "+"]
-输出: 6
-解释: (4 + (13 / 5)) = 6
+输入：["4", "13", "5", "/", "+"]
+输出：6
+解释：(4 + (13 / 5)) = 6
 ```
 
 **示例 3：**
 
 ```java
-输入: ["10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"]
-输出: 22
-解释: 
+输入：["10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"]
+输出：22
+解释：
   ((10 * (6 / ((9 + 3) * -11))) + 17) + 5
 = ((10 * (6 / (12 * -11))) + 17) + 5
 = ((10 * (6 / -132)) + 17) + 5
@@ -507,7 +502,7 @@ public void reverseString(char[] s,int l,int r) {
 
 ```java
 public static int evalRPN(String[] tokens) {
-    //上面自己封装的Stack
+    //上面自己封装的 Stack
     MyStack<Integer> stack=new MyStack<>(tokens.length);
     for (int i=0;i<tokens.length;i++) {
         if("+".equals(tokens[i])){
@@ -529,13 +524,13 @@ public static int evalRPN(String[] tokens) {
     return stack.peek();
 }
 ```
-12ms，90%，其实一开始看到这个题我是拒绝的，我以为又是啥数学题，然后仔细看了下发现挺简单的，思路就是利用栈，每次遇到符号就pop两个出来进行运算，然后再入栈，值得注意的地方就是减法和除法的顺序
+12ms，90%，其实一开始看到这个题我是拒绝的，我以为又是啥数学题，然后仔细看了下发现挺简单的，思路就是利用栈，每次遇到符号就 pop 两个出来进行运算，然后再入栈，值得注意的地方就是减法和除法的顺序
 
 ## [71. 简化路径](https://leetcode-cn.com/problems/simplify-path/)
 
 以 Unix 风格给出一个文件的绝对路径，你需要简化它。或者换句话说，将其转换为规范路径。
 
-在 Unix 风格的文件系统中，一个点（.）表示当前目录本身；此外，两个点 （..） 表示将目录切换到上一级（指向父目录）；两者都可以是复杂相对路径的组成部分。更多信息请参阅：[Linux / Unix中的绝对路径 vs 相对路径](https://blog.csdn.net/u011327334/article/details/50355600)
+在 Unix 风格的文件系统中，一个点（.）表示当前目录本身；此外，两个点 （..） 表示将目录切换到上一级（指向父目录）；两者都可以是复杂相对路径的组成部分。更多信息请参阅：[Linux / Unix 中的绝对路径 vs 相对路径](https://blog.csdn.net/u011327334/article/details/50355600)
 
 请注意，返回的规范路径必须始终以斜杠 / 开头，并且两个目录名之间必须只有一个斜杠 `/`。最后一个目录名（如果存在）**不能**以 / 结尾。此外，规范路径必须是表示绝对路径的**最短**字符串
 
@@ -555,7 +550,6 @@ public static int evalRPN(String[] tokens) {
 解释：从根目录向上一级是不可行的，因为根是你可以到达的最高级。
 ```
 
-
 **示例 3：**
 
 ```java
@@ -563,7 +557,6 @@ public static int evalRPN(String[] tokens) {
 输出："/home/foo"
 解释：在规范路径中，多个连续斜杠需要用一个斜杠替换。
 ```
-
 
 **示例 4：**
 
@@ -578,7 +571,6 @@ public static int evalRPN(String[] tokens) {
 输入："/a/../../b/../c//.//"
 输出："/c"
 ```
-
 
 **示例 6：**
 
@@ -600,7 +592,7 @@ public static String simplifyPath(String path) {
             //.. 回溯
             stack.pop();
         }else if (!".".equals(s[i]) && !"".equals(s[i]) && !s[i].equals("..") ) {
-            //普通的英文字符abcd
+            //普通的英文字符 abcd
             stack.push(s[i]);
         }
     }
@@ -614,7 +606,7 @@ public static String simplifyPath(String path) {
     return res.toString();
 }
 
-//自己封装的stack
+//自己封装的 stack
 public class MyStack<T>{
 
     T [] objValues=null;
@@ -660,7 +652,7 @@ public class MyStack<T>{
     }
 }
 ```
-这题本来是很简单的，但是我钻到牛角尖去了，一直想着怎么在遍历过程中处理，写了一堆ifelse。。。还是太菜了啊，其实直接按照`"/"` 划分split字符串然后处理那个数组就可以了
+这题本来是很简单的，但是我钻到牛角尖去了，一直想着怎么在遍历过程中处理，写了一堆 ifelse。还是太菜了啊，其实直接按照`"/"` 划分 split 字符串然后处理那个数组就可以了
 
 ## [225. 用队列实现栈](https://leetcode-cn.com/problems/implement-stack-using-queues/)
 
@@ -730,17 +722,17 @@ class MyStack {
 }
 ```
 
-很巧妙的做法，将元素前n-1个出队后再重新入队，`1 2 --> 2 1` 直接将堆顶推置队列头 ，将每次新加入的元素都放置队列头而不是队尾，这样实际上就完成了逆序的操作
+很巧妙的做法，将元素前 n-1 个出队后再重新入队，`1 2 --> 2 1` 直接将堆顶推置队列头 ，将每次新加入的元素都放置队列头而不是队尾，这样实际上就完成了逆序的操作
 
-这样push压栈时间复杂度`O(N)` ，`pop/peek` 时间复杂度`O(1)`
+这样 push 压栈时间复杂度`O(N)` ，`pop/peek` 时间复杂度`O(1)`
 
 **解法二**
 
-适用于push频繁的stack
+适用于 push 频繁的 stack
 
 ```java
 public class MyStack{
-   //形式上q1是负责进栈 q2负责出栈
+   //形式上 q1 是负责进栈 q2 负责出栈
     private LinkedList inQueue=new LinkedList(); 
     private LinkedList outQueue=new LinkedList();
 
@@ -753,7 +745,7 @@ public class MyStack{
         while(inQueue.size()>1){
             outQueue.add(inQueue.poll());
         }
-        //交换q1,q2的引用
+        //交换 q1,q2 的引用
         LinkedList temp;
         temp=inQueue;
         inQueue=outQueue;
@@ -762,14 +754,14 @@ public class MyStack{
     }
 
     private Object peek(){
-        //q1 --->q2 留一个,最后一个不poll,最后poll
+        //q1 --->q2 留一个，最后一个不 poll, 最后 poll
         while(inQueue.size()>1){
             outQueue.add(inQueue.poll());
             if(inQueue.size()==1){
                 outQueue.add(inQueue.peek());
             }
         }
-        //交换q1,q2的引用
+        //交换 q1,q2 的引用
         LinkedList temp;
         temp=inQueue;
         inQueue=outQueue;
@@ -779,7 +771,7 @@ public class MyStack{
 }
 ```
 
-两个队列，push压栈时间复杂度`O(1)`，pop/push出栈时间复杂度`O(N)` ，出栈的时候将一个队列的前n-1个元素全部加入到另一个队列中作为缓存，然后将最后一个元素出栈，最后别忘了交换两个队列的引用，不然push的时候就会出问题，要保证`inQueue` 一直是入栈的队列，其中存放着所有的元素
+两个队列，push 压栈时间复杂度`O(1)`，pop/push 出栈时间复杂度`O(N)` ，出栈的时候将一个队列的前 n-1 个元素全部加入到另一个队列中作为缓存，然后将最后一个元素出栈，最后别忘了交换两个队列的引用，不然 push 的时候就会出问题，要保证`inQueue` 一直是入栈的队列，其中存放着所有的元素
 
 ## [232. 用栈实现队列](https://leetcode-cn.com/problems/implement-queue-using-stacks/)
 
@@ -854,7 +846,7 @@ class MyQueue {
 }
 ```
 
-很上面一题是姊妹题，需要注意的地方就是`s2s`的时候要确保stack2栈是空的才能push
+很上面一题是姊妹题，需要注意的地方就是`s2s`的时候要确保 stack2 栈是空的才能 push
 
 ## [155. 最小栈](https://leetcode-cn.com/problems/min-stack/)
 
@@ -868,7 +860,7 @@ class MyQueue {
 
 - getMin() -- 检索栈中的最小元素。
 
-**示例:**
+**示例：**
 
 ```java
 MinStack minStack = new MinStack();
@@ -883,7 +875,7 @@ minStack.getMin();   --> 返回 -2.
 
 **解法一**
 
-利用辅助栈，同步的push和pop
+利用辅助栈，同步的 push 和 pop
 
 ```java
 class MinStack {
@@ -948,7 +940,7 @@ class MinStack {
         if (helpStack.isEmpty()) {
             helpStack.push(x);
         }else if (x<=helpStack.peek()) {
-            //相等的也要入栈,不然不好控制后面出栈
+            //相等的也要入栈，不然不好控制后面出栈
             helpStack.push(x);
         }
     }
@@ -975,13 +967,13 @@ class MinStack {
 }
 ```
 
-其实这里有一个地方把我卡了一会儿，就是出栈的时候，我开始为了简洁if的条件写的
+其实这里有一个地方把我卡了一会儿，就是出栈的时候，我开始为了简洁 if 的条件写的
 
-`stack.pop()==helpStack.peek()` 然后卡在了一个case上，想了半天才意识到是`Integer`的问题，这里弹出来的是两个`Integer`并不会自动拆箱，而且值是不在 -128~127之间的，所以就false了
+`stack.pop()==helpStack.peek()` 然后卡在了一个 case 上，想了半天才意识到是`Integer`的问题，这里弹出来的是两个`Integer`并不会自动拆箱，而且值是不在 -128~127 之间的，所以就 false 了
 
 **解法三**
 
-帅地上看见的解法，在栈中存一个diff差值，代表当前元素和入栈前的min的差值，空间复杂度为O(1)，但是这种做法限制比较多，比如数据的大小会有限制，同时貌似也无法做`peek()`操作
+帅地上看见的解法，在栈中存一个 diff 差值，代表当前元素和入栈前的 min 的差值，空间复杂度为 O(1)，但是这种做法限制比较多，比如数据的大小会有限制，同时貌似也无法做`peek()`操作
 
 ```java
 public class MinStack155_2{
@@ -1007,7 +999,7 @@ public class MinStack155_2{
     
     public void pop() {
         int diff=stack.pop();
-        //小于等于0说明 min就是当前真实的栈顶元素,也就是说 min-minPre=diff
+        //小于等于 0 说明 min 就是当前真实的栈顶元素，也就是说 min-minPre=diff
         min=diff<=0?min-diff:min;
     }
     
@@ -1022,7 +1014,7 @@ public class MinStack155_2{
 }
 ```
 
-## [779. 第K个语法符号](https://leetcode-cn.com/problems/k-th-symbol-in-grammar/)
+## [779. 第 K 个语法符号](https://leetcode-cn.com/problems/k-th-symbol-in-grammar/)
 
 On the first row, we write a `0`. Now in every subsequent row, we look at the previous row and replace each occurrence of `0` with `01`, and each occurrence of `1` with `10`.
 
@@ -1059,15 +1051,15 @@ row 4: 01101001
 找规律，前半部分和后半部分是有一定规律的，把前六行都写出来
 
 ```java
-  第一行: 0
-  第二行: 01
-  第三行: 01|10
-  第四行: 01 10|10 01
-  第五行: 01 10 10 01|10 01 01 10
-  第六行: 01 10 10 01 10 01 01 10 | 10 01 01 10 01 10 10 01
+  第一行：0
+  第二行：01
+  第三行：01|10
+  第四行：01 10|10 01
+  第五行：01 10 10 01|10 01 01 10
+  第六行：01 10 10 01 10 01 01 10 | 10 01 01 10 01 10 10 01
 ```
 
-  N%2!=0 对称, 第K个等于 2^(N-1)-K+1
+  N%2!=0 对称，第 K 个等于 2^(N-1)-K+1
   N%2==0 互补对称
 
 ```java
@@ -1079,7 +1071,7 @@ public int kthGrammar(int N, int K) {
         return 1;
     }
     int len=1<<(N-1); //当前行长度
-    if(K>len/2){ //大于1/2
+    if(K>len/2){ //大于 1/2
         //结合上面的规律，找前半部分和自己等价的位置
         if(N%2!=0){ 
             K=len-K+1;
@@ -1096,14 +1088,14 @@ public int kthGrammar(int N, int K) {
 }
 ```
 
-时间复杂第O(N)，思路还算清晰，最开始没想到用`位运算`来算长度，用的`pow()`最后效率差不多，可能是底层做了优化。
+时间复杂第 O(N)，思路还算清晰，最开始没想到用`位运算`来算长度，用的`pow()`最后效率差不多，可能是底层做了优化。
 
 **解法二**
 
-这种解法实际上就是把整个序列看作一颗满二叉树，每个节点的值和父节点其实是有对应关系的，如果K是偶数那么就和父节点的值相反，否则就相同，所以我们可以递归的去找父节点对应的index的值。
+这种解法实际上就是把整个序列看作一颗满二叉树，每个节点的值和父节点其实是有对应关系的，如果 K 是偶数那么就和父节点的值相反，否则就相同，所以我们可以递归的去找父节点对应的 index 的值。
 
 ```java
-//01排列
+//01 排列
 //              0
 //          /        \   
 //      0                1
@@ -1112,10 +1104,9 @@ public int kthGrammar(int N, int K) {
 // / \     /  \     /  \    / \ 
 //0   1   1    0   1    0  0   1
 
-
 public int kthGrammar(int N, int K) {
     if (K==1) return 0;
-    //(K+1)/2是对应父节点的index
+    //(K+1)/2 是对应父节点的 index
     int parent=kthGrammar(N-1,(K+1)/2);
     //取反
     int f_parent=-(parent-1);
@@ -1129,7 +1120,7 @@ public int kthGrammar(int N, int K) {
 
 **解法三**
 
-这个解法其实和上面的思路是一样的，都是利用父节点和K的奇偶来判断，其实仔细看上面的代码你会发现N其实并没有实际的意义，具体K的值只和K本身有关，下面的解法就没有用到N.
+这个解法其实和上面的思路是一样的，都是利用父节点和 K 的奇偶来判断，其实仔细看上面的代码你会发现 N 其实并没有实际的意义，具体 K 的值只和 K 本身有关，下面的解法就没有用到 N.
 
 ```java
 public static int kthGrammar3(int N, int K) {
@@ -1145,8 +1136,7 @@ public static int kthGrammar3(int N, int K) {
     return r?1:0;
 }
 ```
-这题其实还有一种解法，利用二进制，对K做奇偶检验，貌似时间复杂度是O(1)。
-
+这题其实还有一种解法，利用二进制，对 K 做奇偶检验，貌似时间复杂度是 O(1)。
 
 ## [50. Pow(x, n)](https://leetcode-cn.com/problems/powx-n/)
 
@@ -1173,9 +1163,9 @@ public static double fastPow(double x,int n){
 }
 ```
 
-核心思想就是 `x^n=(x^2/n)^2`，常规累乘的方式计算时间复杂度是O(N)因为要遍历所有的元素，但是其实知道了`x^n/2`之后 `x^n`就可以直接平方得到了不用继续遍历，整体时间复杂度为O(logN) 
+核心思想就是 `x^n=(x^2/n)^2`，常规累乘的方式计算时间复杂度是 O(N) 因为要遍历所有的元素，但是其实知道了`x^n/2`之后 `x^n`就可以直接平方得到了不用继续遍历，整体时间复杂度为 O(logN) 
 
-2019.8.20，又写了一遍，提交然后没过。看了下给的测试用例，最后一个给的n是 `-2^31` 也就是int整数的最小值，int类型的取值范围是 `-2^31 ~ 2^31-1` 而这个负值在这里取反之后会直接溢出最后得到的还是 `-2^31` ，所以这里这样写 if会执行两次，x就又会变回来，所以结果直接就是`Infinity`无穷大了，所以为了保证if只会执行一次可以将其封装一下
+2019.8.20，又写了一遍，提交然后没过。看了下给的测试用例，最后一个给的 n 是 `-2^31` 也就是 int 整数的最小值，int 类型的取值范围是 `-2^31 ~ 2^31-1` 而这个负值在这里取反之后会直接溢出最后得到的还是 `-2^31` ，所以这里这样写 if 会执行两次，x 就又会变回来，所以结果直接就是`Infinity`无穷大了，所以为了保证 if 只会执行一次可以将其封装一下
 
 ```java
 public static double myPow(double x, int n) {
@@ -1236,7 +1226,7 @@ public static double fastPow(double x,int n){
 
 **解法一**
 
-19.10.13的周赛的第1题，果然比赛和刷题还是不一样，差点没做出来。。。
+19.10.13 的周赛的第 1 题，果然比赛和刷题还是不一样，差点没做出来。
 
 ```java
 public static int balancedStringSplit(String s) {
@@ -1267,7 +1257,7 @@ public static int balancedStringSplit(String s) {
 
 给你一个由 '('、')' 和小写字母组成的字符串 s。
 
-你需要从字符串中删除最少数目的 '(' 或者 ')' （可以删除任意位置的括号)，使得剩下的「括号字符串」有效。
+你需要从字符串中删除最少数目的 '(' 或者 ')' （可以删除任意位置的括号），使得剩下的「括号字符串」有效。
 
 请返回任意一个合法字符串。
 
@@ -1285,14 +1275,12 @@ public static int balancedStringSplit(String s) {
 解释："lee(t(co)de)" , "lee(t(c)ode)" 也是一个可行答案。
 ```
 
-
 **示例 2：**
 
 ```java
 输入：s = "a)b(c)d"
 输出："ab(c)d"
 ```
-
 
 **示例 3：**
 
@@ -1301,7 +1289,6 @@ public static int balancedStringSplit(String s) {
 输出：""
 解释：空字符串也是有效的
 ```
-
 
 **示例 4：**
 
@@ -1317,7 +1304,7 @@ public static int balancedStringSplit(String s) {
 
 **解法一**
 
-11.3周赛第三题，这题倒是没什么障碍，用栈就ok，不过我这里实现的不太好，replace时间复杂度略高，应该用一个数组做mark最后用StringBuilder做append应该效率会高很多
+11.3 周赛第三题，这题倒是没什么障碍，用栈就 ok，不过我这里实现的不太好，replace 时间复杂度略高，应该用一个数组做 mark 最后用 StringBuilder 做 append 应该效率会高很多
 
 ```java
 public String minRemoveToMakeValid(String s) {
@@ -1362,7 +1349,6 @@ public String minRemoveToMakeValid(String s) {
 输出： 1
 ```
 
-
 **示例 2：**
 
 ```java
@@ -1370,14 +1356,12 @@ public String minRemoveToMakeValid(String s) {
 输出： 2
 ```
 
-
 **示例 3：**
 
 ```java
 输入： "()()"
 输出： 2
 ```
-
 
 **示例 4：**
 
@@ -1400,7 +1384,7 @@ public int scoreOfParentheses(String S) {
         if(S.charAt(i)=='('){
             stack.push(-11111);
         }else{
-            //遇到右括号,下面的分支都是处理 ")"
+            //遇到右括号，下面的分支都是处理 ")"
             int top=stack.peek();
             if(top == -11111){ //栈顶是左括号，将 ( --> 1
                 stack.pop();
@@ -1409,7 +1393,7 @@ public int scoreOfParentheses(String S) {
                 int sum=0; //遇到数值了
                 while(!stack.isEmpty()){
                     int temp=stack.pop();
-                    //弹出去,直到遇到 "("就*2,其实就是把"(1"-->2
+                    //弹出去，直到遇到 "("就* 2, 其实就是把"(1"-->2
                     if(temp==-11111){ 
                         sum*=2;
                         break;
@@ -1437,7 +1421,7 @@ public int scoreOfParentheses(String S) {
     int k=0,res=1;
     for (int i=0;i<S.length();i++) {
         if (S.charAt(i)=='(') {
-            k++; //k用来计算括号的深度
+            k++; //k 用来计算括号的深度
         }else{
             k--;
             if (S.charAt(i-1)=='(') {
@@ -1480,7 +1464,7 @@ push(5), pop() -> 5, pop() -> 3, pop() -> 2, pop() -> 1
 
 **解法一**
 
-直接用栈模拟，可惜没有bugfree...
+直接用栈模拟，可惜没有 bugfree...
 
 ```java
 public boolean validateStackSequences(int[] pushed, int[] popped) {
@@ -1501,17 +1485,17 @@ public boolean validateStackSequences(int[] pushed, int[] popped) {
     return stack.isEmpty();
 }
 ```
-每进一个元素就判断栈顶和出栈顺序的头是否相等，然后出栈，最后看栈中是否为空就ok
+每进一个元素就判断栈顶和出栈顺序的头是否相等，然后出栈，最后看栈中是否为空就 ok
 
-## [NC560.打字](https://www.nowcoder.com/practice/7819ebf1369044e5bee2f9848d9c6c72)
+## [NC560. 打字](https://www.nowcoder.com/practice/7819ebf1369044e5bee2f9848d9c6c72)
 
-牛妹在练习打字，现在按照时间顺序给出牛妹按下的键（以字符串形式给出,'<'代表回退backspace，其余字符均是牛妹打的字符，字符只包含小写字母与'<'），牛妹想知道最后在屏幕上显示的文本内容是什么。
-在文本内容为空的时候也可以按回退backspace（在这种情况下没有任何效果）。
-**示例1**
+牛妹在练习打字，现在按照时间顺序给出牛妹按下的键（以字符串形式给出，'<'代表回退 backspace，其余字符均是牛妹打的字符，字符只包含小写字母与'<'），牛妹想知道最后在屏幕上显示的文本内容是什么。
+在文本内容为空的时候也可以按回退 backspace（在这种情况下没有任何效果）。
+**示例 1**
 ```go
-输入: "acv<"
-输出: "ac"
-说明:
+输入："acv<"
+输出："ac"
+说明：
 牛妹在打完"acv"之后按了回退，所以最后是"ac"
 ```
 **解法一**
@@ -1539,7 +1523,7 @@ public String Typing (String s) {
 }
 ```
 
-## _BFS广搜_
+## _BFS 广搜_
 
 ## [279. 完全平方数](https://leetcode-cn.com/problems/perfect-squares/)
 
@@ -1548,23 +1532,22 @@ public String Typing (String s) {
 **示例 1:**
 
 ```java
-输入: n = 12
-输出: 3 
-解释: 12 = 4 + 4 + 4.
+输入：n = 12
+输出：3 
+解释：12 = 4 + 4 + 4.
 ```
-
 
 **示例 2:**
 
 ```java
-输入: n = 13
-输出: 2
-解释: 13 = 4 + 9.
+输入：n = 13
+输出：2
+解释：13 = 4 + 9.
 ```
 
 **解法一**
 
-这题在上一篇[dp专题](http://imlgw.top/2019/09/01/leetcode-dong-tai-gui-hua/)中有讲过，不过是dp的解法，这里主要记录BFS的解法
+这题在上一篇 [dp 专题](http://imlgw.top/2019/09/01/leetcode-dong-tai-gui-hua/) 中有讲过，不过是 dp 的解法，这里主要记录 BFS 的解法
 
 ```java
 public static int numSquares2(int n) {
@@ -1576,7 +1559,7 @@ public static int numSquares2(int n) {
         Pair pair=queue.poll();
         int num=pair.num;
         int step=pair.step;
-        //nums=0说明找到了，并且一定是最短的
+        //nums=0 说明找到了，并且一定是最短的
         if (num==0) {
             return step;
         }
@@ -1601,7 +1584,7 @@ static class Pair{
     }
 }
 ```
-30ms 90%，比dp的方式会快很多，思路就是将这个问题转换为求图的最短路径的问题，找到一个最短的从n到0的以平方数为差的路径
+30ms 90%，比 dp 的方式会快很多，思路就是将这个问题转换为求图的最短路径的问题，找到一个最短的从 n 到 0 的以平方数为差的路径
 
 ## [127. 单词接龙](https://leetcode-cn.com/problems/word-ladder/)
 
@@ -1647,7 +1630,7 @@ Explanation: The endWord "cog" is not in wordList, therefore no possible transfo
 
 **解法一**
 
-这题其实很久以前就写过了，当时是看了啊哈算法的一些BFS算法然后仿照书上的写的，书上是C语言写的，所以最后我写的时候也按照C的格式去写了😅，写的贼啰嗦，现在又用"Java"的方式又重新写了一遍
+这题其实很久以前就写过了，当时是看了啊哈算法的一些 BFS 算法然后仿照书上的写的，书上是 C 语言写的，所以最后我写的时候也按照 C 的格式去写了😅，写的贼啰嗦，现在又用"Java"的方式又重新写了一遍
 
 ```java
 private static int[] mark;
@@ -1677,7 +1660,7 @@ public int ladderLength(String beginWord, String endWord, List<String> wordList)
         for (int i = 0; i < wordList.size(); i++) {
             if (mark[i] == 0 && cmp(wordList.get(i), que[head].word)) {
                 que[tail].word = wordList.get(i);
-                //这里是从head开始的，所以应该是head的步数+1
+                //这里是从 head 开始的，所以应该是 head 的步数+1
                 que[tail].step=que[head].step+1;
                 // 标记为已经走过
                 mark[i] = 1;
@@ -1716,13 +1699,13 @@ class Que {
     int step;
 }
 ```
-这就是当时写的解法，思路就是BFS，只不过写的复杂了
+这就是当时写的解法，思路就是 BFS，只不过写的复杂了
 
 **解法二**
 
 ```java
 public int ladderLength(String beginWord, String endWord, List<String> wordList)     {
-    //visit数组
+    //visit 数组
     boolean[] visit=new boolean[wordList.size()];
     if (!wordList.contains(endWord)) {
         return 0;
@@ -1733,7 +1716,7 @@ public int ladderLength(String beginWord, String endWord, List<String> wordList)
     //int flag=0;
     while (!queue.isEmpty()) {
         Pair pair=queue.poll();
-        // 统计最小步数,放在内循环中会快一点
+        // 统计最小步数，放在内循环中会快一点
         /*if (pair.word.equals(endWord)) {
             return pair.step;
         }*/
@@ -1741,7 +1724,7 @@ public int ladderLength(String beginWord, String endWord, List<String> wordList)
         for (int i = 0; i < wordList.size(); i++) {
             if (!visit[i] && cmp(wordList.get(i),pair.word)) {
                 if (wordList.get(i).equals(endWord)) {
-                    //这里加1 是因为取的是pair的step
+                    //这里加 1 是因为取的是 pair 的 step
                     //到当前这个单词还要多走一步
                     return pair.step+1;
                 }
@@ -1778,9 +1761,9 @@ class Pair {
     }
 }
 ```
-273ms，47%中规中矩的做法，连续写了好几题BFS的，总算是对BFS的板子有点熟悉了，这题还有两个可以优化的点 ① _双端BFS_ ② _寻找下一个字符串的方式_，只不过我没咋看懂，等看懂了再来补充，那种方式时间好像可以缩减到 20ms内.....
+273ms，47%中规中矩的做法，连续写了好几题 BFS 的，总算是对 BFS 的板子有点熟悉了，这题还有两个可以优化的点 ① _双端 BFS_ ② _寻找下一个字符串的方式_，只不过我没咋看懂，等看懂了再来补充，那种方式时间好像可以缩减到 20ms 内。....
 
-> 这题有个困难版本，需要打印出所有的最短序列，这个在我很久之前的一篇文章中也有讲，但是至今我也还没有AC，一直是TLE，现在回头看我之前的代码已经看不懂了。。。写了100多行，略复杂BFS+DFS的做法，可能是没处理好所以TLE了，感兴趣可以看看[那篇文章](http://imlgw.top/2018/10/31/yi-dao-leetcode-yin-fa-de-can-an/#2-%E5%8A%A0%E5%BC%BA%E7%89%88-%E5%8D%95%E8%AF%8D%E6%8E%A5%E9%BE%99-2)
+> 这题有个困难版本，需要打印出所有的最短序列，这个在我很久之前的一篇文章中也有讲，但是至今我也还没有 AC，一直是 TLE，现在回头看我之前的代码已经看不懂了。写了 100 多行，略复杂 BFS+DFS 的做法，可能是没处理好所以 TLE 了，感兴趣可以看看 [那篇文章](http://imlgw.top/2018/10/31/yi-dao-leetcode-yin-fa-de-can-an/#2-%E5%8A%A0%E5%BC%BA%E7%89%88-%E5%8D%95%E8%AF%8D%E6%8E%A5%E9%BE%99-2)
 
 ## [542. 01 矩阵](https://leetcode-cn.com/problems/01-matrix/)
 
@@ -1789,7 +1772,7 @@ class Pair {
 两个相邻元素间的距离为 1 
 
 **示例 1:**
-输入:
+输入：
 
 ```java
 0 0 0
@@ -1797,7 +1780,7 @@ class Pair {
 0 0 0
 ```
 
-输出:
+输出：
 
 ```java
 0 0 0
@@ -1806,7 +1789,7 @@ class Pair {
 ```
 
 **示例 2:**
-输入:
+输入：
 
 ```java
 0 0 0
@@ -1814,8 +1797,7 @@ class Pair {
 1 1 1
 ```
 
-
-输出:
+输出：
 
 ```java
 0 0 0
@@ -1823,19 +1805,18 @@ class Pair {
 1 2 1
 ```
 
-
-**注意:**
+**注意：**
 
 - 给定矩阵的元素个数不超过 10000
 - 给定矩阵中至少有一个元素是 0
-- 矩阵中的元素只在四个方向上相邻: 上、下、左、右
+- 矩阵中的元素只在四个方向上相邻：上、下、左、右
 
 **解法一**
 
-憨憨的BFS解法
+憨憨的 BFS 解法
 
 ```java
-//遍历每一个1,BFS寻找离他最近的0,一次只能确定一个1,效率略低
+//遍历每一个 1,BFS 寻找离他最近的 0, 一次只能确定一个 1, 效率略低
 public int[][] updateMatrix(int[][] matrix) {
     if (matrix == null || matrix.length <=0 || matrix[0].length <=0) {
         return new int[][]{};
@@ -1871,7 +1852,7 @@ public int findMinDis(int[][] matrix,int x,int y){
             }
         }
     }
-    return -1; //题目说了一定有0,所以不会走到这里
+    return -1; //题目说了一定有 0, 所以不会走到这里
 }
 
 public boolean isValid(int[][] matrix,int x,int y){
@@ -1889,17 +1870,17 @@ class Pair{
     }
 }
 ```
-可以看到代码中有很明显的改动痕迹，最开始是用visit数组保证每一个元素只会进队列一次，不会重复的进队列，但是这里为什么我去掉了呢？
+可以看到代码中有很明显的改动痕迹，最开始是用 visit 数组保证每一个元素只会进队列一次，不会重复的进队列，但是这里为什么我去掉了呢？
 
-其实主要是一开始提交的解法超时了，把visit数组去掉就过了，在数组过大的时候每次BFS都要开辟一个matrix大小的boolean数组，这无疑会极其耗费时间，但是为什么不加visit数组不会死循环呢？
+其实主要是一开始提交的解法超时了，把 visit 数组去掉就过了，在数组过大的时候每次 BFS 都要开辟一个 matrix 大小的 boolean 数组，这无疑会极其耗费时间，但是为什么不加 visit 数组不会死循环呢？
 
-确实，如果不加visit数组那么确实是有可能会导致死循环的，两个节点互相重复添加对方，但是这一题有个很关键的地方，题目说明了一定会有0，也就是说一定会解，那么就不会死循环，举一个很简单的例子
+确实，如果不加 visit 数组那么确实是有可能会导致死循环的，两个节点互相重复添加对方，但是这一题有个很关键的地方，题目说明了一定会有 0，也就是说一定会解，那么就不会死循环，举一个很简单的例子
 
-`【0，1，1】` 这里我们先考虑中间的1，然后我们按照下右上左的顺序去添加周围的节点，那么队列中就为末尾的`[1]` ，当遍历到右的时候发现是0，直接return，然后我们考虑下一个1，转了一圈队列中只有一个中间的`[1]` ， 然后我们又重复刚刚的步骤会将末尾的1又加入队列，但是下一次遍历就会找到最左边的0，然后返回，所以并不会死循环，当然这样做的前提是一定要有解！
+`【0，1，1】` 这里我们先考虑中间的 1，然后我们按照下右上左的顺序去添加周围的节点，那么队列中就为末尾的`[1]` ，当遍历到右的时候发现是 0，直接 return，然后我们考虑下一个 1，转了一圈队列中只有一个中间的`[1]` ， 然后我们又重复刚刚的步骤会将末尾的 1 又加入队列，但是下一次遍历就会找到最左边的 0，然后返回，所以并不会死循环，当然这样做的前提是一定要有解！
 
 **解法二**
 
-另一种更好的做法，以0作为源，向四周BFS，同时更新周围的1的值
+另一种更好的做法，以 0 作为源，向四周 BFS，同时更新周围的 1 的值
 
 ```java
 //update: 2020.4.15
@@ -1949,13 +1930,13 @@ class Pair{
 }
 ```
 
-核心思想就是 把所有1都置为最大值, 把所有为0的位置加入队列中, 每次从队列中poll 一个节点, 更新其四周的节点, ~~如果被更新的节点距离变小了就将其也加入队列准备更新其邻接点~~ step是递增的，第一次遇到的一定是最近的
+核心思想就是 把所有 1 都置为最大值，把所有为 0 的位置加入队列中，每次从队列中 poll 一个节点，更新其四周的节点，~~如果被更新的节点距离变小了就将其也加入队列准备更新其邻接点~~ step 是递增的，第一次遇到的一定是最近的
 
-多源BFS，参考下面的 [994. 腐烂的橘子]()  和 [1162. 地图分析]()
+多源 BFS，参考下面的 [994. 腐烂的橘子]()  和 [1162. 地图分析]()
 
 **解法三**
 
-> 这题的最优解应该是动态规划的解法，我实在是懒得写（菜），其实和哪个 不同路径有点类似，每个1离他最近的0的距离其实就是它周围的元素离0最近的距离+1
+> 这题的最优解应该是动态规划的解法，我实在是懒得写（菜），其实和哪个 不同路径有点类似，每个 1 离他最近的 0 的距离其实就是它周围的元素离 0 最近的距离+1
 >
 > 也就是 `matrix[i][j] =min(dp[i][j-1],dp[i-1][j],dp[i+1][j],dp[i][j+1]) + 1` 但是我们不可能同时求出是个方向的最小值，所以我们需要两次遍历，第一遍从左上到右下，第二遍从右下到左上，两次遍历就可以确定每个节点的值，代码以后有时间再来写
 
@@ -1977,7 +1958,6 @@ class Pair{
 下标 5 -> 下标 4 -> 下标 1 -> 下标 3 
 下标 5 -> 下标 6 -> 下标 4 -> 下标 1 -> 下标 3 
 ```
-
 
 **示例 2：**
 
@@ -2005,7 +1985,7 @@ class Pair{
 
 **解法一**
 
-BFS，某次周赛的第3题，还是挺简单的，可惜那次没参加
+BFS，某次周赛的第 3 题，还是挺简单的，可惜那次没参加
 
 ```java
 public boolean canReach(int[] arr, int start) {
@@ -2033,7 +2013,7 @@ public boolean canReach(int[] arr, int start) {
 
 **解法二**
 
-DFS解法，没啥好说的
+DFS 解法，没啥好说的
 
 ```java
 public boolean canReach(int[] arr,int start){
@@ -2085,7 +2065,6 @@ public boolean dfs(int[] arr,int index,boolean[] visit){
 解释：一开始就在最后一个元素处，所以你不需要跳跃。
 ```
 
-
 **示例 3：**
 
 ```java
@@ -2094,14 +2073,12 @@ public boolean dfs(int[] arr,int index,boolean[] visit){
 解释：你可以直接从下标 0 处跳到下标 7 处，也就是数组的最后一个元素处。
 ```
 
-
 **示例 4：**
 
 ```java
 输入：arr = [6,1,9]
 输出：2
 ```
-
 
 **示例 5：**
 
@@ -2117,7 +2094,7 @@ public boolean dfs(int[] arr,int index,boolean[] visit){
 
 **解法一**
 
-19双周赛的最后一题，讲道理挺简单的（可我还是TLE了好长时间）
+19 双周赛的最后一题，讲道理挺简单的（可我还是 TLE 了好长时间）
 
 ```java
 public int minJumps(int[] arr) {
@@ -2168,34 +2145,33 @@ class Pair{
 }
 ```
 
-看一下数据范围，直接BFS遍历跳同值的肯定不行，所以想到了用map预处理同值的索引，结果还是TLE了，后面一个case有50000个7，这里即使做了map索引但是无奈太多了，依然会超时，这里其实这么多7，只有头和尾的7是用的，其他位置的7都是无用的，可以直接忽略，所以构建索引的时候可以跳过这些中间位置，这样可以节省很多时间
+看一下数据范围，直接 BFS 遍历跳同值的肯定不行，所以想到了用 map 预处理同值的索引，结果还是 TLE 了，后面一个 case 有 50000 个 7，这里即使做了 map 索引但是无奈太多了，依然会超时，这里其实这么多 7，只有头和尾的 7 是用的，其他位置的 7 都是无用的，可以直接忽略，所以构建索引的时候可以跳过这些中间位置，这样可以节省很多时间
 
 ## [690. 员工的重要性](https://leetcode-cn.com/problems/employee-importance/)
 
-给定一个保存员工信息的数据结构，它包含了员工唯一的id，重要度 和 直系下属的id。
+给定一个保存员工信息的数据结构，它包含了员工唯一的 id，重要度 和 直系下属的 id。
 
-比如，员工1是员工2的领导，员工2是员工3的领导。他们相应的重要度为15, 10, 5。那么员工1的数据结构是[1, 15, [2]]，员工2的数据结构是[2, 10, [3]]，员工3的数据结构是[3, 5, []]。注意虽然员工3也是员工1的一个下属，但是由于并不是直系下属，因此没有体现在员工1的数据结构中。
+比如，员工 1 是员工 2 的领导，员工 2 是员工 3 的领导。他们相应的重要度为 15, 10, 5。那么员工 1 的数据结构是 [1, 15, [2]]，员工 2 的数据结构是 [2, 10, [3]]，员工 3 的数据结构是 [3, 5, []]。注意虽然员工 3 也是员工 1 的一个下属，但是由于并不是直系下属，因此没有体现在员工 1 的数据结构中。
 
-现在输入一个公司的所有员工信息，以及单个员工id，返回这个员工和他所有下属的重要度之和。
+现在输入一个公司的所有员工信息，以及单个员工 id，返回这个员工和他所有下属的重要度之和。
 
 **示例 1:**
 
 ```java
-输入: [[1, 5, [2, 3]], [2, 3, []], [3, 3, []]], 1
-输出: 11
-解释:
-员工1自身的重要度是5，他有两个直系下属2和3，而且2和3的重要度均为3。因此员工1的总重要度是 5 + 3 + 3 = 11。
+输入：[[1, 5, [2, 3]], [2, 3, []], [3, 3, []]], 1
+输出：11
+解释：
+员工 1 自身的重要度是 5，他有两个直系下属 2 和 3，而且 2 和 3 的重要度均为 3。因此员工 1 的总重要度是 5 + 3 + 3 = 11。
 ```
 
-
-**注意:**
+**注意：**
 
 1. 一个员工最多有一个直系领导，但是可以有多个直系下属
-2. 员工数量不超过2000。
+2. 员工数量不超过 2000。
 
 **解法一**
 
-BFS，没啥好说的，憨憨题直接bugfree
+BFS，没啥好说的，憨憨题直接 bugfree
 
 ```java
 public int getImportance(List<Employee> employees, int id) {
@@ -2292,15 +2268,15 @@ C -> 2
 
 **解法一**
 
-170周赛的第三题，其实是一道水题，题目意思搞清楚就很简单了
+170 周赛的第三题，其实是一道水题，题目意思搞清楚就很简单了
 
 ```java
 public List<String> watchedVideosByFriends(List<List<String>> watchedVideos, int[][] friends, int id, int level) {
     Queue<Integer> queue=new LinkedList<>();
-    int[] levels=new int[friends.length]; //这里没必要,这里用一个变量就ok了
+    int[] levels=new int[friends.length]; //这里没必要，这里用一个变量就 ok 了
     boolean[] visit=new boolean[friends.length];
     HashMap<String,Integer> map=new HashMap<>();
-    List<Integer> flist=new ArrayList<>(); //level层的朋友
+    List<Integer> flist=new ArrayList<>(); //level 层的朋友
     queue.add(id);
     visit[id]=true;
     while(!queue.isEmpty()){
@@ -2320,7 +2296,7 @@ public List<String> watchedVideosByFriends(List<List<String>> watchedVideos, int
     for (int i=0;i<flist.size();i++) {
         List<String> videos=watchedVideos.get(flist.get(i));
         for (String v:videos) {
-            map.put(v,map.getOrDefault(v,0)+1); //map记录videos出现的次数
+            map.put(v,map.getOrDefault(v,0)+1); //map 记录 videos 出现的次数
         }
     }
     //下面几步还是挺老道的
@@ -2342,25 +2318,25 @@ public List<String> watchedVideosByFriends(List<List<String>> watchedVideos, int
 
 ```java
 给定 a / b = 2.0, b / c = 3.0
-问题: a / c = ?, b / a = ?, a / e = ?, a / a = ?, x / x = ? 
+问题：a / c = ?, b / a = ?, a / e = ?, a / a = ?, x / x = ? 
 返回 [6.0, 0.5, -1.0, 1.0, -1.0 ]
 ```
 
-输入为: `vector<pair<string, string>> equations, vector<double>& values, vector<pair<string, string>> queries(方程式，方程式结果，问题方程式)`， 其中 `equations.size() == values.size()`，即方程式的长度与方程式结果长度相等（程式与结果一一对应），并且结果值均为正数。以上为方程式的描述。 返回`vector<double>`类型。
+输入为：`vector<pair<string, string>> equations, vector<double>& values, vector<pair<string, string>> queries（方程式，方程式结果，问题方程式）`， 其中 `equations.size() == values.size()`，即方程式的长度与方程式结果长度相等（程式与结果一一对应），并且结果值均为正数。以上为方程式的描述。 返回`vector<double>`类型。
 
 基于上述例子，输入如下：
 
 ```java
-equations(方程式) = [ ["a", "b"], ["b", "c"] ],
-values(方程式结果) = [2.0, 3.0],
-queries(问题方程式) = [ ["a", "c"], ["b", "a"], ["a", "e"], ["a", "a"], ["x", "x"] ]. 
+equations（方程式） = [ ["a", "b"], ["b", "c"] ],
+values（方程式结果） = [2.0, 3.0],
+queries（问题方程式） = [ ["a", "c"], ["b", "a"], ["a", "e"], ["a", "a"], ["x", "x"] ]. 
 ```
 
-输入总是有效的。你可以假设除法运算中不会出现除数为0的情况，且不存在任何矛盾的结果。
+输入总是有效的。你可以假设除法运算中不会出现除数为 0 的情况，且不存在任何矛盾的结果。
 
 **解法一**
 
-建立图，然后BFS，这样就简单多了，比并茶集的方法直白多了，随便也学了一下如何建图
+建立图，然后 BFS，这样就简单多了，比并茶集的方法直白多了，随便也学了一下如何建图
 
 ```java
 //构造图 + BFS/DFS
@@ -2383,7 +2359,7 @@ class Pair{
 }
 
 public double bfs(String a,String b){
-    //讲道理,不管a,b是否在graph中,只要想等都应该返回1吧,这里是考虑了0的情况?
+    //讲道理，不管 a,b 是否在 graph 中，只要想等都应该返回 1 吧，这里是考虑了 0 的情况？
     if (!graph.containsKey(a) || !graph.containsKey(b)) {
         return -1.0;
     }
@@ -2446,34 +2422,32 @@ public double[] calcEquation(List<List<String>> equations, double[] values, List
 
 删除最小数量的无效括号，使得输入的字符串有效，返回所有可能的结果。
 
-**说明:** 输入可能包含了除 ( 和 ) 以外的字符。
+**说明：** 输入可能包含了除 ( 和 ) 以外的字符。
 
 **示例 1:**
 
 ```java
-输入: "()())()"
-输出: ["()()()", "(())()"]
+输入："()())()"
+输出：["()()()", "(())()"]
 ```
-
 
 **示例 2:**
 
 ```java
-输入: "(a)())()"
-输出: ["(a)()()", "(a())()"]
+输入："(a)())()"
+输出：["(a)()()", "(a())()"]
 ```
-
 
 **示例 3:**
 
 ```java
-输入: ")("
-输出: [""]
+输入：")("
+输出：[""]
 ```
 
 **解法一**
 
-BFS解法
+BFS 解法
 
 ```java
 public List<String> removeInvalidParentheses(String s) {
@@ -2523,7 +2497,7 @@ public boolean isValid(String s){
 }
 ```
 
-还是比较简单，dfs的解法比较难搞，容易TLE，这里懒得写了
+还是比较简单，dfs 的解法比较难搞，容易 TLE，这里懒得写了
 
 ## [994. 腐烂的橘子](https://leetcode-cn.com/problems/rotting-oranges/)
 
@@ -2570,7 +2544,7 @@ public boolean isValid(String s){
 
 **解法一**
 
-BFS打卡题，这种解法应该算是比较好的了，2ms
+BFS 打卡题，这种解法应该算是比较好的了，2ms
 
 ```java
 private int[][] diretion={{0,1},{1,0},{0,-1},{-1,0}};
@@ -2623,7 +2597,7 @@ public boolean valid(final int[][] grid,int x,int y){
 ```
 **解法二**
 
-一开始的解法，虽然效率稍微低一点点 4ms，但是bugfree了
+一开始的解法，虽然效率稍微低一点点 4ms，但是 bugfree 了
 
 ```java
 private int[][] diretion={{0,1},{1,0},{0,-1},{-1,0}};
@@ -2652,7 +2626,7 @@ public int orangesRotting(int[][] grid) {
         Pair pair=queue.poll();
         //统计一个最大的步数作为结果
         //max=Math.max(max,pair.step);
-        max=pair.step; //最后弹出的哪个就是最大的，这是个递增(非单调)的过程
+        max=pair.step; //最后弹出的哪个就是最大的，这是个递增（非单调）的过程
         for (int i=0;i<4;i++) {
             int nx=pair.x+diretion[i][0];
             int ny=pair.y+diretion[i][1];
@@ -2719,7 +2693,7 @@ public boolean valid(final int[][] grid,int x,int y){
 
 **解法一**
 
-这题的意思其实求**离陆地最远的海洋是那一块，然后返回这个最远的距离**，这个题目描述的确实让人迷惑，一会儿最远，一会儿最近，其实题目意思搞懂了就很简单了，其实和上面腐烂的橘子是一样的。多源的BFS，曼哈顿距离其实就是上下左右走的step
+这题的意思其实求**离陆地最远的海洋是那一块，然后返回这个最远的距离**，这个题目描述的确实让人迷惑，一会儿最远，一会儿最近，其实题目意思搞懂了就很简单了，其实和上面腐烂的橘子是一样的。多源的 BFS，曼哈顿距离其实就是上下左右走的 step
 
 ```java
 private int[][] diretion={{1,0},{-1,0},{0,1},{0,-1}};
@@ -2780,18 +2754,17 @@ public boolean valid(final int[][] grid,int x,int y){
 **示例 1:**
 
 ```java
-输入: 2, [[1,0]] 
-输出: true
-解释: 总共有 2 门课程。学习课程 1 之前，你需要完成课程 0。所以这是可能的。
+输入：2, [[1,0]] 
+输出：true
+解释：总共有 2 门课程。学习课程 1 之前，你需要完成课程 0。所以这是可能的。
 ```
-
 
 **示例 2:**
 
 ```java
-输入: 2, [[1,0],[0,1]]
-输出: false
-解释: 总共有 2 门课程。学习课程 1 之前，你需要先完成课程 0；并且学习课程 0 之前，你还应先完成课程 1。这是不可能的。
+输入：2, [[1,0],[0,1]]
+输出：false
+解释：总共有 2 门课程。学习课程 1 之前，你需要先完成课程 0；并且学习课程 0 之前，你还应先完成课程 1。这是不可能的。
 ```
 
 **提示：**
@@ -2813,10 +2786,10 @@ public boolean canFinish(int numCourses, int[][] prerequisites) {
     }
     for(int[] p:prerequisites){
         indegree[p[0]]++; //每个节点的入度值
-        //邻接表,注意这里别搞反了,这里记录的是p[1]所有的出度节点
+        //邻接表，注意这里别搞反了，这里记录的是 p[1] 所有的出度节点
         adjacency.get(p[1]).add(p[0]); 
     }
-    //课程id
+    //课程 id
     Queue<Integer> queue=new LinkedList<>();
     for(int i=0;i<numCourses;i++){
         if(indegree[i]==0){
@@ -2841,7 +2814,7 @@ public boolean canFinish(int numCourses, int[][] prerequisites) {
 
 现在你总共有 *n* 门课需要选，记为 `0` 到 `n-1`。
 
-在选修某些课程之前需要一些先修课程。 例如，想要学习课程 0 ，你需要先完成课程 1 ，我们用一个匹配来表示他们: `[0,1]`
+在选修某些课程之前需要一些先修课程。 例如，想要学习课程 0 ，你需要先完成课程 1 ，我们用一个匹配来表示他们：`[0,1]`
 
 给定课程总量以及它们的先决条件，返回你为了学完所有课程所安排的学习顺序。
 
@@ -2850,37 +2823,37 @@ public boolean canFinish(int numCourses, int[][] prerequisites) {
 **示例 1:**
 
 ```java
-输入: 2, [[1,0]] 
-输出: [0,1]
-解释: 总共有 2 门课程。要学习课程 1，你需要先完成课程 0。因此，正确的课程顺序为 [0,1] 。
+输入：2, [[1,0]] 
+输出：[0,1]
+解释：总共有 2 门课程。要学习课程 1，你需要先完成课程 0。因此，正确的课程顺序为 [0,1] 。
 ```
 
 **示例 2:**
 
 ```java
-输入: 4, [[1,0],[2,0],[3,1],[3,2]]
-输出: [0,1,2,3] or [0,2,1,3]
-解释: 总共有 4 门课程。要学习课程 3，你应该先完成课程 1 和课程 2。并且课程 1 和课程 2 都应该排在课程 0 之后。
+输入：4, [[1,0],[2,0],[3,1],[3,2]]
+输出：[0,1,2,3] or [0,2,1,3]
+解释：总共有 4 门课程。要学习课程 3，你应该先完成课程 1 和课程 2。并且课程 1 和课程 2 都应该排在课程 0 之后。
      因此，一个正确的课程顺序是 [0,1,2,3] 。另一个正确的排序是 [0,2,1,3] 。
 ```
 
-**说明:**
+**说明：**
 
-1. 输入的先决条件是由**边缘列表**表示的图形，而不是邻接矩阵。详情请参见[图的表示法](http://blog.csdn.net/woaidapaopao/article/details/51732947)。
+1. 输入的先决条件是由**边缘列表**表示的图形，而不是邻接矩阵。详情请参见 [图的表示法](http://blog.csdn.net/woaidapaopao/article/details/51732947)。
 2. 你可以假定输入的先决条件中没有重复的边。
 
-**提示:**
+**提示：**
 
 1. 这个问题相当于查找一个循环是否存在于有向图中。如果存在循环，则不存在拓扑排序，因此不可能选取所有课程进行学习。
-2. [通过 DFS 进行拓扑排序](https://www.coursera.org/specializations/algorithms) - 一个关于Coursera的精彩视频教程（21分钟），介绍拓扑排序的基本概念。
+2. [通过 DFS 进行拓扑排序](https://www.coursera.org/specializations/algorithms) - 一个关于 Coursera 的精彩视频教程（21 分钟），介绍拓扑排序的基本概念。
 3. 拓扑排序也可以通过 [BFS](https://baike.baidu.com/item/%E5%AE%BD%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/5224802?fr=aladdin&fromid=2148012&fromtitle=%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2) 完成。
 
 **解法一**
 
-BFS做法，和上面一样
+BFS 做法，和上面一样
 
 ```java
-//BFS拓扑排序
+//BFS 拓扑排序
 public int[] findOrder(int numCourses, int[][] prerequisites) {
     int[] indegree=new int[numCourses]; //入度数
     List<List<Integer>> adjacency=new ArrayList<>();
@@ -2915,10 +2888,10 @@ public int[] findOrder(int numCourses, int[][] prerequisites) {
 
 **解法二**
 
-DFS的做法，比BFS更有意思一点，其实就是个不断判环的过程，图相关的还是不太熟悉啊
+DFS 的做法，比 BFS 更有意思一点，其实就是个不断判环的过程，图相关的还是不太熟悉啊
 
 ```java
-//DFS的解法
+//DFS 的解法
 int k=0;
 
 public int[] findOrder(int numCourses, int[][] prerequisites) {
@@ -2947,7 +2920,7 @@ public boolean dfs(List<List<Integer>> adj,int cur,int[] mark,int[] res){
         }
     }
     mark[cur]=2;
-    //cur的先决课程是没环的，所以可以学cur
+    //cur 的先决课程是没环的，所以可以学 cur
     res[k++]=cur; 
     return false;
 }
@@ -2957,10 +2930,9 @@ public boolean dfs(List<List<Integer>> adj,int cur,int[] mark,int[] res){
 
 Difficulty: **中等**
 
-
 有两个容量分别为 _x_升 和 _y_升 的水壶以及无限多的水。请判断能否通过使用这两个水壶，从而可以得到恰好 _z_升 的水？
 
-如果可以，最后请用以上水壶中的一或两个来盛放取得的 _z升 _水。
+如果可以，最后请用以上水壶中的一或两个来盛放取得的 _z 升 _水。
 
 你允许：
 
@@ -2971,21 +2943,20 @@ Difficulty: **中等**
 **示例 1:** (From the famous )
 
 ```go
-输入: x = 3, y = 5, z = 4
-输出: True
+输入：x = 3, y = 5, z = 4
+输出：True
 ```
 
 **示例 2:**
 
 ```go
-输入: x = 2, y = 6, z = 5
-输出: False
+输入：x = 2, y = 6, z = 5
+输出：False
 ```
-
 
 **解法一**
 
-暴力BFS的解法
+暴力 BFS 的解法
 ```java
 public boolean canMeasureWater(int x, int y, int z) {
     Queue<int[]> queue = new LinkedList<>();
@@ -2999,13 +2970,13 @@ public boolean canMeasureWater(int x, int y, int z) {
         if (cx==z || cy==z || cx+cy==z) {
             return true;
         }
-        //清空x
+        //清空 x
         addQueue(0, cy, queue);
-        //清空y
+        //清空 y
         addQueue(cx, 0, queue);
-        //装满x
+        //装满 x
         addQueue(capX, cy, queue);
-        //装满y
+        //装满 y
         addQueue(cx, capY, queue);
         //x-->y
         addQueue(Math.max(0, cx-capY+cy), Math.min(capY, cy+cx), queue);
@@ -3040,4 +3011,4 @@ public int gcd(int a,int b){
 
 ## _单调栈_
 
-> 单独开辟出新的专题 [LeetCode单调栈](http://imlgw.top/2020/08/28/leetcode-dan-diao-zhan/)
+> 单独开辟出新的专题 [LeetCode 单调栈](http://imlgw.top/2020/08/28/leetcode-dan-diao-zhan/)

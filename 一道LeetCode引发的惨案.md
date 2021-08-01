@@ -1,5 +1,5 @@
 ---
-title: 一道LeetCode引发的惨案
+title: 一道 LeetCode 引发的惨案
 tags:
   - 数据结构
   - 算法
@@ -9,18 +9,18 @@ categories:
   - 算法
 abbrlink: 96e09a6a
 ---
-## 一道LeetCode搜索题引发的惨案
- ### 1.先上 [题目](https://leetcode-cn.com/problems/word-ladder/) 
+## 一道 LeetCode 搜索题引发的惨案
+ ### 1. 先上 [题目](https://leetcode-cn.com/problems/word-ladder/) 
 给定两个单词（_beginWord _和 _endWord_）和一个字典，找到从 _beginWord_ 到 _endWord_ 的最短转换序列的长度。转换需遵循如下规则：
 
 1.  每次转换只能改变一个字母。
 2.  转换过程中的中间单词必须是字典中的单词。
  [原题链接](https://leetcode-cn.com/problems/word-ladder/) 
-![oss](https://imlgwpicture.oss-cn-qingdao.aliyuncs.com/blogImage/3V6EQ77R_%28%292SCR%248R%5B%245F7.png)其实这题明显是BFS(广搜) 题目类型也说了是广搜，但是我不信邪写了DFS(毕竟代码比较好写)，然后惨案就发生了。
+![oss](https://imlgwpicture.oss-cn-qingdao.aliyuncs.com/blogImage/3V6EQ77R_%28%292SCR%248R%5B%245F7.png) 其实这题明显是 BFS（广搜） 题目类型也说了是广搜，但是我不信邪写了 DFS（毕竟代码比较好写），然后惨案就发生了。
 
 ```java
    // 标记数组
-	// 默认都是0
+	// 默认都是 0
 	private static int[] mark;
 
 	public int ladderLength(String beginWord, String endWord, List<String> wordList) {
@@ -29,7 +29,7 @@ abbrlink: 96e09a6a
 		if (!wordList.contains(endWord)) {
 			return 0;
 		}
-		// dfs开始
+		// dfs 开始
 		dfs(beginWord, endWord, wordList);
 		// 无法转换
 		if (min == Integer.MAX_VALUE) {
@@ -75,11 +75,11 @@ abbrlink: 96e09a6a
 		return count == 1;
 	}
 ```
-结果直接TLE了，后来想了想DFS每次都会**尝试**所有情况，而给的例子后面的数据量也比较大，而且这题是要统计最短路径，要全部递归完才能确定最小值，我把数据拿来自己测试跑了好长时间都没跑出来，而BFS没有递归只是会耗费的空间会比较大。从这里也可以总结出来DFS跟适合判断是否存在是否可达之类的问题，BFS更适合做找最短最小之类的问题。上BFS代码
+结果直接 TLE 了，后来想了想 DFS 每次都会**尝试**所有情况，而给的例子后面的数据量也比较大，而且这题是要统计最短路径，要全部递归完才能确定最小值，我把数据拿来自己测试跑了好长时间都没跑出来，而 BFS 没有递归只是会耗费的空间会比较大。从这里也可以总结出来 DFS 跟适合判断是否存在是否可达之类的问题，BFS 更适合做找最短最小之类的问题。上 BFS 代码
 
 ```java
 // 标记数组
-	// 默认都是0
+	// 默认都是 0
 	private static int[] mark;
 	// 模拟队列
 	class Que {
@@ -102,7 +102,6 @@ abbrlink: 96e09a6a
 			que[i] = new Que();
 		}
 		que[tail].word = beginWord;
-		que[tail].word = beginWord;
 		que[tail].step = 1;
 		tail++;
 		int flag=0;
@@ -111,7 +110,7 @@ abbrlink: 96e09a6a
 			for (int i = 0; i < wordList.size(); i++) {
 				if (mark[i] == 0 && cmp(wordList.get(i), que[head].word)) {
 					que[tail].word = wordList.get(i);
-					//这里是从head开始的，所以应该是head的步数+1
+					//这里是从 head 开始的，所以应该是 head 的步数+1
 					que[tail].step=que[head].step+1;
 					// 标记为已经走过
 					mark[i] = 1;
@@ -146,7 +145,7 @@ abbrlink: 96e09a6a
 	}
 ```
 
-PS：刚刚修改了下代码，我也佩服自己BFS都还没搞清楚就直接上了代码，然后结果居然还是对的，之前在if判断队尾元素是不是和endWord相等后还维护了一个最小值min，后来想了想不对，最后一个和endWord相等的元素已经进栈了，已经是最短的了，后面的即使可以转换到也最多只能和当前的相等了。 如果只是为了统计最小值就可以直接break了。那如果不仅仅要统计最小值还要记录路径要怎么搞？
+PS：刚刚修改了下代码，我也佩服自己 BFS 都还没搞清楚就直接上了代码，然后结果居然还是对的，之前在 if 判断队尾元素是不是和 endWord 相等后还维护了一个最小值 min，后来想了想不对，最后一个和 endWord 相等的元素已经进栈了，已经是最短的了，后面的即使可以转换到也最多只能和当前的相等了。 如果只是为了统计最小值就可以直接 break 了。那如果不仅仅要统计最小值还要记录路径要怎么搞？
 ### 2. [加强版](https://leetcode-cn.com/problems/word-ladder-ii/) 单词接龙 2
 是一道困难等级的题，需要在上面的基础上找出所有的最短的路径。
 
@@ -185,7 +184,6 @@ PS：刚刚修改了下代码，我也佩服自己BFS都还没搞清楚就直接
 		}
 		//先把第一个单词放进去
 		que[tail].word = beginWord;
-		que[tail].word = beginWord;
 		que[tail].step = 1;
 		tail++;
 		List<Que> quelist=new ArrayList<>();
@@ -194,7 +192,7 @@ PS：刚刚修改了下代码，我也佩服自己BFS都还没搞清楚就直接
 			for (int i = 0; i < wordList.size(); i++) {
 				if (mark[i] == 0 && cmp(wordList.get(i), que[head].word)) {
 					que[tail].word = wordList.get(i);
-					//这里是从head开始的，所以应该是head的步数+1
+					//这里是从 head 开始的，所以应该是 head 的步数+1
 					que[tail].step=que[head].step+1;
 					//que[head].next=que[tail];
 					// 标记为已经走过
@@ -204,14 +202,14 @@ PS：刚刚修改了下代码，我也佩服自己BFS都还没搞清楚就直接
 				   		min=que[tail].step;
 				   		//到这里队列后面就不用再插入元素了
 
-				   		//2.把之前走过的路在下一个head
+				   		//2. 把之前走过的路在下一个 head
 
-				   		//将队列变成list
+				   		//将队列变成 list
 				   		for(int j=0;j<=tail;j++){
 				   			quelist.add(que[j]);
 				   		}
 				   		markDfs= new int[wordList.size() + 1]; 
-				   		// 1. 用DFS试一下
+				   		// 1. 用 DFS 试一下
 				   		dfsBfs(que[0],endWord,quelist);
 			    	}
                     tail++;
@@ -222,7 +220,6 @@ PS：刚刚修改了下代码，我也佩服自己BFS都还没搞清楚就直接
 		}
 		return res;
     }
-
 
     private void dfsBfs(Que beginWord,String endWord,List<Que> ques){
     	int step = 0;
@@ -280,8 +277,8 @@ PS：刚刚修改了下代码，我也佩服自己BFS都还没搞清楚就直接
 		return count == 1;
 	}
 ```
-整体上在Que上增加了一个prev的指针，遍历路径，一开始是用的BFS不过我想的太简单了，我只是把最后一个节点出队列然后再BFS，后来发现不行(居然还跑过了24个测试案例)，实际上这题我还是没有做出来，但是上面的方法应该是没问题的就是会TLE😭，大概思路就是先BFS缩短DFS需要遍历的字典然后控制每次递归的身体不能超过BFS的到的最短路径
-![img9](https://imlgwpicture.oss-cn-qingdao.aliyuncs.com/blogImage/blog.PNG)一开始只能跑几个数据的，优化下能跑几十个的，但是还是太慢了，毕竟是一道难题等以后学了相关的东西再来试试看能不能做出来吧.
+整体上在 Que 上增加了一个 prev 的指针，遍历路径，一开始是用的 BFS 不过我想的太简单了，我只是把最后一个节点出队列然后再 BFS，后来发现不行（居然还跑过了 24 个测试案例），实际上这题我还是没有做出来，但是上面的方法应该是没问题的就是会 TLE😭，大概思路就是先 BFS 缩短 DFS 需要遍历的字典然后控制每次递归的身体不能超过 BFS 的到的最短路径
+![img9](https://imlgwpicture.oss-cn-qingdao.aliyuncs.com/blogImage/blog.PNG) 一开始只能跑几个数据的，优化下能跑几十个的，但是还是太慢了，毕竟是一道难题等以后学了相关的东西再来试试看能不能做出来吧。
 
 ---
 算法，学着挺有意思，就是头有点凉。

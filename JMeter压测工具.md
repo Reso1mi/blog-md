@@ -1,5 +1,5 @@
 ---
-title: JMeter压测
+title: JMeter 压测
 tags:
   - JMeter
   - 秒杀
@@ -10,9 +10,9 @@ cover: 'http://static.imlgw.top/image/20190713/Blog-Built-in-JMeter-Functions.pn
 abbrlink: f990e699
 ---
 
-## JMeter入门
+## JMeter 入门
 
-[官网地址](http://jmeter.apache.org/) 下载好之后直接运行jar包 
+[官网地址](http://jmeter.apache.org/) 下载好之后直接运行 jar 包 
 
 ### 简单上手
 
@@ -24,9 +24,9 @@ abbrlink: f990e699
 
 ![mark](http://static.imlgw.top/image/20190529/KonWE6pHVdMz.png?imageslim)
 
-Ramp-Up就是多长时间内启动这些线程设置位0就是同时启动。
+Ramp-Up 就是多长时间内启动这些线程设置位 0 就是同时启动。
 
-**设置HTTP请求默认值**
+**设置 HTTP 请求默认值**
 
 ![mark](http://static.imlgw.top/image/20190529/73A4su1jMAWM.png?imageslim)
 
@@ -34,7 +34,7 @@ Ramp-Up就是多长时间内启动这些线程设置位0就是同时启动。
 
 ![mark](http://static.imlgw.top/image/20190529/Uwy5zrWzFsji.png?imageslim)
 
-**添加HTTP请求**
+**添加 HTTP 请求**
 
 ![mark](http://static.imlgw.top/image/20190529/iVbmgkdG7D88.png?imageslim)
 
@@ -52,7 +52,7 @@ Ramp-Up就是多长时间内启动这些线程设置位0就是同时启动。
 
 这里我们可以需要关注的就是吞吐量这个参数，一开始可能会不太准多测几次。
 
-同时我们也可以用Linux的`top`命令查看当前CPU的利用率。
+同时我们也可以用 Linux 的`top`命令查看当前 CPU 的利用率。
 
 ### 添加自定义参数
 
@@ -71,9 +71,9 @@ Ramp-Up就是多长时间内启动这些线程设置位0就是同时启动。
 
 ![mark](http://static.imlgw.top/image/20190601/5up85aDbSTWM.png?imageslim)
 
-### 生成token
+### 生成 token
 
-方便后面的压测，可以直接写一个工具类生成token供后面的redis使用
+方便后面的压测，可以直接写一个工具类生成 token 供后面的 redis 使用
 
 ```java
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -96,7 +96,7 @@ public class TokenUtils {
             String phone = creatPhone();
             RegisterVo registerVo = new RegisterVo(phone,"123456","user-"+i);
             spikeUserService.register(registerVo);
-            //需要在service层token返回出来
+            //需要在 service 层 token 返回出来
             String token= spikeUserService.login(resp, new LoginVo(registerVo.getMobile(), registerVo.getPassword()));
             outputStream.write((phone+","+token+"\n").getBytes());
         }
@@ -112,11 +112,11 @@ public class TokenUtils {
 }
 ```
 
-### Redis压测
+### Redis 压测
 
 ①redis-benchmark -h 127.0.0.1 -p 6379 -c 100 -n 100000
 
-100个并发，十万个请求，对常用的一些命令进行测试
+100 个并发，十万个请求，对常用的一些命令进行测试
 
 ![mark](http://static.imlgw.top/image/20190601/oPkioXCFgL8R.png?imageslim)
 
@@ -124,39 +124,37 @@ public class TokenUtils {
 
 100 bytes payload 
 
--q 是quiet输出信息较少
+-q 是 quiet 输出信息较少
 
 ③ redis-benchmark -n 100000 -q script load "redis.call('set','foo','bar')"
 
 对特定的语句压测
 
-
-
 ##  搭建压测环境
 
 ### 命令行压测
 
-其实还是需要借助图形界面来录好jmx文件然后上传到Linux上，然后执行
+其实还是需要借助图形界面来录好 jmx 文件然后上传到 Linux 上，然后执行
 
 sh jmeter.sh -n -t Xxx.jmx -l result.jtl
 
-然后再用图形界面导入result.jtl就可以看到结果
+然后再用图形界面导入 result.jtl 就可以看到结果
 
-> 上面的测试都是在我的开发机(win)上进行的，压测和服务都在本地，结果可能并不准确，这里为了隔离环境我开了了2个虚拟机，一个是部署服务的机器（2G 4核），一个是部署mysql和redis的机器（2G 4核），这里在Linux上运行部署项目有两种方式，一种是打成war包放在tomcat目录下，一种是打成jar包直接运行。
+> 上面的测试都是在我的开发机 (win) 上进行的，压测和服务都在本地，结果可能并不准确，这里为了隔离环境我开了了 2 个虚拟机，一个是部署服务的机器（2G 4 核），一个是部署 mysql 和 redis 的机器（2G 4 核），这里在 Linux 上运行部署项目有两种方式，一种是打成 war 包放在 tomcat 目录下，一种是打成 jar 包直接运行。
 
 ### 环境
 
-✔ 192.168.25.123   Centos6  mysql+redis  2G4核
+✔ 192.168.25.123   Centos6  mysql+redis  2G4 核
 
-✔ 192.168.25.4     Centos7   SpikeServer+压测  2.5G 4核
+✔ 192.168.25.4     Centos7   SpikeServer+压测  2.5G 4 核
 
-✔~~win10开发机     Jmeter压测 SpikeServer~~ 
+✔~~win10 开发机     Jmeter 压测 SpikeServer~~ 
 
-✔~~192.168.25.129 Centos7 压测设备 2G4核~~
+✔~~192.168.25.129 Centos7 压测设备 2G4 核~~
 
-### SpringBoot打war包
+### SpringBoot 打 war 包
 
-**添加tomcat依赖(编译时依赖)**
+**添加 tomcat 依赖（编译时依赖）**
 
 ```java
 <dependency>
@@ -166,7 +164,7 @@ sh jmeter.sh -n -t Xxx.jmx -l result.jtl
 </dependency>
 ```
 
-**添加一个maven插件**
+**添加一个 maven 插件**
 
 ```java
 <plugin>
@@ -178,13 +176,13 @@ sh jmeter.sh -n -t Xxx.jmx -l result.jtl
 </plugin>
 ```
 
-**修改pom打包方式位war**
+**修改 pom 打包方式位 war**
 
 ```java
 <packaging>war</packaging>
 ```
 
-**boot类添加一个方法**
+**boot 类添加一个方法**
 
 ```java
 @SpringBootApplication
@@ -194,7 +192,7 @@ public class SpikeApplication extends SpringBootServletInitializer {
     }
     /**
      * @param builder
-     * @return 打 war包
+     * @return 打 war 包
      */
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
@@ -203,29 +201,29 @@ public class SpikeApplication extends SpringBootServletInitializer {
 }
 ```
 
-然后在项目目录下执行`mvn clean package`就会在target目录下生成war包，然后将war包拷到tomcat里面就可以直接运行了。
+然后在项目目录下执行`mvn clean package`就会在 target 目录下生成 war 包，然后将 war 包拷到 tomcat 里面就可以直接运行了。
 
-### SpringBoot打jar包
+### SpringBoot 打 jar 包
 
-**pom里的打包方式改为jar(默认就是jar)**
+**pom 里的打包方式改为 jar（默认就是 jar)**
 
 ```java
 <packaging>war</packaging>
 ```
 
-**添加一个maven插件**
+**添加一个 maven 插件**
 
 ```java
-<!--打jar包的插件-->
+<!--打 jar 包的插件-->
 <plugin>
     <groupId>org.springframework.boot</groupId>
 	<artifactId>spring-boot-maven-plugin</artifactId>
 </plugin>
 ```
 
-**执行mvn clean package**
+**执行 mvn clean package**
 
-同上会在target目录下生成一个jar包，jar包内容大致如下
+同上会在 target 目录下生成一个 jar 包，jar 包内容大致如下
 
 ```java
 Manifest-Version: 1.0
@@ -244,7 +242,7 @@ Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
  ot-starter-parent/Spike
 ```
 
-如果确少一些信息比如Main-Class和Start-Class，说明jar包打的有问题，运行会报`没有主清单属性`，我一开始没注意，我的`plugins`上层还有个`pluginmanagement`插件根本没加载进来，去掉就行了。
+如果确少一些信息比如 Main-Class 和 Start-Class，说明 jar 包打的有问题，运行会报`没有主清单属性`，我一开始没注意，我的`plugins`上层还有个`pluginmanagement`插件根本没加载进来，去掉就行了。
 
 ## 开始压测
 
@@ -260,7 +258,7 @@ public String tolist(Model model,SpikeUser spikeUser) {
 }
 ```
 
-这个接口主要就做了一个查询的mysql的操作，没有cookie所以不会去操作redis
+这个接口主要就做了一个查询的 mysql 的操作，没有 cookie 所以不会去操作 redis
 
 ### 遇到的问题
 
@@ -277,7 +275,7 @@ java.io.IOException: 打开的文件过多
         at java.lang.Thread.run(Thread.java:748) [na:1.8.0_171]
 ```
 
-google后发现是句柄太少的原因，Linux默认是1024，而我们同时起了5000个线程自然就出问题了。
+google 后发现是句柄太少的原因，Linux 默认是 1024，而我们同时起了 5000 个线程自然就出问题了。
 
 通过`ulimit -a` 可以查看到当前的最大句柄数`open files` ，这里我们可以通过 `ulimit -n 2048`临时的设置一个较大的值，但是重启后就会失效。
 
@@ -307,53 +305,53 @@ file locks                      (-x) unlimited
 *  hard nofile 65536
 ```
 
-就可以将文件句柄限制统一改成软32768，硬65536。配置文件最前面的是指domain，设置为星号代表全局，另外你也可以针对不同的用户做出不同的限制。
+就可以将文件句柄限制统一改成软 32768，硬 65536。配置文件最前面的是指 domain，设置为星号代表全局，另外你也可以针对不同的用户做出不同的限制。
 
-注意：这个当中的硬限制是实际的限制，而软限制，是warnning限制，只会做出warning，其实ulimit命令本身就有分软硬设置，加-H就是硬，加-S就是软
+注意：这个当中的硬限制是实际的限制，而软限制，是 warnning 限制，只会做出 warning，其实 ulimit 命令本身就有分软硬设置，加-H 就是硬，加-S 就是软
 
 修改后记得重启才会生效 [参考资料](https://www.cnblogs.com/ibook360/archive/2012/05/11/2495405.html) 
 
-一开始是打算直接用win开发机做压测的，但是发现在进程开大了之后老是跑不完，跑一半就停了（可能是内存给小了），而且数据出入也比较大，然后改用秒杀服务的那条机器来压测，一开始只增大了跑秒杀服务的虚拟机，发现还是会有异常，然后我把mysql和redis的虚拟机也调大了就没报异常了，但是在压测的时候秒杀服务的虚拟机cpu飙到了 `9.0+`，4核的机子，cpu飙到这么高就有点问题了一般来说应该维持在 `4*0.7` 左右。
+一开始是打算直接用 win 开发机做压测的，但是发现在进程开大了之后老是跑不完，跑一半就停了（可能是内存给小了），而且数据出入也比较大，然后改用秒杀服务的那条机器来压测，一开始只增大了跑秒杀服务的虚拟机，发现还是会有异常，然后我把 mysql 和 redis 的虚拟机也调大了就没报异常了，但是在压测的时候秒杀服务的虚拟机 cpu 飙到了 `9.0+`，4 核的机子，cpu 飙到这么高就有点问题了一般来说应该维持在 `4*0.7` 左右。
 
 ![mark](http://static.imlgw.top/image/20190604/LedMcRvfSXeb.png?imageslim)
 
 ![mark](http://static.imlgw.top/image/20190604/UbcTCaTGiEJ9.png?imageslim)
 
-可以看到平均等待时间都在2s以上。
+可以看到平均等待时间都在 2s 以上。
 
-为了更准确的模拟，我又开了一台~~1G2核~~ 2G4核的虚拟机专门来做压测（8G内存吃不消了）。
+为了更准确的模拟，我又开了一台~~1G2 核~~ 2G4 核的虚拟机专门来做压测（8G 内存吃不消了）。
 
 ![mark](http://static.imlgw.top/image/20190604/pr4yMAE2Jamf.png?imageslim)
 
-这里用top观察了两台虚拟机的情况发现mysql的那台机器负载一直很低，SpikeServer那台机器（1G双核）负载一路飙到6.0+。吞吐率也明显的下降了，这里我连续测试了两次都是400多。
+这里用 top 观察了两台虚拟机的情况发现 mysql 的那台机器负载一直很低，SpikeServer 那台机器（1G 双核）负载一路飙到 6.0+。吞吐率也明显的下降了，这里我连续测试了两次都是 400 多。
 
 ### 最终配置
 
-经过一上午的折腾，我决定还是值利用两台你虚拟机，一台跑SpikeServer和压测，另外一台跑mysql和redis，再启动一台成本太大了，这里主要根据这个做一个标准量，后期优化后拿来对比
+经过一上午的折腾，我决定还是值利用两台你虚拟机，一台跑 SpikeServer 和压测，另外一台跑 mysql 和 redis，再启动一台成本太大了，这里主要根据这个做一个标准量，后期优化后拿来对比
 
 #### 结果
 
 ![mark](http://static.imlgw.top/image/20190604/IEGxtWU8pujI.png?imageslim)
 
-后面在调整机器或连续测试了5，6次 在5000的并发下QPS大概是1000左右的样子，小于1000。
+后面在调整机器或连续测试了 5，6 次 在 5000 的并发下 QPS 大概是 1000 左右的样子，小于 1000。
 
-### 压测Redis查询的性能
+### 压测 Redis 查询的性能
 
-上面的goods_list实际上只对mysql进行了一个查询操作，而mysql的并发量并不大。
+上面的 goods_list 实际上只对 mysql 进行了一个查询操作，而 mysql 的并发量并不大。
 
-下面我们单独对redis做一下压测，看下系统的QPS（这里）
+下面我们单独对 redis 做一下压测，看下系统的 QPS（这里）
 
 ![mark](http://static.imlgw.top/image/20190604/h2NOJszwC7Lo.png?imageslim)
 
 #### 结果
 
-一开测试忘了调大redis链接池的大小，一直跑不出来，后来改大之后测了4，5次，同样的5000并发10次，QPS大概在3000左右
+一开测试忘了调大 redis 链接池的大小，一直跑不出来，后来改大之后测了 4，5 次，同样的 5000 并发 10 次，QPS 大概在 3000 左右
 
 ![mark](http://static.imlgw.top/image/20190606/58L5ieKaxR7a.png?imageslim)
 
-可以说是相当快了，而且`top`观察redis那台机器发现负载依然很低，说明这点并发确实对redis来说是小意思，前面其实也单独对redis用它自带的压测工具测试过，大概每秒10 0000的GET是没问题的
+可以说是相当快了，而且`top`观察 redis 那台机器发现负载依然很低，说明这点并发确实对 redis 来说是小意思，前面其实也单独对 redis 用它自带的压测工具测试过，大概每秒 10 0000 的 GET 是没问题的
 
-### 重头戏—压测do_spike接口
+### 重头戏—压测 do_spike 接口
 
 ```java
  @RequestMapping("/do_spike")
@@ -363,7 +361,7 @@ file locks                      (-x) unlimited
         }
         //检查库存
         GoodsVo goodsVo= goodsService.getGoodsVoByGoodsId(goodsId);
-        int stock=goodsVo.getStockCount(); //这里拿的秒杀商品里面的库存,不是商品里面的库存
+        int stock=goodsVo.getStockCount(); //这里拿的秒杀商品里面的库存，不是商品里面的库存
         if(stock<=0){
             model.addAttribute("failMsg",CodeMsg.STOCK_EMPTY);
             return "spike_fail";
@@ -381,15 +379,15 @@ file locks                      (-x) unlimited
  }
 ```
 
-步骤都跟上面一样，不过要多加一个商品id的参数，这里依然是5000的并发10次，其实这里测出来的结果和上面的商品列表差不太多，差不多950左右QPS，毕竟这里有判断库存的操作，一旦小于0之后就不会对mysql再进行操作，进行复杂的**减库存**和**生成订单**操作
+步骤都跟上面一样，不过要多加一个商品 id 的参数，这里依然是 5000 的并发 10 次，其实这里测出来的结果和上面的商品列表差不太多，差不多 950 左右 QPS，毕竟这里有判断库存的操作，一旦小于 0 之后就不会对 mysql 再进行操作，进行复杂的**减库存**和**生成订单**操作
 
 #### 超卖问题
 
-本来只有10件商品，硬生生给减成了负数😂
+本来只有 10 件商品，硬生生给减成了负数😂
 
 ![mark](http://static.imlgw.top/image/20190606/m5RhIzmdXRV1.png?imageslim)
 
-可以看到有16个人秒杀到了这个商品这显然是不合理的
+可以看到有 16 个人秒杀到了这个商品这显然是不合理的
 
 ![mark](http://static.imlgw.top/image/20190606/nJmnvKvVzAHt.png?imageslim)
 

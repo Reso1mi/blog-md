@@ -1,5 +1,5 @@
 ---
-title: Spring-Redis遇到的bug
+title: Spring-Redis 遇到的 bug
 tags:
   - Bug
   - Redis
@@ -10,10 +10,10 @@ date: 2018/9/24
 abbrlink: bea4831e
 ---
 
-##   两个小bug记录一下
-1.  Spring-data-redis和jedis整合的版本问题报错如下：
+##   两个小 bug 记录一下
+1.  Spring-data-redis 和 jedis 整合的版本问题报错如下：
 ```java
-严重: Exception sending context initialized event to listener instance of class org.springframework.web.context.ContextLoaderListener
+严重：Exception sending context initialized event to listener instance of class org.springframework.web.context.ContextLoaderListener
 org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'redisTemplate' defined in URL [jar:file:/E:/repository/com/pyg/pyg-common/0.0.1-SNAPSHOT/pyg-common-0.0.1-SNAPSHOT.jar!/spring/applicationContext-redis.xml]: Invocation of init method failed; nested exception is java.lang.NoSuchMethodError: org.springframework.core.serializer.support.DeserializingConverter.<init>(Ljava/lang/ClassLoader;)V
 at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1578)
 at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:545)
@@ -45,17 +45,16 @@ at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.
 ... 21 more
 ```
 
- 报错原因：Spring-data-reids 和 jedis的版本冲突（应该也和Spring的版本有关系,别人跟我一样的包都可以运行）。
+ 报错原因：Spring-data-reids 和 jedis 的版本冲突（应该也和 Spring 的版本有关系，别人跟我一样的包都可以运行）。
 我测试成功的版本：
 <jedis.version>2.6.2</jedis.version>
 <spring.version>4.2.0.RELEASE</spring.version>
 <spring-data-redis.version>1.4.2.RELEASE</spring.version>
 
-2. Spring加载配置文件的问题
-因为同时配置了MySql和Redis的配置文件而且不是同一个工程所以不是同时初始化然后出现了以下的问题。
-同个模块中如果出现多个context:property-placeholder ，location properties文件后， 运行时出现Could not resolve placeholder 'key' in string value${key}。原因是在加载第一个context:property-placeholder时 会扫描所有的bean，而有的bean里面出现第二个 context:property-placeholder引入的properties的占位符${key}， 此时还没有加载第二个property-placeholder，所以解析不了${key}。
-解决办法一，可以将通过模块的多个property-placeholder合并为一个，将初始化放在一起。
-方法二，添加ignore-unresolvable="true "，这样可以在加载第一个property-placeholder时出现解析不了的占位符进行忽略掉
+2. Spring 加载配置文件的问题
+因为同时配置了 MySql 和 Redis 的配置文件而且不是同一个工程所以不是同时初始化然后出现了以下的问题。
+同个模块中如果出现多个 context:property-placeholder ，location properties 文件后， 运行时出现 Could not resolve placeholder 'key' in string value${key}。原因是在加载第一个 context:property-placeholder 时 会扫描所有的 bean，而有的 bean 里面出现第二个 context:property-placeholder 引入的 properties 的占位符${key}， 此时还没有加载第二个 property-placeholder，所以解析不了${key}。
+解决办法一，可以将通过模块的多个 property-placeholder 合并为一个，将初始化放在一起。
+方法二，添加 ignore-unresolvable="true "，这样可以在加载第一个 property-placeholder 时出现解析不了的占位符进行忽略掉
 
-ps：目前的计划是先把品优购这个项目做完，然后搞一搞微信小程序之类的开发，然后开始着手研究源码，对Spring的源码非常好奇有种特别想了解她的欲望hahahahahaha....  看源码肯定会涉及到设计模式也顺便学一学，再就是数据结构和算法，这学期也正在学也不用着急跟着老师的进度再加自己的自学补充，这个东西也不是说今天学完了就会了的东西，大二上学期主要的打算就是这个了，还有就是不能挂科！！！！,再往后就是打算学下安卓和安卓逆向，不过暂时只是个打算😄。再往后就是大三了，还没打算到那个时候，想想还真快，不知不觉就一年过去了。Come on , add oil ! ! ! @imlgw
-
+ps：目前的计划是先把品优购这个项目做完，然后搞一搞微信小程序之类的开发，然后开始着手研究源码，对 Spring 的源码非常好奇有种特别想了解她的欲望 hahahahahaha....  看源码肯定会涉及到设计模式也顺便学一学，再就是数据结构和算法，这学期也正在学也不用着急跟着老师的进度再加自己的自学补充，这个东西也不是说今天学完了就会了的东西，大二上学期主要的打算就是这个了，还有就是不能挂科！！！！, 再往后就是打算学下安卓和安卓逆向，不过暂时只是个打算😄。再往后就是大三了，还没打算到那个时候，想想还真快，不知不觉就一年过去了。Come on , add oil ! ! ! @imlgw

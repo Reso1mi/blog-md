@@ -6,6 +6,7 @@ categories:
   - 算法
 date: 2020/11/9
 abbrlink: 22c967e1
+mathjax: true
 ---
 
 

@@ -1,5 +1,5 @@
 ---
-title: LeetCode贪心
+title: LeetCode 贪心
 tags:
   - LeetCode
   - 贪心
@@ -8,7 +8,6 @@ categories:
 date: 2020/1/21
 abbrlink: a91acf16
 ---
-
 
 ## [455. 分发饼干](https://leetcode-cn.com/problems/assign-cookies/)
 
@@ -22,28 +21,27 @@ abbrlink: a91acf16
 **示例 1:**
 
 ```java
-输入: [1,2,3], [1,1]
+输入：[1,2,3], [1,1]
 
-输出: 1
+输出：1
 
-解释: 
-你有三个孩子和两块小饼干，3个孩子的胃口值分别是：1,2,3。
-虽然你有两块小饼干，由于他们的尺寸都是1，你只能让胃口值是1的孩子满足。
-所以你应该输出1。
+解释：
+你有三个孩子和两块小饼干，3 个孩子的胃口值分别是：1,2,3。
+虽然你有两块小饼干，由于他们的尺寸都是 1，你只能让胃口值是 1 的孩子满足。
+所以你应该输出 1。
 ```
-
 
 **示例 2:**
 
 ```java
-输入: [1,2], [1,2,3]
+输入：[1,2], [1,2,3]
 
-输出: 2
+输出：2
 
-解释: 
-你有两个孩子和三块小饼干，2个孩子的胃口值分别是1,2。
+解释：
+你有两个孩子和三块小饼干，2 个孩子的胃口值分别是 1,2。
 你拥有的饼干数量和尺寸都足以让所有孩子满足。
-所以你应该输出2.
+所以你应该输出 2.
 ```
 
 **解法一**
@@ -72,26 +70,26 @@ public int findContentChildren(int[] g, int[] s) {
 }
 ```
 
-## [274. H指数](https://leetcode-cn.com/problems/h-index/)
+## [274. H 指数](https://leetcode-cn.com/problems/h-index/)
 
 给定一位研究者论文被引用次数的数组（被引用次数是非负整数）。编写一个方法，计算出研究者的 h 指数。
 
-h 指数的定义: “h 代表“高引用次数”（high citations），一名科研人员的 h 指数是指他（她）的 （N 篇论文中）~~至多~~有 h 篇论文分别被引用了至少 h 次。（其余的 N - h 篇论文每篇被引用次数不多于 h 次。）”
+h 指数的定义：“h 代表“高引用次数”（high citations），一名科研人员的 h 指数是指他（她）的 （N 篇论文中）~~至多~~有 h 篇论文分别被引用了至少 h 次。（其余的 N - h 篇论文每篇被引用次数不多于 h 次。）”
 
-**示例:**
+**示例：**
 
 ```java
-输入: citations = [3,0,6,1,5]
-输出: 3 
-解释: 给定数组表示研究者总共有 5 篇论文，每篇论文相应的被引用了 3, 0, 6, 1, 5 次。
+输入：citations = [3,0,6,1,5]
+输出：3 
+解释：给定数组表示研究者总共有 5 篇论文，每篇论文相应的被引用了 3, 0, 6, 1, 5 次。
      由于研究者有 3 篇论文每篇至少被引用了 3 次，其余两篇论文每篇被引用不多于 3 次，所以她的 h 指数是 3。
 ```
 
-**说明:** 如果 h 有多种可能的值，h 指数是其中最大的那个。
+**说明：** 如果 h 有多种可能的值，h 指数是其中最大的那个。
 
 **解法一**
 
-题目意思搞懂就ok
+题目意思搞懂就 ok
 
 ```java
 public int hIndex(int[] citations) {
@@ -131,7 +129,7 @@ s = "axc", t = "ahbgdc"
 
 **后续挑战 :**
 
-如果有大量输入的 S，称作S1, S2, ... , Sk 其中 k >= 10亿，你需要依次检查它们是否为 T 的子序列。在这种情况下，你会怎样改变代码？
+如果有大量输入的 S，称作 S1, S2, ... , Sk 其中 k >= 10 亿，你需要依次检查它们是否为 T 的子序列。在这种情况下，你会怎样改变代码？
 
 **解法一**
 
@@ -166,7 +164,7 @@ public boolean subsequence(String s,String t,int sindex,int tindex){
     if (sindex == s.length()) {
         return true;
     }
-    //上下if不能交换,可能最后一个才相等
+    //上下 if 不能交换，可能最后一个才相等
     if (tindex == t.length()) {
         return false;
     }
@@ -176,7 +174,7 @@ public boolean subsequence(String s,String t,int sindex,int tindex){
 **解法二**
 
 ```java
-//大量的s字符串 处理
+//大量的 s 字符串 处理
 public boolean isSubsequence3(String s, String t) {
     //预处理
     ArrayList<ArrayList<Integer>> hash=new ArrayList<>();
@@ -186,7 +184,7 @@ public boolean isSubsequence3(String s, String t) {
     for (int i=0;i<t.length();i++) {
         hash.get(t.charAt(i)-'a').add(i);
     }
-    //经过上面的预处理,后面的处理就会很快,不用再遍历t字符串
+    //经过上面的预处理，后面的处理就会很快，不用再遍历 t 字符串
     int lastIndex=-1;
     for (int i=0;i<s.length();i++) {
         List<Integer> indexList=hash.get(s.charAt(i)-'a');
@@ -199,7 +197,7 @@ public boolean isSubsequence3(String s, String t) {
     return true;
 }
 
-//找到第一个比target大的元素
+//找到第一个比 target 大的元素
 public int binarySearch(List<Integer> list,int target){
     int left=0,right=list.size()-1;
     while(left<=right){
@@ -216,7 +214,7 @@ public int binarySearch(List<Integer> list,int target){
 
 ## [621. 任务调度器](https://leetcode-cn.com/problems/task-scheduler/)
 
-给定一个用字符数组表示的 CPU 需要执行的任务列表。其中包含使用大写的 A - Z 字母表示的26 种不同种类的任务。任务可以以任意顺序执行，并且每个任务都可以在 1 个单位时间内执行完。CPU 在任何一个单位时间内都可以执行一个任务，或者在待命状态。
+给定一个用字符数组表示的 CPU 需要执行的任务列表。其中包含使用大写的 A - Z 字母表示的 26 种不同种类的任务。任务可以以任意顺序执行，并且每个任务都可以在 1 个单位时间内执行完。CPU 在任何一个单位时间内都可以执行一个任务，或者在待命状态。
 
 然而，两个**相同种类**的任务之间必须有长度为 n 的冷却时间，因此至少有连续 n 个单位时间内 CPU 在执行不同的任务，或者在待命状态。
 
@@ -225,9 +223,9 @@ public int binarySearch(List<Integer> list,int target){
 **示例 1：**
 
 ```java
-输入: tasks = ["A","A","A","B","B","B"], n = 2
-输出: 8
-执行顺序: A -> B -> (待命) -> A -> B -> (待命) -> A -> B.
+输入：tasks = ["A","A","A","B","B","B"], n = 2
+输出：8
+执行顺序：A -> B -> （待命） -> A -> B -> （待命） -> A -> B.
 ```
 
 **注：**
@@ -271,22 +269,22 @@ public int leastInterval(char[] tasks, int n) {
 **示例 1:**
 
 ```java
-输入: [2,3,1,1,4]
-输出: true
-解释: 我们可以先跳 1 步，从位置 0 到达 位置 1, 然后再从位置 1 跳 3 步到达最后一个位置。
+输入：[2,3,1,1,4]
+输出：true
+解释：我们可以先跳 1 步，从位置 0 到达 位置 1, 然后再从位置 1 跳 3 步到达最后一个位置。
 ```
 
 **示例 2:**
 
 ```java
-输入: [3,2,1,0,4]
-输出: false
-解释: 无论怎样，你总会到达索引为 3 的位置。但该位置的最大跳跃长度是 0 ， 所以你永远不可能到达最后一个位置。
+输入：[3,2,1,0,4]
+输出：false
+解释：无论怎样，你总会到达索引为 3 的位置。但该位置的最大跳跃长度是 0 ， 所以你永远不可能到达最后一个位置。
 ```
 
 **解法一**
 
-回溯，勉强能过。。。太蠢了，为啥想不到简单的方法，就非得往复杂了想？就这么傻么？
+回溯，勉强能过。太蠢了，为啥想不到简单的方法，就非得往复杂了想？就这么傻么？
 
 ```java
 Boolean[] cache=null;
@@ -314,7 +312,7 @@ public boolean jump(int[] nums,int index) {
 ```
 **解法二**
 
-不用多说了，遍历数组，不断更新能到达的最远距离，如果**某个位置的index大于当前能到达的最远距离就直接返回false**
+不用多说了，遍历数组，不断更新能到达的最远距离，如果**某个位置的 index 大于当前能到达的最远距离就直接返回 false**
 
 ```java
 //MDZZ
@@ -339,22 +337,22 @@ public boolean canJump(int[] nums) {
 
 你的目标是使用最少的跳跃次数到达数组的最后一个位置。
 
-**示例:**
+**示例：**
 
 ```java
-输入: [2,3,1,1,4]
-输出: 2
-解释: 跳到最后一个位置的最小跳跃数是 2。
+输入：[2,3,1,1,4]
+输出：2
+解释：跳到最后一个位置的最小跳跃数是 2。
      从下标为 0 跳到下标为 1 的位置，跳 1 步，然后跳 3 步到达数组的最后一个位置。
 ```
 
-**说明:**
+**说明：**
 
 假设你总是可以到达数组的最后一个位置。
 
 **解法一**
 
-兴致勃勃写了个dp
+兴致勃勃写了个 dp
 
 ```java
 public int jump(int[] nums) {
@@ -374,9 +372,9 @@ public int jump(int[] nums) {
 }
 ```
 
-如果这就过了那你也太小瞧这题了😂人家可是hard题，那能这么容易就让你过了？
+如果这就过了那你也太小瞧这题了😂人家可是 hard 题，那能这么容易就让你过了？
 
-没错，这里直接TLE了，最后一个CASE过不去
+没错，这里直接 TLE 了，最后一个 CASE 过不去
 
 **解法二**
 
@@ -391,7 +389,7 @@ public int jump(int[] nums){
     int max=0;//最大边界
     int step=0,curMaxIndex=0;
     for (int i=0;i<nums.length-1;i++) {
-        curMaxIndex=Math.max(curMaxIndex,nums[i]+i); //i能跳的位置中,跳的最远的
+        curMaxIndex=Math.max(curMaxIndex,nums[i]+i); //i 能跳的位置中，跳的最远的
         if (i==max) {//走到边界就++
             step++;
             max=curMaxIndex;
@@ -436,18 +434,17 @@ public int jump(int[] nums){
 **示例 1:**
 
 ```java
-输入: [[1,3],[2,6],[8,10],[15,18]]
-输出: [[1,6],[8,10],[15,18]]
-解释: 区间 [1,3] 和 [2,6] 重叠, 将它们合并为 [1,6].
+输入：[[1,3],[2,6],[8,10],[15,18]]
+输出：[[1,6],[8,10],[15,18]]
+解释：区间 [1,3] 和 [2,6] 重叠，将它们合并为 [1,6].
 ```
-
 
 **示例 2:**
 
 ```java
-输入: [[1,4],[4,5]]
-输出: [[1,5]]
-解释: 区间 [1,4] 和 [4,5] 可被视为重叠区间。
+输入：[[1,4],[4,5]]
+输出：[[1,5]]
+解释：区间 [1,4] 和 [4,5] 可被视为重叠区间。
 ```
 
 **解法一**
@@ -483,13 +480,13 @@ public int[][] merge(int[][] intervals) {
 }
 ```
 
-最大的收获就是学到了一招list转array的方法😁
+最大的收获就是学到了一招 list 转 array 的方法😁
 
 偶然看到，简化下代码
 
 ```java
 //update：2020.4.16
-//偶然看到,简化下代码
+//偶然看到，简化下代码
 public int[][] merge(int[][] intervals) {
     if (intervals ==null || intervals.length<=0) {
         return new int[][]{};
@@ -533,7 +530,6 @@ public int[][] merge(int[][] intervals) {
 
 Difficulty: **中等**
 
-
 字符串 `S` 由小写字母组成。我们要把这个字符串划分为尽可能多的片段，同一个字母只会出现在其中的一个片段。返回一个表示每个字符串片段的长度的列表。
 
 **示例 1：**
@@ -552,10 +548,9 @@ Difficulty: **中等**
 *   `S`的长度在`[1, 500]`之间。
 *   `S`只包含小写字母 `'a'` 到 `'z'` 。
 
-
 **解法一**
 
-我一开始的想法就是先统计出所有26个字母出现的首位置和末位置，然后题目就变成了[合并区间](#56-合并区间)，但是其实不需要真正的合并，这里只需要求长度就行了
+我一开始的想法就是先统计出所有 26 个字母出现的首位置和末位置，然后题目就变成了 [合并区间](#56-合并区间)，但是其实不需要真正的合并，这里只需要求长度就行了
 ```golang
 func partitionLabels(S string) []int {
     var m = make(map[byte]int)
@@ -583,7 +578,7 @@ func partitionLabels(S string) []int {
 
 给定一个区间的集合，找到需要移除区间的最小数量，使剩余区间互不重叠。
 
-注意:
+注意：
 
 - 可以认为区间的终点总是大于它的起点。
 - 区间 [1,2] 和 [2,3] 的边界相互“接触”，但没有相互重叠。
@@ -591,38 +586,38 @@ func partitionLabels(S string) []int {
 **示例 1:**
 
 ```java
-输入: [ [1,2], [2,3], [3,4], [1,3] ]
+输入：[ [1,2], [2,3], [3,4], [1,3] ]
 
-输出: 1
+输出：1
 
-解释: 移除 [1,3] 后，剩下的区间没有重叠。
+解释：移除 [1,3] 后，剩下的区间没有重叠。
 ```
 
 **示例 2:**
 
 ```java
-输入: [ [1,2], [1,2], [1,2] ]
+输入：[ [1,2], [1,2], [1,2] ]
 
-输出: 2
+输出：2
 
-解释: 你需要移除两个 [1,2] 来使剩下的区间没有重叠。
+解释：你需要移除两个 [1,2] 来使剩下的区间没有重叠。
 ```
 
 **示例 3:**
 
 ```java
-输入: [ [1,2], [2,3] ]
+输入：[ [1,2], [2,3] ]
 
-输出: 0
+输出：0
 
-解释: 你不需要移除任何区间，因为它们已经是无重叠的了。
+解释：你不需要移除任何区间，因为它们已经是无重叠的了。
 ```
 
 **解法一**
 
 动态规划，其实和最长递增子序列是一样的
 
-> 和[最长数对链](http://imlgw.top/2019/09/01/leetcode-dong-tai-gui-hua/#646-%E6%9C%80%E9%95%BF%E6%95%B0%E5%AF%B9%E9%93%BE)一摸一样
+> 和 [最长数对链](http://imlgw.top/2019/09/01/leetcode-dong-tai-gui-hua/#646-%E6%9C%80%E9%95%BF%E6%95%B0%E5%AF%B9%E9%93%BE) 一摸一样
 
 ```java
 public int eraseOverlapIntervals(int[][] intervals) {
@@ -646,7 +641,7 @@ public int eraseOverlapIntervals(int[][] intervals) {
 ```
 先根据左边界排个序，保证后面的不会覆盖前面的，然后反手求一下最长的无重叠区间长度，和最长递增子序列一样，最后用总长度减去这个最长的区间长度结果就是答案
 
-171ms，8%，感觉快要过不了了。。。本来是是写的记忆化递归的，结果过不了。。。卡在倒数第二个case上
+171ms，8%，感觉快要过不了了。本来是是写的记忆化递归的，结果过不了。卡在倒数第二个 case 上
 
 **记忆化递归写法**
 
@@ -658,7 +653,7 @@ public int eraseOverlapIntervals2(int[][] intervals) {
     return intervals.length-dfs(intervals,0,Integer.MIN_VALUE);
 }
 
-//背包问题,返回最多可以留下的区间
+//背包问题，返回最多可以留下的区间
 public int dfs(int[][] intervals,int index,int prev) {
     if (index==intervals.length) {
         return 0;
@@ -684,8 +679,8 @@ public int eraseOverlapIntervals(int[][] intervals) {
     if (intervals==null || intervals.length<=0) {
         return 0;
     }
-    //按照起点排序,重叠的时候选择保留结尾小的那一个
-    //Arrays.sort(intervals,(a,b)->a[0]-b[0]); lambda初始化效率会低一点
+    //按照起点排序，重叠的时候选择保留结尾小的那一个
+    //Arrays.sort(intervals,(a,b)->a[0]-b[0]); lambda 初始化效率会低一点
     Arrays.sort(intervals,new Comparator<int[]>(){
         @Override
         public int compare(int[] a,int[] b){
@@ -711,7 +706,6 @@ public int eraseOverlapIntervals(int[][] intervals) {
 
 Difficulty: **中等**
 
-
 给你一个区间列表，请你删除列表中被其他区间所覆盖的区间。
 
 只有当 `c <= a` 且 `b <= d` 时，我们才认为区间 `[a,b)` 被区间 `[c,d)` 覆盖。
@@ -731,7 +725,6 @@ Difficulty: **中等**
 *   `1 <= intervals.length <= 1000`
 *   `0 <= intervals[i][0] < intervals[i][1] <= 10^5`
 *   对于所有的 `i != j`：`intervals[i] != intervals[j]`
-
 
 **解法一**
 
@@ -761,27 +754,26 @@ func removeCoveredIntervals(intervals [][]int) int {
 
 Difficulty: **中等**
 
+在二维空间中有许多球形的气球。对于每个气球，提供的输入是水平方向上，气球直径的开始和结束坐标。由于它是水平的，所以 y 坐标并不重要，因此只要知道开始和结束的 x 坐标就足够了。开始坐标总是小于结束坐标。平面内最多存在 10<sup>4</sup>个气球。
 
-在二维空间中有许多球形的气球。对于每个气球，提供的输入是水平方向上，气球直径的开始和结束坐标。由于它是水平的，所以y坐标并不重要，因此只要知道开始和结束的x坐标就足够了。开始坐标总是小于结束坐标。平面内最多存在10<sup>4</sup>个气球。
-
-一支弓箭可以沿着x轴从不同点完全垂直地射出。在坐标x处射出一支箭，若有一个气球的直径的开始和结束坐标为 x<sub style="display: inline;">start，</sub>x<sub style="display: inline;">end，</sub> 且满足  x<sub style="display: inline;">start</sub> ≤ x ≤ x<sub style="display: inline;">end，</sub>则该气球会被引爆<sub style="display: inline;">。</sub>可以射出的弓箭的数量没有限制。 弓箭一旦被射出之后，可以无限地前进。我们想找到使得所有气球全部被引爆，所需的弓箭的最小数量。
+一支弓箭可以沿着 x 轴从不同点完全垂直地射出。在坐标 x 处射出一支箭，若有一个气球的直径的开始和结束坐标为 x<sub style="display: inline;">start，</sub>x<sub style="display: inline;">end，</sub> 且满足  x<sub style="display: inline;">start</sub> ≤ x ≤ x<sub style="display: inline;">end，</sub>则该气球会被引爆<sub style="display: inline;">。</sub>可以射出的弓箭的数量没有限制。 弓箭一旦被射出之后，可以无限地前进。我们想找到使得所有气球全部被引爆，所需的弓箭的最小数量。
 
 **Example:**
 
 ```go
-输入:
+输入：
 [[10,16], [2,8], [1,6], [7,12]]
 
-输出:
+输出：
 2
 
-解释:
-对于该样例，我们可以在x = 6（射爆[2,8],[1,6]两个气球）和 x = 11（射爆另外两个气球）。
+解释：
+对于该样例，我们可以在 x = 6（射爆 [2,8],[1,6] 两个气球）和 x = 11（射爆另外两个气球）。
 ```
 
 **解法一**
 
-和前面几题一样，按照起点排序，发生重叠时记录小的Xend，实际上end的含义就是当前这一箭能射穿前面所有气球的最远距离，后面的气球如果大于这个距离就需要加一箭，否则就可以一并射穿
+和前面几题一样，按照起点排序，发生重叠时记录小的 Xend，实际上 end 的含义就是当前这一箭能射穿前面所有气球的最远距离，后面的气球如果大于这个距离就需要加一箭，否则就可以一并射穿
 ```golang
 func findMinArrowShots(points [][]int) int {
     if len(points) <= 0 {
@@ -895,7 +887,7 @@ func Min(a, b int) int {
 
 **解法一**
 
-感觉这个贪心还是很经典的，很多题都是这个思路，上面的 跳跃游戏2，包括172周赛的最后一题，都是这个类似的区间覆盖问题
+感觉这个贪心还是很经典的，很多题都是这个思路，上面的 跳跃游戏 2，包括 172 周赛的最后一题，都是这个类似的区间覆盖问题
 
 ```java
 public int videoStitching(int[][] clips, int T) {
@@ -919,22 +911,22 @@ public int videoStitching(int[][] clips, int T) {
 }
 ```
 
-首先按照左边界排序，然后找的时候**每次都在序列中找能覆盖`overlap`上一次右边界的最长区间** ，第一次覆盖其实就是找的左边界能覆盖0的最长的区间，然后下一次就要找能覆盖这个区间右边界的最长的区间。最终的结果就是最少的区间数目，正确性这里其实思考一下就知道了，每次都选择最优区间，对后面的选择没有负面影响，具体如何证明还是留给大佬们吧
+首先按照左边界排序，然后找的时候**每次都在序列中找能覆盖`overlap`上一次右边界的最长区间** ，第一次覆盖其实就是找的左边界能覆盖 0 的最长的区间，然后下一次就要找能覆盖这个区间右边界的最长的区间。最终的结果就是最少的区间数目，正确性这里其实思考一下就知道了，每次都选择最优区间，对后面的选择没有负面影响，具体如何证明还是留给大佬们吧
 
 ## [406. 根据身高重建队列](https://leetcode-cn.com/problems/queue-reconstruction-by-height/)
 
-假设有打乱顺序的一群人站成一个队列。 每个人由一个整数对` (h, k) `表示，其中h是这个人的身高，k是排在这个人前面且身高大于或等于h的人数。 编写一个算法来重建这个队列。
+假设有打乱顺序的一群人站成一个队列。 每个人由一个整数对` (h, k) `表示，其中 h 是这个人的身高，k 是排在这个人前面且身高大于或等于 h 的人数。 编写一个算法来重建这个队列。
 
 注意：
-总人数少于1100人。
+总人数少于 1100 人。
 
 **示例**
 
 ```java
-输入:
+输入：
 [[7,0], [4,4], [7,1], [5,0], [6,1], [5,2]]
 
-输出:
+输出：
 [[5,0], [7,0], [5,2], [6,1], [4,4], [7,1]]
 ```
 
@@ -956,7 +948,7 @@ public int[][] reconstructQueue(int[][] people) {
 }
 ```
 
-首先对身高h降序，k升序进行排列得到，然后将元素`（h，k）`插入前面比它大的元素中的第k个位置，保证该元素前面有k个比当前元素大的，使之合法，**后面的比它矮的元素的移动对前面其实的没有任何影响**，这个算法的正确性很容易想到，身高高的人是看不到身高矮的人的~，也就是身高矮的人在身高高的人前或后对身高高的人是没有任何影响的
+首先对身高 h 降序，k 升序进行排列得到，然后将元素`（h，k）`插入前面比它大的元素中的第 k 个位置，保证该元素前面有 k 个比当前元素大的，使之合法，**后面的比它矮的元素的移动对前面其实的没有任何影响**，这个算法的正确性很容易想到，身高高的人是看不到身高矮的人的~，也就是身高矮的人在身高高的人前或后对身高高的人是没有任何影响的
 
 ```java
 [7,0] [7,1] [6,1] [5,0] [5,2] [4,4]
@@ -982,7 +974,6 @@ public int[][] reconstructQueue(int[][] people) {
 解释：选出数字 3, 6, 1 和 8，它们的和是 18（可被 3 整除的最大和）。
 ```
 
-
 **示例 2：**
 
 ```java
@@ -1006,7 +997,7 @@ public int[][] reconstructQueue(int[][] people) {
 
 **解法三**
 
-O(NlogN)贪心，最优解法应该是dp，放在dp[专题中](http://imlgw.top/2019/09/01/leetcode-dong-tai-gui-hua/)
+O(NlogN) 贪心，最优解法应该是 dp，放在 dp[专题中](http://imlgw.top/2019/09/01/leetcode-dong-tai-gui-hua/)
 
 ```java
 public int maxSumDivThree3(int[] nums) {
@@ -1020,30 +1011,30 @@ public int maxSumDivThree3(int[] nums) {
     }
     Collections.sort(one);
     Collections.sort(two);
-    if (sum%3==1) { //移除一个余数为1的 或者两个余数为2的
+    if (sum%3==1) { //移除一个余数为 1 的 或者两个余数为 2 的
         return Math.max(one.size()>=1?sum-one.get(0):0,two.size()>=2?sum-two.get(0)-two.get(1):0);
     }
-    if (sum%3==2) { //移除一个余数为2 或者两个余数为1的
+    if (sum%3==2) { //移除一个余数为 2 或者两个余数为 1 的
         return Math.max(two.size()>=1?sum-two.get(0):0,one.size()>=2?sum-one.get(0)-one.get(1):0);   
     }
     return sum;
 }
 ```
 
-如果总和%3=1我们就可以移除数组中%3=1的最小那个或者移除两个%3=2的最小的，同理，总和%3=2，我们可以移除一个最小的%2=0的元素，或者移除两个%2=1的最小元素
+如果总和%3=1 我们就可以移除数组中%3=1 的最小那个或者移除两个%3=2 的最小的，同理，总和%3=2，我们可以移除一个最小的%2=0 的元素，或者移除两个%2=1 的最小元素
 
-这里我们需要记录的仅仅是数组中%3=1和%3=2的最小的4个值就ok，其实不用排序就可以，直接O(N)遍历就行，嫌麻烦没改，后面有时间来改改
+这里我们需要记录的仅仅是数组中%3=1 和%3=2 的最小的 4 个值就 ok，其实不用排序就可以，直接 O(N) 遍历就行，嫌麻烦没改，后面有时间来改改
 
 **解法二**
 
-履行上面的承诺，改好了一版O(N)的贪心解法
+履行上面的承诺，改好了一版 O(N) 的贪心解法
 
 ```java
 public int maxSumDivThree(int[] nums) {
     int M=0x3f3f3f3f;
-    //余1最小值
+    //余 1 最小值
     int min1_0=M,min1_1=M;
-    //余2最小值
+    //余 2 最小值
     int min2_0=M,min2_1=M;
     int sum=0;
     for(int i=0;i<nums.length;i++){
@@ -1086,7 +1077,6 @@ public int maxSumDivThree(int[] nums) {
 输出："981"
 ```
 
-
 **示例 2：**
 
 ```java
@@ -1094,14 +1084,12 @@ public int maxSumDivThree(int[] nums) {
 输出："8760"
 ```
 
-
 **示例 3：**
 
 ```java
 输入：digits = [1]
 输出：""
 ```
-
 
 **示例 4：**
 
@@ -1118,7 +1106,7 @@ public int maxSumDivThree(int[] nums) {
 
 **解法一**
 
-177周赛的T4，时隔多日，周赛又出了这一题，和上面一样，思路差不多的，需要优先考虑只删除一个的情况
+177 周赛的 T4，时隔多日，周赛又出了这一题，和上面一样，思路差不多的，需要优先考虑只删除一个的情况
 
 ```java
 public String largestMultipleOfThree(int[] digits) {
@@ -1129,17 +1117,15 @@ public String largestMultipleOfThree(int[] digits) {
         freq[digits[i]]++;
     }
     if(sum==0) return "0";
-    //删除一个余1的或者两个余2的,优先删除一个余1的
-    //删除1个得到的结果肯定比删除2个大
+    //删除一个余 1 的或者两个余 2 的，优先删除一个余 1 的
+    //删除 1 个得到的结果肯定比删除 2 个大
     if(sum%3==1){ 
         if(!deleteMin(freq,1)){ 
             deleteMin(freq,2);
-            deleteMin(freq,2);
         }
     }
-    if(sum%3==2){ //删除一个余2的或者两个余1的
+    if(sum%3==2){ //删除一个余 2 的或者两个余 1 的
         if(!deleteMin(freq,2)){
-            deleteMin(freq,1);
             deleteMin(freq,1);
         }   
     }
@@ -1171,7 +1157,7 @@ public boolean deleteMin(int[] freq,int y){
 
 **解法一**
 
-按照深度的奇偶划分两个子串。。。。
+按照深度的奇偶划分两个子串。
 
 ```java
 public int[] maxDepthAfterSplit(String seq) {
@@ -1313,7 +1299,7 @@ public int maxEvents(int[][] events) {
 
 如果你可以绕环路行驶一周，则返回出发时加油站的编号，否则返回 -1。
 
-**说明:** 
+**说明：** 
 
 - 如果题目有解，该答案即为唯一答案。
 - 输入数组均为非空数组，且长度相同。
@@ -1322,14 +1308,14 @@ public int maxEvents(int[][] events) {
 **示例 1:**
 
 ```java
-输入: 
+输入：
 gas  = [1,2,3,4,5]
 cost = [3,4,5,1,2]
 
-输出: 3
+输出：3
 
-解释:
-从 3 号加油站(索引为 3 处)出发，可获得 4 升汽油。此时油箱有 = 0 + 4 = 4 升汽油
+解释：
+从 3 号加油站（索引为 3 处）出发，可获得 4 升汽油。此时油箱有 = 0 + 4 = 4 升汽油
 开往 4 号加油站，此时油箱有 4 - 1 + 5 = 8 升汽油
 开往 0 号加油站，此时油箱有 8 - 2 + 1 = 7 升汽油
 开往 1 号加油站，此时油箱有 7 - 3 + 2 = 6 升汽油
@@ -1341,13 +1327,13 @@ cost = [3,4,5,1,2]
 **示例 2:**
 
 ```java
-输入: 
+输入：
 gas  = [2,3,4]
 cost = [3,4,3]
 
-输出: -1
+输出：-1
 
-解释:
+解释：
 你不能从 0 号或 1 号加油站出发，因为没有足够的汽油可以让你行驶到下一个加油站。
 我们从 2 号加油站出发，可以获得 4 升汽油。 此时油箱有 = 0 + 4 = 4 升汽油
 开往 0 号加油站，此时油箱有 4 - 3 + 2 = 3 升汽油
@@ -1363,11 +1349,11 @@ func canCompleteCircuit(gas []int, cost []int) int {
     n:=len(gas)
     curGas:=0 //当前油量
     start:=0 //起点
-    total:=0 //gas和cost之差,小于0的话肯定无法绕圈
+    total:=0 //gas 和 cost 之差，小于 0 的话肯定无法绕圈
     for i:=start;i<n;i++{
         curGas+=(gas[i]-cost[i])
         total+=(gas[i]-cost[i])
-        //油量不够，i无法继续前进到i+1,说明从start~i无法绕环
+        //油量不够，i 无法继续前进到 i+1, 说明从 start~i 无法绕环
         if curGas<0{ 
             start=i+1
             curGas=0
@@ -1410,7 +1396,7 @@ func canCompleteCircuit(gas []int, cost []int) int {
 
 **解法一**
 
-虽然tag有贪心，但是并不是贪心。。。直接模拟就行了，反而是这题的[进阶版本](https://leetcode-cn.com/problems/last-stone-weight-ii/)，我以为可以这样贪心过，结果发现不对
+虽然 tag 有贪心，但是并不是贪心。直接模拟就行了，反而是这题的 [进阶版本](https://leetcode-cn.com/problems/last-stone-weight-ii/)，我以为可以这样贪心过，结果发现不对
 
 ```java
 public int lastStoneWeight(int[] stones) {
@@ -1430,24 +1416,24 @@ public int lastStoneWeight(int[] stones) {
     return pq.poll();
 }
 ```
-## [920. 会议室(LintCode)](https://www.lintcode.com/problem/meeting-rooms/description)
+## [920. 会议室 (LintCode)](https://www.lintcode.com/problem/meeting-rooms/description)
 
-给定一系列的会议时间间隔，包括起始和结束时间[[s1,e1]，[s2,e2]，…(si < ei)，确定一个人是否可以参加所有会议。
-- (0,8),(8,10)在8这这一时刻不冲突
+给定一系列的会议时间间隔，包括起始和结束时间 [[s1,e1]，[s2,e2]，…(si < ei)，确定一个人是否可以参加所有会议。
+- (0,8),(8,10) 在 8 这这一时刻不冲突
 
-**样例1**
+**样例 1**
 
 ```go
-输入: intervals = [(0,30),(5,10),(15,20)]
-输出: false
-解释:
+输入：intervals = [(0,30),(5,10),(15,20)]
+输出：false
+解释：
 (0,30), (5,10) 和 (0,30),(15,20) 这两对会议会冲突
 ```
-**样例2**
+**样例 2**
 ```go
-输入: intervals = [(5,8),(9,15)]
-输出: true
-解释:
+输入：intervals = [(5,8),(9,15)]
+输出：true
+解释：
 这两个时间段不会冲突
 ```
 
@@ -1473,31 +1459,31 @@ func canAttendMeetings (intervals []*Interval) bool {
 
 ## [919. 会议室 II(LintCode)](https://www.lintcode.com/problem/meeting-rooms-ii/description)
 
-给定一系列的会议时间间隔intervals，包括起始和结束时间[[s1,e1],[s2,e2],...] (si < ei)，找到所需的最小的会议室数量。
+给定一系列的会议时间间隔 intervals，包括起始和结束时间 [[s1,e1],[s2,e2],...] (si < ei)，找到所需的最小的会议室数量。
 
-**样例1**
+**样例 1**
 ```go
-输入: intervals = [(0,30),(5,10),(15,20)]
-输出: 2
-解释:
+输入：intervals = [(0,30),(5,10),(15,20)]
+输出：2
+解释：
 需要两个会议室
-会议室1:(0,30)
-会议室2:(5,10),(15,20)
+会议室 1:(0,30)
+会议室 2:(5,10),(15,20)
 ```
 
-**样例2**
+**样例 2**
 ```go
-输入: intervals = [(2,7)]
-输出: 1
-解释:
-只需要1个会议室就够了
+输入：intervals = [(2,7)]
+输出：1
+解释：
+只需要 1 个会议室就够了
 ```
 
 **解法一**
 
-扫描线的做法，感觉比较简单，也比较好理解（这应该属于最简单的扫描线吧，我看了其他的一些扫描线啥的都是acm里面的内容）
+扫描线的做法，感觉比较简单，也比较好理解（这应该属于最简单的扫描线吧，我看了其他的一些扫描线啥的都是 acm 里面的内容）
 ![mark](http://static.imlgw.top/blog/20200810/nQveo3X6eKxI.png?imageslim)
-类似就是上图样子，求一个最大的有重合的区间数量，先将起点终点打散后排序，扫描的时候就按照排序后的节点来一个个扫描，然后根据节点的属性来判断是应该+1还是-1，如果是起点就+1，如果遇到终点就-1，整个过程就像是一条线从左往右扫描过去一样
+类似就是上图样子，求一个最大的有重合的区间数量，先将起点终点打散后排序，扫描的时候就按照排序后的节点来一个个扫描，然后根据节点的属性来判断是应该+1 还是-1，如果是起点就+1，如果遇到终点就-1，整个过程就像是一条线从左往右扫描过去一样
 ```golang
 /**
  * Definition of Interval:
@@ -1543,7 +1529,7 @@ func minMeetingRooms (intervals []*Interval) int {
 ```
 **解法二**
 
-排序+小根堆，按起点排序，然后遍历所有区间，如果某个区间的start大于堆顶的结束时间，说明这两个会议可以公用一个会议室，所以将堆顶弹出，然后将当前会议加入堆中，所以最后堆的大小就是会议室的数量
+排序+小根堆，按起点排序，然后遍历所有区间，如果某个区间的 start 大于堆顶的结束时间，说明这两个会议可以公用一个会议室，所以将堆顶弹出，然后将当前会议加入堆中，所以最后堆的大小就是会议室的数量
 ```java
 //小根堆的思路
 public int minMeetingRooms(List<Interval> intervals) {
@@ -1562,26 +1548,26 @@ public int minMeetingRooms(List<Interval> intervals) {
 ```
 个人感觉这个思路还是没有上面扫描线简单好理解
 
-## [391. 数飞机(LintCode)](https://www.lintcode.com/problem/number-of-airplanes-in-the-sky/description)
+## [391. 数飞机 (LintCode)](https://www.lintcode.com/problem/number-of-airplanes-in-the-sky/description)
 
-给出飞机的起飞和降落时间的列表，用序列 interval 表示. 请计算出天上同时最多有多少架飞机？
+给出飞机的起飞和降落时间的列表，用序列 interval 表示。请计算出天上同时最多有多少架飞机？
 
 **样例 1:**
 ```go
-输入: [(1, 10), (2, 3), (5, 8), (4, 7)]
-输出: 3
-解释: 
-第一架飞机在1时刻起飞, 10时刻降落.
-第二架飞机在2时刻起飞, 3时刻降落.
-第三架飞机在5时刻起飞, 8时刻降落.
-第四架飞机在4时刻起飞, 7时刻降落.
-在5时刻到6时刻之间, 天空中有三架飞机.
+输入：[(1, 10), (2, 3), (5, 8), (4, 7)]
+输出：3
+解释：
+第一架飞机在 1 时刻起飞，10 时刻降落。
+第二架飞机在 2 时刻起飞，3 时刻降落。
+第三架飞机在 5 时刻起飞，8 时刻降落。
+第四架飞机在 4 时刻起飞，7 时刻降落。
+在 5 时刻到 6 时刻之间，天空中有三架飞机。
 ```
 **样例 2:**
 ```go
-输入: [(1, 2), (2, 3), (3, 4)]
-输出: 1
-解释: 降落优先于起飞.
+输入：[(1, 2), (2, 3), (3, 4)]
+输出：1
+解释：降落优先于起飞。
 ```
 
 **解法一**
@@ -1620,11 +1606,11 @@ func countOfAirplanes(airplanes []*Interval) int {
         list = append(list, &Pair{airplanes[i].End, true})
     }
     //[(1, 2), (2, 3), (3, 4)]
-    //随意排序： 1 2start 2end 3start 3end 4 这样最大值就是2，不对
+    //随意排序： 1 2start 2end 3start 3end 4 这样最大值就是 2，不对
     //所以应该降落优先，将降落时间点的排在前面
     sort.Slice(list, func(i int, j int) bool {
         if list[i].time == list[j].time {
-            //将end放在前面
+            //将 end 放在前面
             return list[i].isEnd
         }
         return list[i].time < list[j].time
@@ -1644,17 +1630,17 @@ func countOfAirplanes(airplanes []*Interval) int {
 ```
 当然同样可以使用堆，这里就不多写了
 
-## [NC531.递增数组](https://www.nowcoder.com/practice/d0907f3982874b489edde5071c96754a)
+## [NC531. 递增数组](https://www.nowcoder.com/practice/d0907f3982874b489edde5071c96754a)
 
-牛牛有一个数组array，牛牛可以每次选择一个连续的区间，让区间的数都加1，他想知道把这个数组变为严格单调递增，最少需要操作多少次？
+牛牛有一个数组 array，牛牛可以每次选择一个连续的区间，让区间的数都加 1，他想知道把这个数组变为严格单调递增，最少需要操作多少次？
 - 1 <= array.size <= 2*10^5
 - 1 <= array[i] <= 1*10^9
 
-**示例1**
+**示例 1**
 ```go
-输入: [1,2,1]
-输出: 2
-说明: 把第三个数字+2可以构成1，2，3
+输入：[1,2,1]
+输出：2
+说明：把第三个数字+2 可以构成 1，2，3
 ```
 **解法一**
 
@@ -1670,7 +1656,7 @@ public long IncreasingArray (int[] array) {
     return res;
 }
 ```
-虽然是easy，还是想了一会儿，我的想法就是当增加一个数的时候就连同**后面的所有数**一起增加，而增加一个数肯定是增加到前一个数+1的次数是最少的（当然我们也不用真的去加，因为后面的区间是整体++，而我们要求的操作次数只是个差值）
+虽然是 easy，还是想了一会儿，我的想法就是当增加一个数的时候就连同**后面的所有数**一起增加，而增加一个数肯定是增加到前一个数+1 的次数是最少的（当然我们也不用真的去加，因为后面的区间是整体++，而我们要求的操作次数只是个差值）
 其实很详细的证明我也给不出来，我只考虑了几种情况
 1. `i`后面的部分是单调递增的 3 1(i)  2  3，那么很明显这里和后面一起增加是最优选择
 2. `i`后面是部分是单调递减的 3 3(i)  2  1，那么同样，和后面的一起增加是最优选择，单独选择某一个区间都会导致整体的落差变大，使得后面没增加的部分需要增加的次数增加
@@ -1681,9 +1667,9 @@ public long IncreasingArray (int[] array) {
 
 Difficulty: **中等**
 
-给定一个非负整数&amp;nbsp;<code>N</code>，找出小于或等于&amp;nbsp;<code>N</code>&amp;nbsp;的最大的整数，同时这个整数需要满足其各个位数上的数字是单调递增。</p>
+给定一个非负整数&amp;nbsp;<code>N</code>，找出小于或等于&amp;nbsp;<code>N</code>&amp;nbsp; 的最大的整数，同时这个整数需要满足其各个位数上的数字是单调递增。</p>
 
-<p>（当且仅当每个相邻位数上的数字&amp;nbsp;<code>x</code>&amp;nbsp;和&amp;nbsp;<code>y</code>&amp;nbsp;满足&amp;nbsp;<code>x &amp;lt;= y</code>&amp;nbsp;时，我们称这个整数是单调递增的。）</p>
+<p>（当且仅当每个相邻位数上的数字&amp;nbsp;<code>x</code>&amp;nbsp; 和&amp;nbsp;<code>y</code>&amp;nbsp; 满足&amp;nbsp;<code>x &amp;lt;= y</code>&amp;nbsp; 时，我们称这个整数是单调递增的。）</p>
 
 <p>
 
@@ -1694,52 +1680,52 @@ Difficulty: **中等**
 **示例 1:**
 
 ```go
-输入: N = 10
-输出: 9
+输入：N = 10
+输出：9
 ```
 
 **示例 2:**
 
 ```go
-输入: N = 1234
-输出: 1234
+输入：N = 1234
+输出：1234
 ```
 
 **示例 3:**
 
 ```go
-输入: N = 332
-输出: 299
+输入：N = 332
+输出：299
 ```
 
-**说明:** `N` 是在 `[0, 10^9]` 范围内的一个整数。
+**说明：** `N` 是在 `[0, 10^9]` 范围内的一个整数。
 
 <strong>示例 1:</strong></p>
 
 ```go
-输入: N = 10
-输出: 9
+输入：N = 10
+输出：9
 ```
 
 <p><strong>示例 2:</strong></p>
 
 ```go
-输入: N = 1234
-输出: 1234
+输入：N = 1234
+输出：1234
 ```
 
 <p><strong>示例 3:</strong></p>
 
 ```go
-输入: N = 332
-输出: 299
+输入：N = 332
+输出：299
 ```
 
-<p><strong>说明:</strong> N是在<code>[0, 10^9]</code>范围内的一个整数。</p>
+<p><strong>说明：</strong> N 是在<code>[0, 10^9]</code>范围内的一个整数。</p>
 
 **解法一**
 
-这题写了好几版，总感觉很简单，但是总是有case能把我卡住，最终的思路就是，**逆向遍历**这个数，如果某个数小于前面（左边）的数，那么将前面的数减一，然后记录下当前的下标，最终这个下标后面的数都要变成9
+这题写了好几版，总感觉很简单，但是总是有 case 能把我卡住，最终的思路就是，**逆向遍历**这个数，如果某个数小于前面（左边）的数，那么将前面的数减一，然后记录下当前的下标，最终这个下标后面的数都要变成 9
 ```golang
 //322 -> 299
 //243 -> 239

@@ -1,5 +1,5 @@
 ---
-title: LeetCode二叉树
+title: LeetCode 二叉树
 tags:
   - LeetCode
   - 二叉树
@@ -12,7 +12,7 @@ abbrlink: 43c532c9
 
 ## _LeetCode 二叉树_
 
-> 善用**ctrl+f**
+> 善用** ctrl+f**
 
 ## [144. 二叉树的前序遍历](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)
 
@@ -111,7 +111,7 @@ static class Command{
     }
 }
 ```
-bobo老师的一种思路，可以说是相当妙了👏，一下就解决了三种遍历的非递归实现，另外两种只需要调整一下进栈的顺序就可以了！
+bobo 老师的一种思路，可以说是相当妙了👏，一下就解决了三种遍历的非递归实现，另外两种只需要调整一下进栈的顺序就可以了！
 
 **解法四**
 
@@ -151,17 +151,17 @@ public List<Integer> preorderTraversal4(TreeNode root) {
 >
 > 
 
-## [589. N叉树的前序遍历](https://leetcode-cn.com/problems/n-ary-tree-preorder-traversal/)
+## [589. N 叉树的前序遍历](https://leetcode-cn.com/problems/n-ary-tree-preorder-traversal/)
 
 给定一个 N 叉树，返回其节点值的*前序遍历*。
 
-例如，给定一个 `3叉树` :
+例如，给定一个 `3 叉树` :
 
 ![MWwEt0.png](https://s2.ax1x.com/2019/11/20/MWwEt0.png)
 
-返回其前序遍历: `[1,3,5,6,2,4]`。
+返回其前序遍历：`[1,3,5,6,2,4]`。
 
-**说明:** 递归法很简单，你可以使用迭代法完成此题吗?
+**说明：** 递归法很简单，你可以使用迭代法完成此题吗？
 
 **解法一**
 
@@ -250,7 +250,7 @@ public List<Integer> inorderTraversal3(TreeNode root) {
         }
         //没有左子树了
         cur=stack.pop();
-        //将当前节点添加到res中
+        //将当前节点添加到 res 中
         res.add(cur.val);
         //切换为右子树
         cur=cur.right;
@@ -279,35 +279,35 @@ Output: [3,2,1]
 
 **解法一**
 
-这题是个hard题，没那么容易（不过根据bobo老师的方式来做确实简单😂）
+这题是个 hard 题，没那么容易（不过根据 bobo 老师的方式来做确实简单😂）
 
 ```java
 public List<Integer> postorderTraversal3(TreeNode root) {
     List<Integer> res=new ArrayList<>();
     if (root==null) return res;
     Stack<TreeNode> stack=new Stack<>();
-    TreeNode cur=root,lastNode=null; //lastNode为上一次访问的节点
+    TreeNode cur=root,lastNode=null; //lastNode 为上一次访问的节点
     while(cur!=null||!stack.isEmpty()){
         while (cur!=null) {
             stack.push(cur);
             cur=cur.left;
         }
-        //没有左子树了,把后一个左节点拿出来
+        //没有左子树了，把后一个左节点拿出来
         cur=stack.peek();
-        //如果没有右节点,或者右节点访问过了
+        //如果没有右节点，或者右节点访问过了
         if (cur.right==null||cur.right==lastNode) {
             //添加节点
             res.add(cur.val);
-            //记录当前节点为lastNode
+            //记录当前节点为 lastNode
             lastNode=cur;
-            //将他pop出去
+            //将他 pop 出去
             stack.pop();
             //节点已经弹出
-            //指向null,不然就死循环了
+            //指向 null, 不然就死循环了
             cur=null;
         }else{
-            //右节点不为空,并且没访问过
-            //切换为右子树,重复上面的步骤
+            //右节点不为空，并且没访问过
+            //切换为右子树，重复上面的步骤
             cur=cur.right;
         }
         
@@ -346,17 +346,17 @@ public List<Integer> postorderTraversals(TreeNode root) {
     return res;
 }
 ```
-## [590. N叉树的后序遍历](https://leetcode-cn.com/problems/n-ary-tree-postorder-traversal/)
+## [590. N 叉树的后序遍历](https://leetcode-cn.com/problems/n-ary-tree-postorder-traversal/)
 
 给定一个 N 叉树，返回其节点值的*后序遍历*。
 
-例如，给定一个 `3叉树` :
+例如，给定一个 `3 叉树` :
 
 ![NTree](https://i.loli.net/2019/12/01/KAQP9UNfV5bau7J.png)
 
-返回其后序遍历: `[5,6,3,2,4,1]`.
+返回其后序遍历：`[5,6,3,2,4,1]`.
 
-**说明:** 递归法很简单，你可以使用迭代法完成此题吗?
+**说明：** 递归法很简单，你可以使用迭代法完成此题吗？
 
 **解法一**
 
@@ -412,7 +412,7 @@ public List<Integer> postorder(Node root) {
 }
 ```
 
-这题开始因为一个空的case把我搞晕了，搞了半天才发现
+这题开始因为一个空的 case 把我搞晕了，搞了半天才发现
 
 ## [102. 二叉树的层次遍历](https://leetcode-cn.com/problems/binary-tree-level-order-traversal/)
 
@@ -450,11 +450,11 @@ public List<List<Integer>> levelOrder(TreeNode root) {
     Queue<TreeNode> queue=new LinkedList<>();
     queue.add(root);
     while(!queue.isEmpty()){
-        //count代表的其实就是每一层的节点个数
+        //count 代表的其实就是每一层的节点个数
         int count=queue.size();
         List<Integer> list=new ArrayList<>();
         while(count>0){
-            //取出当前节点,并将其左右子节点入队列
+            //取出当前节点，并将其左右子节点入队列
             TreeNode node=queue.poll();
             list.add(node.val);
             if (node.left!=null) {
@@ -473,7 +473,7 @@ public List<List<Integer>> levelOrder(TreeNode root) {
 
 **解法二**
 
-递归DFS，这种其实还是挺有意思的，可以看下
+递归 DFS，这种其实还是挺有意思的，可以看下
 
 ```java
 public List<List<Integer>> levelOrder(TreeNode root) {
@@ -491,17 +491,15 @@ private void helper(List<List<Integer>> res, TreeNode root, int depth) {
     helper(res, root.right, depth + 1);
 }
 ```
-## [429. N叉树的层序遍历](https://leetcode-cn.com/problems/n-ary-tree-level-order-traversal/)
+## [429. N 叉树的层序遍历](https://leetcode-cn.com/problems/n-ary-tree-level-order-traversal/)
 
-给定一个 N 叉树，返回其节点值的*层序遍历*。 (即从左到右，逐层遍历)。
+给定一个 N 叉树，返回其节点值的*层序遍历*。 （即从左到右，逐层遍历）。
 
-例如，给定一个 `3叉树` :
+例如，给定一个 `3 叉树` :
 
 ![NTee](https://i.loli.net/2019/12/01/He8KVlms1jynbvr.png)
 
-
-
-返回其层序遍历:
+返回其层序遍历：
 
 ```java
 [
@@ -511,7 +509,7 @@ private void helper(List<List<Integer>> res, TreeNode root, int depth) {
 ]
 ```
 
-**说明:**
+**说明：**
 
 1. 树的深度不会超过 `1000`。
 2. 树的节点总数不会超过 `5000`。
@@ -558,8 +556,6 @@ Given binary tree `[3,9,20,null,null,15,7]`,
     /  \
    15   7
 ```
-
-
 
 return its bottom-up level order traversal as:
 
@@ -666,12 +662,12 @@ public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
 
 给定一棵二叉树，想象自己站在它的右侧，按照从顶部到底部的顺序，返回从右侧所能看到的节点值。
 
-**示例:**
+**示例：**
 
 ```java
-输入: [1,2,3,null,5,null,4]
-输出: [1, 3, 4]
-解释:
+输入：[1,2,3,null,5,null,4]
+输出：[1, 3, 4]
+解释：
 
    1            <---
  /   \
@@ -714,7 +710,7 @@ public List<Integer> rightSideView(TreeNode root) {
 
 **解法二**
 
-dfs，其实就是一直向右走，走不动就向左走，这样遍历的轨迹就是沿着二叉树的右边缘向下的，我们只需要记录层数，然后当层数和res数量相等的时候记录结果就行了（看见头条面试要求写logN空间的，应该就是这种解法了，但是下面的解法空间复杂度应该还是O(N)的，最坏情况下形成一链表就成N了，不过相比上面层次遍历永远是N的做法还是要好一点）
+dfs，其实就是一直向右走，走不动就向左走，这样遍历的轨迹就是沿着二叉树的右边缘向下的，我们只需要记录层数，然后当层数和 res 数量相等的时候记录结果就行了（看见头条面试要求写 logN 空间的，应该就是这种解法了，但是下面的解法空间复杂度应该还是 O(N) 的，最坏情况下形成一链表就成 N 了，不过相比上面层次遍历永远是 N 的做法还是要好一点）
 
 ```go
 func rightSideView(root *TreeNode) []int {
@@ -735,34 +731,31 @@ func rightSideView(root *TreeNode) []int {
 }
 ```
 
-
-
 ## [637. 二叉树的层平均值](https://leetcode-cn.com/problems/average-of-levels-in-binary-tree/) 
 
-给定一个非空二叉树, 返回一个由每层节点平均值组成的数组.
+给定一个非空二叉树，返回一个由每层节点平均值组成的数组。
 
 **示例 1:**
 
 ```java
-输入:
+输入：
     3
    / \
   9  20
     /  \
    15   7
-输出: [3, 14.5, 11]
-解释:
-第0层的平均值是 3,  第1层是 14.5, 第2层是 11. 因此返回 [3, 14.5, 11].
+输出：[3, 14.5, 11]
+解释：
+第 0 层的平均值是 3,  第 1 层是 14.5, 第 2 层是 11. 因此返回 [3, 14.5, 11].
 ```
-
 
 **注意：**
 
-1. 节点值的范围在32位有符号整数范围内。
+1. 节点值的范围在 32 位有符号整数范围内。
 
 **解法一**
 
-一百遍啊一百遍，这应该属于树类型题的HelloWorld吧 ~ 
+一百遍啊一百遍，这应该属于树类型题的 HelloWorld 吧 ~ 
 
 ```java
 public List<Double> averageOfLevels(TreeNode root) {
@@ -798,7 +791,7 @@ public List<Double> averageOfLevels(TreeNode root) {
 
 二叉树的深度为根节点到最远叶子节点的最长路径上的节点数。
 
-**说明:** 叶子节点是指没有子节点的节点。
+**说明：** 叶子节点是指没有子节点的节点。
 
 **示例：**
 给定二叉树 [3,9,20,null,null,15,7]
@@ -810,7 +803,6 @@ public List<Double> averageOfLevels(TreeNode root) {
     /  \
    15   7
 ```
-
 
 返回它的最大深度 3 。
 
@@ -856,19 +848,19 @@ public int maxDepth(TreeNode root) {
     return max;
 }
 ```
-## [559. N叉树的最大深度](https://leetcode-cn.com/problems/maximum-depth-of-n-ary-tree/)
+## [559. N 叉树的最大深度](https://leetcode-cn.com/problems/maximum-depth-of-n-ary-tree/)
 
 给定一个 N 叉树，找到其最大深度。
 
 最大深度是指从根节点到最远叶子节点的最长路径上的节点总数。
 
-例如，给定一个 `3叉树` :
+例如，给定一个 `3 叉树` :
 
-![3叉树](https://s2.ax1x.com/2019/11/20/MWwEt0.png)
+![3 叉树](https://s2.ax1x.com/2019/11/20/MWwEt0.png)
 
 我们应返回其最大深度，3。
 
-**说明:**
+**说明：**
 
 1. 树的深度不会超过 `1000`。
 2. 树的节点总不会超过 `5000`。
@@ -896,9 +888,9 @@ public int maxDepth(Node root) {
 
 最小深度是从根节点到最近叶子节点的最短路径上的节点数量。
 
-**说明:** 叶子节点是指没有子节点的节点。
+**说明：** 叶子节点是指没有子节点的节点。
 
-**示例:**
+**示例：**
 
 给定二叉树 `[3,9,20,null,null,15,7]`   
 
@@ -910,12 +902,11 @@ public int maxDepth(Node root) {
    15   7
 ```
 
-
 返回它的最小深度  2.
 
 **解法一**
 
-最大都求了，最小也来一发，经典BFS做法，求最短路径
+最大都求了，最小也来一发，经典 BFS 做法，求最短路径
 
 ```java
 public int minDepth(TreeNode root) {
@@ -959,8 +950,7 @@ public int minDepth(TreeNode root) {
     return Math.min(minDepth(root.left),minDepth(root.right))+1;
 }
 ```
-很上面最大的相反，但是有个细节需要注意，如果一个根节点左右子树，**有一颗为空**，如果不处理，按照之前的逻辑，这颗空子树下一次就会返回0，肯定会比另一颗小最后返回的就是到这颗子树的路径，但是仔细想想这样是正确的么？明显不是，最短路径的尽头一定是叶子节点也就是左右子树都为空的时候，所以这里需要特别注意
-
+很上面最大的相反，但是有个细节需要注意，如果一个根节点左右子树，**有一颗为空**，如果不处理，按照之前的逻辑，这颗空子树下一次就会返回 0，肯定会比另一颗小最后返回的就是到这颗子树的路径，但是仔细想想这样是正确的么？明显不是，最短路径的尽头一定是叶子节点也就是左右子树都为空的时候，所以这里需要特别注意
 
 ## [226. 翻转二叉树](https://leetcode-cn.com/problems/invert-binary-tree/)
 
@@ -978,7 +968,6 @@ public int minDepth(TreeNode root) {
 1   3 6   9
 ```
 
-
 输出：
 
 ```java
@@ -989,10 +978,10 @@ public int minDepth(TreeNode root) {
 9   6 3   1
 ```
 
-**备注:**
+**备注：**
 这个问题是受到 Max Howell 的 原问题 启发的 ：
 
-> 谷歌：我们90％的工程师使用您编写的软件(Homebrew)，但是您却无法在面试时在白板上写出翻转二叉树这道题，这太糟糕了。
+> 谷歌：我们 90％的工程师使用您编写的软件 (Homebrew)，但是您却无法在面试时在白板上写出翻转二叉树这道题，这太糟糕了。
 
 **解法一**
 
@@ -1034,36 +1023,36 @@ public TreeNode invertTree(TreeNode root) {
 **示例 1:**
 
 ```java
-输入:       1         1
+输入：1         1
           / \       / \
          2   3     2   3
 
         [1,2,3],   [1,2,3]
 
-输出: true
+输出：true
 ```
 
 **示例 2:**
 
 ```java
-输入:      1          1
+输入：1          1
           /           \
          2             2
     
         [1,2],     [1,null,2]
 
-输出: false
+输出：false
 ```
 
 **示例 3:**
 
 ```java
-输入:       1         1
+输入：1         1
           / \       / \
          2   1     1   2
         
         [1,2,1],   [1,1,2]
-输出: false
+输出：false
 ```
 
 **解法一**
@@ -1084,7 +1073,6 @@ public boolean isSameTree(TreeNode p, TreeNode q) {
 
 Difficulty: **中等**
 
-
 我们可以为二叉树 T 定义一个翻转操作，如下所示：选择任意节点，然后交换它的左子树和右子树。
 
 只要经过一定次数的翻转操作后，能使 X 等于 Y，我们就称二叉树 X _翻转等价_于二叉树 Y。
@@ -1104,7 +1092,6 @@ Difficulty: **中等**
 
 1.  每棵树最多有 `100` 个节点。
 2.  每棵树中的每个值都是唯一的、在 `[0, 99]` 范围内的整数。
-
 
 **解法一**
 
@@ -1149,7 +1136,6 @@ func flipEquiv(root1 *TreeNode, root2 *TreeNode) bool {
   / \
  1   2
 ```
-
 
 给定的树 t：
 
@@ -1202,7 +1188,7 @@ public boolean isSubtree(TreeNode s, TreeNode t) {
     return isSubtree(s.left,t) | isSubtree(s.right,t);
 }
 ```
-过了146/176的case，但是这个明显是错的，不过核心的递归还是大概雏形写出来了
+过了 146/176 的 case，但是这个明显是错的，不过核心的递归还是大概雏形写出来了
 
 **解法二**
 
@@ -1228,19 +1214,19 @@ public boolean isSame(TreeNode s, TreeNode t){
 }
 ```
 
-开始的代码没这么简洁，比较罗嗦，要判断一棵树是不是另一颗的子树很好判断，要么s和t直接相等，要么t是s左子树的子树，或者右子树的子树，所以我们还需要一个函数判断两个两棵树是否相等，只用一个函数确实不好实现
+开始的代码没这么简洁，比较罗嗦，要判断一棵树是不是另一颗的子树很好判断，要么 s 和 t 直接相等，要么 t 是 s 左子树的子树，或者右子树的子树，所以我们还需要一个函数判断两个两棵树是否相等，只用一个函数确实不好实现
 
 **解法三**
 
-其实还有一种解法，也是最开始想到的，就是直接中序遍历和前序遍历，得到两个序列，然后用kmp匹配两棵树，kmp很久没看了，不会写了，后面有时间再来写
+其实还有一种解法，也是最开始想到的，就是直接中序遍历和前序遍历，得到两个序列，然后用 kmp 匹配两棵树，kmp 很久没看了，不会写了，后面有时间再来写
 
-## [面试题26. 树的子结构](https://leetcode-cn.com/problems/shu-de-zi-jie-gou-lcof/)
+## [面试题 26. 树的子结构](https://leetcode-cn.com/problems/shu-de-zi-jie-gou-lcof/)
 
-输入两棵二叉树A和B，判断B是不是A的子结构。(约定空树不是任意一个树的子结构)
+输入两棵二叉树 A 和 B，判断 B 是不是 A 的子结构。（约定空树不是任意一个树的子结构）
 
-B是A的子结构， 即 A中有出现和B相同的结构和节点值。
+B 是 A 的子结构， 即 A 中有出现和 B 相同的结构和节点值。
 
-**例如:**
+**例如：**
 给定的树 A:
 
 ```java
@@ -1258,7 +1244,6 @@ B是A的子结构， 即 A中有出现和B相同的结构和节点值。
   /
  1
 ```
-
 
 返回 true，因为 B 与 A 的一个子树拥有相同的结构和节点值。
 
@@ -1293,7 +1278,7 @@ public boolean isSubStructure(TreeNode A, TreeNode B) {
 }
 
 public boolean isSame(TreeNode A,TreeNode B){
-    if (B==null) { //AB同时为NULL应该返回true,所以上下不能交换
+    if (B==null) { //AB 同时为 NULL 应该返回 true, 所以上下不能交换
         return true;
     }
     if(A==null){
@@ -1302,7 +1287,7 @@ public boolean isSame(TreeNode A,TreeNode B){
     return A.val==B.val && isSame(A.left,B.left) && isSame(A.right,B.right);
 }
 ```
-这里说的是子结构不是子树，isSame函数不需要保证完全相等，这里就需要注意了，当`A!=null && B==null`的时候就说明B已经匹配完了A还没有，这就说明B是A的子结构
+这里说的是子结构不是子树，isSame 函数不需要保证完全相等，这里就需要注意了，当`A!=null && B==null`的时候就说明 B 已经匹配完了 A 还没有，这就说明 B 是 A 的子结构
 
 **UPDATE(2020.5.7)**
 
@@ -1335,17 +1320,17 @@ func dfs(A *TreeNode, B *TreeNode)bool{
 
 完全二叉树的定义如下：在完全二叉树中，除了最底层节点可能没填满外，其余每层节点数都达到最大值，并且最下面一层的节点都集中在该层最左边的若干位置。若最底层为第 h 层，则该层包含 1~ 2h 个节点。
 
-**示例:**
+**示例：**
 
 ```java
-输入: 
+输入：
     1
    / \
   2   3
  / \  /
 4  5 6
 
-输出: 6
+输出：6
 ```
 
 **解法一**
@@ -1391,7 +1376,7 @@ public int countNodes(TreeNode root) {
 
 **解法三**
 
-这题是mid难度，而且题目给的条件还没用上：**这是一颗完全二叉树**，所以我们可以利用它的性质来做，众所周知，**满二叉树的节点个数**可以直接根据公式 `2^H-1` 计算得来，所以我们只要判断当前的完全二叉树是不是**满二叉树**，如果是直接算出来，这样就可以省去中间很多节点的遍历
+这题是 mid 难度，而且题目给的条件还没用上：**这是一颗完全二叉树**，所以我们可以利用它的性质来做，众所周知，**满二叉树的节点个数**可以直接根据公式 `2^H-1` 计算得来，所以我们只要判断当前的完全二叉树是不是**满二叉树**，如果是直接算出来，这样就可以省去中间很多节点的遍历
 
 ```java
 //利用完全二叉树的性质
@@ -1405,7 +1390,7 @@ public int countNodes(TreeNode root) {
         right=right.right;
         hight++;
     }
-    //同时向左向右走，走到最后left==null就说明这颗树是满二叉树，可以利用公式直接求出节点个数
+    //同时向左向右走，走到最后 left==null 就说明这颗树是满二叉树，可以利用公式直接求出节点个数
     //否则就对其左右子树递归求解
     return left==null?(1<<hight)-1:countNodes(root.left)+countNodes(root.right)+1;
 }
@@ -1416,9 +1401,9 @@ public int countNodes(TreeNode root) {
 
 给定一个二叉树和一个目标和，判断该树中是否存在**根节点到叶子节点**的路径，这条路径上所有节点值相加等于目标和。
 
-**说明:** 叶子节点是指没有子节点的节点。
+**说明：** 叶子节点是指没有子节点的节点。
 
-**示例:** 
+**示例：** 
 给定如下二叉树，以及目标和 `sum = 22`
 
 ```java
@@ -1502,12 +1487,12 @@ public void sumOfLeft(TreeNode root) {
 
 给定一个二叉树，返回所有从根节点到叶子节点的路径。
 
-**说明:** 叶子节点是指没有子节点的节点。
+**说明：** 叶子节点是指没有子节点的节点。
 
-**示例:**
+**示例：**
 
 ```java
- 输入:
+ 输入：
 
    1
  /   \
@@ -1515,14 +1500,14 @@ public void sumOfLeft(TreeNode root) {
  \
   5
 
-输出: ["1->2->5", "1->3"]
+输出：["1->2->5", "1->3"]
 
-解释: 所有根节点到叶子节点的路径为: 1->2->5, 1->3
+解释：所有根节点到叶子节点的路径为：1->2->5, 1->3
 ```
 
 **解法一**
 
-递归DFS的解法
+递归 DFS 的解法
 
 ```java
 //DFS
@@ -1553,7 +1538,7 @@ public List<String> binaryTreePaths(TreeNode root) {
 
 **解法二**
 
-BFS广搜
+BFS 广搜
 
 ```java
 public List<String> binaryTreePaths(TreeNode root) {
@@ -1567,7 +1552,7 @@ public List<String> binaryTreePaths(TreeNode root) {
     while(!node_stack.isEmpty()){
         TreeNode node=node_stack.pop();
         path=path_stack.pop();
-        //叶子节点，这条路径搜索结束，添加到res中
+        //叶子节点，这条路径搜索结束，添加到 res 中
         if (node.left==null&&node.right==null) {
             res.add(path);
         }
@@ -1584,7 +1569,7 @@ public List<String> binaryTreePaths(TreeNode root) {
     return res;
 }
 ```
-这里和传统的BFS不太一样，是用的栈来遍历的
+这里和传统的 BFS 不太一样，是用的栈来遍历的
 
 **解法三**
 
@@ -1597,7 +1582,7 @@ func binaryTreePaths(root *TreeNode) []string {
     return res
 }
 
-//注意这个res要传指针
+//注意这个 res 要传指针
 func dfs(root *TreeNode,path string,res *[]string){
     if root==nil {return}
     path+=strconv.Itoa(root.Val)
@@ -1614,9 +1599,9 @@ func dfs(root *TreeNode,path string,res *[]string){
 
 给定一个二叉树和一个目标和，找到所有从根节点到叶子节点路径总和等于给定目标和的路径。
 
-**说明:** 叶子节点是指没有子节点的节点
+**说明：** 叶子节点是指没有子节点的节点
 
-**示例:**
+**示例：**
 给定如下二叉树，以及目标和 `sum = 22`，
 
 ```java
@@ -1628,7 +1613,7 @@ func dfs(root *TreeNode,path string,res *[]string){
      /  \    / \
     7    2  5   1
 ```
-返回:
+返回：
 
 ```java
 [
@@ -1639,7 +1624,7 @@ func dfs(root *TreeNode,path string,res *[]string){
 
 **解法一**
 
-和上一题的做法基本一致，本来应该是一遍bugfree的，编译错误整了半天
+和上一题的做法基本一致，本来应该是一遍 bugfree 的，编译错误整了半天
 
 ```java
 public List<List<Integer>> pathSum(TreeNode root, int sum) {
@@ -1671,7 +1656,7 @@ public List<List<Integer>> pathSum(TreeNode root, int sum) {
 ```
 **解法二**
 
-废了老大劲终于把BFS写出来了。。。可以看出还是借鉴的上面的思路
+废了老大劲终于把 BFS 写出来了。可以看出还是借鉴的上面的思路
 
 ```java
 public List<List<Integer>> pathSum2(TreeNode root,int sum) {
@@ -1681,7 +1666,7 @@ public List<List<Integer>> pathSum2(TreeNode root,int sum) {
     Stack<TreeNode> node_stack=new Stack<>();
     //路径栈
     Stack<List<Integer>> path_stack=new Stack<>();
-    //节点sum栈
+    //节点 sum 栈
     Stack<Integer> sum_stack=new Stack<>();
     //给每个栈存入初始值
     node_stack.add(root);
@@ -1700,11 +1685,11 @@ public List<List<Integer>> pathSum2(TreeNode root,int sum) {
             continue;
         }
         if (node.left!=null) {
-            //这三个栈是同步的,node栈存放当前节点
-            //path栈存放根节点到当前节点的路径
-            //sum栈存放的是path栈中所有节点的val和
+            //这三个栈是同步的，node 栈存放当前节点
+            //path 栈存放根节点到当前节点的路径
+            //sum 栈存放的是 path 栈中所有节点的 val 和
             node_stack.add(node.left);
-            //这里不要直接操作pathList,否则左右的路径会混在一起
+            //这里不要直接操作 pathList, 否则左右的路径会混在一起
             LinkedList<Integer> tlis= new LinkedList(pathList);
             tlis.add(node.left.val);
             path_stack.add(tlis);
@@ -1727,7 +1712,7 @@ public List<List<Integer>> pathSum2(TreeNode root,int sum) {
 
 **解法三**
 
-补一种dfs+回溯的思路，上面的所有路径也可以这样做，感觉会比上面的要好一点
+补一种 dfs+回溯的思路，上面的所有路径也可以这样做，感觉会比上面的要好一点
 
 ```java
 public List<List<Integer>> pathSum(TreeNode root, int sum) {
@@ -1741,7 +1726,7 @@ public void dfs(TreeNode root,int sum,List<Integer> lis){
     if(root==null) return;
     lis.add(root.val);
     if(root.left==null && root.right==null && sum==root.val){
-        res.add(new ArrayList(lis)); //这里不能return，得到后面回溯后才能return
+        res.add(new ArrayList(lis)); //这里不能 return，得到后面回溯后才能 return
     }else{
         dfs(root.left,sum-root.val,lis);
         dfs(root.right,sum-root.val,lis);
@@ -1776,7 +1761,7 @@ public void dfs(TreeNode root,int sum,List<Integer> lis){
 
 **解法一**
 
-这题和上面两题很类似，可惜我并没有直接做出来，菜啊，看了一眼评论区看见了几个for循环立马就懂了，然后过了好几天实现了下，一开始root的位置放错了，改了一会儿
+这题和上面两题很类似，可惜我并没有直接做出来，菜啊，看了一眼评论区看见了几个 for 循环立马就懂了，然后过了好几天实现了下，一开始 root 的位置放错了，改了一会儿
 
 ```java
 public List<TreeNode> allPossibleFBT(int N) {
@@ -1792,7 +1777,7 @@ public List<TreeNode> allPossibleFBT(int N) {
         List<TreeNode> rights=allPossibleFBT(N-i);
         for(TreeNode le:lefts){
             for(TreeNode ri:rights){
-                //一路从最外层移动到这里。。。。
+                //一路从最外层移动到这里。
                 TreeNode root=new TreeNode(0); 
                 root.left=le;
                 root.right=ri;
@@ -1812,17 +1797,17 @@ public List<TreeNode> allPossibleFBT(int N) {
 
 计算从根到叶子节点生成的所有数字之和。
 
-**说明:** 叶子节点是指没有子节点的节点。
+**说明：** 叶子节点是指没有子节点的节点。
 
 **示例 1:**
 
 ```java
-输入: [1,2,3]
+输入：[1,2,3]
     1
    / \
   2   3
-输出: 25
-解释:
+输出：25
+解释：
 从根到叶子节点路径 1->2 代表数字 12.
 从根到叶子节点路径 1->3 代表数字 13.
 因此，数字总和 = 12 + 13 = 25.
@@ -1831,14 +1816,14 @@ public List<TreeNode> allPossibleFBT(int N) {
 **示例 2:**
 
 ```java
-输入: [4,9,0,5,1]
+输入：[4,9,0,5,1]
     4
    / \
   9   0
  / \
 5   1
-输出: 1026
-解释:
+输出：1026
+解释：
 从根到叶子节点路径 4->9->5 代表数字 495.
 从根到叶子节点路径 4->9->1 代表数字 491.
 从根到叶子节点路径 4->0 代表数字 40.
@@ -1866,7 +1851,7 @@ public int sumNumbers(TreeNode root) {
         }
         if (node.left!=null) {
             node_stack.add(node.left);
-             //注意*10,在上一层的基础上*10
+             //注意* 10, 在上一层的基础上* 10
             sum_stack.add(tempS*10+node.left.val);
         }
         if (node.right!=null) {
@@ -1879,7 +1864,7 @@ public int sumNumbers(TreeNode root) {
 ```
 **解法二**
 
-DFS解法，一开始没想出来。。。
+DFS 解法，一开始没想出来。
 
 ```java
 private int sum=0;
@@ -1930,7 +1915,7 @@ public void sumNumber(int parent,TreeNode root) {
 
 **解法一**
 
-和上一题一摸一样，没啥好说的，只不过一个是10进制，一个是二进制
+和上一题一摸一样，没啥好说的，只不过一个是 10 进制，一个是二进制
 
 ```go
 /**
@@ -1963,7 +1948,7 @@ func dfs(root *TreeNode,cur int,sum *int){
 }
 ```
 
-> 这题的数据太弱了，甚至都不用取模照样可以过。。。。我一开始看到1000个节点，还考虑要不要处理大数的情况，看到返回值是int才作罢🤣
+> 这题的数据太弱了，甚至都不用取模照样可以过。我一开始看到 1000 个节点，还考虑要不要处理大数的情况，看到返回值是 int 才作罢🤣
 
 ## [437. 路径总和 III](https://leetcode-cn.com/problems/path-sum-iii/)
 
@@ -1973,7 +1958,7 @@ func dfs(root *TreeNode,cur int,sum *int){
 
 路径不需要从根节点开始，也不需要在叶子节点结束，但是路径方向必须是向下的（只能从父节点到子节点）。
 
-二叉树不超过1000个节点，且节点数值范围是 [-1000000,1000000] 的整数。
+二叉树不超过 1000 个节点，且节点数值范围是 [-1000000,1000000] 的整数。
 
 **示例：**
 
@@ -1988,7 +1973,7 @@ root = [10,5,-3,3,2,null,11,3,-2,null,1], sum = 8
 3  -2   1
 ```
 
-返回 3。和等于 8 的路径有:
+返回 3。和等于 8 的路径有：
 
 1.  5 -> 3
 2.  5 -> 2 -> 1
@@ -2020,15 +2005,15 @@ public int findPath(TreeNode node,int sum){
     return res;
 }
 ```
-~~emmmm，这题分类是easy确实太迷了，嵌套的递归，看了解法确实看的懂，但是写是绝对写不出来的（眼睛：我懂了，脑子：你懂个锤子）除非能记住~~
+~~emmmm，这题分类是 easy 确实太迷了，嵌套的递归，看了解法确实看的懂，但是写是绝对写不出来的（眼睛：我懂了，脑子：你懂个锤子）除非能记住~~
 
-回头来看发现其实挺简单的，确实是easy题~ 但是这个解很明显不是最优解，这个里面会有很多的重复的计算，最优解是利用 前缀和+回溯的解法，有点小顶~
+回头来看发现其实挺简单的，确实是 easy 题~ 但是这个解很明显不是最优解，这个里面会有很多的重复的计算，最优解是利用 前缀和+回溯的解法，有点小顶~
 
 **解法二**
 
 补上前缀和的做法，之前好像是看了答案，然后感觉很难，就没写？今天又重新做了下，先写了暴力解，然后就直接写出了前缀和的做法，感觉前缀和的思路还是挺优秀的，一开始忘了回溯，思考了下意识到这里记录的应该是一条分支之上而下的前缀和，所以在统计完某个节点后应该回溯
 ```golang
-//前缀和的思路O(N)挺不错的
+//前缀和的思路 O(N) 挺不错的
 func pathSum(root *TreeNode, sum int) int {
     if root == nil {
         return 0
@@ -2046,7 +2031,7 @@ func dfs(root *TreeNode, sum int, target int, preSum map[int]int, res *int) {
         return
     }
     sum += root.Val
-    //preSum[sum]++，这里WA了一发，写在上面如果tatget为0就把当前节点算进去了
+    //preSum[sum]++，这里 WA 了一发，写在上面如果 tatget 为 0 就把当前节点算进去了
     *res += preSum[sum-target]
     preSum[sum]++
     dfs(root.Left, sum, target, preSum, res)
@@ -2058,42 +2043,42 @@ func dfs(root *TreeNode, sum int, target int, preSum map[int]int, res *int) {
 
 ## [235. 二叉搜索树的最近公共祖先](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-search-tree/)
 
-给定一个二叉搜索树, 找到该树中两个指定节点的最近公共祖先。
+给定一个二叉搜索树，找到该树中两个指定节点的最近公共祖先。
 
 百度百科中最近公共祖先的定义为：对于有根树 T 的两个结点 p、q，最近公共祖先表示为一个结点 x，满足 x 是 p、q 的祖先且 x 的深度尽可能大（**一个节点也可以是它自己的祖先**）
 
-例如，给定如下二叉搜索树:  `root = [6,2,8,0,4,7,9,null,null,3,5]`
+例如，给定如下二叉搜索树：`root = [6,2,8,0,4,7,9,null,null,3,5]`
 
 ![mark](http://static.imlgw.top/blog/20191001/KlQJmqmdWmP3.png?imageslim)
 
 **示例 1:**
 
 ```java
-输入: root = [6,2,8,0,4,7,9,null,null,3,5], p = 2, q = 8
-输出: 6 
-解释: 节点 2 和节点 8 的最近公共祖先是 6
+输入：root = [6,2,8,0,4,7,9,null,null,3,5], p = 2, q = 8
+输出：6 
+解释：节点 2 和节点 8 的最近公共祖先是 6
 ```
 
 **示例 2:**
 
 ```java
-输入: root = [6,2,8,0,4,7,9,null,null,3,5], p = 2, q = 4
-输出: 2
-解释: 节点 2 和节点 4 的最近公共祖先是 2, 因为根据定义最近公共祖先节点可以为节点本身。
+输入：root = [6,2,8,0,4,7,9,null,null,3,5], p = 2, q = 4
+输出：2
+解释：节点 2 和节点 4 的最近公共祖先是 2, 因为根据定义最近公共祖先节点可以为节点本身。
 ```
 
-**说明:**
+**说明：**
 
 - 所有节点的值都是唯一的。
 - p、q 为不同节点且均存在于给定的二叉搜索树中。
 
 **解法一**
 
-看了一点点思路，然后bugfree
+看了一点点思路，然后 bugfree
 
 ```java
 public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
-    //特殊情况,其中一个已经是另一个的祖先了
+    //特殊情况，其中一个已经是另一个的祖先了
     //if (p==root || q==root) return root;
     //都小于根节点
     if (p.val<root.val && q.val<root.val) {
@@ -2102,14 +2087,14 @@ public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
         //都大于根节点
         return lowestCommonAncestor(root.right,p,q);
     }else{
-        //一大一小 或者有一个是root
+        //一大一小 或者有一个是 root
         return root;
     }
 }
 ```
-其实核心就是利用好BST的性质，左子树一定小于根节点，右子树一定大于根节点，求公共祖先，如果一个节点在左子树，一个在右子树，那么最近的公共祖先一定是root，除此之外，还有一种特殊情况就是当两个节点已经有祖先关系的时候，那么直接返回祖先节点就可以了
+其实核心就是利用好 BST 的性质，左子树一定小于根节点，右子树一定大于根节点，求公共祖先，如果一个节点在左子树，一个在右子树，那么最近的公共祖先一定是 root，除此之外，还有一种特殊情况就是当两个节点已经有祖先关系的时候，那么直接返回祖先节点就可以了
 
-> 这里其实前面的`if`可以去掉，题目中说到了所有节点的值都是唯一的，所以节点值相等就说明是同一个节点，就已经包含在最后一个else的情况中了
+> 这里其实前面的`if`可以去掉，题目中说到了所有节点的值都是唯一的，所以节点值相等就说明是同一个节点，就已经包含在最后一个 else 的情况中了
 
 ## [98. 验证二叉搜索树](https://leetcode-cn.com/problems/validate-binary-search-tree/)
 
@@ -2124,24 +2109,24 @@ public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
 **示例 1:**
 
 ```java
-输入:
+输入：
     2
    / \
   1   3
-输出: true
+输出：true
 ```
 
 **示例 2:**
 
 ```java
-输入:
+输入：
     5
    / \
   1   4
      / \
     3   6
-输出: false
-解释: 输入为: [5,1,4,null,null,3,6]。
+输出：false
+解释：输入为：[5,1,4,null,null,3,6]。
      根节点的值为 5 ，但是其右子节点值为 4 
 ```
 
@@ -2165,18 +2150,18 @@ public boolean isValidBST(TreeNode node,Integer low,Integer high){
     return isValidBST(node.left,low,node.val) && isValidBST(node.right,node.val,high);
 }
 ```
-一定要注意BST的性质是根节点**大于所有** 右子树的节点，**小于所有**左子树的节点，而不是简单的验证当前节点和左右节点的大小关系就可以了，所以我们在验证的时候传入对应的**上界**和**下界**，节点必须要大于下界，小于上界，那么上界和下界从哪里来？_当前节点就是左子树的上界，右子树的下界！_  然后递归左右子树就ok了
+一定要注意 BST 的性质是根节点**大于所有** 右子树的节点，**小于所有**左子树的节点，而不是简单的验证当前节点和左右节点的大小关系就可以了，所以我们在验证的时候传入对应的**上界**和**下界**，节点必须要大于下界，小于上界，那么上界和下界从哪里来？_当前节点就是左子树的上界，右子树的下界！_  然后递归左右子树就 ok 了
 
-> 这题其实还有一个坑，只不过我这个做法直接跳过了，题目的case中有的节点值是`Integer.MIN_VALUE`，和`Integer.MAX_VALUE`  ，如果上界下界直接用int来传递的话，很有可能递归初始调用就是这样的
+> 这题其实还有一个坑，只不过我这个做法直接跳过了，题目的 case 中有的节点值是`Integer.MIN_VALUE`，和`Integer.MAX_VALUE`  ，如果上界下界直接用 int 来传递的话，很有可能递归初始调用就是这样的
 >
-> `return isValidBST(root,Integer.MIN_VALUE,Integer.MAX_VALUE);` 这就正中出题人下怀，所以我们这里用一个包装类型，这样我们只需要检测上界下界是不是null就可以了
+> `return isValidBST(root,Integer.MIN_VALUE,Integer.MAX_VALUE);` 这就正中出题人下怀，所以我们这里用一个包装类型，这样我们只需要检测上界下界是不是 null 就可以了
 
 **解法二**
 
-这个就利用了BST和中序遍历的关系，我们知道中序遍历是 `左->根->右`  这个顺序放到 BST中恰好就是一个升序的序列，所以我们就可以利用这个性质来判断二叉树是不是BST
+这个就利用了 BST 和中序遍历的关系，我们知道中序遍历是 `左->根->右`  这个顺序放到 BST 中恰好就是一个升序的序列，所以我们就可以利用这个性质来判断二叉树是不是 BST
 
 ```java
-//BST的中序遍历一定是升序的
+//BST 的中序遍历一定是升序的
 public boolean isValidBST(TreeNode root){
     LinkedList<Integer> order=new LinkedList<>();
     if (root==null) {
@@ -2200,12 +2185,11 @@ public boolean isValidBST(TreeNode root){
     return true;
 }
 ```
-这里其实可以不用list保存结果，~~用一个int保存上一次的节点值就行了~~ md重做的时候因为这个WA了好几次，如果用int的话需要加一个标志位用来初始化
+这里其实可以不用 list 保存结果，~~用一个 int 保存上一次的节点值就行了~~ md 重做的时候因为这个 WA 了好几次，如果用 int 的话需要加一个标志位用来初始化
 
 ## [958. 二叉树的完全性检验](https://leetcode-cn.com/problems/check-completeness-of-a-binary-tree/)
 
 Difficulty: **中等**
-
 
 给定一个二叉树，确定它是否是一个_完全二叉树_。
 
@@ -2237,10 +2221,9 @@ Difficulty: **中等**
 
 1.  树中将会有 1 到 100 个结点。
 
-
 **解法一**
 
-一开始思路出现了问题，想着去按照节点个数去校验，然后对最后一层做特判，然后发现这种思路是死胡同，实际上判断是否是完全二叉树很简单，只要节点**中间**没有出现null就说明是完全二叉树
+一开始思路出现了问题，想着去按照节点个数去校验，然后对最后一层做特判，然后发现这种思路是死胡同，实际上判断是否是完全二叉树很简单，只要节点**中间**没有出现 null 就说明是完全二叉树
 ```java
 public boolean isCompleteTree(TreeNode root) {
     if (root == null) {
@@ -2251,12 +2234,12 @@ public boolean isCompleteTree(TreeNode root) {
     TreeNode pre = root;
     while(!queue.isEmpty()){
         TreeNode cur = queue.poll();
-        //当前节点前面出现了null
+        //当前节点前面出现了 null
         if (pre==null && cur!=null){
             return false;
         }
         if (cur!=null) {
-            //因为要判断null是否在中间，所以null节点也要存进去
+            //因为要判断 null 是否在中间，所以 null 节点也要存进去
             queue.add(cur.left);
             queue.add(cur.right);
         }
@@ -2272,10 +2255,10 @@ public boolean isCompleteTree(TreeNode root) {
 
 本题中，一个高度平衡二叉树是指一个二叉树每个节点 的左右两个子树的高度差的绝对值不超过 1。
 
-**示例:**
+**示例：**
 
 ```java
-给定有序数组: [-10,-3,0,5,9]
+给定有序数组：[-10,-3,0,5,9]
 一个可能的答案是：[0,-3,9,-10,null,5]，它可以表示下面这个高度平衡二叉搜索树：
       0
      / \
@@ -2310,7 +2293,7 @@ public TreeNode sortedArrayToBST(int[] nums,int left,int right) {
 
 本题中，一个高度平衡二叉树是指一个二叉树*每个节点* 的左右两个子树的高度差的绝对值不超过 1。
 
-**示例:**
+**示例：**
 
 ```sql
 给定的有序链表： [-10, -3, 0, 5, 9],
@@ -2326,7 +2309,7 @@ public TreeNode sortedArrayToBST(int[] nums,int left,int right) {
 
 **解法一**
 
-~~BST不太熟看了下评论写出来的~~
+~~BST 不太熟看了下评论写出来的~~
 
 好久之前写的题了，每日打卡题出了上面的题目，随便做一下这题，发现这题被记录在链表专题中了，移过来下，和上面的一样，只不过找中点的方式不一样（UPDATE: 2020.7.3）
 
@@ -2346,7 +2329,7 @@ public static TreeNode build(ListNode head,ListNode tail){
         fast=fast.next.next;
         slow=slow.next;
     }
-    //slow为中点或中点后一个
+    //slow 为中点或中点后一个
     //1 2 3 4
     TreeNode root=new TreeNode(slow.val);
     root.left=build(head,slow);
@@ -2364,14 +2347,14 @@ func sortedListToBST(head *ListNode) *TreeNode {
         return &TreeNode{Val : head.Val}
     }
     var fast = head
-    var slow = head //slow为左中点
+    var slow = head //slow 为左中点
     var pre  = head
     for fast != nil && fast.Next !=nil{
         fast = fast.Next.Next
         pre = slow
         slow = slow.Next
     }
-    pre.Next = nil //斩断和slow的联系
+    pre.Next = nil //斩断和 slow 的联系
     root := &TreeNode{Val : slow.Val}
     root.Left = sortedListToBST(head)
     root.Right = sortedListToBST(slow.Next)
@@ -2379,7 +2362,7 @@ func sortedListToBST(head *ListNode) *TreeNode {
 }
 ```
 
-## [230. 二叉搜索树中第K小的元素](https://leetcode-cn.com/problems/kth-smallest-element-in-a-bst/)
+## [230. 二叉搜索树中第 K 小的元素](https://leetcode-cn.com/problems/kth-smallest-element-in-a-bst/)
 
 给定一个二叉搜索树，编写一个函数 `kthSmallest` 来查找其中第 k 个最小的元素
 
@@ -2389,20 +2372,19 @@ func sortedListToBST(head *ListNode) *TreeNode {
 **示例 1:**
 
 ```java
-输入: root = [3,1,4,null,2], k = 1
+输入：root = [3,1,4,null,2], k = 1
    3
   / \
  1   4
   \
    2
-输出: 1
+输出：1
 ```
-
 
 **示例 2:**
 
 ```java
-输入: root = [5,3,6,2,4,null,null,1], k = 3
+输入：root = [5,3,6,2,4,null,null,1], k = 3
        5
       / \
      3   6
@@ -2410,9 +2392,8 @@ func sortedListToBST(head *ListNode) *TreeNode {
    2   4
   /
  1
-输出: 3
+输出：3
 ```
-
 
 **进阶：**
 如果二叉搜索树经常被修改（插入/删除操作）并且你需要频繁地查找第 k 小的值，你将如何优化 kthSmallest 函数？
@@ -2442,7 +2423,7 @@ public int kthSmallest(TreeNode root, int k) {
     return -1;
 }
 ```
-还是利用BST中序遍历是升序的性质，在取到第k个元素的时候就直接`break`
+还是利用 BST 中序遍历是升序的性质，在取到第 k 个元素的时候就直接`break`
 
 **解法二**
 
@@ -2471,7 +2452,7 @@ public void kthSmall(TreeNode root, int k) {
     kthSmall(root.right,k);
 }
 ```
-如果是第K大就交换下遍历顺序就行了
+如果是第 K 大就交换下遍历顺序就行了
 ```golang
 func kthLargest(root *TreeNode, k int) int {
     var res = root.Val
@@ -2481,7 +2462,7 @@ func kthLargest(root *TreeNode, k int) int {
         if root == nil{
             return
         }
-        //先right
+        //先 right
         dfs(root.Right)
         count++
         if count == k{
@@ -2495,35 +2476,35 @@ func kthLargest(root *TreeNode, k int) int {
 ```
 **进阶**
 
-可以维护一个大根堆，就和最小栈一样，每次对BST操作的时候同步操作这个大根堆
+可以维护一个大根堆，就和最小栈一样，每次对 BST 操作的时候同步操作这个大根堆
 
 ## [236. 二叉树的最近公共祖先](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-tree/)
 
-给定一个二叉树, 找到该树中两个指定节点的最近公共祖先。
+给定一个二叉树，找到该树中两个指定节点的最近公共祖先。
 
 百度百科中最近公共祖先的定义为：“对于有根树 T 的两个结点 p、q，最近公共祖先表示为一个结点 x，满足 x 是 p、q 的祖先且 x 的深度尽可能大（一个节点也可以是它自己的祖先）。”
 
-例如，给定如下二叉树:  root = [3,5,1,6,2,0,8,null,null,7,4]
+例如，给定如下二叉树：root = [3,5,1,6,2,0,8,null,null,7,4]
 
  ![mark](http://static.imlgw.top/blog/20191003/m0bWNSMUQWy2.png?imageslim)
 
 **示例 1:**
 
 ```java
-输入: root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 1
-输出: 3
-解释: 节点 5 和节点 1 的最近公共祖先是节点 3。
+输入：root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 1
+输出：3
+解释：节点 5 和节点 1 的最近公共祖先是节点 3。
 ```
 
 **示例 2:**
 
 ```java
-输入: root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 4
-输出: 5
-解释: 节点 5 和节点 4 的最近公共祖先是节点 5。因为根据定义最近公共祖先节点可以为节点本身。
+输入：root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 4
+输出：5
+解释：节点 5 和节点 4 的最近公共祖先是节点 5。因为根据定义最近公共祖先节点可以为节点本身。
 ```
 
-**说明:**
+**说明：**
 
 - 所有节点的值都是唯一的。
 - p、q 为不同节点且均存在于给定的二叉树中。
@@ -2548,21 +2529,21 @@ public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
 
 - 如果 pp 和 qq 都存在，则返回它们的公共祖先
 - 如果只存在一个，则返回存在的一个
-- 如果 pp 和 qq 都不存在，则返回NULL 
+- 如果 pp 和 qq 都不存在，则返回 NULL 
 
 **解法二**
 
-2020.4.9新增解法，利用Map记录父节点，然后根据p,q倒推就行了
+2020.4.9 新增解法，利用 Map 记录父节点，然后根据 p,q 倒推就行了
 
 ```java
-//update: 2020.5.10原来用的TreeNode做键，居然能过也是很神奇，我试了下，TreeNode应该是没有覆盖equals的
+//update: 2020.5.10 原来用的 TreeNode 做键，居然能过也是很神奇，我试了下，TreeNode 应该是没有覆盖 equals 的
 //所以要是碰撞的够多，那种做法就错了
 public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
     if (root == null || p==root ||q==root) {
         return root;
     }
     Deque<TreeNode> stack=new ArrayDeque<>();
-    //题目说了值唯一，所以可以用Integer当键
+    //题目说了值唯一，所以可以用 Integer 当键
     HashMap<Integer,TreeNode> map=new HashMap<>();
     map.put(root.val,null); //根节点
     stack.push(root);
@@ -2602,8 +2583,7 @@ public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
 3  4 4  3
 ```
 
-
-但是下面这个 `[1,2,2,null,3,null,3]` 则不是**镜像对称**的:
+但是下面这个 `[1,2,2,null,3,null,3]` 则不是**镜像对称**的：
 
 ```java
     1
@@ -2613,7 +2593,7 @@ public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
    3    3
 ```
 
-**说明:**
+**说明：**
 
 如果你可以运用递归和迭代两种方法解决这个问题，会很加分。
 
@@ -2621,9 +2601,9 @@ public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
 
 哎，感觉刷题还是得在白天，脑子清醒点，下午就感觉做题老是出问题，一开始题都没看清就开始做
 
-其实一开始是想BFS层次遍历然后判断每一层是不是镜像对称的，然后发现有些case是过不了的，比如
+其实一开始是想 BFS 层次遍历然后判断每一层是不是镜像对称的，然后发现有些 case 是过不了的，比如
 
-`[1,3,3,2,null,2]` 这样的case
+`[1,3,3,2,null,2]` 这样的 case
 
 ```java
     1
@@ -2633,9 +2613,9 @@ public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
 2   2
 ```
 
-~~层序遍历判断不出了这样的case~~   下面解法四打脸
+~~层序遍历判断不出了这样的 case~~   下面解法四打脸
 
-然后换一种遍历方式，其实一开始就想到了前序遍历，如果是镜像对称的话，前序遍历刚好就是对称的，但是！！！还是有case过不了！！！我们再看上面的case，我们改一改
+然后换一种遍历方式，其实一开始就想到了前序遍历，如果是镜像对称的话，前序遍历刚好就是对称的，但是！！！还是有 case 过不了！！！我们再看上面的 case，我们改一改
 
 ```java
     1
@@ -2645,10 +2625,10 @@ public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
 2   2
 ```
 
-第`192/195个case`，我惊了，居然还有这种操作！！！实在没办法翻了下解答，发现有位老兄也是这样做的，然后他很巧妙的在每个节点值后面加了一个**层数**，他好像是直接当作字符串添加的，我感觉不太好，改用了数组，最后判断的时候需要保证层数和值都相同才行，完整代码如下
+第`192/195 个 case`，我惊了，居然还有这种操作！！！实在没办法翻了下解答，发现有位老兄也是这样做的，然后他很巧妙的在每个节点值后面加了一个**层数**，他好像是直接当作字符串添加的，我感觉不太好，改用了数组，最后判断的时候需要保证层数和值都相同才行，完整代码如下
 
 ```java
-//[1,2,2,2,null,2] 忘了还有这样的case了,哭了
+//[1,2,2,2,null,2] 忘了还有这样的 case 了，哭了
 public boolean isSymmetric(TreeNode root) {
     if (root == null) {
         return true;
@@ -2697,11 +2677,11 @@ public boolean isSymmetric(TreeNode t1,TreeNode t2) {
     if (t1==null && t2==null) {
         return true;
     }
-    //有一个为null
+    //有一个为 null
     if (t1== null || t2==null) {
         return false;
     }
-    //都不为null
+    //都不为 null
     return t1.val==t2.val && isSymmetric(t1.left,t2.right) && isSymmetric(t1.right,t2.left);
 }
 ```
@@ -2709,7 +2689,7 @@ public boolean isSymmetric(TreeNode t1,TreeNode t2) {
 
 ![mark](http://static.imlgw.top/blog/20191107/Ae6daB6SuXdl.png?imageslim)
 
-判断两颗树是否成镜像对称的话，其实就和照镜子一样的，如上图，判断左子树和右子树是否成镜像对称，就需要判断**t1的左子树和t2的右子树是否镜像对称,t1的右子树和t2的左子树是否镜像对称**，根据这个就可以写出递归函数，还是挺妙的
+判断两颗树是否成镜像对称的话，其实就和照镜子一样的，如上图，判断左子树和右子树是否成镜像对称，就需要判断** t1 的左子树和 t2 的右子树是否镜像对称，t1 的右子树和 t2 的左子树是否镜像对称**，根据这个就可以写出递归函数，还是挺妙的
 
 **解法三**
 
@@ -2766,7 +2746,7 @@ public boolean isSymmetric(TreeNode root) {
                 queue.add(node.left);
                 lis.add(node.left.val);
             }else{
-                //-1占位
+                //-1 占位
                 lis.add(-1);
             }
             
@@ -2774,7 +2754,7 @@ public boolean isSymmetric(TreeNode root) {
                 queue.add(node.right);
                 lis.add(node.right.val);
             }else{
-                //为空加-1占位
+                //为空加-1 占位
                 lis.add(-1);
             }
             count--;
@@ -2797,17 +2777,17 @@ public boolean isSymmetric(TreeNode root) {
 
 示例 1:
 ```java
-输入:
+输入：
     2
    / \
   1   3
-输出:
+输出：
 1
 ```
 
 示例 2:
 ```java
-输入:
+输入：
         1
        / \
       2   3
@@ -2815,14 +2795,14 @@ public boolean isSymmetric(TreeNode root) {
     4   5   6
        /
       7
-输出:
+输出：
 7
 ```
-**注意:** 您可以假设树（即给定的根节点）不为 NULL。
+**注意：** 您可以假设树（即给定的根节点）不为 NULL。
 
 **解法一**
 
-这种题写一百遍了😂，然而我还是没有bugfree
+这种题写一百遍了😂，然而我还是没有 bugfree
 
 ```java
 //其实这种层序遍历的方式对这题有一点小题大作，不过我还是比较习惯这种方式
@@ -2852,7 +2832,7 @@ public int findBottomLeftValue(TreeNode root) {
 ```
 **解法二**
 
-最左边的值，也就是最后一行的第一个元素，dfs深度优先，深度每增加一次就更新一次res
+最左边的值，也就是最后一行的第一个元素，dfs 深度优先，深度每增加一次就更新一次 res
 
 ```java
 //DFS
@@ -2878,7 +2858,7 @@ public void dfs(TreeNode node,int depth){
 
 根据一棵树的前序遍历与中序遍历构造二叉树。
 
-**注意:**
+**注意：**
 你可以假设树中没有重复的元素。
 
 例如，给出
@@ -2887,7 +2867,6 @@ public void dfs(TreeNode node,int depth){
 前序遍历 preorder = [3,9,20,15,7]
 中序遍历 inorder = [9,3,15,20,7]
 ```
-
 
 返回如下的二叉树：
 
@@ -2909,8 +2888,8 @@ public TreeNode buildTree(int[] preorder, int[] inorder) {
 }
 
 public TreeNode buildTree(int[] preorder,int preleft,int preright,int[] inorder,int inleft,int inright) {
-    //递归出口只需要想一下边界,比如只要一个节点的时候,很明显只有一个节点的时候这几个值都是 0
-    //但是此时肯定不能返回null,所以这里递归出口不是大于等于,而是大于
+    //递归出口只需要想一下边界，比如只要一个节点的时候，很明显只有一个节点的时候这几个值都是 0
+    //但是此时肯定不能返回 null, 所以这里递归出口不是大于等于，而是大于
     if (preleft>preright || inleft>inright) {
         return null;
     }
@@ -2939,7 +2918,7 @@ var m map[int]int
 
 func buildTree(preorder []int, inorder []int) *TreeNode {
     n:=len(inorder)
-    //m:=make(map[int]int,n) 靠！这个bug看了半天
+    //m:=make(map[int]int,n) 靠！这个 bug 看了半天
     m=make(map[int]int,n)
     for i,val:=range inorder{
         m[val]=i
@@ -2963,7 +2942,7 @@ func build(pre []int,pl int,pr int,in []int,il int,ir int) *TreeNode{
 
 根据一棵树的中序遍历与后序遍历构造二叉树。
 
-**注意:**
+**注意：**
 你可以假设树中没有重复的元素。
 
 例如，给出
@@ -2972,7 +2951,6 @@ func build(pre []int,pl int,pr int,in []int,il int,ir int) *TreeNode{
 中序遍历 inorder = [9,3,15,20,7]
 后序遍历 postorder = [9,15,7,20,3]
 ```
-
 
 返回如下的二叉树：
 
@@ -2996,15 +2974,15 @@ public TreeNode buildTree(int[] inorder, int[] postorder) {
 }
 
 public TreeNode buildTree(int[] inorder,int inL,int inR, int[] postorder,int pL,int pR) {
-    //递归出口只需要想一下边界,比如只要一个节点的时候,很明显只有一个节点的时候这几个值都是0
-    //但是此时肯定不能返回null,所以这里递归出口不是大于等于,而是大于
+    //递归出口只需要想一下边界，比如只要一个节点的时候，很明显只有一个节点的时候这几个值都是 0
+    //但是此时肯定不能返回 null, 所以这里递归出口不是大于等于，而是大于
     if (inL>inR || pL>pR) { 
         return null;
     }
     TreeNode root=new TreeNode(postorder[pR]);
     int index=inL;
     while(inorder[index]!=postorder[pR]){
-        index++; //一定有,所以不用担心越界的问题
+        index++; //一定有，所以不用担心越界的问题
     }
     root.left=buildTree(inorder,inL,index-1,postorder,pL,pL+index-inL-1);
     root.right=buildTree(inorder,index+1,inR,postorder,pL+index-inL,pR-1);
@@ -3015,10 +2993,10 @@ public TreeNode buildTree(int[] inorder,int inL,int inR, int[] postorder,int pL,
 
 **解法二**
 
-上面两种解法提交后效率都不高，这里去中序遍历中找根节点的操作其实可以用Hash表代替
+上面两种解法提交后效率都不高，这里去中序遍历中找根节点的操作其实可以用 Hash 表代替
 
 ```java
-//hash表优化
+//hash 表优化
 HashMap<Integer,Integer> map=new HashMap<>();
 
 public TreeNode buildTree(int[] inorder, int[] postorder) {
@@ -3032,8 +3010,8 @@ public TreeNode buildTree(int[] inorder, int[] postorder) {
 }
 
 public TreeNode buildTree(int[] inorder,int inL,int inR, int[] postorder,int pL,int pR) {
-    //递归出口只需要想一下边界,比如只要一个节点的时候,很明显只有一个节点的时候这几个值都是相等的
-    //但是此时肯定不能返回null,所以这里递归出口不是大于等于,而是大于
+    //递归出口只需要想一下边界，比如只要一个节点的时候，很明显只有一个节点的时候这几个值都是相等的
+    //但是此时肯定不能返回 null, 所以这里递归出口不是大于等于，而是大于
     if (inL>inR || pL>pR) { 
         return null;
     }
@@ -3095,11 +3073,11 @@ public TreeNode constructFromPrePost(int[] pre,int preL,int preR,int[] post,int 
 ```
 ![mark](http://static.imlgw.top/blog/20191106/pcmvnEK8Hwg8.png?imageslim)
 
-还是这张图，前序的第一个是根节点，后序的最后一个是根节点，而我们要找的是左右子树的分界线，这里没有中序遍历，乍一看似乎不好确定，其实不然，注意观察前序的第二个节点，也就是左子树的根节点，比如上面的2，对应到后序遍历中其实正好就可以作为左子树的分界线，这样一来就和上面一样了，所以这里的关键就是找到一个划分点
+还是这张图，前序的第一个是根节点，后序的最后一个是根节点，而我们要找的是左右子树的分界线，这里没有中序遍历，乍一看似乎不好确定，其实不然，注意观察前序的第二个节点，也就是左子树的根节点，比如上面的 2，对应到后序遍历中其实正好就可以作为左子树的分界线，这样一来就和上面一样了，所以这里的关键就是找到一个划分点
 
 🔔 **有一点需要注意，题目说了这题的结果可能是不唯一的，数据结构的课程里面也讲过，仅凭前序和后序是无法确定一颗二叉树的，但是一定么？**
 
-并不一定，我们题目的case就是个反例，它就可以通过前序和后序唯一的确定这颗二叉树，那什么时候可以确定，什么时候无法确定呢？
+并不一定，我们题目的 case 就是个反例，它就可以通过前序和后序唯一的确定这颗二叉树，那什么时候可以确定，什么时候无法确定呢？
 
 无法确定的例子好说，【1，2】，【2，1】这个就无法确定
 
@@ -3116,7 +3094,7 @@ public TreeNode constructFromPrePost(int[] pre,int preL,int preR,int[] post,int 
  / \
 2   3  只可能是这种情况
  ```
-归纳总结一下，可以发现，**如果这颗二叉树每个节点的度都是0或者2** 那么他就可以通过前序和后序确定，反之就不一定了，因为你只有一个子节点那么就无法确定这个节点是左节点还是右节点，如果没有或者两个都有那么就可以确定了（根据顺序确定，前面的是左后面的是右，但是你只有一个我就不知道是左还是右了）
+归纳总结一下，可以发现，**如果这颗二叉树每个节点的度都是 0 或者 2** 那么他就可以通过前序和后序确定，反之就不一定了，因为你只有一个子节点那么就无法确定这个节点是左节点还是右节点，如果没有或者两个都有那么就可以确定了（根据顺序确定，前面的是左后面的是右，但是你只有一个我就不知道是左还是右了）
 
 ## [114. 二叉树展开为链表](https://leetcode-cn.com/problems/flatten-binary-tree-to-linked-list/)
 
@@ -3148,11 +3126,11 @@ public TreeNode constructFromPrePost(int[] pre,int preL,int preR,int[] post,int 
           6
 ```
 
-> 题目没抄错，就是这样的，确实题目没有说明按照什么方式展开，但是看case能猜到是前序遍历的方式展开（靠猜的？）
+> 题目没抄错，就是这样的，确实题目没有说明按照什么方式展开，但是看 case 能猜到是前序遍历的方式展开（靠猜的？）
 
 **解法一**
 
-前序遍历，递归的解法，用一个全局变量保存链表的结尾，每次将节点添加到last的后面
+前序遍历，递归的解法，用一个全局变量保存链表的结尾，每次将节点添加到 last 的后面
 
 ```java
 TreeNode last=null;
@@ -3216,7 +3194,7 @@ public void flatten(TreeNode root) {
     pre=root;
 }
 ```
-相比前面的解法，为了不丢失右子树，先遍历右子树，再遍历左子树，整个序列就是`6 5 4 3 2 1`  我们只需要将每个节点的right指向前一个节点就ok了
+相比前面的解法，为了不丢失右子树，先遍历右子树，再遍历左子树，整个序列就是`6 5 4 3 2 1`  我们只需要将每个节点的 right 指向前一个节点就 ok 了
 
 **解法三**
 
@@ -3234,9 +3212,9 @@ public void flatten(TreeNode root) {
             }
             //将根的右节点接在 mRight.right
             mRight.right=root.right;
-            //将root.left接在root.right
+            //将 root.left 接在 root.right
             root.right=root.left;
-            //左节点置为null
+            //左节点置为 null
             root.left=null;
         }
         //重复该过程
@@ -3248,7 +3226,7 @@ public void flatten(TreeNode root) {
 
 ![mark](http://static.imlgw.top/blog/20191108/BIx12P1AYjeX.png?imageslim)
 
-## [面试题36. 二叉搜索树与双向链表](https://leetcode-cn.com/problems/er-cha-sou-suo-shu-yu-shuang-xiang-lian-biao-lcof/)
+## [面试题 36. 二叉搜索树与双向链表](https://leetcode-cn.com/problems/er-cha-sou-suo-shu-yu-shuang-xiang-lian-biao-lcof/)
 
 输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的循环双向链表。要求不能创建任何新的节点，只能调整树中节点指针的指向。
 
@@ -3304,7 +3282,6 @@ struct Node {
 }
 ```
 
-
 填充它的每个 next 指针，让这个指针指向其下一个右侧节点。如果找不到下一个右侧节点，则将 next 指针设置为 NULL
 
 初始状态下，所有 next 指针都被设置为 NULL
@@ -3313,7 +3290,7 @@ struct Node {
 
 **解法一**
 
-开始没做出来，菜！！！然后特意留到今天总结，又在web上提交了一遍
+开始没做出来，菜！！！然后特意留到今天总结，又在 web 上提交了一遍
 
 ```java
 public Node connect(Node root) {
@@ -3393,13 +3370,13 @@ struct Node {
 
 **解法一**
 
-题目要求的O(1)空间，参考了大佬的解法，模拟层序遍历，着实是很巧妙，代码简洁清晰，值得细细品味
+题目要求的 O(1) 空间，参考了大佬的解法，模拟层序遍历，着实是很巧妙，代码简洁清晰，值得细细品味
 
 ```java
 public Node connect(Node root) {
     Node dummyNode=new Node(-1);
     Node cur=root;
-    //cur在上层，dummyNode和tail在下层，tail负责连接下层所有子节点
+    //cur 在上层，dummyNode 和 tail 在下层，tail 负责连接下层所有子节点
     while(cur!=null){
         dummyNode.next=null; //重置
         Node tail=dummyNode;
@@ -3414,7 +3391,7 @@ public Node connect(Node root) {
             }
             cur=cur.next;
         }
-        cur=dummyNode.next; //cur转换到下一层
+        cur=dummyNode.next; //cur 转换到下一层
     }
     return root;
 }
@@ -3432,7 +3409,7 @@ public Node connect(Node root) {
 
 **说明：** 要求算法时间复杂度为 O(h)，h 为树的高度。
 
-**示例:**
+**示例：**
 
 ```java
 root = [5,3,6,2,4,null,7]
@@ -3487,9 +3464,9 @@ public TreeNode deleteNode(TreeNode root, int key) {
         //用右子树的最小值填补删除的元素
         TreeNode delNode=root;
         root=getMin(root.right);
-        //下面的left和right不能交换,还好刚开始写错了一波,不然也不会发现,哈哈啊哈哈哈
-        //这里的deleteMin是为了删除delNode的最小值root,如果你先把delNode.left连接到了root.left
-        //那么root就不再是最小值了,再进行deleteMin就会导致root无法删除,最后返回root,导致root.right=root形成环
+        //下面的 left 和 right 不能交换，还好刚开始写错了一波，不然也不会发现，哈哈啊哈哈哈
+        //这里的 deleteMin 是为了删除 delNode 的最小值 root, 如果你先把 delNode.left 连接到了 root.left
+        //那么 root 就不再是最小值了，再进行 deleteMin 就会导致 root 无法删除，最后返回 root, 导致 root.right=root 形成环
         //结果无法打印
         root.right=deleteMin(delNode.right);
         root.left=delNode.left;
@@ -3519,9 +3496,9 @@ public TreeNode getMin(TreeNode node){
 
 注意，可能存在多种有效的插入方式，只要树在插入后仍保持为二叉搜索树即可。 你可以返回任意有效的结果。
 
-例如, 
+例如，
 
-给定二叉搜索树:
+给定二叉搜索树：
 
 ```java
     4
@@ -3530,11 +3507,10 @@ public TreeNode getMin(TreeNode node){
  / \
 1   3
 
-和 插入的值: 5
+和 插入的值：5
 ```
 
-
-你可以返回这个二叉搜索树:
+你可以返回这个二叉搜索树：
 
 ```java
      4
@@ -3543,7 +3519,7 @@ public TreeNode getMin(TreeNode node){
  / \   /
 1   3 5
 ```
-或者这个树也是有效的:
+或者这个树也是有效的：
 
 ```java
      5
@@ -3572,13 +3548,11 @@ public TreeNode insertIntoBST(TreeNode root, int val) {
 ```
 没啥好说的，看代码就懂了
 
-
-
 ## [662. 二叉树最大宽度](https://leetcode-cn.com/problems/maximum-width-of-binary-tree/)
 
 给定一个二叉树，编写一个函数来获取这个树的最大宽度。树的宽度是所有层中的最大宽度。**这个二叉树与满二叉树（full binary tree）结构相同，但一些节点为空。**
 
-每一层的宽度被定义为两个端点（该层最左和最右的非空节点，两端点间的null节点也计入长度）之间的长度。
+每一层的宽度被定义为两个端点（该层最左和最右的非空节点，两端点间的 null 节点也计入长度）之间的长度。
 
 **Example 1:**
 
@@ -3679,7 +3653,7 @@ public int widthOfBinaryTree(TreeNode root) {
     return max;
 }
 ```
-还是层次遍历的思路，不过需要额外添加一个索引列表，用来**记录每个节点对应在完全二叉树中的索引**，这个索引值完全可以根据上一层父节点的索引的到，我们初始化定义根节点的index为1，然后进行层次遍历记录每一层的每个节点的index就ok，当遍历完一层之后统计列表最左和最右两个节点之差，这个值就是当前层的宽度，最后求个最大值就ok了，很可惜，看了答案才知道
+还是层次遍历的思路，不过需要额外添加一个索引列表，用来**记录每个节点对应在完全二叉树中的索引**，这个索引值完全可以根据上一层父节点的索引的到，我们初始化定义根节点的 index 为 1，然后进行层次遍历记录每一层的每个节点的 index 就 ok，当遍历完一层之后统计列表最左和最右两个节点之差，这个值就是当前层的宽度，最后求个最大值就 ok 了，很可惜，看了答案才知道
 
 **解法二**
 
@@ -3709,7 +3683,7 @@ public void dfs(TreeNode node,int depth,int index,List<Integer> leftIdxs){
     dfs(node.right,depth+1,index*2+1,leftIdxs);
 }
 ```
-这个版本在空间复杂度可能会低一点，list中只存每个层最左的节点，当深度大于等于list的长度时候说明当前节点一定是新一层的最左节点，这个时候添加进去就ok，然后求每个节点和当前层最左的节点index差值就最后更新最大值就ok，这个解法还是没有那么自然，还是上面的BFS好理解一点
+这个版本在空间复杂度可能会低一点，list 中只存每个层最左的节点，当深度大于等于 list 的长度时候说明当前节点一定是新一层的最左节点，这个时候添加进去就 ok，然后求每个节点和当前层最左的节点 index 差值就最后更新最大值就 ok，这个解法还是没有那么自然，还是上面的 BFS 好理解一点
 
 ## [671. 二叉树中第二小的节点](https://leetcode-cn.com/problems/second-minimum-node-in-a-binary-tree/)
 
@@ -3720,27 +3694,27 @@ public void dfs(TreeNode node,int depth,int index,List<Integer> leftIdxs){
 **示例 1:**
 
 ```java
-输入: 
+输入：
     2
    / \
   2   5
      / \
     5   7
 
-输出: 5
-说明: 最小的值是 2 ，第二小的值是 5 。
+输出：5
+说明：最小的值是 2 ，第二小的值是 5 。
 ```
 
 **示例 2:**
 
 ```java
-输入: 
+输入：
     2
    / \
   2   2
 
-输出: -1
-说明: 最小的值是 2, 但是不存在第二小的值。
+输出：-1
+说明：最小的值是 2, 但是不存在第二小的值。
 ```
 
 **解法一**
@@ -3769,7 +3743,7 @@ func dfs(root *TreeNode) int {
 	if root.Val == root.Left.Val && root.Val == root.Right.Val {
 		return min(dfs(root.Left), dfs(root.Right))
 	}
-	//和左子树相等,在左子树中找第二小和右子树比较
+	//和左子树相等，在左子树中找第二小和右子树比较
 	if root.Val == root.Left.Val {
 		return min(dfs(root.Left), root.Right.Val)
 	}
@@ -3797,7 +3771,6 @@ func min(a, b int) int {
 输入：root = [10,5,15,3,7,null,18], L = 7, R = 15
 输出：32
 ```
-
 
 **示例 2：**
 
@@ -3844,15 +3817,15 @@ public void preorder(TreeNode root, int L, int R) {
 **示例 1:**
 
 ```java
-输入: 
+输入：
 	Tree 1                     Tree 2                  
           1                         2                             
          / \                       / \                            
         3   2                     1   3                        
        /                           \   \                      
       5                             4   7                  
-输出: 
-合并后的树:
+输出：
+合并后的树：
 	     3
 	    / \
 	   4   5
@@ -3860,7 +3833,7 @@ public void preorder(TreeNode root, int L, int R) {
 	 5   4   7
 ```
 
-**注意:** 合并必须从两个树的根节点开始。
+**注意：** 合并必须从两个树的根节点开始。
 
 **解法一**
 
@@ -3886,7 +3859,7 @@ public TreeNode mergeTrees(TreeNode t1, TreeNode t2) {
 **示例 :**
 
 ```java
-输入:
+输入：
 
    1
     \
@@ -3894,18 +3867,18 @@ public TreeNode mergeTrees(TreeNode t1, TreeNode t2) {
     /
    2
 
-输出:
+输出：
 1
 
-解释:
-最小绝对差为1，其中 2 和 1 的差的绝对值为 1（或者 2 和 3）。
+解释：
+最小绝对差为 1，其中 2 和 1 的差的绝对值为 1（或者 2 和 3）。
 ```
 
-**注意:** 树中至少有2个节点。
+**注意：** 树中至少有 2 个节点。
 
 **解法一**
 
-很可惜，这题还WA了一次。。。
+很可惜，这题还 WA 了一次。
 
 ```java
 public int getMinimumDifference(TreeNode root) {
@@ -3956,7 +3929,6 @@ public void inorder(TreeNode root){
 
 Difficulty: **简单**
 
-
 给定一个有相同值的二叉搜索树（BST），找出 BST 中的所有众数（出现频率最高的元素）。
 
 假定 BST 有如下定义：
@@ -3976,16 +3948,15 @@ Difficulty: **简单**
    2
 ```
 
-`返回[2]`.
+`返回 [2]`.
 
-**提示**：如果众数超过1个，不需考虑输出顺序
+**提示**：如果众数超过 1 个，不需考虑输出顺序
 
 **进阶：**你可以不使用额外的空间吗？（假设由递归产生的隐式调用栈的开销不被计算在内）
 
-
 **解法一**
 
-之前忘了记录了，中序遍历统计答案就ok，但是非要严格的O(1)就需要使用Morris遍历（不会
+之前忘了记录了，中序遍历统计答案就 ok，但是非要严格的 O(1) 就需要使用 Morris 遍历（不会
 ```golang
 /**
  * Definition for a binary tree node.
@@ -4031,13 +4002,13 @@ func findMode(root *TreeNode) []int {
 **示例：**
 
 ```java
-输入: 
+输入：
 	  1
      / \
     3   2
    / \   \  
   5   3   9 
-输出: [1, 3, 9]
+输出：[1, 3, 9]
 ```
 
 **解法一**
@@ -4125,17 +4096,17 @@ public void pushLeft(TreeNode node){
 }
 ```
 
-我们可以用一个stack存储BST的左链，当取最小值就从stack中直接取，如果取出来的node还有右子树就将右子树的左链也添加进来，是不是有点熟悉？其实就是中序遍历的过程
+我们可以用一个 stack 存储 BST 的左链，当取最小值就从 stack 中直接取，如果取出来的 node 还有右子树就将右子树的左链也添加进来，是不是有点熟悉？其实就是中序遍历的过程
 
 ## [95. 不同的二叉搜索树 II](https://leetcode-cn.com/problems/unique-binary-search-trees-ii/)
 
 给定一个整数 n，生成所有由 1 ... n 为节点所组成的**二叉搜索树**。
 
-**示例:**
+**示例：**
 
 ```java
-输入: 3
-输出:
+输入：3
+输出：
 [
   [1,null,3,2],
   [3,2,null,1],
@@ -4143,7 +4114,7 @@ public void pushLeft(TreeNode node){
   [2,1,3],
   [1,null,2,null,3]
 ]
-解释:
+解释：
 以上的输出对应以下 5 种不同结构的二叉搜索树：
 
    1         3     3      2      1
@@ -4166,7 +4137,7 @@ public  List<TreeNode> generateTrees(int n) {
 public List<TreeNode> generateTrees(int start,int end) {
     List<TreeNode> res=new ArrayList<>();
     if (start>end) {
-        //null也是一种情况，左右子树为空
+        //null 也是一种情况，左右子树为空
         res.add(null);
         return res;
     }
@@ -4194,12 +4165,12 @@ public List<TreeNode> generateTrees(int start,int end) {
 **例如：**
 
 ```java
-输入: 二叉搜索树:
+输入：二叉搜索树：
               5
             /   \
            2     13
 
-输出: 转换为累加树:
+输出：转换为累加树：
              18
             /   \
           20     13
@@ -4213,7 +4184,7 @@ public List<TreeNode> generateTrees(int start,int end) {
 //以下代码纯属娱乐
 public TreeNode convertBST(TreeNode root) {
     if (root==null) {
-        return new TreeNode(0);//这里肯定是错的，null应该直接返回null
+        return new TreeNode(0);//这里肯定是错的，null 应该直接返回 null
     }
     if (root.left==null && root.right==null) {
         return root;
@@ -4224,7 +4195,7 @@ public TreeNode convertBST(TreeNode root) {
 }
 ```
 
-忽略返回值的部分，乍一看好像是对的😂，其实问题大了，首先是左边的值算的不对，因为是DFS会从最左边开始算，都只加了他的父节点原始的值，而父节点的累加值还没有算出来，其次有些情况是算不出来的比如左子树的某一个右节点你就算不出来
+忽略返回值的部分，乍一看好像是对的😂，其实问题大了，首先是左边的值算的不对，因为是 DFS 会从最左边开始算，都只加了他的父节点原始的值，而父节点的累加值还没有算出来，其次有些情况是算不出来的比如左子树的某一个右节点你就算不出来
 
 **解法二**
 
@@ -4257,7 +4228,7 @@ public void dfs(TreeNode root){
 **示例 1**
 
 ```java
-输入:
+输入：
 
   5
  /  \
@@ -4268,7 +4239,7 @@ public void dfs(TreeNode root){
 **示例 2**
 
 ```java
-输入:
+输入：
 
   5
  /  \
@@ -4278,7 +4249,7 @@ public void dfs(TreeNode root){
 
 **解法一**
 
-左子树和+右子树和，HashMap记录出现的次数，记录最大值然后取出出现次数最多的
+左子树和+右子树和，HashMap 记录出现的次数，记录最大值然后取出出现次数最多的
 
 ```java
 private Map<Integer,Integer> map = new HashMap<>();
@@ -4292,7 +4263,7 @@ public int[] findFrequentTreeSum(TreeNode root) {
     dfs(root);
     List<Integer> res=new ArrayList<>();
     map.keySet().stream().filter(val->map.get(val)==maxCount).forEach(res::add);
-    return res.stream().mapToInt(Integer::valueOf).toArray(); //list转数组的又一个小技巧，单纯的toArray只能转换成Integer[],还需要转
+    return res.stream().mapToInt(Integer::valueOf).toArray(); //list 转数组的又一个小技巧，单纯的 toArray 只能转换成 Integer[], 还需要转
 }
 
 public int dfs(TreeNode root){
@@ -4306,7 +4277,7 @@ public int dfs(TreeNode root){
 }
 ```
 
-写法是基于Lambda的，函数式写起来真的舒服
+写法是基于 Lambda 的，函数式写起来真的舒服
 
 ## [606. 根据二叉树创建字符串](https://leetcode-cn.com/problems/construct-string-from-binary-tree/)
 
@@ -4317,16 +4288,16 @@ public int dfs(TreeNode root){
 **示例 1:**
 
 ```java
-输入: 二叉树: [1,2,3,4]
+输入：二叉树：[1,2,3,4]
        1
      /   \
     2     3
    /    
   4     
 
-输出: "1(2(4))(3)"
+输出："1(2(4))(3)"
 
-解释: 原本将是“1(2(4)())(3())”，
+解释：原本将是“1(2(4)())(3())”，
 在你省略所有不必要的空括号对之后，
 它将是“1(2(4))(3)”。
 ```
@@ -4334,16 +4305,16 @@ public int dfs(TreeNode root){
 **示例 2:**
 
 ```java
-输入: 二叉树: [1,2,3,null,4]
+输入：二叉树：[1,2,3,null,4]
        1
      /   \
     2     3
      \  
       4 
 
-输出: "1(2()(4))(3)"
+输出："1(2()(4))(3)"
 
-解释: 和第一个示例相似，
+解释：和第一个示例相似，
 除了我们不能省略第一个对括号来中断输入和输出之间的一对一映射关系。
 ```
 
@@ -4402,7 +4373,7 @@ public void dfs(TreeNode node,StringBuilder s){
 
 **解法一**
 
-好像是170前一天的双周赛的第3题，还是很直白的题，遍历的时候带上它的father的值和grandfather的值带到下一层，然后判断就可以了
+好像是 170 前一天的双周赛的第 3 题，还是很直白的题，遍历的时候带上它的 father 的值和 grandfather 的值带到下一层，然后判断就可以了
 
 ```java
 public int sumEvenGrandparent(TreeNode root) {
@@ -4422,10 +4393,6 @@ public int dfs(TreeNode node,int fa,int ga){
     return sum;
 }
 ```
-
-
-
-
 
 ## [1026. 节点与其祖先之间的最大差值](https://leetcode-cn.com/problems/maximum-difference-between-node-and-ancestor/) 
 
@@ -4558,7 +4525,7 @@ public TreeNode delete(TreeNode root,int target){
     return root;
 }
 ```
-搞了半天。。。一开始写的时候写的前序遍历的方式，先删除自己然后再去删除左右孩子，然后在如何判断是否有叶子节点上卡了半天，最后写了个for3000的循环过的。。。好菜啊，只要交换一下顺序变成后序遍历的方式，先删除左右子节点，然后再回头删除自己的就可以一直删了。。
+搞了半天。一开始写的时候写的前序遍历的方式，先删除自己然后再去删除左右孩子，然后在如何判断是否有叶子节点上卡了半天，最后写了个 for3000 的循环过的。好菜啊，只要交换一下顺序变成后序遍历的方式，先删除左右子节点，然后再回头删除自己的就可以一直删了。
 
 ## [1305. 两棵二叉搜索树中的所有元素](https://leetcode-cn.com/problems/all-elements-in-two-binary-search-trees/)
 
@@ -4582,14 +4549,12 @@ public TreeNode delete(TreeNode root,int target){
 输出：[-10,0,0,1,2,5,7,10]
 ```
 
-
 **示例 3：**
 
 ```java
 输入：root1 = [], root2 = [5,1,7,0,2]
 输出：[0,1,2,5,7]
 ```
-
 
 **示例 4：**
 
@@ -4600,7 +4565,7 @@ public TreeNode delete(TreeNode root,int target){
 
 **解法一**
 
-某次周赛的题，大水题，白板回忆写出了中序的非递归haha，感觉忘不了了
+某次周赛的题，大水题，白板回忆写出了中序的非递归 haha，感觉忘不了了
 
 ```java
 public List<Integer> getAllElements(TreeNode root1, TreeNode root2) {
@@ -4639,8 +4604,7 @@ public List<Integer> megerList(List<Integer> list1,List<Integer> list2){
     return res;
 }
 
-
-//递归的TLE了 42/48,不停的创建list太耗时了
+//递归的 TLE 了 42/48, 不停的创建 list 太耗时了
 public List<Integer> megerList(List<Integer> list1,int index1,List<Integer> list2,int index2){
     List<Integer> res=new ArrayList<>();
     if (index1==list1.size()) {
@@ -4694,7 +4658,7 @@ public List<Integer> megerList(List<Integer> list1,int index1,List<Integer> list
 
 **解法一**
 
-174周赛的第三题，当时比赛TLE了。。写了个很蠢的算法
+174 周赛的第三题，当时比赛 TLE 了。写了个很蠢的算法
 
 ```java
 private long mod=1000000007;
@@ -4738,11 +4702,11 @@ public long sum(TreeNode root){
 }
 ```
 
-我居然真的去删除节点去了。。。导致后面都没办法对sum做记忆化，太菜了啊
+我居然真的去删除节点去了。导致后面都没办法对 sum 做记忆化，太菜了啊
 
 **解法二**
 
-能AC但是效率感人
+能 AC 但是效率感人
 
 ```java
 private long mod=1000000007;
@@ -4809,9 +4773,9 @@ public long dfs(TreeNode root){
 }
 ```
 
-在dfs的过程中将子树的sum存起来，然后直接遍历list，求 `max(s*(sumAll-s))`就ok
+在 dfs 的过程中将子树的 sum 存起来，然后直接遍历 list，求 `max(s*(sumAll-s))`就 ok
 
-> 这里最开始被大数据也卡了一会儿，不知道啥时候取模，其实这里题目没有那么难，相乘的结果并不会溢出Long，如果要是溢出Long的话可能就要用什么带模快速乘了
+> 这里最开始被大数据也卡了一会儿，不知道啥时候取模，其实这里题目没有那么难，相乘的结果并不会溢出 Long，如果要是溢出 Long 的话可能就要用什么带模快速乘了
 
 ## [297. 二叉树的序列化与反序列化](https://leetcode-cn.com/problems/serialize-and-deserialize-binary-tree/)
 
@@ -4819,7 +4783,7 @@ public long dfs(TreeNode root){
 
 请设计一个算法来实现二叉树的序列化与反序列化。这里不限定你的序列 / 反序列化算法执行逻辑，你只需要保证一个二叉树可以被序列化为一个字符串并且将这个字符串反序列化为原始的树结构。
 
-**示例:** 
+**示例：** 
 
 ```java
 你可以将以下二叉树：
@@ -4832,9 +4796,9 @@ public long dfs(TreeNode root){
 序列化为 "[1,2,3,null,null,4,5]"
 ```
 
-**提示:** 这与 LeetCode 目前使用的方式一致，详情请参阅 LeetCode 序列化二叉树的格式。你并非必须采取这种方式，你也可以采用其他的方法解决这个问题。
+**提示：** 这与 LeetCode 目前使用的方式一致，详情请参阅 LeetCode 序列化二叉树的格式。你并非必须采取这种方式，你也可以采用其他的方法解决这个问题。
 
-**说明:** 不要使用类的成员 / 全局 / 静态变量来存储状态，你的序列化和反序列化算法应该是无状态的。
+**说明：** 不要使用类的成员 / 全局 / 静态变量来存储状态，你的序列化和反序列化算法应该是无状态的。
 
 **解法一**
 
@@ -4857,13 +4821,13 @@ public String serialize(TreeNode root) {
             queue.add(cur.left);
             queue.add(cur.right);
         }else{
-            sb.append("null,"); //会多很多null,不过影响不大
+            sb.append("null,"); //会多很多 null, 不过影响不大
         }
     }
     return sb.toString();
 }
 
-//按照题目意思写代码就ok
+//按照题目意思写代码就 ok
 public TreeNode deserialize(String data) {
     if ("".equals(data)) {
         return null;
@@ -4940,7 +4904,7 @@ public TreeNode deserialize(Queue<String> queue){
 ```
 **解法三**
 
-补充一个go的写法，和解法二的思路是一样的
+补充一个 go 的写法，和解法二的思路是一样的
 ```go
 type Codec struct {
 }
@@ -4990,7 +4954,7 @@ func (this *Codec) des(queue *[]string) *TreeNode {
 
 **解法一**
 
-题目说 `编码的字符串应尽可能紧凑`，所以直接把上面297的搬过来其实不太好，因为会有很多null字符，并且也没有用到题目二`bst`的条件，`bst`只需要知道一个前序或者后序就可以还原整棵树，题目就变成了根据`前序/后序`和`中序`还原二叉树
+题目说 `编码的字符串应尽可能紧凑`，所以直接把上面 297 的搬过来其实不太好，因为会有很多 null 字符，并且也没有用到题目二`bst`的条件，`bst`只需要知道一个前序或者后序就可以还原整棵树，题目就变成了根据`前序/后序`和`中序`还原二叉树
 
 `golang`新手，用`golang`写了一发，感觉写复杂了（官方解法中还有更加激进的压缩编码的方式，感觉有点偏了）
 
@@ -5056,8 +5020,7 @@ func (this *Codec) deserialize(data string) *TreeNode {
 }
 ```
 
-
-## [面试题33. 二叉搜索树的后序遍历序列](https://leetcode-cn.com/problems/er-cha-sou-suo-shu-de-hou-xu-bian-li-xu-lie-lcof/)
+## [面试题 33. 二叉搜索树的后序遍历序列](https://leetcode-cn.com/problems/er-cha-sou-suo-shu-de-hou-xu-bian-li-xu-lie-lcof/)
 
 输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历结果。如果是则返回 true，否则返回 false。假设输入的数组的任意两个数字都互不相同。
 
@@ -5073,15 +5036,15 @@ func (this *Codec) deserialize(data string) *TreeNode {
 **示例 1：**
 
 ```java
-输入: [1,6,3,2,5]
-输出: false
+输入：[1,6,3,2,5]
+输出：false
 ```
 
 **示例 2：**
 
 ```java
-输入: [1,3,2,6,5]
-输出: true
+输入：[1,3,2,6,5]
+输出：true
 ```
 
 **提示：**
@@ -5101,16 +5064,16 @@ public boolean verifyPostorder(int[] postorder) {
 public boolean verify(int[] postorder,int left,int right){
     if(left>=right) return true;
     int root=postorder[right];
-    //WA点,这里要设置成left-1防止没有左子树的情况,比如5 4 3 2 1
+    //WA 点，这里要设置成 left-1 防止没有左子树的情况，比如 5 4 3 2 1
     //这样可以跳过第二个循环并且不用递归验证左子树
     int index=left-1;
-    for(int i=right-1;i>=left;i--){ //从后往前找第一个小于root
+    for(int i=right-1;i>=left;i--){ //从后往前找第一个小于 root
         if(postorder[i]<root){
-            index=i; //找到第一个小于root的,作为左子树的根
+            index=i; //找到第一个小于 root 的，作为左子树的根
             break;
         }
     }
-    //判断左子树是否都是小于root的
+    //判断左子树是否都是小于 root 的
     for(int i=index;i>=left;i--){
         if(postorder[i]>root){
             return false;
@@ -5120,11 +5083,11 @@ public boolean verify(int[] postorder,int left,int right){
     return verify(postorder,left,index) && verify(postorder,index+1,right-1);
 }
 ```
-这题WA了3发，前两发是代码逻辑的问题，想简化代码，结果把自己带坑里面去了，最后一次是因为一个变量设置的问题，代码中已经注释
+这题 WA 了 3 发，前两发是代码逻辑的问题，想简化代码，结果把自己带坑里面去了，最后一次是因为一个变量设置的问题，代码中已经注释
 
 **UPDATE: 2020.7.14**
 
-重写了下，这样写就不会有奇怪的WA点了，还是要多注意细节和边界
+重写了下，这样写就不会有奇怪的 WA 点了，还是要多注意细节和边界
 ```golang
 func verifyPostorder(post []int) bool {
     return dfs(post, 0, len(post)-1)
@@ -5149,7 +5112,7 @@ func dfs(post[] int, left int, right int) bool {
 
 **解法二**
 
-单调栈的解法，放在[单调栈专题](http://imlgw.top/2019/10/01/leetcode-zhan-dui-lie/#%E9%9D%A2%E8%AF%95%E9%A2%9833-%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E7%9A%84%E5%90%8E%E5%BA%8F%E9%81%8D%E5%8E%86%E5%BA%8F%E5%88%97)中
+单调栈的解法，放在 [单调栈专题](http://imlgw.top/2019/10/01/leetcode-zhan-dui-lie/#%E9%9D%A2%E8%AF%95%E9%A2%9833-%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E7%9A%84%E5%90%8E%E5%BA%8F%E9%81%8D%E5%8E%86%E5%BA%8F%E5%88%97) 中
 
 ## [654. 最大二叉树](https://leetcode-cn.com/problems/maximum-binary-tree/)
 
@@ -5182,7 +5145,7 @@ func dfs(post[] int, left int, right int) bool {
 **解法一**
 
 ```java
-//不做预处理,直接搜索2ms,我这个50ms+.....懒得改的就当练手了
+//不做预处理，直接搜索 2ms, 我这个 50ms+..... 懒得改的就当练手了
 public TreeNode constructMaximumBinaryTree(int[] nums) {
     int n=nums.length;
     int[][] max=new int[n][n];
@@ -5205,15 +5168,15 @@ public TreeNode dfs(int[] nums,int left,int right,int[][] max){
 }
 ```
 
-> 慢的主要原因是构建这个树的话大概只会查询logN次（树高度）最大值，而每层查询的复杂度和为N，所以整体的复杂度其实只要O(NlogN)，除非数组完全有序，这样每次分割都及其不均匀，数的高度为N时间复杂度才会到N^2，而我这个就直接是N^2了hhhhh，太菜了，预处理的思想是好的，但是还是要看具体的题目，这里其实很多的区间值都用不上（除非搞线段树🤣
+> 慢的主要原因是构建这个树的话大概只会查询 logN 次（树高度）最大值，而每层查询的复杂度和为 N，所以整体的复杂度其实只要 O(NlogN)，除非数组完全有序，这样每次分割都及其不均匀，数的高度为 N 时间复杂度才会到 N^2，而我这个就直接是 N^2 了 hhhhh，太菜了，预处理的思想是好的，但是还是要看具体的题目，这里其实很多的区间值都用不上（除非搞线段树🤣
 
 **解法二**
 
-这题也可以用单调栈做，明天写，这题还有个2，明天一起做了
+这题也可以用单调栈做，明天写，这题还有个 2，明天一起做了
 
 ## [998. 最大二叉树 II](https://leetcode-cn.com/problems/maximum-binary-tree-ii/)
 
-题目描述很辣鸡，简单来说就是在`最大二叉树A`的右边插入一个val，仍然是最大二叉树
+题目描述很辣鸡，简单来说就是在`最大二叉树 A`的右边插入一个 val，仍然是最大二叉树
 
 **解法一**
 
@@ -5295,7 +5258,7 @@ public String dfs(TreeNode root){
 }
 ```
 
-> 这题少了case，不加分隔符也能A，我以为会卡这个，试了下结果没卡，100积分到手 ==>  [issue](https://github.com/LeetCode-Feedback/LeetCode-Feedback/issues/284) 
+> 这题少了 case，不加分隔符也能 A，我以为会卡这个，试了下结果没卡，100 积分到手 ==>  [issue](https://github.com/LeetCode-Feedback/LeetCode-Feedback/issues/284) 
 
 ## [653. 两数之和 IV - 输入 BST](https://leetcode-cn.com/problems/two-sum-iv-input-is-a-bst/)
 
@@ -5304,7 +5267,7 @@ public String dfs(TreeNode root){
 **案例 1:**
 
 ```java
-输入: 
+输入：
     5
    / \
   3   6
@@ -5313,13 +5276,13 @@ public String dfs(TreeNode root){
 
 Target = 9
 
-输出: True
+输出：True
 ```
 
 **案例 2:**
 
 ```java
-输入: 
+输入：
     5
    / \
   3   6
@@ -5328,12 +5291,12 @@ Target = 9
 
 Target = 28
 
-输出: False
+输出：False
 ```
 
 **解法一**
 
-开始还想着在logN的解法，发现好像搞不了，而且这是个easy题，所以肯定就是直接中序+双指针了
+开始还想着在 logN 的解法，发现好像搞不了，而且这是个 easy 题，所以肯定就是直接中序+双指针了
 
 ```go
 func findTarget(root *TreeNode, k int) bool {
@@ -5400,7 +5363,7 @@ public String dfs(TreeNode root){
     return dfs(root.left)+dfs(root.right);
 }
 ```
-> 当时看到这题就着会不会又有case遗漏，比如不加分隔符什么的，结果看到github已经有人先手提交了
+> 当时看到这题就着会不会又有 case 遗漏，比如不加分隔符什么的，结果看到 github 已经有人先手提交了
 
 ## [5398. 统计二叉树中好节点的数目](https://leetcode-cn.com/problems/count-good-nodes-in-binary-tree/)
 
@@ -5447,7 +5410,7 @@ public String dfs(TreeNode root){
 
 **解法一**
 
-26th双周赛的t3，水题
+26th 双周赛的 t3，水题
 
 ```java
 int count=0;
@@ -5478,7 +5441,7 @@ public void dfs(TreeNode root,int max){
 **示例 1:**
 
 ```
-输入: 
+输入：
     1
    / \
   0   2
@@ -5486,7 +5449,7 @@ public void dfs(TreeNode root,int max){
   L = 1
   R = 2
 
-输出: 
+输出：
     1
       \
        2
@@ -5495,7 +5458,7 @@ public void dfs(TreeNode root,int max){
 **示例 2:**
 
 ```java
-输入: 
+输入：
     3
    / \
   0   4
@@ -5507,7 +5470,7 @@ public void dfs(TreeNode root,int max){
   L = 1
   R = 3
 
-输出: 
+输出：
       3
      / 
    2   
@@ -5526,7 +5489,7 @@ public TreeNode trimBST(TreeNode root, int L, int R) {
     }
     root.left=trimBST(root.left,L,R);
     root.right=trimBST(root.right,L,R);
-    //root.val<L,左子树全部小于L
+    //root.val<L, 左子树全部小于 L
     if(root.val<L){
         return root.right;
     }
@@ -5540,7 +5503,6 @@ public TreeNode trimBST(TreeNode root, int L, int R) {
 
 Difficulty: **中等**
 
-
 给定二叉树根结点 `root` ，此外树的每个结点的值要么是 0，要么是 1。
 
 返回移除了所有不包含 1 的子树的原二叉树。
@@ -5548,37 +5510,37 @@ Difficulty: **中等**
 ( 节点 X 的子树为 X 本身，以及所有 X 的后代。)
 
 ```golang
-示例1:
-输入: [1,null,0,0,1]
-输出: [1,null,0,null,1]
+示例 1:
+输入：[1,null,0,0,1]
+输出：[1,null,0,null,1]
 
-解释: 
+解释：
 只有红色节点满足条件“所有不包含 1 的子树”。
 右图为返回的答案。
 ```
 
 ```golang
-示例2:
-输入: [1,0,1,0,0,0,1]
-输出: [1,null,1,null,1]
+示例 2:
+输入：[1,0,1,0,0,0,1]
+输出：[1,null,1,null,1]
 
 ```
 
 ```golang
-示例3:
-输入: [1,1,0,1,1,0,1,0]
-输出: [1,1,0,1,1,null,1]
+示例 3:
+输入：[1,1,0,1,1,0,1,0]
+输出：[1,1,0,1,1,null,1]
 
 ```
 
-**说明:**
+**说明：**
 
 *   给定的二叉树最多有 `100` 个节点。
 *   每个节点的值只会为 `0` 或 `1` 。
 
 **解法一**
 
-和上面差不多，感觉应该是是easy。。。
+和上面差不多，感觉应该是是 easy。
 ```golang
 /**
  * Definition for a binary tree node.
@@ -5603,7 +5565,7 @@ func pruneTree(root *TreeNode) *TreeNode {
 
 ## [965. 单值二叉树](https://leetcode-cn.com/problems/univalued-binary-tree/)
 
-题目就不copy了，二叉树只有一个值，水题
+题目就不 copy 了，二叉树只有一个值，水题
 
 **解法一**
 
@@ -5656,7 +5618,7 @@ public boolean dfs(TreeNode root,int val){
 
 **解法一**
 
-第一个选手选择了一个节点之后，将二叉树实际上划分为了3个区域，左孩子区域，右孩子区域，还有父节点所在区域，三个区域以x为界限，没有交集，第二个选手需要在三个区域中选取一个区域，使自己能赢，很明显我们肯定要选最大的那个区域，所以我们只需要判断最大的区域是否比剩下其他部分和都要大就行了
+第一个选手选择了一个节点之后，将二叉树实际上划分为了 3 个区域，左孩子区域，右孩子区域，还有父节点所在区域，三个区域以 x 为界限，没有交集，第二个选手需要在三个区域中选取一个区域，使自己能赢，很明显我们肯定要选最大的那个区域，所以我们只需要判断最大的区域是否比剩下其他部分和都要大就行了
 
 ```java
 int max=0;
@@ -5723,7 +5685,7 @@ public int dfs(TreeNode root,int x,int n){
 
 **解法一**
 
-二叉树水题（3天没刷新题了，再不刷几道实在是说不过其了，刷题还是要保持手感啊）
+二叉树水题（3 天没刷新题了，再不刷几道实在是说不过其了，刷题还是要保持手感啊）
 
 ```go
 func isCousins(root *TreeNode, x int, y int) bool {
@@ -5739,7 +5701,7 @@ func isCousins(root *TreeNode, x int, y int) bool {
         if root.Val == x {
             depX = depth
             pX = parent
-            //结束该子树的搜索，加快速度，下面即使有Y也肯定不是X的堂兄弟
+            //结束该子树的搜索，加快速度，下面即使有 Y 也肯定不是 X 的堂兄弟
             return
         }
         if root.Val == y {
@@ -5756,9 +5718,9 @@ func isCousins(root *TreeNode, x int, y int) bool {
 }
 ```
 
-有一个小的优化点还是挺有意思的，就是return的地方，一开始没考虑这么多，AC了之后感觉不对，是不是LC又少CASE了，结果仔细一想发现这里是个优化点😁
+有一个小的优化点还是挺有意思的，就是 return 的地方，一开始没考虑这么多，AC 了之后感觉不对，是不是 LC 又少 CASE 了，结果仔细一想发现这里是个优化点😁
 
-## [440. 字典序的第K小数字](https://leetcode-cn.com/problems/k-th-smallest-in-lexicographical-order/)
+## [440. 字典序的第 K 小数字](https://leetcode-cn.com/problems/k-th-smallest-in-lexicographical-order/)
 
 给定整数 `n` 和 `k`，找到 `1` 到 `n` 中字典序第 `k` 小的数字。
 
@@ -5767,18 +5729,18 @@ func isCousins(root *TreeNode, x int, y int) bool {
 **示例 :**
 
 ```java
-输入:
+输入：
 n: 13   k: 2
 
-输出:
+输出：
 10
 
-解释:
+解释：
 字典序的排列是 [1, 10, 11, 12, 13, 2, 3, 4, 5, 6, 7, 8, 9]，所以第二小的数字是 10。
 ```
 **解法一**
 
-一开始看了评论区说了10叉树,然后我就顺着这个思路去想了,然后就直接去前序遍历了,然后就T了,这里看下数据范围就知道肯定是过不了的
+一开始看了评论区说了 10 叉树，然后我就顺着这个思路去想了，然后就直接去前序遍历了，然后就 T 了，这里看下数据范围就知道肯定是过不了的
 ```java
 //TLE
 public int findKthNumber(int n, int k) {
@@ -5805,13 +5767,13 @@ public void dfs(int cur,int n,int k){
 ```
 **解法二**
 
-直接遍历肯定是行不通,那么就只能想办法跳过一些节点,这里我们就可以通过计算每个节点的子节点的个数来判断第k个是不是在该节点下,而子节点的个数就可以用`Min(n+1,next*10)-cur`计算得到,`next`是和cur相邻的节点,`n`是最大值,画个图就懂了
+直接遍历肯定是行不通，那么就只能想办法跳过一些节点，这里我们就可以通过计算每个节点的子节点的个数来判断第 k 个是不是在该节点下，而子节点的个数就可以用`Min(n+1,next*10)-cur`计算得到，`next`是和 cur 相邻的节点，`n`是最大值，画个图就懂了
 ![mark](http://static.imlgw.top/blog/20200614/3WPecCGnzxQl.png?imageslim)
 ```golang
 //UPDATE: 2020.7.29 之前的代码细节有的不好理解，重写了一版
 //正解
 func findKthNumber(n int, k int) int {
-    //k和count都是从1开始
+    //k 和 count 都是从 1 开始
     var cur = 1
     for k > 1 {
         count := getChild(cur, n)
@@ -5826,7 +5788,7 @@ func findKthNumber(n int, k int) int {
     return cur
 }
 
-//当前节点下有多少个子节点，也就是以cur开头的有多少个（包括cur）
+//当前节点下有多少个子节点，也就是以 cur 开头的有多少个（包括 cur）
 func getChild(cur int, n int) int {
     var count = 0
     var next = cur+1
@@ -5846,7 +5808,6 @@ func Min(a, b int) int {
 }
 ```
 
-
 ## [386. 字典序排数](https://leetcode-cn.com/problems/lexicographical-numbers/)
 给定一个整数 n, 返回从 1 到 n 的字典顺序。
 
@@ -5858,7 +5819,7 @@ func Min(a, b int) int {
 
 **解法一**
 
-先做的上面那一题,再做这一题就简单多了,前面tle的方法就是这里的正解,十叉树的前序遍历
+先做的上面那一题，再做这一题就简单多了，前面 tle 的方法就是这里的正解，十叉树的前序遍历
 ```java
 List<Integer> res=new ArrayList<>();
 
@@ -5908,10 +5869,10 @@ public void dfs(int cur,int n){
 
 **解法一**
 
-抄答案，第一天看了几分钟，一开始想写递归，直接看了答案，第二天还是没有完整的写出来，其实这题迭代会好理解很多，递归的看了下，有点不好理解，很trick
+抄答案，第一天看了几分钟，一开始想写递归，直接看了答案，第二天还是没有完整的写出来，其实这题迭代会好理解很多，递归的看了下，有点不好理解，很 trick
 ```java
 public TreeNode recoverFromPreorder(String S) {
-    //栈中存的是深度严格单调递增（步伐为1）的节点 0 1 2 3 4....
+    //栈中存的是深度严格单调递增（步伐为 1）的节点 0 1 2 3 4....
     Deque<TreeNode> stack=new ArrayDeque(); 
     int i=0;
     while(i<S.length()){
@@ -5932,7 +5893,7 @@ public TreeNode recoverFromPreorder(String S) {
             while(depth!=stack.size()){
                 stack.pop();
             }
-            //depth==0的只有一个根节点，是不会走这个分支的，所以这里肯定不为空
+            //depth==0 的只有一个根节点，是不会走这个分支的，所以这里肯定不为空
             stack.peek().right=node;
         }
         stack.push(node);
@@ -5985,7 +5946,7 @@ public TreeNode recoverFromPreorder(String S) {
 
 **解法一**
 
-go中序遍历配合全局变量，没啥好说的（看评论区很多人直接new TreeNode感觉不太好吧，题目的意思不是在原树上改么？）
+go 中序遍历配合全局变量，没啥好说的（看评论区很多人直接 new TreeNode 感觉不太好吧，题目的意思不是在原树上改么？）
 ```golang
 func increasingBST(root *TreeNode) *TreeNode {
     var dfs func(root *TreeNode)
@@ -6005,16 +5966,15 @@ func increasingBST(root *TreeNode) *TreeNode {
     return dummyNode.Right
 }
 ```
-> 这题和[面试题 17.12. BiNode](https://leetcode-cn.com/problems/binode-lcci/)解法是一摸一样的，但是这个sb题的描述我是真没看懂，结合评论区和case才知道到底要干啥，看评论区好像都整的挺明白的，一度以为我理解能力出了问题
+> 这题和 [面试题 17.12. BiNode](https://leetcode-cn.com/problems/binode-lcci/) 解法是一摸一样的，但是这个 sb 题的描述我是真没看懂，结合评论区和 case 才知道到底要干啥，看评论区好像都整的挺明白的，一度以为我理解能力出了问题
 
 ## [979. 在二叉树中分配硬币](https://leetcode-cn.com/problems/distribute-coins-in-binary-tree/)
 
 Difficulty: **中等**
 
-
 给定一个有 `N` 个结点的二叉树的根结点 `root`，树中的每个结点上都对应有 `node.val` 枚硬币，并且总共有 `N` 枚硬币。
 
-在一次移动中，我们可以选择两个相邻的结点，然后将一枚硬币从其中一个结点移动到另一个结点。(移动可以是从父结点到子结点，或者从子结点移动到父结点。)。
+在一次移动中，我们可以选择两个相邻的结点，然后将一枚硬币从其中一个结点移动到另一个结点。（移动可以是从父结点到子结点，或者从子结点移动到父结点。)。
 
 返回使每个结点上只有一枚硬币所需的移动次数。
 
@@ -6060,7 +6020,6 @@ Difficulty: **中等**
 1.  `1<= N <= 100`
 2.  `0 <= node.val <= N`
 
-
 **解法一**
 
 一开始直接想出来的做法，后面看了其他人的解法发现还不太一样😂，不过我还是感觉我的方法更好理解
@@ -6074,7 +6033,7 @@ func distributeCoins(root *TreeNode) int {
         }
         return a
     }
-    //dfs返回树的节点数量 和 金币数量
+    //dfs 返回树的节点数量 和 金币数量
     var dfs func(*TreeNode) (int, int)
     dfs = func(root *TreeNode) (int, int) {
         if root == nil {
@@ -6095,7 +6054,7 @@ func distributeCoins(root *TreeNode) int {
 
 **解法二**
 
-其他人的做法，dfs返回节点的盈亏值（节点数和金币数的差值），盈亏值绝对值之和就是总体的转移次数（所以两种解法其实是一样的，只是计算的时间不一样，我的是函数返回后计算盈亏，而下面的解法是返回前计算盈亏，感觉我的更好理解😂）
+其他人的做法，dfs 返回节点的盈亏值（节点数和金币数的差值），盈亏值绝对值之和就是总体的转移次数（所以两种解法其实是一样的，只是计算的时间不一样，我的是函数返回后计算盈亏，而下面的解法是返回前计算盈亏，感觉我的更好理解😂）
 ```golang
 //另一种做法
 func distributeCoins(root *TreeNode) int {
@@ -6125,7 +6084,6 @@ func distributeCoins(root *TreeNode) int {
 
 Difficulty: **困难**
 
-
 二叉搜索树中的两个节点被错误地交换。
 
 请在不改变其结构的情况下，恢复这棵树。
@@ -6133,7 +6091,7 @@ Difficulty: **困难**
 **示例 1:**
 
 ```go
-输入: [1,3,null,null,2]
+输入：[1,3,null,null,2]
 
    1
   /
@@ -6141,7 +6099,7 @@ Difficulty: **困难**
   \
    2
 
-输出: [3,1,null,null,2]
+输出：[3,1,null,null,2]
 
    3
   /
@@ -6153,7 +6111,7 @@ Difficulty: **困难**
 **示例 2:**
 
 ```go
-输入: [3,1,4,null,null,2]
+输入：[3,1,4,null,null,2]
 
   3
  / \
@@ -6161,7 +6119,7 @@ Difficulty: **困难**
    /
   2
 
-输出: [2,1,4,null,null,3]
+输出：[2,1,4,null,null,3]
 
   2
  / \
@@ -6170,11 +6128,10 @@ Difficulty: **困难**
   3
 ```
 
-**进阶:**
+**进阶：**
 
 *   使用 O(_n_) 空间复杂度的解法很容易实现。
 *   你能想出一个只使用常数空间的解决方案吗？
-
 
 **解法一**
 
@@ -6183,7 +6140,7 @@ Difficulty: **困难**
 func recoverTree(root *TreeNode) {
     var node1 *TreeNode
     var node2 *TreeNode
-    //这里犯了一个错误，一开始给pre赋值了一个root,导致节点记录错了
+    //这里犯了一个错误，一开始给 pre 赋值了一个 root, 导致节点记录错了
     var pre *TreeNode
     var dfs func(*TreeNode)
     dfs = func(root *TreeNode) {
@@ -6204,12 +6161,11 @@ func recoverTree(root *TreeNode) {
     node1.Val, node2.Val = node2.Val, node1.Val
 }
 ```
-这种解法严格来说空间复杂度并不是O(1)，递归会有系统栈的开销，空间复杂度应该是O(h)，h是树的高度，真正的O(1)的做法应该是Morris遍历，这种解法就称得上hard了
+这种解法严格来说空间复杂度并不是 O(1)，递归会有系统栈的开销，空间复杂度应该是 O(h)，h 是树的高度，真正的 O(1) 的做法应该是 Morris 遍历，这种解法就称得上 hard 了
 
 ## [1302. 层数最深叶子节点的和](https://leetcode-cn.com/problems/deepest-leaves-sum/)
 
 Difficulty: **中等**
-
 
 给你一棵二叉树，请你返回层数最深的叶子节点的和。
 
@@ -6227,10 +6183,9 @@ Difficulty: **中等**
 *   树中节点数目在 `1` 到 `10^4` 之间。
 *   每个节点的值在 `1` 到 `100` 之间。
 
-
 **解法一**
 
-BFS没啥好说的，DFS的挺有意思
+BFS 没啥好说的，DFS 的挺有意思
 ```golang
 func deepestLeavesSum(root *TreeNode) int {
     var dfs func(*TreeNode, int)
@@ -6256,9 +6211,9 @@ func deepestLeavesSum(root *TreeNode) int {
 }
 ```
 
-## _树形DP(大概)_
+## _树形 DP（大概）_
 
-> 2020.5.10更新，在看了左神的书后，大概了解了树形DP，所谓的树形DP实际上就是把递推方程搬到了树结构上，按我的理解树形DP很大的特点就是最终的解可能存在于树上每个节点，像我下面的题有的暴力解用的就是双重递归，就是dfs遍历没个节点，然后再对每个节点递归求解，但是对根节点求解的时候，实际上其他的子节点都成了子问题，所以后面再对子节点求解的时候问题就重复了，所以就可以采用后序遍历，自底向上，先求左右节点的值再更新根节点，**下面的题其实我不知道到底是不是属于树形DP，可能太简单了，但是再我看来解法比较统一，很有套路所以整理到一起**，我查了下网上介绍的树形DP还是挺难的，后面有时间了解后再来记录
+> 2020.5.10 更新，在看了左神的书后，大概了解了树形 DP，所谓的树形 DP 实际上就是把递推方程搬到了树结构上，按我的理解树形 DP 很大的特点就是最终的解可能存在于树上每个节点，像我下面的题有的暴力解用的就是双重递归，就是 dfs 遍历没个节点，然后再对每个节点递归求解，但是对根节点求解的时候，实际上其他的子节点都成了子问题，所以后面再对子节点求解的时候问题就重复了，所以就可以采用后序遍历，自底向上，先求左右节点的值再更新根节点，**下面的题其实我不知道到底是不是属于树形 DP，可能太简单了，但是再我看来解法比较统一，很有套路所以整理到一起**，我查了下网上介绍的树形 DP 还是挺难的，后面有时间了解后再来记录
 
 ## [110. 平衡二叉树](https://leetcode-cn.com/problems/balanced-binary-tree/)
 
@@ -6266,7 +6221,7 @@ func deepestLeavesSum(root *TreeNode) int {
 
 本题中，一棵高度平衡二叉树定义为：
 
->  一个二叉树每个节点 的左右两个子树的高度差的绝对值不超过1
+>  一个二叉树每个节点 的左右两个子树的高度差的绝对值不超过 1
 
 **示例 1:**
 
@@ -6296,12 +6251,11 @@ func deepestLeavesSum(root *TreeNode) int {
  4   4
 ```
 
-
 返回 false 。
 
 **解法一**
 
-暴力法，结合上面的[二叉树最大深度](#104. 二叉树的最大深度)，**自顶向下**，求左右子树的高度差
+暴力法，结合上面的 [二叉树最大深度](#104. 二叉树的最大深度)，**自顶向下**，求左右子树的高度差
 
 ```java
 //top 2 bottom
@@ -6324,7 +6278,7 @@ public int hight(TreeNode root){
 
 **解法二**
 
-自底向上，利用一个实例变量保存结果，其实就是在上面的求heigh过程中将左右子树的高度先取出来直接比较，如果差距大于1就直接记录下结果false，但是其实这里还是可以优化下
+自底向上，利用一个实例变量保存结果，其实就是在上面的求 heigh 过程中将左右子树的高度先取出来直接比较，如果差距大于 1 就直接记录下结果 false，但是其实这里还是可以优化下
 
 ```java
 private boolean ans=true;
@@ -6381,29 +6335,29 @@ public int hight(TreeNode root){
 
 给定一个二叉树，计算整个树的坡度。
 
-一个树的节点的坡度定义即为，该节点左子树的结点之和和右子树结点之和的差的绝对值。空结点的的坡度是0。
+一个树的节点的坡度定义即为，该节点左子树的结点之和和右子树结点之和的差的绝对值。空结点的的坡度是 0。
 
 整个树的坡度就是其所有节点的坡度之和。
 
-**示例:**
+**示例：**
 
 ```java
-输入: 
+输入：
          1
        /   \
       2     3
-输出: 1
-解释: 
+输出：1
+解释：
 结点的坡度 2 : 0
 结点的坡度 3 : 0
 结点的坡度 1 : |2-3| = 1
 树的坡度 : 0 + 0 + 1 = 1
 ```
 
-**注意:**
+**注意：**
 
-1. 任何子树的结点的和不会超过32位整数的范围。
-2. 坡度的值不会超过32位整数的范围。. 
+1. 任何子树的结点的和不会超过 32 位整数的范围。
+2. 坡度的值不会超过 32 位整数的范围。. 
 
 **解法一**
 
@@ -6429,12 +6383,12 @@ public int childSum(TreeNode root) {
 
 **解法二**
 
-上面的做法确实有点可惜，其实在计算childSum的时候就可以字节把坡度算出来然后累加就是整体的坡度
+上面的做法确实有点可惜，其实在计算 childSum 的时候就可以字节把坡度算出来然后累加就是整体的坡度
 
 ```java
 int tilt=0;
 
-//结果发现上面的做法傻逼了。。。其实我知道是不对的,但是不知道咋改,不过写了个嵌套递归也还行hahaha
+//结果发现上面的做法傻逼了。其实我知道是不对的，但是不知道咋改，不过写了个嵌套递归也还行 hahaha
 public int findTilt(TreeNode root) {
     childSum(root);
     return tilt;
@@ -6497,7 +6451,7 @@ public int hight(TreeNode node){
 
 **解法二**
 
-和之前一样，先写了个暴力的嵌套递归😂，代码确实简介，难道这就是暴力美学么，i了
+和之前一样，先写了个暴力的嵌套递归😂，代码确实简介，难道这就是暴力美学么，i 了
 
 ```java
 public int diameterOfBinaryTree(TreeNode root) {
@@ -6518,29 +6472,29 @@ public int hight(TreeNode node){
 **示例 1:**
 
 ```java
-输入: [1,2,3]
+输入：[1,2,3]
    1
   / \
  2   3
-输出: 6
+输出：6
 ```
 
 **示例 2:**
 
 ```java
-输入: [-10,9,20,null,null,15,7]
+输入：[-10,9,20,null,null,15,7]
    -10
    / \
   9  20
     /  \
    15   7
 
-输出: 42
+输出：42
 ```
 
 **错误解法**
 
-先上一个错误答案，过了 `71/93` 个case（lc的case好少）
+先上一个错误答案，过了 `71/93` 个 case（lc 的 case 好少）
 
 ```java
 public int maxPathSum(TreeNode root) {
@@ -6565,7 +6519,7 @@ public int helper(TreeNode root){
     return root.val+(left>0?left:0)+(right>0?right:0);
 }
 ```
-我一开始的想法是按照根节点来讨论的，每个节点的最大值就是 左右子树的最大路径和（大于0）加上当前节点的值，改了半天WA了几发后发现是有问题的
+我一开始的想法是按照根节点来讨论的，每个节点的最大值就是 左右子树的最大路径和（大于 0）加上当前节点的值，改了半天 WA 了几发后发现是有问题的
 
 ```java
      1 
@@ -6575,11 +6529,11 @@ public int helper(TreeNode root){
 7   9  5  6
 ```
 
-比如这样的，2为根的最长路径是1，2，9但是这个在1为根的节点中是不合法的，所以我们需要的只有单边的路径和，如上图的树，我们需要的就是 `2->9` 这条路径，所以我们需要再添加一个求最长路径的函数
+比如这样的，2 为根的最长路径是 1，2，9 但是这个在 1 为根的节点中是不合法的，所以我们需要的只有单边的路径和，如上图的树，我们需要的就是 `2->9` 这条路径，所以我们需要再添加一个求最长路径的函数
 
 **解法二**
 
-可AC，但是效率较低
+可 AC，但是效率较低
 
 ```java
 public int maxPathSum(TreeNode root) {
@@ -6593,7 +6547,7 @@ public int maxPathSum(TreeNode root) {
     return Math.max(res,Math.max(maxPathSum(root.left),maxPathSum(root.right)));
 }
 
-//以当前节点为根的最大路径和(双边)
+//以当前节点为根的最大路径和（双边）
 public int helper(TreeNode root){
     if(root==null) return Integer.MIN_VALUE;
     if (root.left==null && root.right==null) {
@@ -6604,8 +6558,8 @@ public int helper(TreeNode root){
     return root.val+(left>0?left:0)+(right>0?right:0);
 }
 
-//root为起始节点的最大路径和(单边)
-//这里可以cache一下
+//root 为起始节点的最大路径和（单边）
+//这里可以 cache 一下
 //cache 前 219ms
 //cache 后 30ms
 
@@ -6637,21 +6591,21 @@ public int maxPathSum(TreeNode root) {
     return res;
 }
 
-//返回以当前节点为*起点*的最大路径和(单边,左右子树中选最大的一个)
+//返回以当前节点为*起点*的最大路径和（单边，左右子树中选最大的一个）
 public int helper(TreeNode root){
     if(root==null) return 0;
     int left=Math.max(helper(root.left),0);
     int right=Math.max(helper(root.right),0);
     res=Math.max(res,root.val+left+right); //在这里记录最大值
-    return root.val+Math.max(left,right); //返回的实际上是我上面dfs的结果
+    return root.val+Math.max(left,right); //返回的实际上是我上面 dfs 的结果
 }
 ```
 
-在递归函数中用全局变量记录最大值，最后返回的却是**单边**的最大值，也就是我上面写的dfs函数返回的值，可以说是相当巧妙了，除此外对递归的出口也进行了简化
+在递归函数中用全局变量记录最大值，最后返回的却是**单边**的最大值，也就是我上面写的 dfs 函数返回的值，可以说是相当巧妙了，除此外对递归的出口也进行了简化
 
 **Update: 2020.6.21**
 
-用go重写一下，最近很喜欢写这种闭包的结构，感觉比较简洁
+用 go 重写一下，最近很喜欢写这种闭包的结构，感觉比较简洁
 ```golang
 func maxPathSum(root *TreeNode) int {
     res:=-1<<31
@@ -6661,11 +6615,11 @@ func maxPathSum(root *TreeNode) int {
         }
         return b
     }
-    //以root开头最大单侧路径
+    //以 root 开头最大单侧路径
     var dfs func(root *TreeNode) int
     dfs = func(root *TreeNode) int {
         if root==nil{
-            return -1<<31 //返回的小于0就行
+            return -1<<31 //返回的小于 0 就行
         }
         left:=Max(0,dfs(root.Left))
         right:=Max(0,dfs(root.Right))
@@ -6685,7 +6639,7 @@ func maxPathSum(root *TreeNode) int {
 
 **示例 1:**
 
-输入:
+输入：
 
 ```java
               5
@@ -6695,7 +6649,7 @@ func maxPathSum(root *TreeNode) int {
           1   1   5
 ```
 
-输出:
+输出：
 
 ```java
 2
@@ -6703,7 +6657,7 @@ func maxPathSum(root *TreeNode) int {
 
 **示例 2:**
 
-输入:
+输入：
 
 ```java
               1
@@ -6713,17 +6667,17 @@ func maxPathSum(root *TreeNode) int {
           4   4   5
 ```
 
-输出:
+输出：
 
 ```java
 2
 ```
 
-**注意:** 给定的二叉树不超过10000个结点。 树的高度不超过1000。
+**注意：** 给定的二叉树不超过 10000 个结点。 树的高度不超过 1000。
 
 **错误解法**
 
-其实写了一会儿就意识到和上面的[124.二叉树的最大路径和](#124-二叉树的最大路径和)，[543.二叉树的直径](#543-二叉树的直径)是一样的思路，但是自己还是没写好，递归函数的写着写着就写变了，脱离了最开始的定义
+其实写了一会儿就意识到和上面的 [124. 二叉树的最大路径和](#124-二叉树的最大路径和），[543. 二叉树的直径](#543-二叉树的直径)是一样的思路，但是自己还是没写好，递归函数的写着写着就写变了，脱离了最开始的定义
 
 ```java
 //错误解法，其实整体思路是对的，但是细节没处理好
@@ -6770,7 +6724,7 @@ public int longestUnivaluePath(TreeNode root) {
 
 int res=0;
 
-//以root开头的同值路径长度
+//以 root 开头的同值路径长度
 public int dfs(TreeNode root){
     if(root==null){
         return 0;
@@ -6778,23 +6732,23 @@ public int dfs(TreeNode root){
     int leftMax=dfs(root.left);
     int rightMax=dfs(root.right);
     if(root.left!=null){
-        //不相等就直接设置成0
+        //不相等就直接设置成 0
         leftMax=root.left.val==root.val?leftMax+1:0;
     }
     if(root.right!=null){
         rightMax=root.right.val==root.val?rightMax+1:0;
     }
-    //其实3种情况都包含了
+    //其实 3 种情况都包含了
     res=Math.max(res,leftMax+rightMax);
     return Math.max(leftMax,rightMax);
 }
 ```
 
-注意dfs函数的定义：_**以root开头的最长同值路径**_
+注意 dfs 函数的定义：_**以 root 开头的最长同值路径**_
 
-既然是以root开头，所以代表的其实是**单侧**的最长路径，也就是说这个路径不能穿过root，所以我们要分别求左右的值，然后取最大值，再判断和左右节点是否相等
+既然是以 root 开头，所以代表的其实是**单侧**的最长路径，也就是说这个路径不能穿过 root，所以我们要分别求左右的值，然后取最大值，再判断和左右节点是否相等
 
-再然后我们需要判断root和左右节点值是否相等，如果和左右节点不想等，那么`leftMax`和`rightMax`应该直接置为0，不应该再代入做计算，上面的错误解法就是错在这里，如果相等那就应该+1，然后统计最大值的时候也就可以很轻松的包含所有的3种情况
+再然后我们需要判断 root 和左右节点值是否相等，如果和左右节点不想等，那么`leftMax`和`rightMax`应该直接置为 0，不应该再代入做计算，上面的错误解法就是错在这里，如果相等那就应该+1，然后统计最大值的时候也就可以很轻松的包含所有的 3 种情况
 
 > 这里为什么要先求最大值，再判断，先判断在求最大值不行么？
 >
@@ -6802,7 +6756,7 @@ public int dfs(TreeNode root){
 
 **Update: 2020.6.21**
 
-go重写一遍，换了个方式，统计节点个数最后减一
+go 重写一遍，换了个方式，统计节点个数最后减一
 ```golang
 func longestUnivaluePath(root *TreeNode) int {
     if root==nil{
@@ -6818,7 +6772,7 @@ func longestUnivaluePath(root *TreeNode) int {
         if root==nil{
             return 0
         }
-        //root和左右子节点能形成的最长同值路径(至少是1)
+        //root 和左右子节点能形成的最长同值路径（至少是 1)
         left := 1+dfs(root.Left) 
         right := 1+dfs(root.Right)
         if root.Left==nil || root.Val!=root.Left.Val{
@@ -6836,39 +6790,39 @@ func longestUnivaluePath(root *TreeNode) int {
 ```
 **解法二**
 
-另一种dfs的思路，代码更加简洁一点，但是稍微有一点不好想
+另一种 dfs 的思路，代码更加简洁一点，但是稍微有一点不好想
 
 ```java
 public int longestUnivaluePath(TreeNode root) {
     if(root==null) return 0;
-    //起点的值无所谓,root节点没有父节点不用向上层函数返回值
+    //起点的值无所谓，root 节点没有父节点不用向上层函数返回值
     dfs(root,-1); 
     return res;
 }
 
 int res=0;
 
-//以 root父节点和root 开始的同值路径长度
+//以 root 父节点和 root 开始的同值路径长度
 public int dfs(TreeNode root,int parent){
     if(root==null){
         return 0;
     }
     int leftMax=dfs(root.left,root.val);
     int rightMax=dfs(root.right,root.val);
-    //这里res的计算其实3种情况都包含了
+    //这里 res 的计算其实 3 种情况都包含了
     res=Math.max(res,leftMax+rightMax);
     if(root.val==parent){
-        //和父节点同值,返回左右最大值+1
+        //和父节点同值，返回左右最大值+1
         return Math.max(leftMax,rightMax)+1;
     }
-    //和父节点不同值，直接返回0
+    //和父节点不同值，直接返回 0
     return 0;
 }
 ```
 
-注意dfs函数的定义：_**以node父节点和node开始的同值路径长度**_
+注意 dfs 函数的定义：_**以 node 父节点和 node 开始的同值路径长度**_
 
-在函数中添加一个父节点的值，然后在遍历到一个节点的时候判断当前节点和父节点的关系就行了，如果和父节点不相等，那么直接返回0，相等就返回左右最大值+1（这个+1加的是当前节点），然后同样采用后序遍历，这个思路没有那么自然，不过也挺不错的
+在函数中添加一个父节点的值，然后在遍历到一个节点的时候判断当前节点和父节点的关系就行了，如果和父节点不相等，那么直接返回 0，相等就返回左右最大值+1（这个+1 加的是当前节点），然后同样采用后序遍历，这个思路没有那么自然，不过也挺不错的
 
 > 还有一种暴力解法，这里就不贴了
 
@@ -6879,13 +6833,13 @@ public int dfs(TreeNode root,int parent){
 给一棵二叉树，找到最长连续路径的长度。
 这条路径是指 任何的节点序列中的起始节点到树中的任一节点都必须遵循 父-子 联系。最长的连续路径必须是从父亲节点到孩子节点（`不能逆序`）。
 
-**样例1:**
+**样例 1:**
 
 ```java
-输入:
+输入：
 {1,#,3,2,4,#,#,#,5}
-输出:3
-说明:
+输出：3
+说明：
 这棵树如图所示
    1
     \
@@ -6894,16 +6848,16 @@ public int dfs(TreeNode root,int parent){
    2   4
         \
          5
-最长连续序列是3-4-5，所以返回3.
+最长连续序列是 3-4-5，所以返回 3.
 ```
 
-**样例2:**
+**样例 2:**
 
 ```java
-输入:
+输入：
 {2,#,3,2,#,1,#}
-输出:2
-说明:
+输出：2
+说明：
 这棵树如图所示：
    2
     \
@@ -6912,12 +6866,12 @@ public int dfs(TreeNode root,int parent){
    2    
   / 
  1
-最长连续序列是2-3，而不是3-2-1，所以返回2.
+最长连续序列是 2-3，而不是 3-2-1，所以返回 2.
 ```
 
 **解法一**
 
-和上一题最长同值路径几乎一摸一样，这题leetCode也有，[但是是会员题](https://leetcode-cn.com/problems/binary-tree-longest-consecutive-sequence)，前几天每日一题出了这个（后来改了），然后我在lintcode找到了，应该是同一题，随手做一下
+和上一题最长同值路径几乎一摸一样，这题 leetCode 也有，[但是是会员题](https://leetcode-cn.com/problems/binary-tree-longest-consecutive-sequence)，前几天每日一题出了这个（后来改了），然后我在 lintcode 找到了，应该是同一题，随手做一下
 
 ```java
 public int longestConsecutive(TreeNode root) {
@@ -6928,12 +6882,12 @@ public int longestConsecutive(TreeNode root) {
 
 int max=0;
 
-//以root开始的最长连续序列
+//以 root 开始的最长连续序列
 public int dfs(TreeNode root){
     if(root == null){
         return 0;
     }
-    //保证至少是1
+    //保证至少是 1
     int leftMax = Math.max(1,dfs(root.left));
     int rightMax = Math.max(1,dfs(root.right));
     if(root.left!=null){
@@ -6947,7 +6901,7 @@ public int dfs(TreeNode root){
 }
 ```
 
-其实一开始写了一个很复杂的，dfs的定义又和父节点耦合了，感觉和父节点耦合之后就很难搞，很容易搞晕，所以尽量不和父节点耦合，直接以当前节点定义
+其实一开始写了一个很复杂的，dfs 的定义又和父节点耦合了，感觉和父节点耦合之后就很难搞，很容易搞晕，所以尽量不和父节点耦合，直接以当前节点定义
 
 **Update: 2020.6.21**
 
@@ -6988,21 +6942,21 @@ func longestConsecutive (root *TreeNode) int {
 **示例 1:**
 
 ```java
-输入: [3,2,3,null,3,null,1]
+输入：[3,2,3,null,3,null,1]
  	 3
 	/ \
    2   3
     \   \ 
      3   1
 
-输出: 7 
-解释: 小偷一晚能够盗取的最高金额 = 3 + 3 + 1 = 7.
+输出：7 
+解释：小偷一晚能够盗取的最高金额 = 3 + 3 + 1 = 7.
 ```
 
 **示例 2:**
 
 ~~~java
-输入: [3,4,5,1,3,null,1]
+输入：[3,4,5,1,3,null,1]
 
  	 3
 	/ \
@@ -7010,8 +6964,8 @@ func longestConsecutive (root *TreeNode) int {
   / \   \ 
  1   3   1
 
-输出: 9
-解释: 小偷一晚能够盗取的最高金额 = 4 + 5 = 9.
+输出：9
+解释：小偷一晚能够盗取的最高金额 = 4 + 5 = 9.
 ~~~
 
 **解法一**
@@ -7019,8 +6973,8 @@ func longestConsecutive (root *TreeNode) int {
 暴力递归，应该还是写得出来
 
 ```java
-//AC了,但是效率很低
-//可以用hashMap缓存一下每个节点rob的值,但是没必要
+//AC 了，但是效率很低
+//可以用 hashMap 缓存一下每个节点 rob 的值，但是没必要
 public int rob(TreeNode root) {
     return tryRob(root);
 }
@@ -7048,7 +7002,7 @@ public int tryRob(TreeNode root) {
 ```
 **解法二**
 
-看评论区说是啥树形dp ? 知识盲区了hahaha
+看评论区说是啥树形 dp ? 知识盲区了 hahaha
 
 ```java
 public int rob(TreeNode root) {
@@ -7056,8 +7010,8 @@ public int rob(TreeNode root) {
     return Math.max(res[0],res[1]);
 }
 
-//树形dp???
-//看的懂，但是肯定写不出来 。。。。
+//树形 dp???
+//看的懂，但是肯定写不出来 。
 public int[] tryRob(TreeNode root) {
     int[] dp=new int[2];
     if (root==null) {
@@ -7075,7 +7029,7 @@ public int[] tryRob(TreeNode root) {
 ```
 ~~不是我吹，就这样的题目，再遇见多少次我都写不出来这样的解（笑~~
 
-> 2020.5.10更新，在看了左神的书后，了解到这种其实就是树形DP，所谓的树形DP实际上就是把递推方程搬到了树结构上，按我的理解树形DP很大的特点就是最终的解可能存在于树上每个节点，所以每个节点都是个子问题，可以从子问题推出父问题
+> 2020.5.10 更新，在看了左神的书后，了解到这种其实就是树形 DP，所谓的树形 DP 实际上就是把递推方程搬到了树结构上，按我的理解树形 DP 很大的特点就是最终的解可能存在于树上每个节点，所以每个节点都是个子问题，可以从子问题推出父问题
 
 ## [1372. 二叉树中的最长交错路径](https://leetcode-cn.com/problems/longest-zigzag-path-in-a-binary-tree/)
 
@@ -7124,7 +7078,7 @@ public int[] tryRob(TreeNode root) {
 
 **解法一**
 
-某次周赛的T3，树形DP
+某次周赛的 T3，树形 DP
 
 ```java
 int max=0;
@@ -7148,7 +7102,7 @@ public int[] dfs(TreeNode root){
 ```
 **Update: 2020.6.21**
 
-用go重写（回顾）下
+用 go 重写（回顾）下
 ```golang
 func longestZigZag(root *TreeNode) int {
     var Max = func(a,b int)int{
@@ -7174,17 +7128,17 @@ func longestZigZag(root *TreeNode) int {
 
 **解法二**
 
-直接搜索的做法，其实这种做法没有上面树形dp好理解，dfs函数的定义会和父节点混合
+直接搜索的做法，其实这种做法没有上面树形 dp 好理解，dfs 函数的定义会和父节点混合
 
 ```java
 int res=0;
 
 public int longestZigZag(TreeNode root) {
-    dfs(root,false);//true false都无所谓，root没有父节点
+    dfs(root,false);//true false 都无所谓，root 没有父节点
     return res-1;
 }
 
-//当前节点和父节点形成的交错路径长度，isRight代表父节点到当前节点的走向是不是right
+//当前节点和父节点形成的交错路径长度，isRight 代表父节点到当前节点的走向是不是 right
 public int dfs(TreeNode root,boolean isRight){
     if(root==null){
         return 0;
@@ -7202,7 +7156,6 @@ public int dfs(TreeNode root,boolean isRight){
 ## [968. 监控二叉树](https://leetcode-cn.com/problems/binary-tree-cameras/)
 
 Difficulty: **困难**
-
 
 给定一个二叉树，我们在树的节点上安装摄像头。
 
@@ -7235,10 +7188,9 @@ Difficulty: **困难**
 1.  给定树的节点数的范围是 `[1, 1000]`。
 2.  每个节点的值都是 0。
 
-
 **解法一**
 
-树形DP
+树形 DP
 ```golang
 /**
  * Definition for a binary tree node.
@@ -7248,9 +7200,9 @@ Difficulty: **困难**
  *     Right *TreeNode
  * }
  */
-//0: 覆盖整棵树，root必须设置监控
-//1: 覆盖整棵树，无论root是否设置监控
-//2: 覆盖两颗子树，无论root是否被覆盖
+//0: 覆盖整棵树，root 必须设置监控
+//1: 覆盖整棵树，无论 root 是否设置监控
+//2: 覆盖两颗子树，无论 root 是否被覆盖
 func minCameraCover(root *TreeNode) int {
     var Min = func(a, b int) int {if a < b {return a}; return b}
     var INF = 0x3f3f3f3f
@@ -7301,13 +7253,13 @@ Difficulty: **困难**
 
 **解法一**
 
-这题有[更好的做法](http://imlgw.top/2019/05/04/leetcode-shu-zu/#315-%E8%AE%A1%E7%AE%97%E5%8F%B3%E4%BE%A7%E5%B0%8F%E4%BA%8E%E5%BD%93%E5%89%8D%E5%85%83%E7%B4%A0%E7%9A%84%E4%B8%AA%E6%95%B0)，直接归并就行了，这里主要是为了学习BIT
+这题有 [更好的做法](http://imlgw.top/2019/05/04/leetcode-shu-zu/#315-%E8%AE%A1%E7%AE%97%E5%8F%B3%E4%BE%A7%E5%B0%8F%E4%BA%8E%E5%BD%93%E5%89%8D%E5%85%83%E7%B4%A0%E7%9A%84%E4%B8%AA%E6%95%B0)，直接归并就行了，这里主要是为了学习 BIT
 
-暴力的做法: 其实就是桶排序的思想，我们从右向左扫数组，扫描一个就在对应的桶+1，同时计算该位置左边的前缀和，就是右边比当前元素小的值，也就是我们需要的结果，但是问题是这个`bit`数组是一直在变化的，扫描一个元素就会在bit数组对应的位置上+1，每次变化后都需要O(N)来重新计算后缀和，这样整体的复杂度就是O(N^2)，数据量1e5，过不了OJ
+暴力的做法：其实就是桶排序的思想，我们从右向左扫数组，扫描一个就在对应的桶+1，同时计算该位置左边的前缀和，就是右边比当前元素小的值，也就是我们需要的结果，但是问题是这个`bit`数组是一直在变化的，扫描一个元素就会在 bit 数组对应的位置上+1，每次变化后都需要 O(N) 来重新计算后缀和，这样整体的复杂度就是 O(N^2)，数据量 1e5，过不了 OJ
 
-所以我们可以用线段树来维护区间和，但是线段树代码量比较大，常数也比较大，所以这里学一下新科技：**[树状数组](https://blog.csdn.net/Yaokai_AssultMaster/article/details/79492190)**，区间查询，单点修改时间复杂度都是logN，且代码简单。
+所以我们可以用线段树来维护区间和，但是线段树代码量比较大，常数也比较大，所以这里学一下新科技：**[树状数组](https://blog.csdn.net/Yaokai_AssultMaster/article/details/79492190)**，区间查询，单点修改时间复杂度都是 logN，且代码简单。
 
-同时还有一个问题，这里我们直接按照值来定位是不合适的，数据范围比较大，直接按照元素值来定位会造成很大空间的浪费，并且题目也不允许开这么大的空间，所以还需要离散化，因为我们只关系元素之间的大小关系，所以我们转换成每个元素说对应的rank就行了
+同时还有一个问题，这里我们直接按照值来定位是不合适的，数据范围比较大，直接按照元素值来定位会造成很大空间的浪费，并且题目也不允许开这么大的空间，所以还需要离散化，因为我们只关系元素之间的大小关系，所以我们转换成每个元素说对应的 rank 就行了
 
 ```java
 int[] tree;
@@ -7318,7 +7270,7 @@ public int lowbit(int i) {
     return i & -i;
 }
 
-//update索引i位置
+//update 索引 i 位置
 public void update(int i, int delta) {
     while (i <= n) {
         tree[i] += delta;
@@ -7328,7 +7280,7 @@ public void update(int i, int delta) {
 
 public int query(int i) {
     int sum = 0;
-    //从1开始
+    //从 1 开始
     while (i > 0) {
         sum += tree[i];
         i -= lowbit(i);
@@ -7337,16 +7289,16 @@ public int query(int i) {
 }
 
 /*
-暴力的做法: 其实就是桶排序的思想，我们从右向左扫数组，扫描一个就在对应的桶+1，
+暴力的做法：其实就是桶排序的思想，我们从右向左扫数组，扫描一个就在对应的桶+1，
 同时计算该位置左边的前缀和，就是右边比当前元素小的值，也就是我们需要的结果，
-但是问题是这个`bit`数组是一直在变化的，扫描一个元素就会在bit数组对应的位置上+1，
-每次变化后都需要O(N)来重新计算后缀和，这样整体的复杂度就是O(N^2)，数据量1e5，过不了OJ
+但是问题是这个`bit`数组是一直在变化的，扫描一个元素就会在 bit 数组对应的位置上+1，
+每次变化后都需要 O(N) 来重新计算后缀和，这样整体的复杂度就是 O(N^2)，数据量 1e5，过不了 OJ
 
 所以我们可以用线段树来维护区间和，但是线段树代码量比较大，常数也比较大
-所以这里学一下新科技：**树状数组**，区间查询，单点修改时间复杂度都是logN，且代码简单。
+所以这里学一下新科技：**树状数组**，区间查询，单点修改时间复杂度都是 logN，且代码简单。
 同时还有一个问题，这里我们直接按照值来定位是不合适的，数据范围比较大，
 直接按照元素值来定位会造成很大空间的浪费，并且题目也不允许开这么大的空间
-所以还需要离散化，因为我们只关系元素之间的大小关系，所以我们转换成每个元素说对应的rank就行了
+所以还需要离散化，因为我们只关系元素之间的大小关系，所以我们转换成每个元素说对应的 rank 就行了
 */
 public List<Integer> countSmaller(int[] nums) {
     n = nums.length;
@@ -7364,7 +7316,7 @@ public List<Integer> countSmaller(int[] nums) {
         rank[temp[i][0]] = i+1;
     }
     for (int i = n-1; i >= 0; i--) {
-        //O(NlogN)构建BIT(可以优化成O(N))
+        //O(NlogN) 构建 BIT（可以优化成 O(N))
         update(rank[i], 1);
         res.add(0, query(rank[i]-1));
     }

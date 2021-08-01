@@ -1,5 +1,5 @@
 ---
-title: LeetCode二分查找
+title: LeetCode 二分查找
 tags:
   - LeetCode
   - 二分
@@ -21,25 +21,24 @@ abbrlink: ac033e1a
 **示例 1:**
 
 ```java
-输入: nums = [-1,0,3,5,9,12], target = 9
-输出: 4
-解释: 9 出现在 nums 中并且下标为 4
+输入：nums = [-1,0,3,5,9,12], target = 9
+输出：4
+解释：9 出现在 nums 中并且下标为 4
 ```
-
 
 **示例 2:**
 
 ```java
-输入: nums = [-1,0,3,5,9,12], target = 2
-输出: -1
-解释: 2 不存在 nums 中因此返回 -1
+输入：nums = [-1,0,3,5,9,12], target = 2
+输出：-1
+解释：2 不存在 nums 中因此返回 -1
 ```
 
 **提示：**
 
 - 你可以假设 nums 中的所有元素是不重复的
-- n 将在 [1, 10000]之间
-- nums 的每个元素都将在 [-9999, 9999]之间
+- n 将在 [1, 10000] 之间
+- nums 的每个元素都将在 [-9999, 9999] 之间
 
 **解法一**
 
@@ -71,7 +70,7 @@ public int search(int[] nums, int target) {
     int left=0,right=nums.length;
     while(left<right){
         int mid=left+(right-left)/2;
-        if(nums[mid]<target){ //排除mid
+        if(nums[mid]<target){ //排除 mid
             left=mid+1;
         }else{
             right=mid;
@@ -91,16 +90,16 @@ public int search(int[] nums, int target) {
 **示例 1:**
 
 ```java
-输入: 4
-输出: 2
+输入：4
+输出：2
 ```
 
 **示例 2:**
 
 ```java
-输入: 8
-输出: 2
-说明: 8 的平方根是 2.82842..., 
+输入：8
+输出：2
+说明：8 的平方根是 2.82842..., 
      由于返回类型是整数，小数部分将被舍去。
 ```
 
@@ -139,7 +138,7 @@ func mySqrt(x int) int {
     var right int64 = lx/2 + 1
     for left < right {
         mid := left + (right-left)/2 + 1
-        //大于lx的一定不是res可以排除，但是小于的不一定不是，题目是向下取整的
+        //大于 lx 的一定不是 res 可以排除，但是小于的不一定不是，题目是向下取整的
         if mid*mid > lx { 
             right = mid - 1
         } else {
@@ -163,39 +162,39 @@ func mySqrt(x int) int {
 **示例 1:**
 
 ```java
-输入: [1,3,5,6], 5
-输出: 2
+输入：[1,3,5,6], 5
+输出：2
 ```
 
 **示例 2:**
 
 ```java
-输入: [1,3,5,6], 2
-输出: 1
+输入：[1,3,5,6], 2
+输出：1
 ```
 
 **示例 3:**
 
 ```java
-输入: [1,3,5,6], 7
-输出: 4
+输入：[1,3,5,6], 7
+输出：4
 ```
 
 **示例 4:**
 
 ```java
-输入: [1,3,5,6], 0
-输出: 0
+输入：[1,3,5,6], 0
+输出：0
 ```
 
 **解法一**
 
-跟谁学笔试现场写的，上面的都是dd（删除了之前的解法）
+跟谁学笔试现场写的，上面的都是 dd（删除了之前的解法）
 
 ```java
 public int searchInsert(int[] nums, int target) {
     int len=nums.length;
-    int lo=0,hi=len; //和模板不一样，因为这里是搜索插入位置是可以到达right的
+    int lo=0,hi=len; //和模板不一样，因为这里是搜索插入位置是可以到达 right 的
     while(lo< hi){
         int mid=lo+(hi-lo)/2;
         if(nums[mid]<target){
@@ -241,16 +240,15 @@ public int searchInsert(int[] nums, int target) {
 **示例 1:**
 
 ```java
-输入: [3,4,5,1,2]
-输出: 1
+输入：[3,4,5,1,2]
+输出：1
 ```
-
 
 **示例 2:**
 
 ```java
-输入: [4,5,6,7,0,1,2]
-输出: 0
+输入：[4,5,6,7,0,1,2]
+输出：0
 ```
 
 **解法一**
@@ -281,12 +279,12 @@ public int findMin(int[] nums) {
     return nums[left];
 }
 ```
-说实话，我都不知道咋对的。。。
+说实话，我都不知道咋对的。
 
 **解法二**
 
 模板解法，还是模板写起来清晰舒服
-> 建议直接看UPDATE
+> 建议直接看 UPDATE
 ```java
 public int findMin(int[] nums) {
     if (nums==null||nums.length<=0) {
@@ -295,7 +293,7 @@ public int findMin(int[] nums) {
     int left=0,right=nums.length-1;
     while(left<right){
         int mid=left+(right-left)/2;
-        if (nums[mid]>nums[right]) { //排除mid的分支
+        if (nums[mid]>nums[right]) { //排除 mid 的分支
             left=mid+1;
         }else{
             right=mid;
@@ -310,12 +308,12 @@ public int findMin(int[] nums) {
 
 **UPDATE: 2020.7.22**
 
-最小值的特点就是肯定是小于等于nums的最后一个元素，这里没有重复的元素，所以最小值肯定是小于最后一个元素的，除非最后一个就是最小的元素，这种情况我们设置为res的初始值，这样我重写后我感觉更好理解了，进阶版的只需要在这个的基础上稍加改动就行了
+最小值的特点就是肯定是小于等于 nums 的最后一个元素，这里没有重复的元素，所以最小值肯定是小于最后一个元素的，除非最后一个就是最小的元素，这种情况我们设置为 res 的初始值，这样我重写后我感觉更好理解了，进阶版的只需要在这个的基础上稍加改动就行了
 ```golang
 func findMin(nums []int) int {
     var n = len(nums)
     var left, right = 0, n - 1
-    var res = right//对nums[n-1]就是最小值做兜底
+    var res = right//对 nums[n-1] 就是最小值做兜底
     for left <= right {
         mid := left + (right-left)/2
         if nums[mid] < nums[n-1] {
@@ -328,12 +326,12 @@ func findMin(nums []int) int {
     return nums[res]
 }
 ```
-同理也可以和左边界比较，最小值一定是小于等于nums[0]的
+同理也可以和左边界比较，最小值一定是小于等于 nums[0] 的
 ```golang
 func findMin(nums []int) int {
     var n = len(nums)
     var left, right = 0, n - 1
-    var res = left //对nums[0]就是最小值做兜底
+    var res = left //对 nums[0] 就是最小值做兜底
     for left <= right {
         mid := left + (right-left)/2
         if nums[mid] < nums[0] {
@@ -360,17 +358,16 @@ func findMin(nums []int) int {
 **示例 1：**
 
 ```java
-输入: [1,3,5]
-输出: 1
+输入：[1,3,5]
+输出：1
 ```
 
 **示例 2：**
 
 ```java
-输入: [2,2,2,0,1]
-输出: 0
+输入：[2,2,2,0,1]
+输出：0
 ```
-
 
 **说明：**
 
@@ -378,9 +375,9 @@ func findMin(nums []int) int {
 - 允许重复会影响算法的时间复杂度吗？会如何影响，为什么？  
 
 **解法一**
-> 建议直接参考解法2
+> 建议直接参考解法 2
 
-相比上一题有了重复的元素，在跳转的时候需要分清楚情况，在mid和中点相等的时候只排除右边界一个元素
+相比上一题有了重复的元素，在跳转的时候需要分清楚情况，在 mid 和中点相等的时候只排除右边界一个元素
 
 ```java
 public int findMin(int[] nums) {
@@ -392,7 +389,7 @@ public int findMin(int[] nums) {
         }else if(nums[mid] < nums[right]){
             right=mid;
         }else{
-            right--; //和右边界相等,无法判断,只缩减一步
+            right--; //和右边界相等，无法判断，只缩减一步
         }
     }
     return nums[left];
@@ -403,7 +400,7 @@ public int findMin(int[] nums) {
 
 (UPDATE: 2020.7.22)
 
-相比[寻找旋转排序数组中的最小值](#153-寻找旋转排序数组中的最小值)，仅仅只是加了一个尾部去重的操作，去重后就和上面的情况一样了，这样就比前面的解法更加清晰了，时间复杂度也还是一样的
+相比 [寻找旋转排序数组中的最小值](#153-寻找旋转排序数组中的最小值)，仅仅只是加了一个尾部去重的操作，去重后就和上面的情况一样了，这样就比前面的解法更加清晰了，时间复杂度也还是一样的
 ```python
 # update: 2020/4/8
 class Solution:
@@ -415,7 +412,7 @@ class Solution:
         nr = right
         while left <= right:
             mid = left + (right - left)//2
-            # 和nr比，不能和0比，可能会有0 1 2这样的
+            # 和 nr 比，不能和 0 比，可能会有 0 1 2 这样的
             if nums[mid] > nums[nr]:
                 left = mid + 1
             else:
@@ -439,20 +436,20 @@ class Solution:
 **示例 1:**
 
 ```java
-输入: nums = [4,5,6,7,0,1,2], target = 0
-输出: 4
+输入：nums = [4,5,6,7,0,1,2], target = 0
+输出：4
 ```
 
 **示例 2:**
 
 ```java
-输入: nums = [4,5,6,7,0,1,2], target = 3
-输出: -1
+输入：nums = [4,5,6,7,0,1,2], target = 3
+输出：-1
 ```
 
 **解法一**
 
-题目明确要求了时间复杂度O(logn)，所以肯定还是要二分，先上代码吧
+题目明确要求了时间复杂度 O(logn)，所以肯定还是要二分，先上代码吧
 
 ```java
 public static int search2(int[] nums, int target) {
@@ -467,33 +464,33 @@ public static int search2(int[] nums, int target) {
 
     while (lo <= hi) {
         int mid = lo + ((hi - lo) / 2);
-        // 左, 右 指的是旋转点左右
-        if (nums[mid] > target) { //首先是大于target的情况
+        // 左，右 指的是旋转点左右
+        if (nums[mid] > target) { //首先是大于 target 的情况
 
             if (target < nums[lo]) {
-                //target在右边
-                //mid未知还需要判断下 画一个折线图就很清楚了
-                if (nums[mid] <= nums[hi]) { //mid也在右边
+                //target 在右边
+                //mid 未知还需要判断下 画一个折线图就很清楚了
+                if (nums[mid] <= nums[hi]) { //mid 也在右边
                     hi = mid - 1;
                 } else {
-                    //mid在左边
+                    //mid 在左边
                     lo = mid + 1;
                 }
             } else if (target > nums[lo]) {
-                //说明mid在左边, target也在左边
+                //说明 mid 在左边，target 也在左边
                 hi = mid - 1;
             } else {
                 return lo;
             }
-        } else if (nums[mid] < target) { //小于target的情况
+        } else if (nums[mid] < target) { //小于 target 的情况
 
             if (target < nums[hi]) {
-                //mid在右边，target在右边
+                //mid 在右边，target 在右边
                 lo = mid + 1;
             } else if (target > nums[hi]) {
-                //target在左边
-                //mid未知还需要判断下
-                if (nums[mid] > nums[hi]) { //mid在左边
+                //target 在左边
+                //mid 未知还需要判断下
+                if (nums[mid] > nums[hi]) { //mid 在左边
                     lo = mid + 1;
                 } else {
                     hi = mid - 1;
@@ -522,7 +519,7 @@ public static int search2(int[] nums, int target) {
 
 ```
 
-1ms，99% 纯if判断**target**和**mid**的位置，然后选择移动**lo**还是**hi**，一开始我随便找了几组数然后就开始写，写到后面发现都是bug😂，这里画个图很方便
+1ms，99% 纯 if 判断** target **和** mid **的位置，然后选择移动** lo **还是** hi**，一开始我随便找了几组数然后就开始写，写到后面发现都是 bug😂，这里画个图很方便
 
 ![mark](http://static.imlgw.top///20190507/vQgFb8yle0FH.png?imageslim)
 
@@ -573,7 +570,7 @@ public static int binarySearch(int []nums,int target,int lo,int hi){
 }
 ```
 
-这个应该比上一个慢一点，最好情况下是`O(logN)`直接将**target**划分到有序的那一边，如果没划分到有序的那一边就会花费时间去二分尝试切割数组，时间复杂度应该是`logN+log(N/2)+log(N/4)+...log(N/N)` 最后整体复杂度应该是`O(logN*logN)` ，虽然比 `logN` 好很多，但是并不是我们想要的算法
+这个应该比上一个慢一点，最好情况下是`O(logN)`直接将** target **划分到有序的那一边，如果没划分到有序的那一边就会花费时间去二分尝试切割数组，时间复杂度应该是`logN+log(N/2)+log(N/4)+...log(N/N)` 最后整体复杂度应该是`O(logN*logN)` ，虽然比 `logN` 好很多，但是并不是我们想要的算法
 
 **解法三**
 
@@ -600,7 +597,7 @@ class Solution {
 }
 ```
 
-`(nums[mid]>=nums[0])==(target>=nums[0])` 这一步很巧妙，满足这个关系就说明mid和target在同一段，不用变化，可以直接求，否则就根据mid的位置考虑如何变化
+`(nums[mid]>=nums[0])==(target>=nums[0])` 这一步很巧妙，满足这个关系就说明 mid 和 target 在同一段，不用变化，可以直接求，否则就根据 mid 的位置考虑如何变化
 
 ## [81. 搜索旋转排序数组 II](https://leetcode-cn.com/problems/search-in-rotated-sorted-array-ii/)
 
@@ -613,25 +610,25 @@ class Solution {
 **示例 1:**
 
 ```go
-输入: nums = [2,5,6,0,0,1,2], target = 0
-输出: true
+输入：nums = [2,5,6,0,0,1,2], target = 0
+输出：true
 ```
 
 **示例 2:**
 
 ```go
-输入: nums = [2,5,6,0,0,1,2], target = 3
-输出: false
+输入：nums = [2,5,6,0,0,1,2], target = 3
+输出：false
 ```
 
-**进阶:**
+**进阶：**
 
 - 这是 [搜索旋转排序数组](https://leetcode-cn.com/problems/search-in-rotated-sorted-array/description/) 的延伸题目，本题中的 `nums`  可能包含重复元素。
 - 这会影响到程序的时间复杂度吗？会有怎样的影响，为什么？
 
 **解法一**
 
-WA哭了，好难搞，要是在工程上我肯定直接遍历了，太细节了这波
+WA 哭了，好难搞，要是在工程上我肯定直接遍历了，太细节了这波
 
 ```go
 func search(nums []int, target int) bool {
@@ -644,21 +641,21 @@ func search(nums []int, target int) bool {
     for left<right {
         mid:=left+(right-left)/2+1
         if nums[mid]>nums[right] { //左半边
-            //target在[left,mid)的有序区间内
+            //target 在 [left,mid) 的有序区间内
             if nums[left]<=target && target<nums[mid]{
                 right=mid-1
             }else{
                 left=mid
             }
         }else if nums[mid]<nums[right]{
-            //target在[mid,right]
+            //target 在 [mid,right]
             if nums[mid]<=target && target<=nums[right]{
                 left=mid
             }else{
                 right=mid-1
             }
         }else{
-            //mid==right看right是不是target
+            //mid==right 看 right 是不是 target
             if nums[right]==target{
                 return true
             }
@@ -669,17 +666,17 @@ func search(nums []int, target int) bool {
 }
 ```
 
-看着别人的题解写都WA了5，6次。。。。这个其实就不能按照上一题的思路来了，因为有重复的，不好判断mid和target是不是在同一边
+看着别人的题解写都 WA 了 5，6 次。这个其实就不能按照上一题的思路来了，因为有重复的，不好判断 mid 和 target 是不是在同一边
 
 **解法二**
 
-（update：2020/4/8）和上面的搜索最小值一样，如果只是中间重复没有任何影响，但是如果是头尾重复，那么问题就大了，我们就没办法通过头或者尾的值，判断target和mid所在的区间，所以我们可以开始先对头尾去重，这样就可以方便判断target和mid所在区间，比如1 0 1 1 1就可以变成1 0，然后再进行二分就很简单了
+（update：2020/4/8）和上面的搜索最小值一样，如果只是中间重复没有任何影响，但是如果是头尾重复，那么问题就大了，我们就没办法通过头或者尾的值，判断 target 和 mid 所在的区间，所以我们可以开始先对头尾去重，这样就可以方便判断 target 和 mid 所在区间，比如 1 0 1 1 1 就可以变成 1 0，然后再进行二分就很简单了
 ```python
 class Solution:
     def search(self, nums: List[int], target: int) -> bool:
         left, right = 0, len(nums)-1
         res = 0
-        # 尾部去重，方便确定target和mid所在区间
+        # 尾部去重，方便确定 target 和 mid 所在区间
         while right >= 0 and nums[right] == nums[0]:
             right -= 1
         while left <= right:
@@ -704,35 +701,35 @@ class Solution:
 **示例：**
 
 ```java
-输入:
+输入：
 letters = ["c", "f", "j"]
 target = "a"
-输出: "c"
+输出："c"
 
-输入:
+输入：
 letters = ["c", "f", "j"]
 target = "c"
-输出: "f"
+输出："f"
 
-输入:
+输入：
 letters = ["c", "f", "j"]
 target = "d"
-输出: "f"
+输出："f"
 
-输入:
+输入：
 letters = ["c", "f", "j"]
 target = "g"
-输出: "j"
+输出："j"
 
-输入:
+输入：
 letters = ["c", "f", "j"]
 target = "j"
-输出: "c"
+输出："c"
 
-输入:
+输入：
 letters = ["c", "f", "j"]
 target = "k"
-输出: "c"
+输出："c"
 ```
 
 **提示：**
@@ -743,7 +740,7 @@ target = "k"
 
 **解法一**
 
-按照新模板写的，题解区很多人讨论`['z'，'a'，'b']`这样的case，其实我觉得没必要，纠结这没啥意义，可能还是题目描述有点问题，我们就直接当普通二分写就行了
+按照新模板写的，题解区很多人讨论`['z'，'a'，'b']`这样的 case，其实我觉得没必要，纠结这没啥意义，可能还是题目描述有点问题，我们就直接当普通二分写就行了
 
 ```java
 public char nextGreatestLetter(char[] letters, char target) {
@@ -773,20 +770,20 @@ public char nextGreatestLetter(char[] letters, char target) {
 **示例 1:**
 
 ```java
-输入: nums = [5,7,7,8,8,10], target = 8
-输出: [3,4]
+输入：nums = [5,7,7,8,8,10], target = 8
+输出：[3,4]
 ```
 
 **示例 2:**
 
 ```java
-输入: nums = [5,7,7,8,8,10], target = 6
-输出: [-1,-1]
+输入：nums = [5,7,7,8,8,10], target = 6
+输出：[-1,-1]
 ```
 
 **解法一**
 
-时间复杂度O(logN)，肯定还是要二分
+时间复杂度 O(logN)，肯定还是要二分
 
 ```java
 //两次二分
@@ -842,11 +839,11 @@ public int right(int []nums,int target,int lo,int hi){
 }
 ```
 
-1ms ，99% 核心就是两次二分，分别向左和向后二分整个数组， 在相等的时候并不返回，多判断一下，左边的就控制hi向左边继续找，右边就控制lo向右边继续找，直到下一个不等于target就返回，和上面一题一样都是二分的变种
+1ms ，99% 核心就是两次二分，分别向左和向后二分整个数组， 在相等的时候并不返回，多判断一下，左边的就控制 hi 向左边继续找，右边就控制 lo 向右边继续找，直到下一个不等于 target 就返回，和上面一题一样都是二分的变种
 
 **解法二**
 
-统一的解法，上面的做法虽然直白，但是没有通用性，这里借鉴评论区大佬 [liweiwei1419](https://www.liwei.party/)的[讲解](https://leetcode-cn.com/problems/search-insert-position/solution/te-bie-hao-yong-de-er-fen-cha-fa-fa-mo-ban-python-/)写一个通用的解法，之前写二分一直都是凭感觉，不注意细节，有错误就debug，东改一改，西改一改，然后就过了。。。毫无章法，以后要统一写法了
+统一的解法，上面的做法虽然直白，但是没有通用性，这里借鉴评论区大佬 [liweiwei1419](https://www.liwei.party/) 的 [讲解](https://leetcode-cn.com/problems/search-insert-position/solution/te-bie-hao-yong-de-er-fen-cha-fa-fa-mo-ban-python-/) 写一个通用的解法，之前写二分一直都是凭感觉，不注意细节，有错误就 debug，东改一改，西改一改，然后就过了。毫无章法，以后要统一写法了
 
 ```java
 //两次二分
@@ -857,11 +854,11 @@ public int[] searchRange(int[] nums, int target) {
     return new int[]{left(nums,target,0,nums.length-1),right(nums,target,0,nums.length-1)};
 }
 
-//找大于等于target的第一个元素,小于肯定不符合
+//找大于等于 target 的第一个元素，小于肯定不符合
 public int left(int []nums,int target,int lo,int hi){
     while(lo<hi){
         int mid=lo+(hi-lo)/2;
-        if(nums[mid]<target){ //排除小于target的,剩下【lo,hi】都是大于等于的
+        if(nums[mid]<target){ //排除小于 target 的，剩下【lo,hi】都是大于等于的
             lo=mid+1;
         }else{
             hi=mid;
@@ -870,12 +867,12 @@ public int left(int []nums,int target,int lo,int hi){
     return nums[hi]==target?hi:-1;
 }
 
-//找小于等于target的最后一个元素,大于肯定不符合
+//找小于等于 target 的最后一个元素，大于肯定不符合
 public int right(int []nums,int target,int lo,int hi){
     while(lo<hi){
         //选取右中值
         int mid=lo+(hi-lo)/2+1;
-        if(nums[mid]>target){ //排除大于target,剩下[lo,hi]都是小于等于的
+        if(nums[mid]>target){ //排除大于 target, 剩下 [lo,hi] 都是小于等于的
             hi=mid-1;
         }else{
             //根据这个判断需要选取右中值
@@ -927,25 +924,22 @@ public int rightSearch(int[] nums,int target){
 }
 ```
 
+## [面试题 53 - II. 0～n-1 中缺失的数字](https://leetcode-cn.com/problems/que-shi-de-shu-zi-lcof/)
 
-
-## [面试题53 - II. 0～n-1中缺失的数字](https://leetcode-cn.com/problems/que-shi-de-shu-zi-lcof/)
-
-一个长度为 ~~n-1~~ n 的递增排序数组中的所有数字都是唯一的，并且每个数字都在范围~~0～n-1~~ 0~n 之内。在范围~~0～n-1~~ 0~n内的~~n~~ n+1 个数字中有且只有一个数字不在该数组中，请找出这个数字。
+一个长度为 ~~n-1~~ n 的递增排序数组中的所有数字都是唯一的，并且每个数字都在范围~~0～n-1~~ 0~n 之内。在范围~~0～n-1~~ 0~n 内的~~n~~ n+1 个数字中有且只有一个数字不在该数组中，请找出这个数字。
 
 **示例 1:**
 
 ```java
-输入: [0,1,3]
-输出: 2
+输入：[0,1,3]
+输出：2
 ```
-
 
 **示例 2:**
 
 ```java
-输入: [0,1,2,3,4,5,6,7,9]
-输出: 8
+输入：[0,1,2,3,4,5,6,7,9]
+输出：8
 ```
 
 **限制：**
@@ -972,17 +966,14 @@ public int missingNumber(int[] nums) {
 }
 ```
 
-二分找那个索引不对的元素就ok了，按照模板写的，排除法，排除相等的，最后返回的索引`left`就是缺失的数字
-
-
+二分找那个索引不对的元素就 ok 了，按照模板写的，排除法，排除相等的，最后返回的索引`left`就是缺失的数字
 
 ## [852. 山脉数组的峰顶索引](https://leetcode-cn.com/problems/peak-index-in-a-mountain-array/)
 
 我们把符合下列属性的数组 A 称作山脉：
 
 - A.length >= 3
-- 存在 0 < i < A.length - 1 使得A[0] < A[1] < ... A[i-1] < A[i] > A[i+1] > ... > A[A.length - 1]
-
+- 存在 0 < i < A.length - 1 使得 A[0] < A[1] < ... A[i-1] < A[i] > A[i+1] > ... > A[A.length - 1]
 
 给定一个确定为山脉的数组，返回任何满足 `A[0] < A[1] < ... A[i-1] < A[i] > A[i+1] > ... > A[A.length - 1]` 的 i 的值。
 
@@ -993,7 +984,6 @@ public int missingNumber(int[] nums) {
 输出：1
 ```
 
-
 **示例 2：**
 
 ```java
@@ -1003,7 +993,7 @@ public int missingNumber(int[] nums) {
 
 **解法一**
 
-其实还是上面的模板，只不过做了一点点改动而已，很傻逼的WA了一发，我也是服了自己了
+其实还是上面的模板，只不过做了一点点改动而已，很傻逼的 WA 了一发，我也是服了自己了
 
 ```java
 public static int peakIndexInMountainArray(int[] A) {
@@ -1023,7 +1013,7 @@ public static int peakIndexInMountainArray(int[] A) {
 }
 ```
 
-代码优化 `2020.4.9` 不知道为啥之前写成哪个鬼样子。。。
+代码优化 `2020.4.9` 不知道为啥之前写成哪个鬼样子。
 
 ```java
 public static int peakIndexInMountainArray(int[] A) {
@@ -1092,7 +1082,7 @@ public static int peakIndexInMountainArray(int[] A) {
 
 **解法一**
 
-这题，，，咋说呢，数据太弱了，配不上hard题，顶多算个mid偏简单，数据大的时候可以考虑加上缓存，这样就比较有意思了，这里我就懒得加了😁
+这题，咋说呢，数据太弱了，配不上 hard 题，顶多算个 mid 偏简单，数据大的时候可以考虑加上缓存，这样就比较有意思了，这里我就懒得加了😁
 
 ```go
 func findInMountainArray(target int, mountainArr *MountainArray) int {
@@ -1102,7 +1092,7 @@ func findInMountainArray(target int, mountainArr *MountainArray) int {
     right := n - 1
     for left < right {
         mid := left + (right-left)/2
-        //mid+1肯定不会越界
+        //mid+1 肯定不会越界
         if mountainArr.get(mid) < mountainArr.get(mid+1) {
             left = mid + 1
         } else {
@@ -1161,7 +1151,7 @@ func findInMountainArray(target int, mA *MountainArray) int {
     var maxIdx = right
     for left <= right{
         mid := left + (right-left)/2
-        //左中，所以mid+1不会越界
+        //左中，所以 mid+1 不会越界
         if mA.get(mid) > mA.get(mid+1){
             maxIdx = mid
             right = mid - 1 
@@ -1212,29 +1202,27 @@ func search(mA *MountainArray, target int, left int, right int, less func(int, i
 **示例 1:**
 
 ```java
-输入: nums = [1,2,3,1]
-输出: 2
-解释: 3 是峰值元素，你的函数应该返回其索引 2。
+输入：nums = [1,2,3,1]
+输出：2
+解释：3 是峰值元素，你的函数应该返回其索引 2。
 ```
-
 
 **示例 2:**
 
 ```java
-输入: nums = [1,2,1,3,5,6,4]
-输出: 1 或 5 
-解释: 你的函数可以返回索引 1，其峰值元素为 2；
+输入：nums = [1,2,1,3,5,6,4]
+输出：1 或 5 
+解释：你的函数可以返回索引 1，其峰值元素为 2；
      或者返回索引 5， 其峰值元素为 6。
 ```
 
-
-**说明:**
+**说明：**
 
 你的解法应该是 `O(logN)` 时间复杂度的。
 
 **解法一**
 
-题目挑明了logN的复杂度，那么肯定就是二分了，那是怎么个二分的思路呢？题目其实也说了很清楚了，边界的左右两边都是`-∞` 所以我们直接按照递增的去搜，最后肯定能搜索到峰值
+题目挑明了 logN 的复杂度，那么肯定就是二分了，那是怎么个二分的思路呢？题目其实也说了很清楚了，边界的左右两边都是`-∞` 所以我们直接按照递增的去搜，最后肯定能搜索到峰值
 
 ```java
 public int findPeakElement(int[] nums) {
@@ -1250,7 +1238,7 @@ public int findPeakElement(int[] nums) {
     return left;
 }
 ```
-liweiwei大佬的二分模板真好用！！！
+liweiwei 大佬的二分模板真好用！！！
 
 ## [74. 搜索二维矩阵](https://leetcode-cn.com/problems/search-a-2d-matrix/)
 
@@ -1261,28 +1249,27 @@ liweiwei大佬的二分模板真好用！！！
 **示例 1:**
 
 ```java
-输入:
+输入：
 matrix = [
   [1,   3,  5,  7],
   [10, 11, 16, 20],
   [23, 30, 34, 50]
 ]
 target = 3
-输出: true
+输出：true
 ```
-
 
 **示例 2:**
 
 ```java
-输入:
+输入：
 matrix = [
   [1,   3,  5,  7],
   [10, 11, 16, 20],
   [23, 30, 34, 50]
 ]
 target = 13
-输出: false
+输出：false
 ```
 
 **解法一**
@@ -1325,7 +1312,7 @@ public boolean searchMatrix(int[][] matrix, int target) {
 }
 ```
 
-😔，这题wa了11次，是的，11次，可想而知我有多彩，最后写出来的解法还是如此的难看，主要就是在确定在哪一行的时候写出了好多问题，可以看到我上下的两种二分方法是不一样的，前期就揪着一种写，按照上面的板子写，结果写出了一堆bug... 以后写二分还是要注意啊，1s确定思路，代码写了3h。。。。
+😔，这题 wa 了 11 次，是的，11 次，可想而知我有多彩，最后写出来的解法还是如此的难看，主要就是在确定在哪一行的时候写出了好多问题，可以看到我上下的两种二分方法是不一样的，前期就揪着一种写，按照上面的板子写，结果写出了一堆 bug... 以后写二分还是要注意啊，1s 确定思路，代码写了 3h。
 
 **解法二**
 
@@ -1358,7 +1345,7 @@ public boolean searchMatrix(int[][] matrix, int target) {
 - 每行的元素从左到右升序排列。
 - 每列的元素从上到下升序排列。
 
-**示例:**
+**示例：**
 现有矩阵 matrix 如下：
 
 ```java
@@ -1401,12 +1388,11 @@ public boolean searchMatrix(int[][] matrix, int target) {
     return false;
 }
 ```
-整个矩阵从左上到右下，其实就分为了两块，每个元素的左上一定小于当前元素，右下一定大于当前元素，这题也可以二分，就像下面的[1351. 统计有序矩阵中的负数](#1351-统计有序矩阵中的负数)一样，但是时间复杂度会高一些
+整个矩阵从左上到右下，其实就分为了两块，每个元素的左上一定小于当前元素，右下一定大于当前元素，这题也可以二分，就像下面的 [1351. 统计有序矩阵中的负数](#1351-统计有序矩阵中的负数)一样，但是时间复杂度会高一些
 
 ## [1351. 统计有序矩阵中的负数](https://leetcode-cn.com/problems/count-negative-numbers-in-a-sorted-matrix/)
 
 Difficulty: **简单**
-
 
 给你一个 `m * n` 的矩阵 `grid`，矩阵中的元素无论是按行还是按列，都以非递增顺序排列。 
 
@@ -1448,7 +1434,6 @@ Difficulty: **简单**
 *   `1 <= m, n <= 100`
 *   `-100 <= grid[i][j] <= 100`
 
-
 **解法一**
 
 没啥好说的，和上面的解法一样，从左下角向上搜索
@@ -1474,7 +1459,7 @@ func countNegatives(grid [][]int) int {
 
 **解法二**
 
-O(mlogn)解法
+O(mlogn) 解法
 
 ```golang
 //O(mlogn) 只利用了行逆序的条件
@@ -1536,7 +1521,7 @@ nums2 = [3, 4]
 
 **解法一**
 
-Hard题，首先想到的是归并，但是时间复杂度不符合要求，最低要求 `O(log(m+n))`，想了好一会儿实在是想不出来（菜）然后看了评论区的解法
+Hard 题，首先想到的是归并，但是时间复杂度不符合要求，最低要求 `O(log(m+n))`，想了好一会儿实在是想不出来（菜）然后看了评论区的解法
 
 ```java
 //find nums1+nums2 /2 大的数
@@ -1577,17 +1562,17 @@ public double findMedian(int[] nums1,int left1,int right1, int[] nums2,int left2
     }
 }
 ```
-这种解法还是挺妙的，求第k小的思路，两个数组都是有序的，我们要求第k小，我们可以将k一分为二，看看两个数组的 `k/2` 位置的元素哪个大哪个小，小的哪个数组前 `k/2` 个元素就可以直接排除掉，因为他们必不可能是第k小的元素，举个例子就很容易理解
+这种解法还是挺妙的，求第 k 小的思路，两个数组都是有序的，我们要求第 k 小，我们可以将 k 一分为二，看看两个数组的 `k/2` 位置的元素哪个大哪个小，小的哪个数组前 `k/2` 个元素就可以直接排除掉，因为他们必不可能是第 k 小的元素，举个例子就很容易理解
 
 ```java
 1 2 3 5
 1 2 4 6 7 8 9  k=6
-k/2=3,分别在两数组中找第三个元素，也即是3，4明显3比较小，所以我们可以直接排除第一个数组的1，2，3三个元素，他们必不可能是第k小的元素！
+k/2=3, 分别在两数组中找第三个元素，也即是 3，4 明显 3 比较小，所以我们可以直接排除第一个数组的 1，2，3 三个元素，他们必不可能是第 k 小的元素！
 *1 2 3* 5
 1 2 4 6 7 8 9  k=3
 ```
 
-然后重复上面的过程，每次排除`k/2` 的元素，最后在`log(k)` 的时间复杂度下就能找到两个数组的mid，而这里`k=(m+n+1)/2` 所以是符合题目要求的，除此之外，我们还需要考虑奇数和偶数的情况，那我们就可以分别计算一下，我们求一下左中位数和右中位数，如果是奇数左中和右中就是同一个`(k)/2==(k+1)/2` ，偶数的话就是`(k)/2`和`(k+1)/2`分别就是左中和右中，然后我们直接/2就得到了解
+然后重复上面的过程，每次排除`k/2` 的元素，最后在`log(k)` 的时间复杂度下就能找到两个数组的 mid，而这里`k=(m+n+1)/2` 所以是符合题目要求的，除此之外，我们还需要考虑奇数和偶数的情况，那我们就可以分别计算一下，我们求一下左中位数和右中位数，如果是奇数左中和右中就是同一个`(k)/2==(k+1)/2` ，偶数的话就是`(k)/2`和`(k+1)/2`分别就是左中和右中，然后我们直接/2 就得到了解
 
 ## [658. 找到 K 个最接近的元素](https://leetcode-cn.com/problems/find-k-closest-elements/)
 
@@ -1596,18 +1581,18 @@ k/2=3,分别在两数组中找第三个元素，也即是3，4明显3比较小�
 **示例 1:**
 
 ```java
-输入: [1,2,3,4,5], k=4, x=3
-输出: [1,2,3,4]
+输入：[1,2,3,4,5], k=4, x=3
+输出：[1,2,3,4]
 ```
 
 **示例 2:**
 
 ```java
-输入: [1,2,3,4,5], k=4, x=-1
-输出: [1,2,3,4]
+输入：[1,2,3,4,5], k=4, x=-1
+输出：[1,2,3,4]
 ```
 
-**说明:**
+**说明：**
 
 1. k 的值为正数，且总是小于给定排序数组的长度。
 2. 数组不为空，且长度不超过 104
@@ -1638,7 +1623,7 @@ public List<Integer> findClosestElements(int[] arr, int k, int x) {
 
 **解法二**
 
-二分的解法，有点trick，不容易想到，参考[题解](https://leetcode-cn.com/problems/find-k-closest-elements/solution/pai-chu-fa-shuang-zhi-zhen-er-fen-fa-python-dai-ma/)
+二分的解法，有点 trick，不容易想到，参考 [题解](https://leetcode-cn.com/problems/find-k-closest-elements/solution/pai-chu-fa-shuang-zhi-zhen-er-fen-fa-python-dai-ma/)
 
 ```java
 public List<Integer> findClosestElements(int[] arr, int k, int x) {
@@ -1660,7 +1645,6 @@ public List<Integer> findClosestElements(int[] arr, int k, int x) {
 ## [367. 有效的完全平方数](https://leetcode-cn.com/problems/valid-perfect-square/)
 
 Difficulty: **简单**
-
 
 给定一个正整数 _num_，编写一个函数，如果 _num_ 是一个完全平方数，则返回 True，否则返回 False。
 
@@ -1705,8 +1689,8 @@ func isPerfectSquare(num int) bool {
 
 完全平方数的性质
 ```golang
-//完全平方数性质 n^2 = 1 + 3 + 5 +...+2n+1 (前n个奇数的和)
-//所以只需要判断num能不能被奇数减成0就行了
+//完全平方数性质 n^2 = 1 + 3 + 5 +...+2n+1 （前 n 个奇数的和）
+//所以只需要判断 num 能不能被奇数减成 0 就行了
 func isPerfectSquare(num int) bool {
     var i = 1
     for num > 0 {
@@ -1721,40 +1705,38 @@ func isPerfectSquare(num int) bool {
 
 Difficulty: **简单**
 
-
 冬季已经来临。 你的任务是设计一个有固定加热半径的供暖器向所有房屋供暖。
 
 现在，给出位于一条水平线上的房屋和供暖器的位置，找到可以覆盖所有房屋的最小加热半径。
 
 所以，你的输入将会是房屋和供暖器的位置。你将输出供暖器的最小加热半径。
 
-**说明:**
+**说明：**
 
 1.  给出的房屋和供暖器的数目是非负数且不会超过 25000。
-2.  给出的房屋和供暖器的位置均是非负数且不会超过10^9。
-3.  只要房屋位于供暖器的半径内(包括在边缘上)，它就可以得到供暖。
+2.  给出的房屋和供暖器的位置均是非负数且不会超过 10^9。
+3.  只要房屋位于供暖器的半径内（包括在边缘上），它就可以得到供暖。
 4.  所有供暖器都遵循你的半径标准，加热的半径也一样。
 
 **示例 1:**
 
 ```golang
-输入: [1,2,3],[2]
-输出: 1
-解释: 仅在位置2上有一个供暖器。如果我们将加热半径设为1，那么所有房屋就都能得到供暖。
+输入：[1,2,3],[2]
+输出：1
+解释：仅在位置 2 上有一个供暖器。如果我们将加热半径设为 1，那么所有房屋就都能得到供暖。
 ```
 
 **示例 2:**
 
 ```golang
-输入: [1,2,3,4],[1,4]
-输出: 1
-解释: 在位置1, 4上有两个供暖器。我们需要将加热半径设为1，这样所有房屋就都能得到供暖。
+输入：[1,2,3,4],[1,4]
+输出：1
+解释：在位置 1, 4 上有两个供暖器。我们需要将加热半径设为 1，这样所有房屋就都能得到供暖。
 ```
-
 
 **解法一**
 
-这个题目感觉不是easy啊，一开始想劈叉了，以为是二分答案，写了半天后来WA在一个很大的case，一直以为是溢出了，改了半天的bug没改出来。。。后来自己按照case的规律构建了一个小的case，发现也WA了，然后才意识到是方法错了, (case: [4,9] [4,8])，这个case按照二分答案的思路就是错的，二分答案是思路就是验证该半径下能否覆盖整个区间，其实也是题目理解有点问题，题目的要求是**覆盖每个房子**，而**不是覆盖整个区间**，所以只需要找到每个房子最近的供暖器就行了，然后统计这些最小值得最大值就是我们需要的半径
+这个题目感觉不是 easy 啊，一开始想劈叉了，以为是二分答案，写了半天后来 WA 在一个很大的 case，一直以为是溢出了，改了半天的 bug 没改出来。后来自己按照 case 的规律构建了一个小的 case，发现也 WA 了，然后才意识到是方法错了，(case: [4,9] [4,8])，这个 case 按照二分答案的思路就是错的，二分答案是思路就是验证该半径下能否覆盖整个区间，其实也是题目理解有点问题，题目的要求是**覆盖每个房子**，而**不是覆盖整个区间**，所以只需要找到每个房子最近的供暖器就行了，然后统计这些最小值得最大值就是我们需要的半径
 
 ```golang
 func findRadius(houses []int, heaters []int) int {
@@ -1772,7 +1754,7 @@ func findRadius(houses []int, heaters []int) int {
     return res
 }
 ​
-//target左边最近的一个
+//target 左边最近的一个
 func search(heaters []int, target int) int {
     var left, right = 0, len(heaters)-1
     var res = left //左边没有供暖器
@@ -1798,7 +1780,7 @@ func findRadius(houses []int, heaters []int) int {
     var res = 0
     for _, h := range houses{
         left := search(heaters, h)
-        if left == -1{ //全部大于hourse,取最小的那个
+        if left == -1{ //全部大于 hourse, 取最小的那个
             res = Max(res, heaters[0]-h)
         }else if left+1 < n{
             res = Max(res, Min(h-heaters[left], heaters[left+1]-h))
@@ -1809,7 +1791,7 @@ func findRadius(houses []int, heaters []int) int {
     return res
 }
 
-//target左边最近的一个
+//target 左边最近的一个
 func search(heaters []int, target int) int {
     var left, right = 0, len(heaters)-1
     var res = -1 //左边没有供暖器
@@ -1825,7 +1807,7 @@ func search(heaters []int, target int) int {
     return res
 }
 ```
-时间复杂度细看的话应该是 `O(MlogM + MlogN)`（M，N分别代表houses和heaters的长度）
+时间复杂度细看的话应该是 `O(MlogM + MlogN)`（M，N 分别代表 houses 和 heaters 的长度）
 
 **解法二**
 
@@ -1850,7 +1832,7 @@ func findRadius(houses []int, heaters []int) int {
     return res
 }
 ```
-时间复杂度细看的话应该是 `O(NlogN + MlogM + N + M)`（M，N分别代表houses和heaters的长度），差别不大，不过很明显双指针的好写很多
+时间复杂度细看的话应该是 `O(NlogN + MlogM + N + M)`（M，N 分别代表 houses 和 heaters 的长度），差别不大，不过很明显双指针的好写很多
 
 ## _二分答案_
 
@@ -1895,7 +1877,7 @@ func findRadius(houses []int, heaters []int) int {
 
 **解法一**
 
-周赛的题，太蠢了，没做出来。。。。
+周赛的题，太蠢了，没做出来。
 
 ```java
 public int smallestDivisor(int[] nums, int threshold) {
@@ -1915,7 +1897,7 @@ public int smallestDivisor(int[] nums, int threshold) {
     return left;
 }
 ```
-其实只要明确一点这题就很容易想到二分，解空间为：`[1，max(nums[i])]` 我们只需要在这个区间之内做二分搜索就ok了，再然后就是向上取整的一个小技巧
+其实只要明确一点这题就很容易想到二分，解空间为：`[1，max(nums[i])]` 我们只需要在这个区间之内做二分搜索就 ok 了，再然后就是向上取整的一个小技巧
 
 ## [287. 寻找重复数](https://leetcode-cn.com/problems/find-the-duplicate-number/)
 
@@ -1924,18 +1906,16 @@ public int smallestDivisor(int[] nums, int threshold) {
 **示例 1:**
 
 ```java
-输入: [1,3,4,2,2]
-输出: 2
+输入：[1,3,4,2,2]
+输出：2
 ```
-
 
 **示例 2:**
 
 ```java
-输入: [3,1,3,4,2]
-输出: 3
+输入：[3,1,3,4,2]
+输出：3
 ```
-
 
 **说明：**
 
@@ -1946,18 +1926,18 @@ public int smallestDivisor(int[] nums, int threshold) {
 
 **解法一**
 
-这题还是挺有意思的，题目要求了数组nums是只读的，且不能使用额外的空间，且时间复杂度还要小于O(N^2)，否则的话其实可以排序，或者使用Hash表来做，这里我们使用二分来做
+这题还是挺有意思的，题目要求了数组 nums 是只读的，且不能使用额外的空间，且时间复杂度还要小于 O(N^2)，否则的话其实可以排序，或者使用 Hash 表来做，这里我们使用二分来做
 
 ```java
 //update: 2020.5.26 其实也属于二分答案
 public int findDuplicate(int[] nums){
     int left=1,right=nums.length-1;
     //这里实际上是对【1,2,3,4,...n-1】这个区间进行二分
-    //在过程中对mid检测每个数在nums数组中出现的次数
-    //1 3 4 2 2实际上是对【1,2,3,4】区间进行二分
+    //在过程中对 mid 检测每个数在 nums 数组中出现的次数
+    //1 3 4 2 2 实际上是对【1,2,3,4】区间进行二分
     while(left<right){
         int mid=left+(right-left)/2+1;
-        //小于mid的数大于mid,排除mid
+        //小于 mid 的数大于 mid, 排除 mid
         if(count(nums,mid)>=mid){ 
             right=mid-1;
         }else{
@@ -1967,8 +1947,8 @@ public int findDuplicate(int[] nums){
     return left;
 }
 
-//n-1个整数 , 1~n有n个数     
-//1 2 2 3 4     1~4之间, 1 2 3 4
+//n-1 个整数 , 1~n 有 n 个数     
+//1 2 2 3 4     1~4 之间，1 2 3 4
 public int count(int[] nums,int n){
     int res=0;
     for (int i=0;i<nums.length;i++) {
@@ -1979,11 +1959,11 @@ public int count(int[] nums,int n){
     return res;
 }
 ```
-这样的解法还是很巧妙的，对nums数组的**取值范围**进行二分，二分的核心就是，nums数组中，小于取值范围中mid的元素应该小于等于mid
+这样的解法还是很巧妙的，对 nums 数组的**取值范围**进行二分，二分的核心就是，nums 数组中，小于取值范围中 mid 的元素应该小于等于 mid
 
-举个例子：`[1 3 4 2 2]` 取值范围是`[1 2 3 4]` ，取中点2，正常情况下nums中小于等于2的元素，应该最多有2个，也就是`[1 2]`2个，但是这里在nums中，有3个`[1 2 2]` 大于2了，这就说明一定有重复的元素，而且一定是小于中点2的，也就是在左半边，下一步就应该舍弃右半边，在`[1,2]`中继续查找 
+举个例子：`[1 3 4 2 2]` 取值范围是`[1 2 3 4]` ，取中点 2，正常情况下 nums 中小于等于 2 的元素，应该最多有 2 个，也就是`[1 2]`2 个，但是这里在 nums 中，有 3 个`[1 2 2]` 大于 2 了，这就说明一定有重复的元素，而且一定是小于中点 2 的，也就是在左半边，下一步就应该舍弃右半边，在`[1,2]`中继续查找 
 
-这里按照我们之前的模板来写，先找排除mid的条件，**在nums中小于mid的元素的数量小于等于mid的时候，包括mid在内的右边界都会被排除，肯定都不是重复的元素** ，然后就按照模板写出二分就行了
+这里按照我们之前的模板来写，先找排除 mid 的条件，**在 nums 中小于 mid 的元素的数量小于等于 mid 的时候，包括 mid 在内的右边界都会被排除，肯定都不是重复的元素** ，然后就按照模板写出二分就行了
 
 **解法二**
 
@@ -2006,7 +1986,7 @@ public int findDuplicate(int[] nums){
     }
 }
 ```
-这种解法的关键是将数组值看作索引然后再数组像链表一样移动，比如 `[1,2,3,4,5,6,7,8,9,5]`用值作为索引连接起来就是`1 2 3 4 [5 6 7 8 9] [5 6 7 8 9] ....` ，时间复杂度`O(N)` 技巧性比较强，如果面试管不追问的话其实答出上面的二分就ok了
+这种解法的关键是将数组值看作索引然后再数组像链表一样移动，比如 `[1,2,3,4,5,6,7,8,9,5]`用值作为索引连接起来就是`1 2 3 4 [5 6 7 8 9] [5 6 7 8 9] ....` ，时间复杂度`O(N)` 技巧性比较强，如果面试管不追问的话其实答出上面的二分就 ok 了
 
 ## [1011. 在 D 天内送达包裹的能力](https://leetcode-cn.com/problems/capacity-to-ship-packages-within-d-days/)
 
@@ -2101,7 +2081,7 @@ public boolean check(int[] weights,int load,int D){
 }
 ```
 
-上面是用的一个[大佬](https://www.bilibili.com/video/BV1YT4y137G4)的模板，不是之前的模板，之前的模板我刚刚写了一发，写错了。。。。
+上面是用的一个 [大佬](https://www.bilibili.com/video/BV1YT4y137G4) 的模板，不是之前的模板，之前的模板我刚刚写了一发，写错了。
 
 ```java
 //之前的二分模板
@@ -2112,7 +2092,7 @@ public int shipWithinDays(int[] weights, int D) {
         sum+=w;
     }
     int left=Math.max(sum/D,max),right=sum;
-    while(left<right){ //这里一开始写成<=了....
+    while(left<right){ //这里一开始写成<=了。...
         int mid=left+(right-left)/2;
         if(check(weights,mid,D)){
             right=mid;
@@ -2124,7 +2104,7 @@ public int shipWithinDays(int[] weights, int D) {
 }
 ```
 
-两种模板各有优点吧，这个大佬的模板相对更简单，但是res的初始值需要格外注意。。。
+两种模板各有优点吧，这个大佬的模板相对更简单，但是 res 的初始值需要格外注意。
 
 ## [875. 爱吃香蕉的珂珂](https://leetcode-cn.com/problems/koko-eating-bananas/)
 
@@ -2139,22 +2119,22 @@ public int shipWithinDays(int[] weights, int D) {
 **示例 1：**
 
 ```java
-输入: piles = [3,6,7,11], H = 8
-输出: 4
+输入：piles = [3,6,7,11], H = 8
+输出：4
 ```
 
 **示例 2：**
 
 ```java
-输入: piles = [30,11,23,4,20], H = 5
-输出: 30
+输入：piles = [30,11,23,4,20], H = 5
+输出：30
 ```
 
 **示例 3：**
 
 ```java
-输入: piles = [30,11,23,4,20], H = 6
-输出: 23
+输入：piles = [30,11,23,4,20], H = 6
+输出：23
 ```
 
 **提示：**
@@ -2165,7 +2145,7 @@ public int shipWithinDays(int[] weights, int D) {
 
 **解法一**
 
-一开始想用`sum/H`向上取整做左边界，结果直接爆掉了，case还是很给力啊
+一开始想用`sum/H`向上取整做左边界，结果直接爆掉了，case 还是很给力啊
 
 ```java
 //二分答案
@@ -2198,7 +2178,6 @@ public boolean check(int[] piles,int k,int H){
 给你一个大小为 `m x n` 的矩阵 `mat` 和一个整数阈值 `threshold`。
 
 请你返回元素总和小于或等于阈值的正方形区域的最大边长；如果没有这样的正方形区域，则返回 **0** 。
-
 
 **示例 1：**
 
@@ -2243,7 +2222,7 @@ public boolean check(int[] piles,int k,int H){
 
 这个题是个好题啊，又学到新东西了：**二维前缀和**，首先看到这道题就意识到了这是个二分答案的题，直接二分边长就行了，左端点`1`，右端点`min(m,n)`，某个边长`x`满足的时候，大于`x`的都满足，某个`x`不满足的时候，小于`x`的都不满足，解空间具有单调性
 
-所以关键问题就是`check`怎么写，如果直接暴力枚举所有矩形然后计算时间复杂度会很恐怖，这个时候就可以引入**二维前缀和**，我就不具体讲解了，看看[官方题解](https://leetcode-cn.com/problems/maximum-side-length-of-a-square-with-sum-less-than-or-equal-to-threshold/solution/yuan-su-he-xiao-yu-deng-yu-yu-zhi-de-zheng-fang-2/)就行了，写的挺好的
+所以关键问题就是`check`怎么写，如果直接暴力枚举所有矩形然后计算时间复杂度会很恐怖，这个时候就可以引入**二维前缀和**，我就不具体讲解了，看看 [官方题解](https://leetcode-cn.com/problems/maximum-side-length-of-a-square-with-sum-less-than-or-equal-to-threshold/solution/yuan-su-he-xiao-yu-deng-yu-yu-zhi-de-zheng-fang-2/) 就行了，写的挺好的
 
 ```java
 public int maxSideLength(int[][] mat, int threshold) {
@@ -2327,7 +2306,7 @@ public boolean check(int[][] mat,int side,int threshold,int[][] dp){
 
 解空间在`[0,max(arr)]`上单调，所以可以二分答案
 
-一开始傻傻的写了两个二分，一个找第一个小于等于target的，一个找大于等于的，其实根本就不用，这两个值肯定是连在一起的🤣
+一开始傻傻的写了两个二分，一个找第一个小于等于 target 的，一个找大于等于的，其实根本就不用，这两个值肯定是连在一起的🤣
 
 ```java
 public int findBestValue(int[] arr, int target) {
@@ -2396,11 +2375,11 @@ public int getSum(int[] arr,int mid){
 
 **解法一**
 
-知道是二分答案但是check写了好久没写出来，真菜啊
+知道是二分答案但是 check 写了好久没写出来，真菜啊
 
 ```java
 public int minTime(int[] time, int m) {
-    int left=0,right=0;//上界最多sum(time)
+    int left=0,right=0;//上界最多 sum(time)
     for(int i=0;i<time.length;i++){
         right+=time[i];
     }
@@ -2414,11 +2393,11 @@ public int minTime(int[] time, int m) {
             left=mid+1;
         }
     }
-    //其实返回left就行了,主要是避免搞混
+    //其实返回 left 就行了，主要是避免搞混
     return res; 
 }
 
-//核心的check
+//核心的 check
 public boolean check(int[] time,int T,int m){
     int day=1,sum=0,maxt=0;
     for (int t:time) {
@@ -2438,31 +2417,31 @@ public boolean check(int[] time,int T,int m){
 
 给定一个非负整数数组和一个整数 *m*，你需要将这个数组分成 *m* 个非空的连续子数组。设计一个算法使得这 *m* 个子数组各自和的最大值最小。
 
-**注意:**
-数组长度 *n* 满足以下条件:
+**注意：**
+数组长度 *n* 满足以下条件：
 
 - 1 ≤ *n* ≤ 1000
 - 1 ≤ *m* ≤ min(50, *n*)
 
-**示例:**
+**示例：**
 
 ```java
-输入:
+输入：
 nums = [7,2,5,10,8]
 m = 2
 
-输出:
+输出：
 18
 
-解释:
-一共有四种方法将nums分割为2个子数组。
-其中最好的方式是将其分为[7,2,5] 和 [10,8]，
-因为此时这两个子数组各自的和的最大值为18，在所有情况中最小。
+解释：
+一共有四种方法将 nums 分割为 2 个子数组。
+其中最好的方式是将其分为 [7,2,5] 和 [10,8]，
+因为此时这两个子数组各自的和的最大值为 18，在所有情况中最小。
 ```
 
 **解法一**
 
-Hard题，但是感觉和前面的mid差不多，没啥好说的，个人感觉这题还没上面的[LCP12.小张刷题计划](#lcp-12-小张刷题计划) 难，不过有个case挺恶心，算的sum会溢出，害我WA了一次，但是他结果返回的又是个int，这就很蠢
+Hard 题，但是感觉和前面的 mid 差不多，没啥好说的，个人感觉这题还没上面的 [LCP12. 小张刷题计划](#lcp-12-小张刷题计划) 难，不过有个 case 挺恶心，算的 sum 会溢出，害我 WA 了一次，但是他结果返回的又是个 int，这就很蠢
 
 ```java
 //一样的套路
@@ -2485,7 +2464,7 @@ public int splitArray(int[] nums, int m) {
     return (int)res;
 }
 
-//分为m组能否保证每组都小于等于mid（如果可以说明还可以更小）
+//分为 m 组能否保证每组都小于等于 mid（如果可以说明还可以更小）
 public boolean check(int[] nums,long limit,int m){
     long sum=0;
     int count=1;
@@ -2500,33 +2479,33 @@ public boolean check(int[] nums,long limit,int m){
 }
 ```
 
-## [NC82.分组](https://www.nowcoder.com/practice/829419bde0e946b6b4fe813ed3972db8)
+## [NC82. 分组](https://www.nowcoder.com/practice/829419bde0e946b6b4fe813ed3972db8)
 
 题目描述
-牛牛有一个n个数字的序列a1，a2，a3...an现在牛牛想把这个序列分成k段连续段，牛牛想知道分出来的k个连续段的段内数字和的最小值最大可以是多少？
+牛牛有一个 n 个数字的序列 a1，a2，a3...an 现在牛牛想把这个序列分成 k 段连续段，牛牛想知道分出来的 k 个连续段的段内数字和的最小值最大可以是多少？
 
-**示例1**
+**示例 1**
 ```go
 输入 : 4,2,[1,2,1,5]
 输出 : 4
-说明:
-有3种分法
-[1],[2,1,5]，数字和分别为1，8，最小值为1
-[1,2][1,5]，数字和分别为3，6，最小值为3
-[1,2,1],[5]数字和分别为4，5，最小值为4
-则最小值的最大值为4
+说明：
+有 3 种分法
+[1],[2,1,5]，数字和分别为 1，8，最小值为 1
+[1,2][1,5]，数字和分别为 3，6，最小值为 3
+[1,2,1],[5] 数字和分别为 4，5，最小值为 4
+则最小值的最大值为 4
 ```
-**备注:**
+**备注：**
 - 1 <= k <= n <= 1e5
 - 0 <= ai <= 1e4
 
-第一个参数整数n代表序列数字个数，
-第二个参数整数k代表分出的段数，
-第三个参数vector a 包含n个元素代表n个数字
+第一个参数整数 n 代表序列数字个数，
+第二个参数整数 k 代表分出的段数，
+第三个参数 vector a 包含 n 个元素代表 n 个数字
 
 **解法一**
 
-我是真的菜啊，上面一题会写这题就不会写了，果然我这种菜鸡刷题就是背题，变一下就不会了。。。其实和上面的正好是反过来的，上面是要最大值最小，这里是要最小值最大，所以check的思路也是相反的，上面是验证：分为k组能否保证每组都小于等于mid。所以这题很显然就应该是：分为k组能否保证每组都大于等于mid（这里验证也是逐渐逼近答案）
+我是真的菜啊，上面一题会写这题就不会写了，果然我这种菜鸡刷题就是背题，变一下就不会了。其实和上面的正好是反过来的，上面是要最大值最小，这里是要最小值最大，所以 check 的思路也是相反的，上面是验证：分为 k 组能否保证每组都小于等于 mid。所以这题很显然就应该是：分为 k 组能否保证每组都大于等于 mid（这里验证也是逐渐逼近答案）
 ```java
 //最小值最大
 public int solve (int n, int k, int[] a) {
@@ -2549,7 +2528,7 @@ public int solve (int n, int k, int[] a) {
     return res;
 }
 
-//分为k组能否保证每组都大于等于mid（如果可以说明还可以更大）
+//分为 k 组能否保证每组都大于等于 mid（如果可以说明还可以更大）
 public boolean check(int mid, int[] a, int k) {
     int sum = 0;
     int count = 0;
@@ -2619,12 +2598,12 @@ public boolean check(int mid, int[] a, int k) {
 
 **解法一**
 
-193th周赛的T3，没参加，但是在群里听群友讨论了，是个二分，刚刚具体的看了题目，发现其实是很明显的二分答案，很可惜没参加这次比赛，感觉能A3道。。。
+193th 周赛的 T3，没参加，但是在群里听群友讨论了，是个二分，刚刚具体的看了题目，发现其实是很明显的二分答案，很可惜没参加这次比赛，感觉能 A3 道。
 ```java
 public int minDays(int[] bloomDay, int m, int k) {
     int n=bloomDay.length;
     if(m*k>n) return -1; //花园的花不够
-    //直接写就完事了，这里数据范围只到1e9，log(1e9)很小的，只有30左右
+    //直接写就完事了，这里数据范围只到 1e9，log(1e9) 很小的，只有 30 左右
     int left=1,right=(int)1e9;
     int res=right+1;
     while(left<=right){
@@ -2639,7 +2618,7 @@ public int minDays(int[] bloomDay, int m, int k) {
     return res;
 }
 
-//check写的好丑...
+//check 写的好丑。..
 public boolean check(int[] bloomDay,int m,int k,int day){
     int i=0;
     int count=0;
@@ -2670,7 +2649,7 @@ public boolean check(int[] bloomDay,int m,int k,int day){
 public int minDays(int[] bloomDay, int m, int k) {
     int n=bloomDay.length;
     if(m*k>n) return -1; //花园的花不够
-    //直接写就完事了，这里数据范围只到1e9，log(1e9)很小的，只有30左右
+    //直接写就完事了，这里数据范围只到 1e9，log(1e9) 很小的，只有 30 左右
     int left=1,right=(int)1e9; 
     int res=right+1;
     while(left<=right){
@@ -2690,7 +2669,7 @@ public boolean check(int[] bloomDay,int m,int k,int day){
     int count=0;
     int temp=0; //相邻的开花数量
     for(int d:bloomDay){
-        if(d<=day){ //花开了(md，这个if写反两次)
+        if(d<=day){ //花开了 (md，这个 if 写反两次）
             temp++;
         }else{
             temp=0;
@@ -2704,10 +2683,9 @@ public boolean check(int[] bloomDay,int m,int k,int day){
 }
 ```
 
-## [378. 有序矩阵中第K小的元素](https://leetcode-cn.com/problems/kth-smallest-element-in-a-sorted-matrix/)
+## [378. 有序矩阵中第 K 小的元素](https://leetcode-cn.com/problems/kth-smallest-element-in-a-sorted-matrix/)
 
 Difficulty: **中等**
-
 
 给定一个 _`n x n` _矩阵，其中每行和每列元素均按升序排序，找到矩阵中第 `k` 小的元素。  
 请注意，它是排序后的第 `k` 小元素，而不是第 `k` 个不同的元素。
@@ -2728,7 +2706,7 @@ k = 8,
 **提示：**  
 你可以假设 k 的值永远是有效的，`1 ≤ k ≤ n<sup>2 </sup>`。
 
-（直接搬运我在lc题解区写的[题解](https://leetcode-cn.com/problems/kth-smallest-element-in-a-sorted-matrix/solution/java-xiao-gen-dui-er-fen-da-an-chang-shi-jie-shi-e/)）
+（直接搬运我在 lc 题解区写的 [题解](https://leetcode-cn.com/problems/kth-smallest-element-in-a-sorted-matrix/solution/java-xiao-gen-dui-er-fen-da-an-chang-shi-jie-shi-e/)）
 
 **解法一**
 
@@ -2762,9 +2740,9 @@ class Pair{
 
 二分答案，我们求的元素一定是在`matrix[0][0]~matrix[n-1][n-1]`之间，取中间某个元素`mid`，大于`mid`的都分布在右下角，小于`mid`的的分布在右上角，越往右上走，小于`mid`的元素就越少，大于`mid`的元素就越多，所以整体是具有单调性的，所以可以二分
 
-然后我认为很关键的一个地方就是二分的写法，我这里用的是 [zls的一个二分模板](https://www.bilibili.com/video/BV1YT4y137G4)，两个分支，一个是答案区间，一个是排除区间，在答案区间记录答案，现在问题就是：是用 `<=` 作为答案区间，还是用 `>=`做为答案区间？
+然后我认为很关键的一个地方就是二分的写法，我这里用的是 [zls 的一个二分模板](https://www.bilibili.com/video/BV1YT4y137G4)，两个分支，一个是答案区间，一个是排除区间，在答案区间记录答案，现在问题就是：是用 `<=` 作为答案区间，还是用 `>=`做为答案区间？
 
-两种方法的区别就是区间收缩的方式不一样，前者是`left=mid+1`后者是`right=mid-1`，所以问题其实就变成了：当**小于等于mid的数量==k**的时候，二分的区间应该如何缩减？
+两种方法的区别就是区间收缩的方式不一样，前者是`left=mid+1`后者是`right=mid-1`，所以问题其实就变成了：当**小于等于 mid 的数量==k **的时候，二分的区间应该如何缩减？
 
 其实举个例子就懂了
 ```go
@@ -2775,9 +2753,9 @@ matrix = [
 ],
 k = 2
 ```
-k=2，对应结果应该是5，但是我们现在mid=8，这里8和5在矩阵中小于等于它们的数量是相同的，这个时候很明显应该缩短right去逼近5，所以我们应该选取`>=`作为答案区间并记录答案，并且缩短right逼近矩阵中真实存在的值
+k=2，对应结果应该是 5，但是我们现在 mid=8，这里 8 和 5 在矩阵中小于等于它们的数量是相同的，这个时候很明显应该缩短 right 去逼近 5，所以我们应该选取`>=`作为答案区间并记录答案，并且缩短 right 逼近矩阵中真实存在的值
 
->这里是一定是可以取到矩阵中的值的，二分最后会在大于等于区域不断缩减right直至不能再缩减，也就是缩减成为矩阵中的元素（再缩减就小于K了）
+>这里是一定是可以取到矩阵中的值的，二分最后会在大于等于区域不断缩减 right 直至不能再缩减，也就是缩减成为矩阵中的元素（再缩减就小于 K 了）
 ```java
 public int kthSmallest(int[][] matrix, int k) {
     int n = matrix.length;
@@ -2786,10 +2764,10 @@ public int kthSmallest(int[][] matrix, int k) {
     int res = left;
     while(left <= right){
         int mid = left + (right - left)/2;
-        //注意这个地方，很关键，核心就是这个等于号的位置，在小于等于mid的数量==k的时候二分的区间应该如何移动
-        //其实举个例子就懂了，假设k=2，对于结果应该是5，但是我们现在mid=8
-        //这里8和5在矩阵中小于等于它们的数量是相同的，这个时候很明显应该缩短right去逼近5
-        //所以我们应该在二分的大于等于区间记录答案，并且缩短right
+        //注意这个地方，很关键，核心就是这个等于号的位置，在小于等于 mid 的数量==k 的时候二分的区间应该如何移动
+        //其实举个例子就懂了，假设 k=2，对于结果应该是 5，但是我们现在 mid=8
+        //这里 8 和 5 在矩阵中小于等于它们的数量是相同的，这个时候很明显应该缩短 right 去逼近 5
+        //所以我们应该在二分的大于等于区间记录答案，并且缩短 right
         if (check(matrix, mid) >= k){
             res = mid;
             right = mid - 1;
@@ -2800,7 +2778,7 @@ public int kthSmallest(int[][] matrix, int k) {
     return res;
 }
 
-//检查数组中小于等于mid的个数
+//检查数组中小于等于 mid 的个数
 public int check(int[][] matrix, int mid){
     int row = matrix.length-1, column = 0;
     int count = 0;
@@ -2825,19 +2803,18 @@ Difficulty: **简单**
 
 给定一个数字 _n_，找出可形成完整阶梯行的总行数。
 
-_n _是一个非负整数，并且在32位有符号整型的范围内。
+_n _是一个非负整数，并且在 32 位有符号整型的范围内。
 
 **示例 1:**
 
 ```
 n = 5
 
-硬币可排列成以下几行:
+硬币可排列成以下几行：
 ¤
 ¤ ¤
-¤ ¤
 
-因为第三行不完整，所以返回2.
+因为第三行不完整，所以返回 2.
 ```
 
 **示例 2:**
@@ -2845,17 +2822,17 @@ n = 5
 ```
 n = 8
 
-硬币可排列成以下几行:
+硬币可排列成以下几行：
 ¤
 ¤ ¤
 ¤ ¤ ¤
 ¤ ¤
 
-因为第四行不完整，所以返回3.
+因为第四行不完整，所以返回 3.
 ```
 **解法一**
 
-因为是从二分的tag来的，所以知道是二分，然后看了题，确定了有二分答案性质，然后直接二分，可是没想到居然溢出了，看来还是有点大意了啊，时间复杂度O(logN)
+因为是从二分的 tag 来的，所以知道是二分，然后看了题，确定了有二分答案性质，然后直接二分，可是没想到居然溢出了，看来还是有点大意了啊，时间复杂度 O(logN)
 ```java
 //二分答案
 public int arrangeCoins(int n) {
@@ -2875,12 +2852,11 @@ public int arrangeCoins(int n) {
     return res;
 }
 ```
-这题当然也可以直接模拟，不过意义不大，这题还有数学的解法，根据求和公式直接算出根，然后利用sqrt函数，这样并不会比二分快多少，sqrt也是logN级别的，而且面试官应该也不希望你利用库函数（当然人如果能手写牛顿迭代法那肯定没问题）
+这题当然也可以直接模拟，不过意义不大，这题还有数学的解法，根据求和公式直接算出根，然后利用 sqrt 函数，这样并不会比二分快多少，sqrt 也是 logN 级别的，而且面试官应该也不希望你利用库函数（当然人如果能手写牛顿迭代法那肯定没问题）
 
 ## [174. 地下城游戏](https://leetcode-cn.com/problems/dungeon-game/)
 
 Difficulty: **困难**
-
 
 一些恶魔抓住了公主（**P**）并将她关在了地下城的右下角。地下城是由 M x N 个房间组成的二维网格。我们英勇的骑士（**K**）最初被安置在左上角的房间里，他必须穿过地下城并通过对抗恶魔来拯救公主。
 
@@ -2932,18 +2908,17 @@ Difficulty: **困难**
 
 </table>
 
-**说明:**
+**说明：**
 
 *   骑士的健康点数没有上限。
 
 *   任何房间都可能对骑士的健康点数造成威胁，也可能增加骑士的健康点数，包括骑士进入的左上角房间以及公主被监禁的右下角房间。
 
-
 **解法一**
 
-以后每日一题没写出来之前绝壁不看群了，看了一眼群，看见群友讨论了这题，说了二分和dp，然后我就直接向二分的方向去想了，如果独立的想的话，应该也是可以得出二分的解法的，毕竟题目的描述很明显就是二分答案，**最低的健康血量**，大于这个血量的肯定可以救出来，小于这个血量的肯定救不出来，所以check就是判断在某个血量下，能否拯救到公主（DP）
+以后每日一题没写出来之前绝壁不看群了，看了一眼群，看见群友讨论了这题，说了二分和 dp，然后我就直接向二分的方向去想了，如果独立的想的话，应该也是可以得出二分的解法的，毕竟题目的描述很明显就是二分答案，**最低的健康血量**，大于这个血量的肯定可以救出来，小于这个血量的肯定救不出来，所以 check 就是判断在某个血量下，能否拯救到公主（DP）
 
-时间复杂度O(N^2logN)（其实我认为也可以当作N^2毕竟上下界都确定了，logN也就30左右），这种解法也挺不错的，融合了二分和dp
+时间复杂度 O(N^2logN)（其实我认为也可以当作 N^2 毕竟上下界都确定了，logN 也就 30 左右），这种解法也挺不错的，融合了二分和 dp
 
 ```java
 public int calculateMinimumHP(int[][] dungeon) {
@@ -2966,9 +2941,9 @@ public boolean check(int[][] dungeon, int live){
     int m = dungeon.length;
     int n = dungeon[0].length;
     int INF = Integer.MIN_VALUE;
-    //live的血量从左上到dungeon[i][j]的剩余最多血量
+    //live 的血量从左上到 dungeon[i][j] 的剩余最多血量
     int[][] dp = new int[m+1][n+1];
-    //地牢外围加上INF的围墙，简化逻辑
+    //地牢外围加上 INF 的围墙，简化逻辑
     Arrays.fill(dp[0], INF);
     dp[0][1] = live;
     for(int i = 1; i <= m; i++){
@@ -2984,7 +2959,7 @@ public boolean check(int[][] dungeon, int live){
     return dp[m][n] > 0;
 }
 ```
-当然这题也有纯dp的做法，很可惜，我压根没往上面想，我只想着二分dp，写完了AC之后就去看评论区了，结果发现大家都是直接dp的。。。然后还看到了一个关键词：逆向dp，然后赶紧关了评论区回来写了下面的dp解法
+当然这题也有纯 dp 的做法，很可惜，我压根没往上面想，我只想着二分 dp，写完了 AC 之后就去看评论区了，结果发现大家都是直接 dp 的。然后还看到了一个关键词：逆向 dp，然后赶紧关了评论区回来写了下面的 dp 解法
 
 **解法二**
 ```java
@@ -3001,7 +2976,7 @@ public int calculateMinimumHP(int[][] dungeon) {
     int m = dungeon.length;
     int n = dungeon[0].length;
     int INF = Integer.MAX_VALUE;
-    //从dungeon[i-1][j-1]到右下角至少要多少血量
+    //从 dungeon[i-1][j-1] 到右下角至少要多少血量
     int[][] dp = new int[m+1][n+1];
     Arrays.fill(dp[m], INF);//末行
     dp[m][n-1] = 1; //初始血量
@@ -3014,36 +2989,36 @@ public int calculateMinimumHP(int[][] dungeon) {
     return dp[0][0];
 }
 ```
-这题为啥不能正向dp呢，设`dp[i][j]`为从左上角到i,j所需要的最低血量? 其实这个很明显就是有问题的，没办法转移，`dp[i][j]`和`dp[i-1][j]`没有任何关系，都不一定是同一条路径
+这题为啥不能正向 dp 呢，设`dp[i][j]`为从左上角到 i,j 所需要的最低血量？其实这个很明显就是有问题的，没办法转移，`dp[i][j]`和`dp[i-1][j]`没有任何关系，都不一定是同一条路径
 
 ## [848. 加油站之间的最小距离（LintCode）](https://www.lintcode.com/problem/minimize-max-distance-to-gas-station/description)
 
-在水平数轴上，我们有加油站：stations[0], stations[1], ..., stations[N-1], 这里N = stations.length。
+在水平数轴上，我们有加油站：stations[0], stations[1], ..., stations[N-1], 这里 N = stations.length。
 
-现在，我们再增加K个加油站，D表示相邻加油站之间的最大距离，这样D就变小了。
+现在，我们再增加 K 个加油站，D 表示相邻加油站之间的最大距离，这样 D 就变小了。
 
-返回所有可能值D中最小值。
+返回所有可能值 D 中最小值。
 1. stations.length 为整数，范围 [10, 2000].
 2. stations[i] 为整数，范围 [0, 10^8].
 3. K 为整数，范围 [1, 10^6].
-4. 答案范围在10 ^ -6之内的有理数。
+4. 答案范围在 10 ^ -6 之内的有理数。
    
 **样例 1:**
 ```go
 输入：stations = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]，K = 9
 输出：0.50
-解释：相邻加油站的距离均为0.50
+解释：相邻加油站的距离均为 0.50
 ```
 **样例 2:**
 ```go
 输入：stations = [3,6,12,19,33,44,67,72,89,95]，K = 2
 输出：14.00
-解释：在距离86处建造加油站(fix: 还有58处)
+解释：在距离 86 处建造加油站 (fix: 还有 58 处）
 ```
 
 **解法一**
 
-二分答案的性质很明显，但是这里和之前的不一样，这里是浮点数二分，和整数的不太一样，浮点数/2的时候都是实际的一分为2，不会有整除的问题，同时题目给出了eps=1e-6，只要left和right误差在这个范围内就是合法的，并不是要求left和right相等，这里还有一个问题，就是这里如果eps太小的话由于精度问题还是可能会tle，这个时候就可以采取固定循环次数的方式逼近，一般取100，200就够了
+二分答案的性质很明显，但是这里和之前的不一样，这里是浮点数二分，和整数的不太一样，浮点数/2 的时候都是实际的一分为 2，不会有整除的问题，同时题目给出了 eps=1e-6，只要 left 和 right 误差在这个范围内就是合法的，并不是要求 left 和 right 相等，这里还有一个问题，就是这里如果 eps 太小的话由于精度问题还是可能会 tle，这个时候就可以采取固定循环次数的方式逼近，一般取 100，200 就够了
 ```java
 public double minmaxGasDist(int[] stations, int k) {
     // Write your code here
@@ -3076,7 +3051,6 @@ public boolean check(int[] stations, int k, double D) {
 
 Difficulty: **中等**
 
-
 在代号为 C-137 的地球上，Rick 发现如果他将两个球放在他新发明的篮子里，它们之间会形成特殊形式的磁力。Rick 有 `n` 个空的篮子，第 `i` 个篮子的位置在 `position[i]` ，Morty 想把 `m` 个球放到这些篮子里，使得任意两球间 **最小磁力** 最大。
 
 已知两个球如果分别位于 `x` 和 `y` ，那么它们之间的磁力为 `|x - y|` 。
@@ -3108,10 +3082,9 @@ Difficulty: **中等**
 *   所有 `position` 中的整数 **互不相同** 。
 *   `2 <= m <= position.length`
 
-
 **解法一**
 
-202周赛T3，没参赛（实在是没时间打）赛后独立的写出来了，很明显是二分答案，不过这里有一点小不同
+202 周赛 T3，没参赛（实在是没时间打）赛后独立的写出来了，很明显是二分答案，不过这里有一点小不同
 ```java
 public int maxDistance(int[] position, int m) {
     Arrays.sort(position);
@@ -3130,9 +3103,9 @@ public int maxDistance(int[] position, int m) {
     return res;
 }
 //1  1000 2000 3000 m=3
-//验证在距离至少为force的情况下能否放下所有的球，然后增大force逼近答案
-//所以check验证成功的不一定是合法的答案，但是最终一定会到达real ans
-//类似【378. 有序矩阵中第K小的元素】这道题
+//验证在距离至少为 force 的情况下能否放下所有的球，然后增大 force 逼近答案
+//所以 check 验证成功的不一定是合法的答案，但是最终一定会到达 real ans
+//类似【378. 有序矩阵中第 K 小的元素】这道题
 public boolean check(int[] position, int m, int force) {
     int last = position[0];
     m--;
@@ -3147,4 +3120,4 @@ public boolean check(int[] position, int m, int force) {
     return false;
 }
 ```
-check类似[378. 有序矩阵中第K小的元素](#378-有序矩阵中第k小的元素)这道题，都是逼近答案，而不是验证答案，其实一开始我的check不是这样写的，写的很丑，这里看了别人的写法发现continue有时候还是挺好用的
+check 类似 [378. 有序矩阵中第 K 小的元素](#378-有序矩阵中第 k 小的元素)这道题，都是逼近答案，而不是验证答案，其实一开始我的 check 不是这样写的，写的很丑，这里看了别人的写法发现 continue 有时候还是挺好用的

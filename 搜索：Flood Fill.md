@@ -6,6 +6,7 @@ categories:
   - 算法
 date: 2021/3/25
 abbrlink: 89c67f8e
+mathjax: true
 ---
 
 ## [1097. 池塘计数](https://www.acwing.com/problem/content/1099/)
