@@ -8,8 +8,8 @@ categories:
   - 算法
 abbrlink: 680ae0e
 ---
-## C实现的双向循环链表
-很久没有用C了，都忘了，昨天下午又复习了一下然后实现了这个双向循环链表，后面每种数据结构都会在这里实现记录下来。
+## C 实现的双向循环链表
+很久没有用 C 了，都忘了，昨天下午又复习了一下然后实现了这个双向循环链表，后面每种数据结构都会在这里实现记录下来。
 开发环境   : sublime+MinGW 
 ```java
 #include <stdio.h>
@@ -42,7 +42,7 @@ Node* createNode(){
 Node* createList(int n)
 {
     Node *tail,*p,*head;
-    //初始化头结点 (这个节点只是个标志，标志链表的头并不存储数据,只是为了操作的统一性)
+    //初始化头结点 （这个节点只是个标志，标志链表的头并不存储数据，只是为了操作的统一性）
     head=(Node*)malloc(sizeof(Node));
     int i;
     if(n >= 1)   //结点的个数 >= 1 的时候
@@ -71,8 +71,7 @@ Node* createList(int n)
         return 0;    
 } 
 
-
-//在头尾插入节点   （实际上这两个方法都可以通过下面的insAnywhere完成，主要为了效率,如果是尾结点插入getEle()时间复杂度过高）
+//在头尾插入节点   （实际上这两个方法都可以通过下面的 insAnywhere 完成，主要为了效率，如果是尾结点插入 getEle() 时间复杂度过高）
 //insAnywhere(head,0);
 void insHead(Node* head){
 	Node *p=createNode();
@@ -104,7 +103,7 @@ void insTail(Node* head){
 
 //取得某一位置的节点  时间复杂度为 O(n)
 Node * getEle(Node* head,int n){
-	//将第一个节点赋值给p
+	//将第一个节点赋值给 p
 	Node *p=head;
 	for (int i = 0; i < n; ++i)
 	{
@@ -146,7 +145,7 @@ void delNode(Node *head,int n){
 	//将后一个节点接在当前节点的前一个的后面
 	delNode->perv->next=nextNode;
 	nextNode->perv=delNode->perv;
-	//free这个节点
+	//free 这个节点
 	free(delNode);
 }
 
@@ -164,7 +163,6 @@ void printlnAll(Node *head){
 	// }
 }
 
-
 int main(int argc, char const *argv[])
 {
 
@@ -172,17 +170,17 @@ int main(int argc, char const *argv[])
 	Node* createNode();
 
 	Node *head=createList(3);
-	printf("遍历链表\n");
+	printf("遍历链表、n");
 	printlnAll(head);
 	
 	insHead(head);
 	//insAnywhere(head,0);
-	printf("在头插入节点后\n");
+	printf("在头插入节点后、n");
 	printlnAll(head);
 
 	insTail(head);    //下面的也可以但是效率比较低
 	//insAnywhere(head,getLength());
-	printf("在尾插入节点后\n");
+	printf("在尾插入节点后、n");
 	printlnAll(head);
 
 	//在第一个元素后面插入元素
@@ -209,7 +207,7 @@ int main(int argc, char const *argv[])
 线性表的这两种结构实际上是后面其他数据结构的基础，顺序储存结构和链式储存结构也各有优劣。
 ![image](http://p1.cdn.img9.top/ipfs/QmUWbnXLv86uwuCrWkp2ft6fax7TgZ1kryaCPKrWTGidsy?1.PNG)
 
-注：代码中的String是我自定义的。
+注：代码中的 String 是我自定义的。
 
 ```java
 typedef struct{
@@ -234,4 +232,3 @@ void init(String *s,int max,char * string){
 }
 
 ```
-

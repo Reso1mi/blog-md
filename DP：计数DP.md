@@ -1,5 +1,5 @@
 ---
-title: DP：计数DP
+title: DP：计数 DP
 tags:
   - 算法
   - 动态规划
@@ -26,7 +26,7 @@ mathjax: true
 
 **数据范围**：$1≤n≤1000$
 
-**输入样例:**
+**输入样例：**
 ```c
 5
 ```
@@ -76,7 +76,7 @@ class Main {
 2. 所有的盘子至少都有两个苹果，这种情况下，我们可以将所有盘子中的苹果数量减一再放，同样也不会影响结果，所以这种情况下等价于将$i-j$个苹果放到$j$个盘子中
 
 然后将上面两种情况加起来就行了
-- 初始状态：$dp[0][0] = 1$，0划分为0份，只有一种分法
+- 初始状态：$dp[0][0] = 1$，0 划分为 0 份，只有一种分法
 - 转移方程：$dp[i][j] =dp[i-1][j-1] + dp[i-j][j],(i \geq j)$
 - 出口：$\sum_{i=1}^{N}{dp[N][i]}$
 
@@ -93,10 +93,10 @@ class Main {
         // BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("./input.txt")));
         int MOD = (int)1e9+7;
         int N = Integer.valueOf(br.readLine());
-        // 将i划分为恰好j份的的方案数量
+        // 将 i 划分为恰好 j 份的的方案数量
         long[][] dp = new long[N+1][N+1];
-        // 1. 最小值是1，等价于dp[i-1][j-1]
-        // 2. 最小值不是1，等价于dp[i-j][j]
+        // 1. 最小值是 1，等价于 dp[i-1][j-1]
+        // 2. 最小值不是 1，等价于 dp[i-j][j]
         // Arrays.fill(dp[0], 1);
         dp[0][0] = 1;
         for (int i = 1; i <= N; i++) {
@@ -127,18 +127,18 @@ public static void main(String... args) throws Exception {
     // BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("./input.txt")));
     int MOD = (int)1e9+7;
     int N = Integer.valueOf(br.readLine());
-    // 将i划分为不超过j份的的方案数量
+    // 将 i 划分为不超过 j 份的的方案数量
     long[][] dp = new long[N+1][N+1];
-    // 0划分为任意份都是1种分法
+    // 0 划分为任意份都是 1 种分法
     // dp[i][j] += dp[i][j-1]
     Arrays.fill(dp[0], 1);
     for (int i = 1; i <= N; i++) {
         for (int j = 1; j <= N; j++) {
-            //dp[i-1][j-1]被包含在dp[i][j-1]中
-            //所以这里我们只需要加上dp[i][j-1]就行了
+            //dp[i-1][j-1] 被包含在 dp[i][j-1] 中
+            //所以这里我们只需要加上 dp[i][j-1] 就行了
             dp[i][j] = dp[i][j-1];
             if (i >= j) {
-                //dp[i-j][j]没有被包含，需要加上
+                //dp[i-j][j] 没有被包含，需要加上
                 dp[i][j] = (dp[i][j] + dp[i-j][j]) % MOD;
             }
         }
@@ -211,7 +211,7 @@ class Main {
     }
 
     public static int solve(int m, int n) {
-        // 前i个苹果，放到j个盘子，有多少种放法
+        // 前 i 个苹果，放到 j 个盘子，有多少种放法
         int[][] dp = new int[m+1][n+1];
         Arrays.fill(dp[0], 1);
         for (int i = 1; i <= m; i++) {
@@ -244,9 +244,9 @@ class Main {
 
 代码实现如下：
 ```java
-//完全背包解法，m+1种物品，体积为[0, m]凑齐体积m，且总使用的物品数量不操作n，求方案数量
+//完全背包解法，m+1 种物品，体积为 [0, m] 凑齐体积 m，且总使用的物品数量不操作 n，求方案数量
 public static int solve(int m, int n) {
-    //前i个数，体积恰好为j，总物品数量不超过k的方案数
+    //前 i 个数，体积恰好为 j，总物品数量不超过 k 的方案数
     int[][][] dp = new int[m+1][m+1][n+1];
     for (int i = 0; i <= n; i++) {
         dp[0][0][i] = 1;
@@ -263,4 +263,3 @@ public static int solve(int m, int n) {
     return dp[m][m][n];
 }
 ```
-
