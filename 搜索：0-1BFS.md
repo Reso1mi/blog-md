@@ -285,7 +285,7 @@ Difficulty: **困难**
 
 **示例 1：**
 
-![](https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2020/02/29/grid1.png)
+![](https://i.loli.net/2021/08/21/8yuC15WLEg4di7Q.png)
 
 ```c
 输入：grid = [[1,1,1,1],[2,2,2,2],[1,1,1,1],[2,2,2,2]]
@@ -297,7 +297,7 @@ Difficulty: **困难**
 
 **示例 2：**
 
-![](https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2020/02/29/grid2.png)
+![](https://i.loli.net/2021/08/21/1NPVla4A5Mrqk23.png)
 
 ```c
 输入：grid = [[1,1,3],[3,2,2],[1,1,4]]
@@ -307,7 +307,7 @@ Difficulty: **困难**
 
 **示例 3：**
 
-![](https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2020/02/29/grid3.png)
+![](https://i.loli.net/2021/08/21/fmEUdVt9s5oXvAS.png)
 
 ```c
 输入：grid = [[1,2],[4,3]]
@@ -586,6 +586,14 @@ class Main {
 "The Chamber of Secrets has been opened again" — this news has spread all around Hogwarts and some of the students have been petrified due to seeing the basilisk. Dumbledore got fired and now Harry is trying to enter the Chamber of Secrets. These aren't good news for Lord Voldemort. The problem is, he doesn't want anybody to be able to enter the chamber. The Dark Lord is going to be busy sucking life out of Ginny.
 
 The Chamber of Secrets is an $n × m$ rectangular grid in which some of the cells are columns. A light ray (and a basilisk's gaze) passes through the columns without changing its direction. But with some spell we can make a column magic to reflect the light ray (or the gaze) in all four directions when it receives the ray. This is shown in the figure below.
+
+![](https://espresso.codeforces.com/9cfd9e8e43fd3d2588d340d44ee464a2a0be8455.png)
+
+The basilisk is located at the right side of the lower right cell of the grid and is looking to the left (in the direction of the lower left cell). According to the legend, anyone who meets a basilisk's gaze directly dies immediately. But if someone meets a basilisk's gaze through a column, this person will get petrified. We know that the door to the Chamber is located on the left side of the upper left corner of the grid and anyone who wants to enter will look in the direction of its movement (in the direction of the upper right cell) from that position.
+
+![](https://espresso.codeforces.com/331328766492501ef28044eb2346ca44f81d764e.png)
+
+Given the dimensions of the chamber and the location of regular columns, Lord Voldemort has asked you to find the minimum number of columns that we need to make magic so that anyone who wants to enter the chamber would be petrified or just declare that it's impossible to secure the chamber.
 
 **Input**
 
