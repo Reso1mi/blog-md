@@ -5,6 +5,8 @@ tags:
 categories:
   - 算法
 abbrlink: 91f9d060
+date: 2021/8/21
+mathjax: true
 ---
 
 ## [175. 电路维修](https://www.acwing.com/problem/content/177/)
