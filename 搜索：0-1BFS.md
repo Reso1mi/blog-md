@@ -1,7 +1,9 @@
 ---
 title: 搜索：0-1BFS
 tags:
-  - 搜索，算法，最短路
+  - 搜索
+  - 算法
+  - 最短路
 categories:
   - 算法
 abbrlink: 91f9d060
